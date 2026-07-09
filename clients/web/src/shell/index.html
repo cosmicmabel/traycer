@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <!--
+      The Content-Security-Policy <meta> is injected here at build time by
+      vite.config.ts from the directive list in
+      src/shell/content-security-policy.ts, so the built page always ships its
+      policy regardless of which server fronts the static bundle.
+    -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Traycer</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="./main.tsx"></script>
+  </body>
+</html>

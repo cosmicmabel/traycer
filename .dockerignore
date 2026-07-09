@@ -1,0 +1,10 @@
+# Keep the build context small; the image installs dependencies itself.
+.git
+node_modules
+**/node_modules
+**/dist
+**/dist-sea
+**/dist-npm
+clients/desktop/release
+**/.eslintcache
+**/.tanstack

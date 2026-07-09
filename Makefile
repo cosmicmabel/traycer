@@ -40,6 +40,27 @@ host-clean:
 	@$(CLI) host uninstall --all
 
 # ---------------------------------------------------------------------------
+# Web app
+#
+# Serves the GUI as a webapp from this machine (clients/web): builds the
+# browser bundle, then runs the Bun serve process (static bundle + host
+# WebSocket proxy + authn proxy). Requires a provisioned host on this machine
+# (`$(CLI) host install latest` + `host start`, or the registered service).
+#
+#   make serve-web                                   # http://127.0.0.1:8788
+#   make serve-web ARGS="--bind 0.0.0.0 --port 8788" # expose on a trusted LAN
+#   make docker-web                                  # build + run the container
+# ---------------------------------------------------------------------------
+
+serve-web:
+	@bunx nx run @traycer-clients/web:build
+	@bun clients/web/src/server/serve.ts $(ARGS)
+
+docker-web:
+	@docker build -t traycer-web .
+	@docker run --rm -p 8788:8788 -v traycer-home:/root/.traycer traycer-web
+
+# ---------------------------------------------------------------------------
 # Quality gates
 # ---------------------------------------------------------------------------
 
