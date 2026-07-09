@@ -19,7 +19,8 @@
   "private": true,
   "workspaces": [
     "protocol",
-    "clients/*"
+    "clients/*",
+    "host"
   ],
   "catalog": {
     "@codemirror/language": "^6.12.4",

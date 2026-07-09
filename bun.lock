@@ -248,6 +248,26 @@
         "vitest": "catalog:",
       },
     },
+    "host": {
+      "name": "@traycer/open-host",
+      "version": "0.0.0",
+      "dependencies": {
+        "uuid": "catalog:",
+        "y-protocols": "catalog:",
+        "yjs": "catalog:",
+        "zod": "catalog:",
+      },
+      "devDependencies": {
+        "@types/bun": "catalog:",
+        "@types/node": "catalog:",
+        "@typescript-eslint/eslint-plugin": "catalog:",
+        "@typescript-eslint/parser": "catalog:",
+        "eslint": "catalog:",
+        "prettier": "catalog:",
+        "typescript": "catalog:",
+        "vitest": "catalog:",
+      },
+    },
     "protocol": {
       "name": "@traycer/protocol",
       "version": "0.1.0",
@@ -1325,6 +1345,8 @@
     "@traycer-clients/traycer-cli": ["@traycer-clients/traycer-cli@workspace:clients/traycer-cli"],
 
     "@traycer-clients/web": ["@traycer-clients/web@workspace:clients/web"],
+
+    "@traycer/open-host": ["@traycer/open-host@workspace:host"],
 
     "@traycer/protocol": ["@traycer/protocol@workspace:protocol"],
 

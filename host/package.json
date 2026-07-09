@@ -1,0 +1,30 @@
+{
+  "name": "@traycer/open-host",
+  "description": "Open-source Traycer host: a WebSocket RPC server implementing the client⇄host wire contract from @traycer/protocol. Minimal-but-real replacement for the closed-source host binary; unimplemented surfaces return structured RPC errors.",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "bun src/index.ts",
+    "compile": "tsc --noEmit -p tsconfig.json",
+    "lint": "eslint . --cache --fix --max-warnings 0",
+    "format": "bun x prettier --write .",
+    "test": "bun test src"
+  },
+  "dependencies": {
+    "uuid": "catalog:",
+    "yjs": "catalog:",
+    "y-protocols": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@types/bun": "catalog:",
+    "@types/node": "catalog:",
+    "@typescript-eslint/eslint-plugin": "catalog:",
+    "@typescript-eslint/parser": "catalog:",
+    "eslint": "catalog:",
+    "prettier": "catalog:",
+    "typescript": "catalog:"
+  },
+  "license": "Apache-2.0"
+}
