@@ -3,6 +3,7 @@ import {
   guiHarnessIdSchema,
   guiHarnessIdSchemaV10,
   guiHarnessIdSchemaV20,
+  guiHarnessIdSchemaV30,
 } from "@traycer/protocol/host/agent/shared";
 import {
   ALL_PERMISSION_MODES,
@@ -172,6 +173,17 @@ export const guiHarnessOptionSchemaV20 = guiHarnessOptionSchema.extend({
 });
 export const listGuiHarnessesResponseSchemaV20 = z.object({
   harnesses: z.array(guiHarnessOptionSchemaV20),
+});
+
+// ── Frozen protocol-v3.0 catalog row + response (before OpenClaw) ───────────
+// v3.0 shipped without OpenClaw; the v4.0 line of `agent.gui.listHarnesses`
+// adds it, and the v4→v3 downgrade bridge filters it out for already-shipped
+// v3.0 callers so their strict decode never sees a value it can't parse.
+export const guiHarnessOptionSchemaV30 = guiHarnessOptionSchema.extend({
+  id: guiHarnessIdSchemaV30,
+});
+export const listGuiHarnessesResponseSchemaV30 = z.object({
+  harnesses: z.array(guiHarnessOptionSchemaV30),
 });
 export type ListGuiHarnessesResponse = z.infer<
   typeof listGuiHarnessesResponseSchema

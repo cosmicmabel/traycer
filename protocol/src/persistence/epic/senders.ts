@@ -260,6 +260,21 @@ export const ampChatSessionAnchorSchema = z.object({
 });
 export type AmpChatSessionAnchor = z.infer<typeof ampChatSessionAnchorSchema>;
 
+// OpenClaw resumes at session granularity only — the adapter re-attaches to
+// the OpenClaw Gateway session as a whole, with no per-message
+// truncation/fork point. `sessionId` is the gateway session id.
+export const openclawChatSessionAnchorSchema = z.object({
+  harnessId: z.literal("openclaw"),
+  hostId: z.string(),
+  sessionId: z.string(),
+  sessionWorkspaceSnapshot: sessionWorkspaceSnapshotSchema,
+  createdAt: z.number(),
+  coveredUntilMessageId: z.string().nullable().default(null),
+});
+export type OpenclawChatSessionAnchor = z.infer<
+  typeof openclawChatSessionAnchorSchema
+>;
+
 export const chatSessionAnchorSchema = z.discriminatedUnion("harnessId", [
   claudeChatSessionAnchorSchema,
   codexChatSessionAnchorSchema,
@@ -275,5 +290,6 @@ export const chatSessionAnchorSchema = z.discriminatedUnion("harnessId", [
   copilotChatSessionAnchorSchema,
   kilocodeChatSessionAnchorSchema,
   ampChatSessionAnchorSchema,
+  openclawChatSessionAnchorSchema,
 ]);
 export type ChatSessionAnchor = z.infer<typeof chatSessionAnchorSchema>;

@@ -870,6 +870,15 @@ export const ampUserMessageAnchorResolvedSchema = z.object({
   ampSessionId: z.string().nullable(),
 });
 
+export const openclawUserMessageAnchorResolvedSchema = z.object({
+  harnessId: z.literal("openclaw"),
+  sessionId: z.string(),
+  // The OpenClaw Gateway session id assigned for this turn. Used to resume
+  // the same gateway session on a later turn. Null only when it was not yet
+  // resolved.
+  openclawSessionId: z.string().nullable(),
+});
+
 export const userMessageAnchorResolvedEventSchema = z.object({
   ...baseRuntimeEventFields,
   type: z.literal("user_message.anchor_resolved"),
@@ -889,6 +898,7 @@ export const userMessageAnchorResolvedEventSchema = z.object({
     copilotUserMessageAnchorResolvedSchema,
     kilocodeUserMessageAnchorResolvedSchema,
     ampUserMessageAnchorResolvedSchema,
+    openclawUserMessageAnchorResolvedSchema,
   ]),
 });
 export type UserMessageAnchorResolvedEvent = z.infer<

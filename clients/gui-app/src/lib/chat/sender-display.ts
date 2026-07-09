@@ -164,5 +164,7 @@ function agentProviderLabel(provider: GuiHarnessId): string {
       return "Kilo Code";
     case "amp":
       return "Amp";
+    case "openclaw":
+      return "OpenClaw";
   }
 }

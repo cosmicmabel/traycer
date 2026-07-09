@@ -41,6 +41,7 @@ describe("OnboardingDiorama", () => {
       "Kimi",
       "Qwen Code",
       "Amp",
+      "OpenClaw",
     ];
     const textOrEmpty = (text: string | null): string => text ?? "";
 

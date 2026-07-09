@@ -118,6 +118,8 @@ const PROVIDER_DESCRIPTIONS: Record<ProviderId, string> = {
     "GitHub Copilot CLI agent via your active Copilot subscription or policy.",
   kilocode: "Kilo Code CLI agent via Kilo login or configured providers.",
   amp: "Amp agent - Ampcode's coding CLI via your Amp account or API key.",
+  openclaw:
+    "OpenClaw agent - driven through the local OpenClaw Gateway via the OpenClaw CLI.",
 };
 
 const TERMINAL_AGENT_ARGS_PLACEHOLDER: Record<
@@ -148,6 +150,7 @@ function terminalAgentArgsPlaceholder(providerId: ProviderId): string {
     case "kimi":
     case "kilocode":
     case "amp":
+    case "openclaw":
       return "CLI arguments (optional)";
   }
 }
@@ -770,6 +773,8 @@ function envNamePlaceholder(providerId: ProviderId): string {
       return "KILO_API_KEY";
     case "amp":
       return "AMP_API_KEY";
+    case "openclaw":
+      return "OPENCLAW_GATEWAY_TOKEN";
   }
 }
 

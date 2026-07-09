@@ -28,6 +28,7 @@ export function providerIdForHarness(
   if (harnessId === "copilot") return "copilot";
   if (harnessId === "kilocode") return "kilocode";
   if (harnessId === "amp") return "amp";
+  if (harnessId === "openclaw") return "openclaw";
   return TUI_HARNESS_ID_TO_PROVIDER_ID[harnessId];
 }
 

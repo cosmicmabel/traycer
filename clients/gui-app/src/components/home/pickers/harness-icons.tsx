@@ -62,6 +62,15 @@ export const AmpIcon: HarnessIcon = (props) => (
   </svg>
 );
 
+// OpenClaw has no lobehub entry — hand-rolled placeholder claw/pincer mark
+// (two opposing pincers over a stem). Paints with `currentColor`, so it
+// follows the light/dark theme like the other monochrome marks.
+export const OpenClawIcon: HarnessIcon = (props) => (
+  <svg {...props} viewBox="0 0 24 24" fill="currentColor">
+    <path d="M12 22c-.55 0-1-.45-1-1v-5.17a6.5 6.5 0 0 1-5.47-5.02A6.51 6.51 0 0 1 5.7 6.2C4.06 5.53 3 3.94 3 2h2c0 1.43.93 2.63 2.22 3.05A6.47 6.47 0 0 1 11 4.08V2h2v2.08c1.4.21 2.7.86 3.78 2.97C18.07 4.63 19 3.43 19 2h2c0 1.94-1.06 3.53-2.7 4.2a6.51 6.51 0 0 1 .17 4.61 6.5 6.5 0 0 1-5.47 5.02V21c0 .55-.45 1-1 1zm-1-8.26V9.5c0-.98-.4-1.87-1.04-2.51A4.49 4.49 0 0 0 7.5 11c0 1.3.55 2.46 1.43 3.28.57.53 1.28.9 2.07 1.05v.41zm2 .41c.79-.15 1.5-.52 2.07-1.05A4.48 4.48 0 0 0 16.5 11c0-1.62-.86-3.05-2.46-4.01A3.54 3.54 0 0 0 13 9.5v4.65z" />
+  </svg>
+);
+
 // Traycer does not have a lobehub entry — hand-rolled from the brand mark.
 export const TraycerIcon: HarnessIcon = (props) => (
   <svg {...props} viewBox="0 0 211 218" fill="currentColor">

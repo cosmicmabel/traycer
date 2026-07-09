@@ -9,6 +9,7 @@ import {
   KiroIcon,
   KiloCodeIcon,
   KimiIcon,
+  OpenClawIcon,
   OpenCodeIcon,
   OpenRouterIcon,
   QwenIcon,
@@ -37,4 +38,5 @@ export const PROVIDER_ICON_CONFIG: Record<ProviderId, HarnessIconConfig> = {
   copilot: { Icon: CopilotIcon, className: "text-foreground" },
   kilocode: { Icon: KiloCodeIcon, className: "text-foreground" },
   amp: { Icon: AmpIcon, className: "text-foreground" },
+  openclaw: { Icon: OpenClawIcon, className: "text-foreground" },
 };

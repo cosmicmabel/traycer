@@ -58,7 +58,8 @@ export const chatSchemaSurfaceBaseline = {
                   "copilot",
                   "kilocode",
                   "openrouter",
-                  "amp"
+                  "amp",
+                  "openclaw"
                 ]
               },
               "model": {
@@ -137,7 +138,8 @@ export const chatSchemaSurfaceBaseline = {
                   "copilot",
                   "kilocode",
                   "openrouter",
-                  "amp"
+                  "amp",
+                  "openclaw"
                 ]
               },
               "sessionId": {
@@ -275,7 +277,8 @@ export const chatSchemaSurfaceBaseline = {
                             "copilot",
                             "kilocode",
                             "openrouter",
-                            "amp"
+                            "amp",
+                            "openclaw"
                           ]
                         },
                         "agentId": {
@@ -1305,6 +1308,65 @@ export const chatSchemaSurfaceBaseline = {
                             "sessionWorkspaceSnapshot",
                             "createdAt"
                           ]
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "harnessId": {
+                              "type": "string",
+                              "const": "openclaw"
+                            },
+                            "hostId": {
+                              "type": "string"
+                            },
+                            "sessionId": {
+                              "type": "string"
+                            },
+                            "sessionWorkspaceSnapshot": {
+                              "type": "object",
+                              "properties": {
+                                "workspaceKind": {
+                                  "type": "string",
+                                  "const": "session-snapshot"
+                                },
+                                "primaryWorkspace": {
+                                  "type": "string"
+                                },
+                                "secondaryWorkspaces": {
+                                  "default": [],
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string"
+                                  }
+                                }
+                              },
+                              "required": [
+                                "workspaceKind",
+                                "primaryWorkspace"
+                              ]
+                            },
+                            "createdAt": {
+                              "type": "number"
+                            },
+                            "coveredUntilMessageId": {
+                              "default": null,
+                              "anyOf": [
+                                {
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            }
+                          },
+                          "required": [
+                            "harnessId",
+                            "hostId",
+                            "sessionId",
+                            "sessionWorkspaceSnapshot",
+                            "createdAt"
+                          ]
                         }
                       ]
                     },
@@ -1357,7 +1419,8 @@ export const chatSchemaSurfaceBaseline = {
                         "copilot",
                         "kilocode",
                         "openrouter",
-                        "amp"
+                        "amp",
+                        "openclaw"
                       ]
                     },
                     "agentId": {
@@ -1476,7 +1539,8 @@ export const chatSchemaSurfaceBaseline = {
                                       "copilot",
                                       "kilocode",
                                       "openrouter",
-                                      "amp"
+                                      "amp",
+                                      "openclaw"
                                     ]
                                   },
                                   "noticeKind": {
@@ -2744,7 +2808,8 @@ export const chatSchemaSurfaceBaseline = {
                               "copilot",
                               "kilocode",
                               "openrouter",
-                              "amp"
+                              "amp",
+                              "openclaw"
                             ]
                           },
                           "source": {
@@ -2766,7 +2831,8 @@ export const chatSchemaSurfaceBaseline = {
                                   "copilot",
                                   "kilocode",
                                   "openrouter",
-                                  "amp"
+                                  "amp",
+                                  "openclaw"
                                 ]
                               },
                               "sessionId": {
@@ -3909,7 +3975,8 @@ export const chatSchemaSurfaceBaseline = {
                             "copilot",
                             "kilocode",
                             "openrouter",
-                            "amp"
+                            "amp",
+                            "openclaw"
                           ]
                         },
                         "agentId": {
@@ -4192,7 +4259,8 @@ export const chatSchemaSurfaceBaseline = {
                   "copilot",
                   "kilocode",
                   "openrouter",
-                  "amp"
+                  "amp",
+                  "openclaw"
                 ]
               },
               "model": {
@@ -4273,7 +4341,8 @@ export const chatSchemaSurfaceBaseline = {
                   "copilot",
                   "kilocode",
                   "openrouter",
-                  "amp"
+                  "amp",
+                  "openclaw"
                 ]
               },
               "sessionId": {
@@ -4417,7 +4486,8 @@ export const chatSchemaSurfaceBaseline = {
                             "copilot",
                             "kilocode",
                             "openrouter",
-                            "amp"
+                            "amp",
+                            "openclaw"
                           ]
                         },
                         "agentId": {
@@ -5511,6 +5581,69 @@ export const chatSchemaSurfaceBaseline = {
                             "coveredUntilMessageId"
                           ],
                           "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "harnessId": {
+                              "type": "string",
+                              "const": "openclaw"
+                            },
+                            "hostId": {
+                              "type": "string"
+                            },
+                            "sessionId": {
+                              "type": "string"
+                            },
+                            "sessionWorkspaceSnapshot": {
+                              "type": "object",
+                              "properties": {
+                                "workspaceKind": {
+                                  "type": "string",
+                                  "const": "session-snapshot"
+                                },
+                                "primaryWorkspace": {
+                                  "type": "string"
+                                },
+                                "secondaryWorkspaces": {
+                                  "default": [],
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string"
+                                  }
+                                }
+                              },
+                              "required": [
+                                "workspaceKind",
+                                "primaryWorkspace",
+                                "secondaryWorkspaces"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "createdAt": {
+                              "type": "number"
+                            },
+                            "coveredUntilMessageId": {
+                              "default": null,
+                              "anyOf": [
+                                {
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            }
+                          },
+                          "required": [
+                            "harnessId",
+                            "hostId",
+                            "sessionId",
+                            "sessionWorkspaceSnapshot",
+                            "createdAt",
+                            "coveredUntilMessageId"
+                          ],
+                          "additionalProperties": false
                         }
                       ]
                     },
@@ -5564,7 +5697,8 @@ export const chatSchemaSurfaceBaseline = {
                         "copilot",
                         "kilocode",
                         "openrouter",
-                        "amp"
+                        "amp",
+                        "openclaw"
                       ]
                     },
                     "agentId": {
@@ -5687,7 +5821,8 @@ export const chatSchemaSurfaceBaseline = {
                                       "copilot",
                                       "kilocode",
                                       "openrouter",
-                                      "amp"
+                                      "amp",
+                                      "openclaw"
                                     ]
                                   },
                                   "noticeKind": {
@@ -7004,7 +7139,8 @@ export const chatSchemaSurfaceBaseline = {
                               "copilot",
                               "kilocode",
                               "openrouter",
-                              "amp"
+                              "amp",
+                              "openclaw"
                             ]
                           },
                           "source": {
@@ -7026,7 +7162,8 @@ export const chatSchemaSurfaceBaseline = {
                                   "copilot",
                                   "kilocode",
                                   "openrouter",
-                                  "amp"
+                                  "amp",
+                                  "openclaw"
                                 ]
                               },
                               "sessionId": {
@@ -8155,7 +8292,8 @@ export const chatSchemaSurfaceBaseline = {
                             "copilot",
                             "kilocode",
                             "openrouter",
-                            "amp"
+                            "amp",
+                            "openclaw"
                           ]
                         },
                         "agentId": {

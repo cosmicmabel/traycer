@@ -27,6 +27,7 @@ export const providerIdSchema = z.enum([
   "kilocode",
   "openrouter",
   "amp",
+  "openclaw",
 ]);
 export type ProviderId = z.infer<typeof providerIdSchema>;
 
@@ -69,6 +70,31 @@ export const providerIdSchemaV20 = z.enum([
 ]);
 export type ProviderIdV20 = z.infer<typeof providerIdSchemaV20>;
 
+/**
+ * Frozen provider id set as shipped in protocol v3.0 (before OpenClaw). Used
+ * only by the frozen v3.0 `providers.list` response so an already-shipped v3.0
+ * client never receives the OpenClaw provider; the v4.0 line adds it with a
+ * v4→v3 (and v4→v2 / v4→v1) downgrade bridge. Do not add new providers here -
+ * extend the latest `providerIdSchema` and use the existing v4 bridge instead.
+ */
+export const providerIdSchemaV30 = z.enum([
+  "claude-code",
+  "codex",
+  "opencode",
+  "cursor",
+  "traycer",
+  "grok",
+  "qwen",
+  "kiro",
+  "droid",
+  "kimi",
+  "copilot",
+  "kilocode",
+  "openrouter",
+  "amp",
+]);
+export type ProviderIdV30 = z.infer<typeof providerIdSchemaV30>;
+
 /** Human-readable provider names, shared by the host and the GUI. */
 export const PROVIDER_DISPLAY_NAMES: Record<ProviderId, string> = {
   "claude-code": "Claude Code",
@@ -85,6 +111,7 @@ export const PROVIDER_DISPLAY_NAMES: Record<ProviderId, string> = {
   kilocode: "Kilo Code",
   openrouter: "OpenRouter",
   amp: "Amp",
+  openclaw: "OpenClaw",
 };
 
 /**
@@ -318,6 +345,22 @@ export const providersListResponseSchemaV20 = z.object({
 });
 export type ProvidersListResponseV20 = z.infer<
   typeof providersListResponseSchemaV20
+>;
+
+// ── Frozen protocol-v3.0 provider state + list response (before OpenClaw) ──
+// `providers.list` always returns every provider; v3.0 shipped without
+// OpenClaw, so it is frozen here as actually shipped. The v4.0 line adds
+// OpenClaw and a v4→v3 (and v4→v2 / v4→v1) downgrade bridge filters it for
+// older callers. Do not add new providers here - use the existing v4 bridge.
+export const providerCliStateSchemaV30 = providerCliStateSchema.extend({
+  providerId: providerIdSchemaV30,
+});
+export type ProviderCliStateV30 = z.infer<typeof providerCliStateSchemaV30>;
+export const providersListResponseSchemaV30 = z.object({
+  providers: z.array(providerCliStateSchemaV30),
+});
+export type ProvidersListResponseV30 = z.infer<
+  typeof providersListResponseSchemaV30
 >;
 
 // Frozen protocol-v1.0 provider state + list response. The v2.0 line of
@@ -635,8 +678,9 @@ export function downgradeProviderAuthV20ToV10(
 
 // Accepts any latest-shaped state (v2.0 or v3.0 alike - both v2→v1 and v3→v1
 // downgrade the same way) and downgrades it to the frozen v1.0 shape. A
-// provider outside v1.0's id set (ACP GUI harnesses, Amp) simply fails the
-// `providerCliStateSchemaV10` parse below and is filtered by the caller.
+// provider outside v1.0's id set (ACP GUI harnesses, Amp, OpenClaw) simply
+// fails the `providerCliStateSchemaV10` parse below and is filtered by the
+// caller.
 export function downgradeProviderCliStateToV10(
   state: ProviderCliState,
 ): ProviderCliStateV10 | null {
@@ -652,16 +696,30 @@ export function downgradeProviderCliStateToV10(
   return parsed.success ? parsed.data : null;
 }
 
-// Downgrades a latest-shaped (v3.0) provider-state list to the frozen v2.0
-// shape, dropping Amp (or any future post-v2.0 provider) so an already-shipped
-// v2.0 client's strict decode never sees it. The auth-status schema is
-// unchanged between v2.0 and latest, so this is a pure filter+reparse - no
-// field remapping needed (unlike the v1.0 downgrade above).
+// Downgrades a latest-shaped provider-state list to the frozen v2.0 shape,
+// dropping Amp and OpenClaw (or any future post-v2.0 provider) so an
+// already-shipped v2.0 client's strict decode never sees it. The auth-status
+// schema is unchanged between v2.0 and latest, so this is a pure
+// filter+reparse - no field remapping needed (unlike the v1.0 downgrade
+// above).
 export function downgradeProviderCliStateListToV20(
   states: readonly ProviderCliState[],
 ): ProviderCliStateV20[] {
   return states.flatMap((state) => {
     const parsed = providerCliStateSchemaV20.safeParse(state);
+    return parsed.success ? [parsed.data] : [];
+  });
+}
+
+// Downgrades a latest-shaped (v4.0) provider-state list to the frozen v3.0
+// shape, dropping OpenClaw (or any future post-v3.0 provider) so an
+// already-shipped v3.0 client's strict decode never sees it. Pure
+// filter+reparse, same rationale as the v2.0 downgrade above.
+export function downgradeProviderCliStateListToV30(
+  states: readonly ProviderCliState[],
+): ProviderCliStateV30[] {
+  return states.flatMap((state) => {
+    const parsed = providerCliStateSchemaV30.safeParse(state);
     return parsed.success ? [parsed.data] : [];
   });
 }

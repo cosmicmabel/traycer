@@ -59,6 +59,7 @@ export const guiHarnessIdSchema = harnessIdSchema.extract([
   "kilocode",
   "openrouter",
   "amp",
+  "openclaw",
 ]);
 export type GuiHarnessId = z.infer<typeof guiHarnessIdSchema>;
 
@@ -103,6 +104,33 @@ export const guiHarnessIdSchemaV20 = harnessIdSchema.extract([
   "openrouter",
 ]);
 export type GuiHarnessIdV20 = z.infer<typeof guiHarnessIdSchemaV20>;
+
+/**
+ * Frozen harness id set as shipped in protocol v3.0 (before OpenClaw). Used
+ * only by the frozen v3.0 response schema of `agent.gui.listHarnesses` so an
+ * already-shipped v3.0 client (which predates OpenClaw) negotiates a wire that
+ * can never carry it; the v4.0 line adds it and v4→v3 / v4→v2 / v4→v1
+ * downgrade bridges filter it for older callers. Do NOT add new harnesses
+ * here - extend the latest `guiHarnessIdSchema` and use the existing v4
+ * bridge instead.
+ */
+export const guiHarnessIdSchemaV30 = harnessIdSchema.extract([
+  "claude",
+  "codex",
+  "opencode",
+  "traycer",
+  "cursor",
+  "grok",
+  "qwen",
+  "kiro",
+  "droid",
+  "kimi",
+  "copilot",
+  "kilocode",
+  "openrouter",
+  "amp",
+]);
+export type GuiHarnessIdV30 = z.infer<typeof guiHarnessIdSchemaV30>;
 
 export const tuiHarnessIdSchema = harnessIdSchema.extract([
   "claude",
@@ -164,6 +192,7 @@ export const AGENT_FACING_HARNESS_IDS = [
   "kilocode",
   "openrouter",
   "amp",
+  "openclaw",
 ] as const;
 
 export const AGENT_FACING_HARNESS_ID_LIST = AGENT_FACING_HARNESS_IDS.join(", ");
@@ -493,6 +522,21 @@ export const listAgentsResponseSchemaV20 = listAgentsResponseSchema.extend({
   agents: z.array(agentSummarySchemaV20),
 });
 export type ListAgentsResponseV20 = z.infer<typeof listAgentsResponseSchemaV20>;
+
+// ── Frozen protocol-v3.0 agent.list response (before OpenClaw) ──────────────
+// `agent.list` enumerates every agent in the epic - including OpenClaw GUI
+// harness chats a newer client created - so an already-shipped v3.0 client
+// (which predates OpenClaw) would hit a strict enum on those rows. v3.0 is
+// frozen here as actually shipped (before OpenClaw); the v4.0 line carries
+// OpenClaw rows and v4→v3 / v4→v2 / v4→v1 bridges drop them for older
+// callers. Do not add new harnesses here - use the existing v4 bridge.
+export const agentSummarySchemaV30 = agentSummarySchema.extend({
+  harnessId: guiHarnessIdSchemaV30.nullable(),
+});
+export const listAgentsResponseSchemaV30 = listAgentsResponseSchema.extend({
+  agents: z.array(agentSummarySchemaV30),
+});
+export type ListAgentsResponseV30 = z.infer<typeof listAgentsResponseSchemaV30>;
 
 /**
  * `agent.sendMessage@1.0` - fire-and-forget enqueue from one agent to

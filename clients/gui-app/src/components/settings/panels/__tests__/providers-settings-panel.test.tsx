@@ -335,6 +335,29 @@ describe("<ProvidersSettingsPanel />", () => {
     ).toBeNull();
   });
 
+  it("shows the CLI-candidates picker for OpenClaw - the CLI path is user-selectable", () => {
+    providerMocks.listResult.data = {
+      providers: [
+        providerState({
+          providerId: "openclaw",
+          selected: { kind: "bundled" },
+          candidates: [],
+          envOverrides: [],
+        }),
+      ],
+    };
+
+    render(
+      <TooltipProvider>
+        <ProvidersSettingsPanel />
+      </TooltipProvider>,
+    );
+
+    expect(
+      screen.getByRole("button", { name: "Add custom path" }),
+    ).toBeDefined();
+  });
+
   it("orders the provider rail by the default provider order", () => {
     providerMocks.listResult.data = {
       providers: [
