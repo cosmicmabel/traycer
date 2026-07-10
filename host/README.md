@@ -81,15 +81,20 @@ removes the pid file on SIGTERM/SIGINT.
   and `epic.createChat`. Host-side Y.Doc writes share one broadcast path
   with client pushes via origin-tagged Y update events.
 
+- **Epic/chat mutations + durability**: `epic.updateTitle` (task-index
+  delta), `epic.renameChat` (user-pinned titles, re-seeded into the Y.Doc),
+  `epic.deleteChat` (live state + blob + Y map entry), and chat transcripts
+  persisted per record to `~/.traycer/host[/env]/open-host-chats/`
+  (chatSchema-validated on lazy load) so they survive restarts.
+- **Tool-call mapping**: gateway tool events (`session.tool`, agent tool
+  phases) map onto `tool_call.started/completed/errored` runtime events and
+  persist as `tool_call` content blocks ahead of the text block.
+
 ## Roadmap (in dependency order)
 
-1. Remaining epic mutations (`epic.updateTitle`, `epic.deleteChat`,
-   `epic.batchDelete`, rename/reparent) and workspace association plumbing
-   (`repoIdentifiers`/`workspaces` on the task rows).
-2. Durable chat persistence (today chat transcripts live for the host
-   process), queueing, approvals, and richer gateway lifecycle mapping
-   (tool events → tool_call blocks).
-3. Workspace/worktree surfaces, then terminals.
+1. Workspace association plumbing (`repoIdentifiers`/`workspaces` on task
+   rows), `epic.batchDelete`, chat queueing and approvals.
+2. Workspace/worktree surfaces, then terminals.
 
 Every unimplemented surface degrades per-request/per-subscription; the GUI's
 boot gate (`host.status`) and the harness/provider catalogs already work
