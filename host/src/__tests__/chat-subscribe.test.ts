@@ -53,6 +53,21 @@ beforeAll(() => {
             params !== null && typeof params === "object"
               ? String(Reflect.get(params, "message"))
               : null;
+          // A tool call bracketing the text: the `session.tool` event shape.
+          ws.send(
+            JSON.stringify({
+              type: "event",
+              event: "session.tool",
+              payload: { name: "read_file", callId: "t1", phase: "start" },
+            }),
+          );
+          ws.send(
+            JSON.stringify({
+              type: "event",
+              event: "session.tool",
+              payload: { name: "read_file", callId: "t1", phase: "end" },
+            }),
+          );
           // Cumulative assistant snapshots, the `chat.*` event shape.
           ws.send(
             JSON.stringify({
@@ -208,14 +223,18 @@ describe("chat.subscribe backed by the OpenClaw gateway", () => {
     // against the canonical server-frame schema.
     const kinds: string[] = [];
     const deltas: string[] = [];
+    const runtimeEventTypes: string[] = [];
     let sawIdle = false;
     let guard = 0;
-    while (!sawIdle && guard < 30) {
+    while (!sawIdle && guard < 40) {
       guard += 1;
       const frame = chatSubscribeServerFrameSchema.parse(await session.next());
       kinds.push(frame.kind);
-      if (frame.kind === "blockDelta" && frame.event.type === "text.delta") {
-        deltas.push(frame.event.delta);
+      if (frame.kind === "blockDelta") {
+        runtimeEventTypes.push(frame.event.type);
+        if (frame.event.type === "text.delta") {
+          deltas.push(frame.event.delta);
+        }
       }
       if (frame.kind === "turnStateChanged" && frame.runStatus === "idle") {
         sawIdle = true;
@@ -225,6 +244,8 @@ describe("chat.subscribe backed by the OpenClaw gateway", () => {
     expect(kinds).toContain("actionAck");
     expect(kinds).toContain("messageAccepted");
     expect(kinds).toContain("eventAppended");
+    expect(runtimeEventTypes).toContain("tool_call.started");
+    expect(runtimeEventTypes).toContain("tool_call.completed");
     expect(deltas.join("")).toBe("Hello from OpenClaw");
     expect(lastGatewayPrompt).toBe("Say hello");
 
@@ -248,7 +269,16 @@ describe("chat.subscribe backed by the OpenClaw gateway", () => {
       const assistant = replay.snapshot.chat.messages[1];
       expect(assistant.role).toBe("assistant");
       if (assistant.role === "assistant") {
-        const block = assistant.blocks[0];
+        expect(assistant.blocks.map((block) => block.type)).toEqual([
+          "tool_call",
+          "text",
+        ]);
+        const toolBlock = assistant.blocks[0];
+        if (toolBlock.type === "tool_call") {
+          expect(toolBlock.toolName).toBe("read_file");
+          expect(toolBlock.status).toBe("completed");
+        }
+        const block = assistant.blocks[1];
         expect(block.type).toBe("text");
         if (block.type === "text") {
           expect(block.text).toBe("Hello from OpenClaw");

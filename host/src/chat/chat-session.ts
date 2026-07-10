@@ -437,6 +437,7 @@ export class ChatSubscription {
         event,
       });
     };
+    const tools = new TurnToolTracker(emitEvent);
 
     try {
       const connection = await OpenClawGatewayConnection.connect(this.gateway);
@@ -458,6 +459,9 @@ export class ChatSubscription {
         sessionKey: `traycer-${this.chatId}`,
         message: prompt,
         onAgentEvent: (event) => {
+          if (tools.handle(event)) {
+            return;
+          }
           const delta = extractTextDelta(event.payload, accumulated);
           if (delta.length > 0) {
             accumulated += delta;
@@ -477,22 +481,43 @@ export class ChatSubscription {
       detach();
       connection.close();
     } catch (cause) {
-      this.finishTurn(turnId, userMessageId, blockId, accumulated, {
-        kind: "errored",
-        message: cause instanceof Error ? cause.message : String(cause),
-      });
+      this.finishTurn(
+        turnId,
+        userMessageId,
+        blockId,
+        accumulated,
+        tools.blocks(),
+        {
+          kind: "errored",
+          message: cause instanceof Error ? cause.message : String(cause),
+        },
+      );
       return;
     }
     if (this.state.turn?.stopped === true) {
-      this.finishTurn(turnId, userMessageId, blockId, accumulated, {
-        kind: "stopped",
-      });
+      this.finishTurn(
+        turnId,
+        userMessageId,
+        blockId,
+        accumulated,
+        tools.blocks(),
+        {
+          kind: "stopped",
+        },
+      );
       return;
     }
     emitEvent({ blockId, timestamp: Date.now(), type: "text.completed" });
-    this.finishTurn(turnId, userMessageId, blockId, accumulated, {
-      kind: "completed",
-    });
+    this.finishTurn(
+      turnId,
+      userMessageId,
+      blockId,
+      accumulated,
+      tools.blocks(),
+      {
+        kind: "completed",
+      },
+    );
   }
 
   private finishTurn(
@@ -500,6 +525,7 @@ export class ChatSubscription {
     userMessageId: string,
     blockId: string,
     text: string,
+    toolBlocks: readonly ToolCallBlock[],
     outcome:
       | { readonly kind: "completed" }
       | { readonly kind: "stopped" }
@@ -517,14 +543,18 @@ export class ChatSubscription {
         displayName: "OpenClaw",
         reply: { expectsReply: false },
       },
-      blocks:
-        text.length > 0 || outcome.kind === "completed"
+      blocks: [
+        ...toolBlocks,
+        ...(text.length > 0 || outcome.kind === "completed"
           ? [
               {
                 blockId,
-                status: outcome.kind === "errored" ? "errored" : "completed",
+                status:
+                  outcome.kind === "errored"
+                    ? ("errored" as const)
+                    : ("completed" as const),
                 timestamp: now,
-                type: "text",
+                type: "text" as const,
                 text:
                   text.length > 0
                     ? text
@@ -532,7 +562,8 @@ export class ChatSubscription {
                 providerNotice: null,
               },
             ]
-          : [],
+          : []),
+      ],
       startedAt: activeTurn?.startedAt ?? now,
       timestamp: now,
       turnId,
@@ -699,6 +730,169 @@ function buildUserPayload(
     };
   }
   return { kind: "user", content };
+}
+
+/** Persisted-shape tool_call content block (all defaulted fields present). */
+type ToolCallBlock = Extract<
+  Message & { role: "assistant" },
+  { role: "assistant" }
+>["blocks"][number] & { type: "tool_call" };
+
+/**
+ * Maps the OpenClaw Gateway's tool events onto the protocol's `tool_call`
+ * RuntimeEvent lane and collects finished blocks for the assistant message.
+ *
+ * The gateway's event names/payloads vary by channel (`session.tool`,
+ * `agent` run events with tool phases); the extractor is deliberately
+ * tolerant: any event whose name mentions "tool" with a resolvable tool
+ * name is tracked, keyed by the payload's call id when present so
+ * concurrent calls don't collide.
+ */
+export class TurnToolTracker {
+  private readonly emitEvent: (event: RuntimeEvent) => void;
+  private readonly open = new Map<
+    string,
+    {
+      readonly blockId: string;
+      readonly toolName: string;
+      readonly startedAt: number;
+    }
+  >();
+  private readonly finished: ToolCallBlock[] = [];
+
+  constructor(emitEvent: (event: RuntimeEvent) => void) {
+    this.emitEvent = emitEvent;
+  }
+
+  blocks(): readonly ToolCallBlock[] {
+    return this.finished;
+  }
+
+  /** Returns true when the event was a tool event (consumed). */
+  handle(event: {
+    readonly event: string;
+    readonly payload: unknown;
+  }): boolean {
+    const tool = extractToolEvent(event.event, event.payload);
+    if (tool === null) {
+      return false;
+    }
+    const now = Date.now();
+    if (tool.phase === "started") {
+      const blockId = randomUUID();
+      this.open.set(tool.key, {
+        blockId,
+        toolName: tool.toolName,
+        startedAt: now,
+      });
+      this.emitEvent({
+        blockId,
+        timestamp: now,
+        type: "tool_call.started",
+        toolName: tool.toolName,
+        agentMessageSend: null,
+        startedAt: now,
+      });
+      return true;
+    }
+    const started = this.open.get(tool.key);
+    const blockId = started?.blockId ?? randomUUID();
+    const startedAt = started?.startedAt ?? now;
+    this.open.delete(tool.key);
+    if (tool.phase === "errored") {
+      this.emitEvent({
+        blockId,
+        timestamp: now,
+        type: "tool_call.errored",
+        toolName: tool.toolName,
+        error: tool.error ?? "tool call failed",
+        terminationReason: "error",
+        agentMessageSend: null,
+      });
+    } else {
+      this.emitEvent({
+        blockId,
+        timestamp: now,
+        type: "tool_call.completed",
+        toolName: tool.toolName,
+        agentMessageSend: null,
+      });
+    }
+    this.finished.push({
+      blockId,
+      status: tool.phase === "errored" ? "errored" : "completed",
+      timestamp: now,
+      type: "tool_call",
+      toolName: tool.toolName,
+      inputSummary: null,
+      inputDetail: null,
+      taskTodoItems: null,
+      error:
+        tool.phase === "errored" ? (tool.error ?? "tool call failed") : null,
+      agentMessageSend: null,
+      progress: null,
+      backgroundOutput: null,
+      startedAt,
+      endedAt: now,
+      backgroundTask: false,
+      stopped: false,
+    });
+    return true;
+  }
+}
+
+interface ExtractedToolEvent {
+  readonly key: string;
+  readonly toolName: string;
+  readonly phase: "started" | "completed" | "errored";
+  readonly error: string | null;
+}
+
+export function extractToolEvent(
+  eventName: string,
+  payload: unknown,
+): ExtractedToolEvent | null {
+  if (!eventName.toLowerCase().includes("tool")) {
+    return null;
+  }
+  if (payload === null || typeof payload !== "object") {
+    return null;
+  }
+  const readString = (key: string): string | null => {
+    const value = Reflect.get(payload, key);
+    return typeof value === "string" && value.length > 0 ? value : null;
+  };
+  const toolName =
+    readString("toolName") ?? readString("name") ?? readString("tool");
+  if (toolName === null) {
+    return null;
+  }
+  const key =
+    readString("callId") ??
+    readString("toolCallId") ??
+    readString("id") ??
+    toolName;
+  const phaseRaw = (
+    readString("phase") ??
+    readString("status") ??
+    readString("state") ??
+    ""
+  ).toLowerCase();
+  const error = readString("error");
+  let phase: ExtractedToolEvent["phase"];
+  if (error !== null || ["error", "errored", "failed"].includes(phaseRaw)) {
+    phase = "errored";
+  } else if (
+    ["end", "ended", "done", "completed", "complete", "ok", "success"].includes(
+      phaseRaw,
+    ) ||
+    Reflect.get(payload, "result") !== undefined
+  ) {
+    phase = "completed";
+  } else {
+    phase = "started";
+  }
+  return { key, toolName, phase, error };
 }
 
 /**
