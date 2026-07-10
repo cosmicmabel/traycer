@@ -12,6 +12,7 @@ import type {
 import { checkStreamCompatibility } from "@traycer/protocol/framework/stream-compat";
 import { z } from "zod";
 import type { BearerVerifier } from "./auth";
+import type { ChatSessionStore, ChatSubscription } from "./chat/chat-session";
 
 /**
  * Per-socket state machine for the streaming `/stream` endpoint.
@@ -25,17 +26,18 @@ import type { BearerVerifier } from "./auth";
  *   host MUST answer `{ kind:"pong", hasBinaryPayload:false }` or the client
  *   drops the socket after 60s (close 4004).
  *
- * The open host currently accepts the handshake and heartbeats but has no
- * stream method sessions yet: every `subscribe` is answered with a terminal
- * `fatalError` naming the unimplemented method, which the client surfaces as
- * a stream failure for that surface only (the unary surface is unaffected).
- * `chat.subscribe` backed by the OpenClaw Gateway adapter is the first
- * planned session (see host/README.md roadmap).
+ * Implemented sessions: `chat.subscribe` (backed by the OpenClaw Gateway,
+ * see chat/chat-session.ts). Every other `subscribe` is answered with a
+ * terminal `fatalError` naming the unimplemented method, which the client
+ * surfaces as a stream failure for that surface only (the unary surface is
+ * unaffected). `epic.subscribe` Y.Doc sync is next on the host/README.md
+ * roadmap.
  */
 export interface StreamConnectionDeps {
   readonly registry: VersionedStreamRpcRegistry;
   readonly manifest: ConnectionManifest;
   readonly verifier: BearerVerifier;
+  readonly chats: ChatSessionStore;
 }
 
 export interface StreamSocket {
@@ -54,6 +56,8 @@ export class StreamConnection {
   private readonly deps: StreamConnectionDeps;
   private readonly socket: StreamSocket;
   private phase: Phase = "awaiting-open";
+  private userId: string | null = null;
+  private chatSubscription: ChatSubscription | null = null;
 
   constructor(deps: StreamConnectionDeps, socket: StreamSocket) {
     this.deps = deps;
@@ -62,6 +66,8 @@ export class StreamConnection {
 
   handleClose(): void {
     this.phase = "done";
+    this.chatSubscription?.dispose();
+    this.chatSubscription = null;
   }
 
   async handleMessage(raw: string): Promise<void> {
@@ -92,9 +98,35 @@ export class StreamConnection {
         this.phase = "done";
         return;
       }
-      // No stream sessions are implemented yet - reject the method
-      // terminally so the client does not reconnect-loop against a session
-      // that can never exist. (Backoff-worthy failures use retryable:true.)
+      if (subscribe.data.method === "chat.subscribe" && this.userId !== null) {
+        const subscription = this.deps.chats.subscribe({
+          params: subscribe.data.params,
+          userId: this.userId,
+          emit: (frame) => {
+            if (this.phase === "subscribed") {
+              this.socket.send(JSON.stringify(frame));
+            }
+          },
+        });
+        if (subscription === null) {
+          this.fatal({
+            code: "CHAT_INVALID",
+            reason: "chat.subscribe params did not parse",
+            incompatibleMethods: null,
+            upgradeGuidance: null,
+          });
+          return;
+        }
+        // Flip to subscribed BEFORE the snapshot so the emit gate above
+        // lets the initial frame through.
+        this.phase = "subscribed";
+        this.chatSubscription = subscription;
+        subscription.emitSnapshot();
+        return;
+      }
+      // Remaining stream methods are rejected terminally so the client does
+      // not reconnect-loop against a session that can never exist.
+      // (Backoff-worthy failures use retryable:true.)
       this.fatal({
         code: "RPC_ERROR",
         reason: `stream method not implemented in @traycer/open-host: ${subscribe.data.method}`,
@@ -105,6 +137,10 @@ export class StreamConnection {
     }
 
     if (this.phase === "subscribed") {
+      if (this.chatSubscription !== null) {
+        await this.chatSubscription.handleFrame(parsed);
+        return;
+      }
       const ping = pingFrameSchema.safeParse(parsed);
       if (ping.success) {
         this.socket.send(
@@ -150,6 +186,7 @@ export class StreamConnection {
       return;
     }
 
+    this.userId = verdict.userId;
     this.phase = "awaiting-subscribe";
     const ack: HostStreamOpenAckFrame = {
       kind: "openAck",

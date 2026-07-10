@@ -53,16 +53,26 @@ removes the pid file on SIGTERM/SIGINT.
   probe, and `sendChat` (fire a prompt into a gateway session and stream the
   agent's events back) — the seam the `chat.subscribe` session plugs into.
 
+- **`chat.subscribe@1.3` sessions backed by the OpenClaw Gateway**
+  (`src/chat/chat-session.ts`): snapshot on subscribe (chat record, access,
+  queue, run state), `send` → `actionAck` / `messageAccepted` / durable
+  `eventAppended` rows / `turnStateChanged` / `blockDelta` runtime events
+  (`turn.started`, `text.delta` diffed from the gateway's cumulative
+  `chat.*` snapshots, `text.completed`, `turn.completed`), `stop`, and
+  ping→pong. Chats are in-memory per host process; a resubscribe replays the
+  persisted messages in its snapshot. Unsupported owner actions are
+  acknowledged as rejected without dropping the stream.
+
 ## Roadmap (in dependency order)
 
-1. **`chat.subscribe` stream sessions** backed by the OpenClaw Gateway
-   adapter: snapshot on subscribe, `send` → `actionAck`/`messageAccepted`/
-   `turnStateChanged`/`blockDelta` runtime events mapped from gateway
-   `agent`/`chat` events, with an in-memory (then persisted) chat store.
-2. **`epic.subscribe`** Y.Doc sync (yjs is already a dependency) so the GUI's
+1. **`epic.subscribe`** Y.Doc sync (yjs is already a dependency) so the GUI's
    epic surfaces work: `snapshot`/`update`/`awareness` binary frames over the
-   documented envelope pairing.
-3. Epic/workspace unary surfaces, then worktrees/terminals.
+   documented envelope pairing, plus the epic unary surface so chats are
+   reachable from the GUI's epic list.
+2. Durable chat persistence (today chats live for the host process), queueing,
+   approvals, and richer gateway lifecycle mapping (tool events → tool_call
+   blocks).
+3. Workspace/worktree surfaces, then terminals.
 
 Every unimplemented surface degrades per-request/per-subscription; the GUI's
 boot gate (`host.status`) and the harness/provider catalogs already work

@@ -4,6 +4,7 @@ import {
 } from "@traycer/protocol/host/registry";
 import { buildStreamManifest } from "@traycer/protocol/framework/stream-compat";
 import { BearerVerifier } from "./auth";
+import { ChatSessionStore } from "./chat/chat-session";
 import type { OpenHostConfig } from "./config";
 import { buildUnaryHandlers } from "./handlers";
 import { OpenClawGatewayProbe } from "./openclaw/gateway-client";
@@ -40,10 +41,12 @@ export function startOpenHostServer(config: OpenHostConfig): RunningOpenHost {
     config.authnBaseUrl,
     config.insecureNoAuth,
   );
-  const openclaw = new OpenClawGatewayProbe({
+  const gatewayOptions = {
     url: config.openclawGatewayUrl,
     token: config.openclawGatewayToken,
-  });
+  };
+  const openclaw = new OpenClawGatewayProbe(gatewayOptions);
+  const chats = new ChatSessionStore(gatewayOptions);
   const handlers = buildUnaryHandlers({
     protocolVersion: runtime.canonical("host.status"),
     openclaw,
@@ -99,6 +102,7 @@ export function startOpenHostServer(config: OpenHostConfig): RunningOpenHost {
                   registry: hostStreamRpcRegistry,
                   manifest: streamManifest,
                   verifier,
+                  chats,
                 },
                 socket,
               );
