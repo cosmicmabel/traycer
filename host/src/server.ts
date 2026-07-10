@@ -5,6 +5,7 @@ import {
 import { buildStreamManifest } from "@traycer/protocol/framework/stream-compat";
 import { BearerVerifier } from "./auth";
 import { ChatSessionStore } from "./chat/chat-session";
+import { EpicStore } from "./epic/epic-store";
 import type { OpenHostConfig } from "./config";
 import { buildUnaryHandlers } from "./handlers";
 import { OpenClawGatewayProbe } from "./openclaw/gateway-client";
@@ -47,6 +48,7 @@ export function startOpenHostServer(config: OpenHostConfig): RunningOpenHost {
   };
   const openclaw = new OpenClawGatewayProbe(gatewayOptions);
   const chats = new ChatSessionStore(gatewayOptions);
+  const epics = new EpicStore(config.environment);
   const handlers = buildUnaryHandlers({
     protocolVersion: runtime.canonical("host.status"),
     openclaw,
@@ -81,6 +83,9 @@ export function startOpenHostServer(config: OpenHostConfig): RunningOpenHost {
           send: (frame: string) => {
             ws.send(frame);
           },
+          sendBinary: (bytes: Uint8Array) => {
+            ws.send(bytes);
+          },
           close: (code: number, reason: string) => {
             ws.close(code, reason);
           },
@@ -103,19 +108,25 @@ export function startOpenHostServer(config: OpenHostConfig): RunningOpenHost {
                   manifest: streamManifest,
                   verifier,
                   chats,
+                  epics,
                 },
                 socket,
               );
       },
       message(ws, message) {
+        const connection = ws.data.connection;
         if (typeof message !== "string") {
-          // Binary frames are only meaningful inside an active stream
-          // session; none exist yet, so an unexpected binary frame ends the
+          // Binary frames are the paired payload of the preceding text
+          // envelope on a stream session; anywhere else they end the
           // connection per the client's own 4003 convention.
+          if (connection instanceof StreamConnection) {
+            void connection.handleBinary(new Uint8Array(message));
+            return;
+          }
           ws.close(4003, "unexpected-binary-frame");
           return;
         }
-        void ws.data.connection?.handleMessage(message);
+        void connection?.handleMessage(message);
       },
       close(ws) {
         ws.data.connection?.handleClose();

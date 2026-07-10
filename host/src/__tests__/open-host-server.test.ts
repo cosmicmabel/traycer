@@ -229,9 +229,9 @@ describe("open host /stream", () => {
 
     session.send({
       kind: "subscribe",
-      method: "epic.subscribe",
-      schemaVersion: { major: 1, minor: 0 },
-      params: { epicId: "epic-1" },
+      method: "terminal.subscribe",
+      schemaVersion: { major: 1, minor: 3 },
+      params: {},
     });
     const fatal: unknown = await session.next();
     expect(fatal).toMatchObject({

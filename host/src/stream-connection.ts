@@ -13,6 +13,7 @@ import { checkStreamCompatibility } from "@traycer/protocol/framework/stream-com
 import { z } from "zod";
 import type { BearerVerifier } from "./auth";
 import type { ChatSessionStore, ChatSubscription } from "./chat/chat-session";
+import type { EpicStore, EpicSubscription } from "./epic/epic-store";
 
 /**
  * Per-socket state machine for the streaming `/stream` endpoint.
@@ -27,21 +28,27 @@ import type { ChatSessionStore, ChatSubscription } from "./chat/chat-session";
  *   drops the socket after 60s (close 4004).
  *
  * Implemented sessions: `chat.subscribe` (backed by the OpenClaw Gateway,
- * see chat/chat-session.ts). Every other `subscribe` is answered with a
+ * see chat/chat-session.ts) and `epic.subscribe` (Y.Doc relay + persistence,
+ * see epic/epic-store.ts). Every other `subscribe` is answered with a
  * terminal `fatalError` naming the unimplemented method, which the client
  * surfaces as a stream failure for that surface only (the unary surface is
- * unaffected). `epic.subscribe` Y.Doc sync is next on the host/README.md
- * roadmap.
+ * unaffected).
+ *
+ * Binary pairing (framework/stream-ws-protocol.ts): a binary WS frame is the
+ * payload of the immediately-preceding text envelope whose
+ * `hasBinaryPayload` is `true`; in-order delivery is the correlation.
  */
 export interface StreamConnectionDeps {
   readonly registry: VersionedStreamRpcRegistry;
   readonly manifest: ConnectionManifest;
   readonly verifier: BearerVerifier;
   readonly chats: ChatSessionStore;
+  readonly epics: EpicStore;
 }
 
 export interface StreamSocket {
   send(frame: string): void;
+  sendBinary(bytes: Uint8Array): void;
   close(code: number, reason: string): void;
 }
 
@@ -49,6 +56,14 @@ const pingFrameSchema = z.object({
   kind: z.literal("ping"),
   hasBinaryPayload: z.literal(false),
 });
+
+/** Minimal envelope read used only to detect binary-paired client frames. */
+const binaryEnvelopeSchema = z
+  .object({
+    kind: z.string(),
+    hasBinaryPayload: z.boolean(),
+  })
+  .loose();
 
 type Phase = "awaiting-open" | "awaiting-subscribe" | "subscribed" | "done";
 
@@ -58,6 +73,9 @@ export class StreamConnection {
   private phase: Phase = "awaiting-open";
   private userId: string | null = null;
   private chatSubscription: ChatSubscription | null = null;
+  private epicSubscription: EpicSubscription | null = null;
+  /** Text envelope awaiting its paired binary frame (in-order correlation). */
+  private pendingBinaryEnvelope: unknown | null = null;
 
   constructor(deps: StreamConnectionDeps, socket: StreamSocket) {
     this.deps = deps;
@@ -68,6 +86,21 @@ export class StreamConnection {
     this.phase = "done";
     this.chatSubscription?.dispose();
     this.chatSubscription = null;
+    this.epicSubscription?.dispose();
+    this.epicSubscription = null;
+  }
+
+  async handleBinary(bytes: Uint8Array): Promise<void> {
+    if (this.phase !== "subscribed" || this.pendingBinaryEnvelope === null) {
+      this.socket.close(4003, "unexpected-binary-frame");
+      this.phase = "done";
+      return;
+    }
+    const envelope = this.pendingBinaryEnvelope;
+    this.pendingBinaryEnvelope = null;
+    if (this.epicSubscription !== null) {
+      await this.epicSubscription.handleFrame(envelope, bytes);
+    }
   }
 
   async handleMessage(raw: string): Promise<void> {
@@ -96,6 +129,33 @@ export class StreamConnection {
       if (!subscribe.success) {
         this.socket.close(4002, "malformed-text-frame");
         this.phase = "done";
+        return;
+      }
+      if (subscribe.data.method === "epic.subscribe" && this.userId !== null) {
+        const subscription = await this.deps.epics.subscribe({
+          params: subscribe.data.params,
+          emit: (frame, binary) => {
+            if (this.phase !== "subscribed") {
+              return;
+            }
+            this.socket.send(JSON.stringify(frame));
+            if (binary !== null) {
+              this.socket.sendBinary(binary);
+            }
+          },
+        });
+        if (subscription === null) {
+          this.fatal({
+            code: "RPC_ERROR",
+            reason: "epic.subscribe params did not parse",
+            incompatibleMethods: null,
+            upgradeGuidance: null,
+          });
+          return;
+        }
+        this.phase = "subscribed";
+        this.epicSubscription = subscription;
+        subscription.emitSnapshot();
         return;
       }
       if (subscribe.data.method === "chat.subscribe" && this.userId !== null) {
@@ -139,6 +199,16 @@ export class StreamConnection {
     if (this.phase === "subscribed") {
       if (this.chatSubscription !== null) {
         await this.chatSubscription.handleFrame(parsed);
+        return;
+      }
+      if (this.epicSubscription !== null) {
+        const envelope = binaryEnvelopeSchema.safeParse(parsed);
+        if (envelope.success && envelope.data.hasBinaryPayload) {
+          // Hold the envelope until its paired binary frame arrives.
+          this.pendingBinaryEnvelope = parsed;
+          return;
+        }
+        await this.epicSubscription.handleFrame(parsed, null);
         return;
       }
       const ping = pingFrameSchema.safeParse(parsed);

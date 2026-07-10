@@ -63,12 +63,22 @@ removes the pid file on SIGTERM/SIGINT.
   persisted messages in its snapshot. Unsupported owner actions are
   acknowledged as rejected without dropping the stream.
 
+- **`epic.subscribe@1.0` Y.Doc sync** (`src/epic/epic-store.ts`): one Y.Doc
+  per epic root plus per-artifact-room body docs, `snapshot` +
+  `cloudSyncStatus` + room snapshots on subscribe, client
+  `applyUpdate`/`awareness` (root and room scope) applied and relayed to
+  every other subscriber over the documented envelope+binary frame pairing,
+  with debounced persistence to `~/.traycer/host[/env]/open-host-epics/` so
+  epics survive restarts. `cloudSyncStatus` reports `connected` because the
+  local doc IS the authoritative copy — there is no cloud room behind this
+  host.
+
 ## Roadmap (in dependency order)
 
-1. **`epic.subscribe`** Y.Doc sync (yjs is already a dependency) so the GUI's
-   epic surfaces work: `snapshot`/`update`/`awareness` binary frames over the
-   documented envelope pairing, plus the epic unary surface so chats are
-   reachable from the GUI's epic list.
+1. **Epic unary surface** (`epic.listTasks`, `epic.create`,
+   `epic.createChat`, …) so the GUI's landing page can mint and list epics —
+   these contracts mirror CloudData shapes and need a local task index next
+   to the Y.Doc store.
 2. Durable chat persistence (today chats live for the host process), queueing,
    approvals, and richer gateway lifecycle mapping (tool events → tool_call
    blocks).
