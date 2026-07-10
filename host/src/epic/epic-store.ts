@@ -82,8 +82,37 @@ export class EpicStore {
     if (persisted !== null) {
       Y.applyUpdate(state.doc, persisted);
     }
+    // Fan every root-doc change out through Y's own update event so client
+    // pushes and host-side writes (epic.create/createChat seeding) share one
+    // broadcast path. `origin` carries the pushing subscriber's emitter so
+    // the echo back to the originator is suppressed.
+    state.doc.on("update", (update: Uint8Array, origin: unknown) => {
+      this.scheduleFlush(state);
+      for (const emitter of state.emitters) {
+        if (emitter !== origin) {
+          emitter({ kind: "update", epicId, hasBinaryPayload: true }, update);
+        }
+      }
+    });
     this.epics.set(epicId, state);
     return state;
+  }
+
+  /**
+   * Host-side write path used by `epic.create` / `epic.createChat`: stores
+   * the persisted chat record in the root doc's `chats` map so every epic
+   * subscriber (current and future) projects the new chat card. Broadcast +
+   * flush ride the doc's `update` event above.
+   */
+  async seedChat(
+    epicId: string,
+    chatRecord: {
+      readonly id: string;
+      readonly [key: string]: unknown;
+    },
+  ): Promise<void> {
+    const state = await this.load(epicId);
+    state.doc.getMap("chats").set(chatRecord.id, chatRecord);
   }
 
   async loadRoom(state: EpicState, artifactRoomId: string): Promise<RoomState> {
@@ -237,12 +266,9 @@ export class EpicSubscription {
     }
 
     if (data.kind === "applyUpdate") {
-      Y.applyUpdate(this.state.doc, binary);
-      this.store.scheduleFlush(this.state);
-      this.broadcastToOthers(
-        { kind: "update", epicId, hasBinaryPayload: true },
-        binary,
-      );
+      // Origin-tagged so the doc's `update` listener (registered in `load`)
+      // relays to every OTHER subscriber without echoing to this one.
+      Y.applyUpdate(this.state.doc, binary, this.emit);
       return;
     }
     if (data.kind === "awareness") {

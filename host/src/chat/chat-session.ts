@@ -73,6 +73,26 @@ export class ChatSessionStore {
     this.gateway = gateway;
   }
 
+  /**
+   * Unary creation path (`epic.create`'s folded chat seed and
+   * `epic.createChat`): mints the chat record up front - idempotent on
+   * `chatId` - so the subsequent `chat.subscribe` finds it titled. Returns
+   * the persisted-shape record for Y.Doc seeding.
+   */
+  ensureChat(input: {
+    readonly epicId: string;
+    readonly chatId: string;
+    readonly userId: string;
+    readonly title: string;
+  }): Chat {
+    const state = this.getOrCreate(input.epicId, input.chatId, input.userId);
+    if (input.title.length > 0 && state.chat.title.length === 0) {
+      state.chat.title = input.title;
+      state.chat.updatedAt = Date.now();
+    }
+    return state.chat;
+  }
+
   subscribe(input: {
     readonly params: unknown;
     readonly userId: string;

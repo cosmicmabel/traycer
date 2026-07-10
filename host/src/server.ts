@@ -6,6 +6,7 @@ import { buildStreamManifest } from "@traycer/protocol/framework/stream-compat";
 import { BearerVerifier } from "./auth";
 import { ChatSessionStore } from "./chat/chat-session";
 import { EpicStore } from "./epic/epic-store";
+import { TaskIndex } from "./epic/task-index";
 import type { OpenHostConfig } from "./config";
 import { buildUnaryHandlers } from "./handlers";
 import { OpenClawGatewayProbe } from "./openclaw/gateway-client";
@@ -49,9 +50,13 @@ export function startOpenHostServer(config: OpenHostConfig): RunningOpenHost {
   const openclaw = new OpenClawGatewayProbe(gatewayOptions);
   const chats = new ChatSessionStore(gatewayOptions);
   const epics = new EpicStore(config.environment);
+  const tasks = new TaskIndex(config.environment);
   const handlers = buildUnaryHandlers({
     protocolVersion: runtime.canonical("host.status"),
     openclaw,
+    tasks,
+    chats,
+    epics,
   });
 
   const server = Bun.serve<ConnectionData>({

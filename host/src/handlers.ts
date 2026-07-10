@@ -8,13 +8,22 @@ import {
 } from "@traycer/protocol/host/agent/gui/contracts";
 import { providersListV40 } from "@traycer/protocol/host/registry";
 import {
+  epicCreateV10,
+  epicCreateChatV10,
+  epicListTasksV10,
+} from "@traycer/protocol/host/epic/contracts";
+import type { EpicLightWithPermission } from "@traycer/protocol/host/epic/unary-schemas";
+import {
   PROVIDER_DISPLAY_NAMES,
   providerIdSchema,
   type ProviderCliState,
   type ProviderId,
 } from "@traycer/protocol/host/provider-schemas";
 import type { GuiHarnessOption } from "@traycer/protocol/host/agent/gui/unary-schemas";
+import type { ChatSessionStore } from "./chat/chat-session";
 import { OPEN_HOST_VERSION } from "./config";
+import type { EpicStore } from "./epic/epic-store";
+import type { TaskIndex } from "./epic/task-index";
 import type { OpenClawGatewayProbe } from "./openclaw/gateway-client";
 
 /**
@@ -74,6 +83,9 @@ export interface HandlerDeps {
     readonly minor: number;
   };
   readonly openclaw: OpenClawGatewayProbe;
+  readonly tasks: TaskIndex;
+  readonly chats: ChatSessionStore;
+  readonly epics: EpicStore;
 }
 
 const OPENCLAW_PROVIDER_ID: ProviderId = "openclaw";
@@ -228,6 +240,65 @@ export function buildUnaryHandlers(
       harnessId: request.harnessId,
       commands: [],
     })),
+  );
+
+  // ── Epic surface (local task index + Y.Doc seeding; no cloud) ───────────
+
+  handlers.set(
+    epicCreateV10.method,
+    contractHandler(epicCreateV10, async (request, context) => {
+      const row: EpicLightWithPermission = {
+        light: request.epic,
+        // Single-user local host: the connection's bearer IS the owner, so
+        // no permission DTO is synthesized (the schema allows null and the
+        // GUI treats a null permission as owner-visible local state).
+        permission: null,
+        repos: [],
+        workspaces: [],
+        roomInfo: null,
+      };
+      await deps.tasks.upsert(row);
+      if (request.chat !== null && request.chat !== undefined) {
+        const chatRecord = deps.chats.ensureChat({
+          epicId: request.epic.id,
+          chatId: request.chat.chatId,
+          userId: context.userId,
+          title: request.chat.title,
+        });
+        await deps.epics.seedChat(request.epic.id, chatRecord);
+      }
+      return {
+        roomInfo: null,
+        task: { epic: row },
+        // The open host never starts the provider turn from the folded
+        // initialMessage; the renderer's stream-driven fallback sends it.
+        initialTurnStarted: request.chat === null ? null : false,
+      };
+    }),
+  );
+
+  handlers.set(
+    epicListTasksV10.method,
+    contractHandler(epicListTasksV10, async (request) => ({
+      tasks: (await deps.tasks.list(request.limit)).map((row) => ({
+        epic: row,
+      })),
+      hasMore: false,
+    })),
+  );
+
+  handlers.set(
+    epicCreateChatV10.method,
+    contractHandler(epicCreateChatV10, async (request, context) => {
+      const chatRecord = deps.chats.ensureChat({
+        epicId: request.epicId,
+        chatId: request.chatId,
+        userId: context.userId,
+        title: request.title,
+      });
+      await deps.epics.seedChat(request.epicId, chatRecord);
+      return { chatId: request.chatId, initialTurnStarted: false };
+    }),
   );
 
   return handlers;

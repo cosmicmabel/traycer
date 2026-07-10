@@ -73,15 +73,22 @@ removes the pid file on SIGTERM/SIGINT.
   local doc IS the authoritative copy — there is no cloud room behind this
   host.
 
+- **Epic unary surface** (`src/epic/task-index.ts` + handlers):
+  `epic.create` (including the folded first-chat seed, minted idempotently in
+  the chat store and written into the epic Y.Doc's `chats` map so every
+  subscriber projects the new chat card), `epic.listTasks` from a local JSON
+  task index stored in the canonical `epicLightWithPermission` wire shape,
+  and `epic.createChat`. Host-side Y.Doc writes share one broadcast path
+  with client pushes via origin-tagged Y update events.
+
 ## Roadmap (in dependency order)
 
-1. **Epic unary surface** (`epic.listTasks`, `epic.create`,
-   `epic.createChat`, …) so the GUI's landing page can mint and list epics —
-   these contracts mirror CloudData shapes and need a local task index next
-   to the Y.Doc store.
-2. Durable chat persistence (today chats live for the host process), queueing,
-   approvals, and richer gateway lifecycle mapping (tool events → tool_call
-   blocks).
+1. Remaining epic mutations (`epic.updateTitle`, `epic.deleteChat`,
+   `epic.batchDelete`, rename/reparent) and workspace association plumbing
+   (`repoIdentifiers`/`workspaces` on the task rows).
+2. Durable chat persistence (today chat transcripts live for the host
+   process), queueing, approvals, and richer gateway lifecycle mapping
+   (tool events → tool_call blocks).
 3. Workspace/worktree surfaces, then terminals.
 
 Every unimplemented surface degrades per-request/per-subscription; the GUI's
