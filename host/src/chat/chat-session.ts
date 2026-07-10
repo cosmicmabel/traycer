@@ -1,4 +1,6 @@
 import { randomUUID } from "node:crypto";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { join } from "node:path";
 import type { z } from "zod";
 import {
   chatSubscribeClientFrameSchema,
@@ -6,12 +8,14 @@ import {
   type ChatRunSettings,
   type ChatSubscribeServerFrame,
 } from "@traycer/protocol/host/agent/gui/subscribe";
-import type {
-  Chat,
-  ChatEvent,
-  Message,
-  UserMessage,
+import {
+  chatSchema,
+  type Chat,
+  type ChatEvent,
+  type Message,
+  type UserMessage,
 } from "@traycer/protocol/persistence/epic/schemas";
+import { hostHomeDir } from "../pid-file";
 import type { RuntimeEvent } from "@traycer/protocol/host/agent/gui/agent-runtime";
 import {
   OpenClawGatewayConnection,
@@ -34,12 +38,16 @@ import {
  * protocol's RuntimeEvent lanes (text deltas + turn lifecycle).
  */
 interface ChatKeyState {
+  readonly epicId: string;
   readonly chat: Chat;
   runStatus: "idle" | "running" | "stopping";
   activeTurn: ActiveTurnState | null;
   turn: ActiveTurnRun | null;
   readonly emitters: Set<(frame: ChatSubscribeServerFrame) => void>;
+  flushTimer: NodeJS.Timeout | null;
 }
+
+const FLUSH_DEBOUNCE_MS = 500;
 
 type SendFrame = Extract<
   z.output<typeof chatSubscribeClientFrameSchema>,
@@ -67,10 +75,61 @@ interface ActiveTurnRun {
 
 export class ChatSessionStore {
   private readonly gateway: OpenClawGatewayOptions;
+  private readonly environment: string;
   private readonly chats = new Map<string, ChatKeyState>();
 
-  constructor(gateway: OpenClawGatewayOptions) {
+  constructor(gateway: OpenClawGatewayOptions, environment: string) {
     this.gateway = gateway;
+    this.environment = environment;
+  }
+
+  /**
+   * Debounced chat-record flush to
+   * `~/.traycer/host[/env]/open-host-chats/<epic>__<chat>.json` so
+   * transcripts survive host restarts. Best-effort: the in-memory record
+   * stays authoritative.
+   */
+  markDirty(state: ChatKeyState): void {
+    if (state.flushTimer !== null) {
+      return;
+    }
+    state.flushTimer = setTimeout(() => {
+      state.flushTimer = null;
+      void this.flush(state);
+    }, FLUSH_DEBOUNCE_MS);
+  }
+
+  private async flush(state: ChatKeyState): Promise<void> {
+    try {
+      await mkdir(this.blobDir(), { recursive: true });
+      await writeFile(
+        join(this.blobDir(), blobName(state.epicId, state.chat.id)),
+        JSON.stringify(state.chat),
+        "utf8",
+      );
+    } catch {
+      // Best-effort persistence.
+    }
+  }
+
+  private async readPersisted(
+    epicId: string,
+    chatId: string,
+  ): Promise<Chat | null> {
+    try {
+      const raw = await readFile(
+        join(this.blobDir(), blobName(epicId, chatId)),
+        "utf8",
+      );
+      const parsed = chatSchema.safeParse(JSON.parse(raw));
+      return parsed.success ? parsed.data : null;
+    } catch {
+      return null;
+    }
+  }
+
+  private blobDir(): string {
+    return join(hostHomeDir(this.environment), "open-host-chats");
   }
 
   /**
@@ -79,30 +138,35 @@ export class ChatSessionStore {
    * `chatId` - so the subsequent `chat.subscribe` finds it titled. Returns
    * the persisted-shape record for Y.Doc seeding.
    */
-  ensureChat(input: {
+  async ensureChat(input: {
     readonly epicId: string;
     readonly chatId: string;
     readonly userId: string;
     readonly title: string;
-  }): Chat {
-    const state = this.getOrCreate(input.epicId, input.chatId, input.userId);
+  }): Promise<Chat> {
+    const state = await this.getOrCreate(
+      input.epicId,
+      input.chatId,
+      input.userId,
+    );
     if (input.title.length > 0 && state.chat.title.length === 0) {
       state.chat.title = input.title;
       state.chat.updatedAt = Date.now();
+      this.markDirty(state);
     }
     return state.chat;
   }
 
-  subscribe(input: {
+  async subscribe(input: {
     readonly params: unknown;
     readonly userId: string;
     readonly emit: (frame: ChatSubscribeServerFrame) => void;
-  }): ChatSubscription | null {
+  }): Promise<ChatSubscription | null> {
     const open = chatSubscribeOpenRequestSchema.safeParse(input.params);
     if (!open.success) {
       return null;
     }
-    const state = this.getOrCreate(
+    const state = await this.getOrCreate(
       open.data.epicId,
       open.data.chatId,
       input.userId,
@@ -117,22 +181,27 @@ export class ChatSessionStore {
       input.userId,
       state,
       input.emit,
+      () => {
+        this.markDirty(state);
+      },
     );
   }
 
-  private getOrCreate(
+  private async getOrCreate(
     epicId: string,
     chatId: string,
     userId: string,
-  ): ChatKeyState {
+  ): Promise<ChatKeyState> {
     const key = `${epicId}/${chatId}`;
     const existing = this.chats.get(key);
     if (existing !== undefined) {
       return existing;
     }
+    const persisted = await this.readPersisted(epicId, chatId);
     const now = Date.now();
     const created: ChatKeyState = {
-      chat: {
+      epicId,
+      chat: persisted ?? {
         parentId: null,
         id: chatId,
         userId,
@@ -151,10 +220,24 @@ export class ChatSessionStore {
       activeTurn: null,
       turn: null,
       emitters: new Set(),
+      flushTimer: null,
     };
+    // Two concurrent loads race the disk read; last-write-wins on the map is
+    // fine (same persisted bytes), but keep the first-inserted state if one
+    // landed while we awaited.
+    const raced = this.chats.get(key);
+    if (raced !== undefined) {
+      return raced;
+    }
     this.chats.set(key, created);
     return created;
   }
+}
+
+/** Filesystem-safe blob name (epic/chat ids are uuids in practice). */
+function blobName(epicId: string, chatId: string): string {
+  const sanitize = (id: string): string => id.replace(/[^A-Za-z0-9._-]/g, "_");
+  return `${sanitize(epicId)}__${sanitize(chatId)}.json`;
 }
 
 export class ChatSubscription {
@@ -164,6 +247,7 @@ export class ChatSubscription {
   private readonly userId: string;
   private readonly state: ChatKeyState;
   private readonly emit: (frame: ChatSubscribeServerFrame) => void;
+  private readonly persist: () => void;
 
   constructor(
     gateway: OpenClawGatewayOptions,
@@ -172,6 +256,7 @@ export class ChatSubscription {
     userId: string,
     state: ChatKeyState,
     emit: (frame: ChatSubscribeServerFrame) => void,
+    persist: () => void,
   ) {
     this.gateway = gateway;
     this.epicId = epicId;
@@ -179,6 +264,7 @@ export class ChatSubscription {
     this.userId = userId;
     this.state = state;
     this.emit = emit;
+    this.persist = persist;
   }
 
   dispose(): void {
@@ -270,6 +356,7 @@ export class ChatSubscription {
     };
     this.state.chat.messages.push(userMessage);
     this.state.chat.updatedAt = now;
+    this.persist();
 
     this.ackAccepted(frame.clientActionId, "send");
     this.broadcast({
@@ -430,6 +517,7 @@ export class ChatSubscription {
     };
     this.state.chat.messages.push(assistant);
     this.state.chat.updatedAt = now;
+    this.persist();
 
     if (outcome.kind === "completed") {
       this.broadcast({
@@ -542,6 +630,7 @@ export class ChatSubscription {
       metadata: null,
     };
     this.state.chat.events.push(event);
+    this.persist();
     this.broadcast({
       kind: "eventAppended",
       hasBinaryPayload: false,

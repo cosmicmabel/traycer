@@ -159,7 +159,7 @@ export class StreamConnection {
         return;
       }
       if (subscribe.data.method === "chat.subscribe" && this.userId !== null) {
-        const subscription = this.deps.chats.subscribe({
+        const subscription = await this.deps.chats.subscribe({
           params: subscribe.data.params,
           userId: this.userId,
           emit: (frame) => {

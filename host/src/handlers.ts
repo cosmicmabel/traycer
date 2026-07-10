@@ -259,7 +259,7 @@ export function buildUnaryHandlers(
       };
       await deps.tasks.upsert(row);
       if (request.chat !== null && request.chat !== undefined) {
-        const chatRecord = deps.chats.ensureChat({
+        const chatRecord = await deps.chats.ensureChat({
           epicId: request.epic.id,
           chatId: request.chat.chatId,
           userId: context.userId,
@@ -290,7 +290,7 @@ export function buildUnaryHandlers(
   handlers.set(
     epicCreateChatV10.method,
     contractHandler(epicCreateChatV10, async (request, context) => {
-      const chatRecord = deps.chats.ensureChat({
+      const chatRecord = await deps.chats.ensureChat({
         epicId: request.epicId,
         chatId: request.chatId,
         userId: context.userId,

@@ -48,7 +48,7 @@ export function startOpenHostServer(config: OpenHostConfig): RunningOpenHost {
     token: config.openclawGatewayToken,
   };
   const openclaw = new OpenClawGatewayProbe(gatewayOptions);
-  const chats = new ChatSessionStore(gatewayOptions);
+  const chats = new ChatSessionStore(gatewayOptions, config.environment);
   const epics = new EpicStore(config.environment);
   const tasks = new TaskIndex(config.environment);
   const handlers = buildUnaryHandlers({
