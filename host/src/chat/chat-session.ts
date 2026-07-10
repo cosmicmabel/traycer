@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import type { z } from "zod";
 import {
@@ -155,6 +155,31 @@ export class ChatSessionStore {
       this.markDirty(state);
     }
     return state.chat;
+  }
+
+  /** `epic.renameChat`: user-authored title, pinned against regeneration. */
+  async renameChat(input: {
+    readonly epicId: string;
+    readonly chatId: string;
+    readonly userId: string;
+    readonly title: string;
+  }): Promise<Chat> {
+    const state = await this.getOrCreate(
+      input.epicId,
+      input.chatId,
+      input.userId,
+    );
+    state.chat.title = input.title;
+    state.chat.isTitleEditedByUser = true;
+    state.chat.updatedAt = Date.now();
+    this.markDirty(state);
+    return state.chat;
+  }
+
+  /** `epic.deleteChat`: drops the live state and the persisted blob. */
+  async deleteChat(epicId: string, chatId: string): Promise<void> {
+    this.chats.delete(`${epicId}/${chatId}`);
+    await rm(join(this.blobDir(), blobName(epicId, chatId)), { force: true });
   }
 
   async subscribe(input: {

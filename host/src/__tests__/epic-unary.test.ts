@@ -176,6 +176,55 @@ describe("epic unary surface", () => {
       title: "Later chat",
     });
   }, 20_000);
+
+  it("updates titles and renames/deletes chats", async () => {
+    await callRpc("epic.create", {
+      epic: epicLight("epic-u3", "Original title"),
+      repoIdentifiers: [],
+      workspaces: [],
+      chat: null,
+    });
+    const retitle = await callRpc("epic.updateTitle", {
+      epicDelta: {
+        id: "epic-u3",
+        title: "Renamed epic",
+        updatedAt: Date.now(),
+      },
+    });
+    expect(retitle.error).toBeNull();
+    expect(retitle.result).toMatchObject({ updated: true });
+    const missing = await callRpc("epic.updateTitle", {
+      epicDelta: { id: "nope", title: "x", updatedAt: Date.now() },
+    });
+    expect(missing.result).toMatchObject({ updated: false });
+
+    await callRpc("epic.createChat", {
+      epicId: "epic-u3",
+      parentId: null,
+      hostId: "open-host",
+      title: "To rename",
+      chatId: "chat-u3",
+    });
+    const renamed = await callRpc("epic.renameChat", {
+      epicId: "epic-u3",
+      chatId: "chat-u3",
+      title: "Renamed chat",
+    });
+    expect(renamed.result).toMatchObject({ updated: true });
+    let doc = await snapshotEpicDoc("epic-u3");
+    expect(doc.getMap("chats").get("chat-u3")).toMatchObject({
+      title: "Renamed chat",
+      isTitleEditedByUser: true,
+    });
+
+    const deleted = await callRpc("epic.deleteChat", {
+      epicId: "epic-u3",
+      chatId: "chat-u3",
+    });
+    expect(deleted.result).toMatchObject({ deleted: true });
+    doc = await snapshotEpicDoc("epic-u3");
+    expect(doc.getMap("chats").get("chat-u3")).toBeUndefined();
+  }, 20_000);
 });
 
 async function snapshotEpicDoc(epicId: string): Promise<Y.Doc> {

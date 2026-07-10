@@ -10,7 +10,10 @@ import { providersListV40 } from "@traycer/protocol/host/registry";
 import {
   epicCreateV10,
   epicCreateChatV10,
+  epicDeleteChatV10,
   epicListTasksV10,
+  epicRenameChatV10,
+  epicUpdateTitleV10,
 } from "@traycer/protocol/host/epic/contracts";
 import type { EpicLightWithPermission } from "@traycer/protocol/host/epic/unary-schemas";
 import {
@@ -298,6 +301,39 @@ export function buildUnaryHandlers(
       });
       await deps.epics.seedChat(request.epicId, chatRecord);
       return { chatId: request.chatId, initialTurnStarted: false };
+    }),
+  );
+
+  handlers.set(
+    epicUpdateTitleV10.method,
+    contractHandler(epicUpdateTitleV10, async (request) => ({
+      updated:
+        request.epicDelta === null
+          ? false
+          : await deps.tasks.applyDelta(request.epicDelta),
+    })),
+  );
+
+  handlers.set(
+    epicRenameChatV10.method,
+    contractHandler(epicRenameChatV10, async (request, context) => {
+      const chatRecord = await deps.chats.renameChat({
+        epicId: request.epicId,
+        chatId: request.chatId,
+        userId: context.userId,
+        title: request.title,
+      });
+      await deps.epics.seedChat(request.epicId, chatRecord);
+      return { updated: true };
+    }),
+  );
+
+  handlers.set(
+    epicDeleteChatV10.method,
+    contractHandler(epicDeleteChatV10, async (request) => {
+      await deps.chats.deleteChat(request.epicId, request.chatId);
+      await deps.epics.removeChat(request.epicId, request.chatId);
+      return { deleted: true };
     }),
   );
 

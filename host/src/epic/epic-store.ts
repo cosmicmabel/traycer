@@ -115,6 +115,12 @@ export class EpicStore {
     state.doc.getMap("chats").set(chatRecord.id, chatRecord);
   }
 
+  /** Host-side delete mirror of `seedChat` (drives `epic.deleteChat`). */
+  async removeChat(epicId: string, chatId: string): Promise<void> {
+    const state = await this.load(epicId);
+    state.doc.getMap("chats").delete(chatId);
+  }
+
   async loadRoom(state: EpicState, artifactRoomId: string): Promise<RoomState> {
     const existing = state.rooms.get(artifactRoomId);
     if (existing !== undefined) {

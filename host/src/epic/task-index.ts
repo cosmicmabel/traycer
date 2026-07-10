@@ -37,6 +37,42 @@ export class TaskIndex {
       .slice(0, Math.max(0, limit));
   }
 
+  /**
+   * `epic.updateTitle`-style partial update. Returns false when the epic is
+   * not in the index (mirrors the cloud resolver's `{updated:false}`).
+   */
+  async applyDelta(delta: {
+    readonly id: string;
+    readonly updatedAt: number;
+    readonly title?: string;
+    readonly ticketCount?: number;
+    readonly specCount?: number;
+    readonly storyCount?: number;
+    readonly reviewCount?: number;
+    readonly status?: string;
+    readonly initialUserPrompt?: string;
+  }): Promise<boolean> {
+    const tasks = await this.loadAll();
+    const row = tasks.find((task) => task.light?.id === delta.id);
+    if (row === undefined || row.light === null || row.light === undefined) {
+      return false;
+    }
+    row.light.updatedAt = delta.updatedAt;
+    if (delta.title !== undefined) row.light.title = delta.title;
+    if (delta.ticketCount !== undefined)
+      row.light.ticketCount = delta.ticketCount;
+    if (delta.specCount !== undefined) row.light.specCount = delta.specCount;
+    if (delta.storyCount !== undefined) row.light.storyCount = delta.storyCount;
+    if (delta.reviewCount !== undefined)
+      row.light.reviewCount = delta.reviewCount;
+    if (delta.status !== undefined) row.light.status = delta.status;
+    if (delta.initialUserPrompt !== undefined) {
+      row.light.initialUserPrompt = delta.initialUserPrompt;
+    }
+    await this.save();
+    return true;
+  }
+
   async upsert(row: EpicLightWithPermission): Promise<void> {
     const tasks = await this.loadAll();
     const id = row.light?.id;
