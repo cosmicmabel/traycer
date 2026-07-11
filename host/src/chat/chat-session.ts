@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
+import { mkdir, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import type { z } from "zod";
 import {
@@ -180,6 +180,26 @@ export class ChatSessionStore {
   async deleteChat(epicId: string, chatId: string): Promise<void> {
     this.chats.delete(`${epicId}/${chatId}`);
     await rm(join(this.blobDir(), blobName(epicId, chatId)), { force: true });
+  }
+
+  /** `epic.batchDelete`: drops every chat (live + persisted) of an epic. */
+  async deleteEpicChats(epicId: string): Promise<void> {
+    for (const key of [...this.chats.keys()]) {
+      if (key.startsWith(`${epicId}/`)) {
+        this.chats.delete(key);
+      }
+    }
+    const prefix = blobName(epicId, "");
+    try {
+      const entries = await readdir(this.blobDir());
+      for (const entry of entries) {
+        if (entry.startsWith(prefix.slice(0, -".json".length))) {
+          await rm(join(this.blobDir(), entry), { force: true });
+        }
+      }
+    } catch {
+      // Missing blob dir means nothing to delete.
+    }
   }
 
   async subscribe(input: {

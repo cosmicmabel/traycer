@@ -225,6 +225,63 @@ describe("epic unary surface", () => {
     doc = await snapshotEpicDoc("epic-u3");
     expect(doc.getMap("chats").get("chat-u3")).toBeUndefined();
   }, 20_000);
+
+  it("stamps repo/workspace associations and batch-deletes epics", async () => {
+    const create = await callRpc("epic.create", {
+      epic: epicLight("epic-u4", "Associated epic"),
+      repoIdentifiers: [{ owner: "cosmicmabel", repo: "traycer" }],
+      workspaces: [{ workspacePath: "/home/user/traycer" }],
+      chat: null,
+    });
+    expect(create.error).toBeNull();
+    expect(create.result).toMatchObject({
+      task: {
+        epic: {
+          repos: [
+            {
+              task: { taskId: "epic-u4", taskType: "epic" },
+              repoIdentifier: { owner: "cosmicmabel", repo: "traycer" },
+            },
+          ],
+          workspaces: [
+            { workspacePath: "/home/user/traycer", hostId: "open-host" },
+          ],
+        },
+      },
+    });
+
+    const collaborators = await callRpc("epic.listCollaborators", {
+      epicId: "epic-u4",
+    });
+    expect(collaborators.result).toMatchObject({
+      collaborators: [],
+      collaboratorsAvailable: false,
+    });
+
+    const batch = await callRpc("epic.batchDelete", {
+      ids: ["epic-u4", "epic-never-existed"],
+    });
+    expect(batch.error).toBeNull();
+    expect(batch.result).toMatchObject({
+      results: [
+        { taskId: "epic-u4", success: true },
+        { taskId: "epic-never-existed", success: false },
+      ],
+    });
+
+    const list = await callRpc("epic.listTasks", {
+      limit: 50,
+      filters: null,
+      extensionPhaseVersion: "1",
+      extensionEpicVersion: "1",
+    });
+    const ids = (
+      list.result as {
+        tasks: Array<{ epic?: { light: { id: string } } | null }>;
+      }
+    ).tasks.map((task) => task.epic?.light.id);
+    expect(ids).not.toContain("epic-u4");
+  }, 20_000);
 });
 
 async function snapshotEpicDoc(epicId: string): Promise<Y.Doc> {

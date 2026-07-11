@@ -8,9 +8,11 @@ import {
 } from "@traycer/protocol/host/agent/gui/contracts";
 import { providersListV40 } from "@traycer/protocol/host/registry";
 import {
+  epicBatchDeleteV10,
   epicCreateV10,
   epicCreateChatV10,
   epicDeleteChatV10,
+  epicListCollaboratorsV10,
   epicListTasksV10,
   epicRenameChatV10,
   epicUpdateTitleV10,
@@ -250,14 +252,26 @@ export function buildUnaryHandlers(
   handlers.set(
     epicCreateV10.method,
     contractHandler(epicCreateV10, async (request, context) => {
+      const now = Date.now();
+      const taskRef = { taskId: request.epic.id, taskType: "epic" as const };
       const row: EpicLightWithPermission = {
         light: request.epic,
         // Single-user local host: the connection's bearer IS the owner, so
         // no permission DTO is synthesized (the schema allows null and the
         // GUI treats a null permission as owner-visible local state).
         permission: null,
-        repos: [],
-        workspaces: [],
+        repos: request.repoIdentifiers.map((repoIdentifier) => ({
+          task: taskRef,
+          repoIdentifier,
+          createdAt: now,
+          createdBy: context.userId,
+        })),
+        workspaces: request.workspaces.map((workspace) => ({
+          task: taskRef,
+          hostId: "open-host",
+          workspacePath: workspace.workspacePath,
+          createdAt: now,
+        })),
         roomInfo: null,
       };
       await deps.tasks.upsert(row);
@@ -302,6 +316,39 @@ export function buildUnaryHandlers(
       await deps.epics.seedChat(request.epicId, chatRecord);
       return { chatId: request.chatId, initialTurnStarted: false };
     }),
+  );
+
+  handlers.set(
+    epicBatchDeleteV10.method,
+    contractHandler(epicBatchDeleteV10, async (request) => {
+      const results = [];
+      for (const taskId of request.ids) {
+        const removed = await deps.tasks.remove(taskId);
+        if (removed) {
+          await deps.epics.deleteEpic(taskId);
+          await deps.chats.deleteEpicChats(taskId);
+          results.push({ taskId, success: true });
+        } else {
+          results.push({
+            taskId,
+            success: false,
+            errorMessage: "epic not found in the local task index",
+          });
+        }
+      }
+      return { results };
+    }),
+  );
+
+  handlers.set(
+    epicListCollaboratorsV10.method,
+    contractHandler(epicListCollaboratorsV10, async () => ({
+      // Single-user local host: no collaborator directory exists, and
+      // `collaboratorsAvailable: false` tells the GUI to hide sharing UI
+      // rather than render an empty owner list.
+      collaborators: [],
+      collaboratorsAvailable: false,
+    })),
   );
 
   handlers.set(

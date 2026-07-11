@@ -1,4 +1,4 @@
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import * as Y from "yjs";
 import {
@@ -119,6 +119,32 @@ export class EpicStore {
   async removeChat(epicId: string, chatId: string): Promise<void> {
     const state = await this.load(epicId);
     state.doc.getMap("chats").delete(chatId);
+  }
+
+  /**
+   * `epic.batchDelete`: drops the live doc state and every persisted blob
+   * for the epic (root + all artifact rooms). Live subscribers keep their
+   * sockets; the GUI navigates away on the unary response.
+   */
+  async deleteEpic(epicId: string): Promise<void> {
+    const state = this.epics.get(epicId);
+    if (state !== undefined) {
+      if (state.flushTimer !== null) {
+        clearTimeout(state.flushTimer);
+      }
+      this.epics.delete(epicId);
+    }
+    const prefix = `${sanitize(epicId)}.`;
+    try {
+      const entries = await readdir(this.blobDir());
+      for (const entry of entries) {
+        if (entry.startsWith(prefix)) {
+          await rm(join(this.blobDir(), entry), { force: true });
+        }
+      }
+    } catch {
+      // Missing blob dir means nothing to delete.
+    }
   }
 
   async loadRoom(state: EpicState, artifactRoomId: string): Promise<RoomState> {

@@ -82,6 +82,18 @@ export class TaskIndex {
     await this.save();
   }
 
+  /** `epic.batchDelete` per-id removal; false when the id was not indexed. */
+  async remove(epicId: string): Promise<boolean> {
+    const tasks = await this.loadAll();
+    const next = tasks.filter((task) => task.light?.id !== epicId);
+    if (next.length === tasks.length) {
+      return false;
+    }
+    this.tasks = next;
+    await this.save();
+    return true;
+  }
+
   private async loadAll(): Promise<EpicLightWithPermission[]> {
     if (this.tasks !== null) {
       return this.tasks;
