@@ -291,6 +291,148 @@ describe("chat.subscribe backed by the OpenClaw gateway", () => {
     session.close();
   }, 20_000);
 
+  it("queues a send while paused and drains it on resume", async () => {
+    const session = await dialStream();
+    session.send({
+      kind: "open",
+      token: "test-bearer",
+      manifest: buildStreamManifest(hostStreamRpcRegistry),
+    });
+    expect(frameKind(await session.next())).toBe("openAck");
+    session.send({
+      kind: "subscribe",
+      method: "chat.subscribe",
+      schemaVersion: { major: 1, minor: 3 },
+      params: { epicId: "epic-1", chatId: "chat-queue" },
+    });
+    const snapshot = chatSubscribeServerFrameSchema.parse(await session.next());
+    if (snapshot.kind !== "snapshot") {
+      throw new Error("expected a snapshot frame");
+    }
+    expect(snapshot.snapshot.queue.status).toBe("idle");
+
+    // Pause: ack → queueChanged(paused) → eventAppended(queue.paused).
+    session.send({
+      kind: "pauseQueue",
+      hasBinaryPayload: false,
+      epicId: "epic-1",
+      chatId: "chat-queue",
+      clientActionId: "pause-1",
+    });
+    const pauseAck = chatSubscribeServerFrameSchema.parse(await session.next());
+    expect(pauseAck).toMatchObject({
+      kind: "actionAck",
+      action: "pauseQueue",
+      status: "accepted",
+    });
+    const paused = chatSubscribeServerFrameSchema.parse(await session.next());
+    expect(paused).toMatchObject({
+      kind: "queueChanged",
+      queue: { status: "paused", items: [] },
+    });
+    expect(frameKind(await session.next())).toBe("eventAppended");
+
+    // A send against the paused queue is accepted but queued, not delivered.
+    session.send({
+      kind: "send",
+      epicId: "epic-1",
+      chatId: "chat-queue",
+      hasBinaryPayload: false,
+      clientActionId: "send-q1",
+      messageId: "msg-q1",
+      content: {
+        type: "doc",
+        content: [
+          {
+            type: "paragraph",
+            content: [{ type: "text", text: "Queued hello" }],
+          },
+        ],
+      },
+      sender: { type: "user", userId: "insecure-local-user" },
+      settings: {
+        harnessId: "openclaw",
+        model: "openclaw/default",
+        permissionMode: "supervised",
+        reasoningEffort: null,
+        serviceTier: null,
+        agentMode: "regular",
+      },
+      accountContext: { type: "PERSONAL" },
+      deliveryPolicy: "auto",
+      worktreeIntent: null,
+    });
+    const sendAck = chatSubscribeServerFrameSchema.parse(await session.next());
+    expect(sendAck).toMatchObject({
+      kind: "actionAck",
+      action: "send",
+      status: "accepted",
+    });
+    const enqueued = chatSubscribeServerFrameSchema.parse(await session.next());
+    if (enqueued.kind !== "queueChanged") {
+      throw new Error("expected a queueChanged frame");
+    }
+    expect(enqueued.queue.status).toBe("paused");
+    expect(enqueued.queue.items).toHaveLength(1);
+    expect(enqueued.queue.items[0]).toMatchObject({
+      messageId: "msg-q1",
+      status: "pending",
+      delivery: "next_turn",
+    });
+    expect(frameKind(await session.next())).toBe("eventAppended");
+
+    // Cancelling an unknown queue item is rejected without touching the queue.
+    session.send({
+      kind: "queueCancel",
+      hasBinaryPayload: false,
+      epicId: "epic-1",
+      chatId: "chat-queue",
+      clientActionId: "cancel-1",
+      queueItemId: "does-not-exist",
+    });
+    const cancelAck = chatSubscribeServerFrameSchema.parse(
+      await session.next(),
+    );
+    expect(cancelAck).toMatchObject({
+      kind: "actionAck",
+      action: "queueCancel",
+      status: "rejected",
+    });
+
+    // Resume: the drain delivers the queued send as a full turn.
+    session.send({
+      kind: "resumeQueue",
+      hasBinaryPayload: false,
+      epicId: "epic-1",
+      chatId: "chat-queue",
+      clientActionId: "resume-1",
+    });
+    const kinds: string[] = [];
+    const deltas: string[] = [];
+    let emptiedQueue = false;
+    let sawIdle = false;
+    let guard = 0;
+    while (!sawIdle && guard < 60) {
+      guard += 1;
+      const frame = chatSubscribeServerFrameSchema.parse(await session.next());
+      kinds.push(frame.kind);
+      if (frame.kind === "queueChanged" && frame.queue.items.length === 0) {
+        emptiedQueue = true;
+      }
+      if (frame.kind === "blockDelta" && frame.event.type === "text.delta") {
+        deltas.push(frame.event.delta);
+      }
+      if (frame.kind === "turnStateChanged" && frame.runStatus === "idle") {
+        sawIdle = true;
+      }
+    }
+    expect(kinds).toContain("messageAccepted");
+    expect(emptiedQueue).toBe(true);
+    expect(deltas.join("")).toBe("Hello from OpenClaw");
+    expect(lastGatewayPrompt).toBe("Queued hello");
+    session.close();
+  }, 20_000);
+
   it("answers ping with pong inside a chat subscription", async () => {
     const session = await dialStream();
     session.send({

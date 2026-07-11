@@ -5,6 +5,8 @@ import type { z } from "zod";
 import {
   chatSubscribeClientFrameSchema,
   chatSubscribeOpenRequestSchema,
+  type ChatQueuedItem,
+  type ChatQueueState,
   type ChatRunSettings,
   type ChatSubscribeServerFrame,
 } from "@traycer/protocol/host/agent/gui/subscribe";
@@ -43,6 +45,11 @@ interface ChatKeyState {
   runStatus: "idle" | "running" | "stopping";
   activeTurn: ActiveTurnState | null;
   turn: ActiveTurnRun | null;
+  queuePaused: boolean;
+  readonly queued: Array<{
+    readonly item: ChatQueuedItem;
+    readonly frame: SendFrame;
+  }>;
   readonly emitters: Set<(frame: ChatSubscribeServerFrame) => void>;
   flushTimer: NodeJS.Timeout | null;
 }
@@ -264,6 +271,8 @@ export class ChatSessionStore {
       runStatus: "idle",
       activeTurn: null,
       turn: null,
+      queuePaused: false,
+      queued: [],
       emitters: new Set(),
       flushTimer: null,
     };
@@ -325,7 +334,7 @@ export class ChatSubscription {
       snapshot: {
         chat: this.state.chat,
         access: { role: "owner", ownerUserId: this.userId, canAct: true },
-        queue: { status: "idle", items: [] },
+        queue: this.queueWireState(),
         runStatus: this.state.runStatus,
         activeTurn: this.state.activeTurn,
         pendingApprovals: [],
@@ -357,6 +366,57 @@ export class ChatSubscription {
       this.handleStop(data.clientActionId);
       return;
     }
+    if (data.kind === "pauseQueue") {
+      this.state.queuePaused = true;
+      this.ackAccepted(data.clientActionId, data.kind);
+      this.broadcastQueue();
+      this.appendChatEvent(
+        "queue.paused",
+        data.clientActionId,
+        null,
+        null,
+        null,
+      );
+      return;
+    }
+    if (data.kind === "resumeQueue") {
+      this.state.queuePaused = false;
+      this.ackAccepted(data.clientActionId, data.kind);
+      this.broadcastQueue();
+      this.appendChatEvent(
+        "queue.resumed",
+        data.clientActionId,
+        null,
+        null,
+        null,
+      );
+      void this.drainQueue();
+      return;
+    }
+    if (data.kind === "queueCancel") {
+      const index = this.state.queued.findIndex(
+        (entry) => entry.item.queueItemId === data.queueItemId,
+      );
+      if (index === -1) {
+        this.ackRejected(
+          data.clientActionId,
+          data.kind,
+          "queue item not found",
+        );
+        return;
+      }
+      const [removed] = this.state.queued.splice(index, 1);
+      this.ackAccepted(data.clientActionId, data.kind);
+      this.broadcastQueue();
+      this.appendChatEvent(
+        "queue.cancelled",
+        data.clientActionId,
+        null,
+        removed.item.messageId,
+        removed.item.queueItemId,
+      );
+      return;
+    }
     // Every other owner action is acknowledged as rejected so the GUI's
     // per-action error surface reports it without dropping the stream.
     this.emit({
@@ -374,22 +434,41 @@ export class ChatSubscription {
   }
 
   private async handleSend(frame: SendFrame): Promise<void> {
-    if (this.state.runStatus !== "idle") {
-      this.emit({
-        kind: "actionAck",
-        hasBinaryPayload: false,
-        epicId: this.epicId,
-        chatId: this.chatId,
-        clientActionId: frame.clientActionId,
-        action: "send",
-        status: "rejected",
-        reason: "a turn is already running (queueing is not supported yet)",
-        code: "RPC_ERROR",
-        backgroundStopTaskIds: [],
-      });
+    if (this.state.runStatus !== "idle" || this.state.queuePaused) {
+      // A running turn (or a paused queue) queues the send instead of
+      // rejecting it; delivery happens at the next turn boundary.
+      const now = Date.now();
+      const item = {
+        queueItemId: randomUUID(),
+        messageId: frame.messageId,
+        message: buildUserPayload(frame.sender, frame.content),
+        sender: frame.sender,
+        settings: frame.settings,
+        accountContext: frame.accountContext,
+        delivery: "next_turn" as const,
+        status: "pending" as const,
+        targetTurnId: null,
+        steerRequest: null,
+        fallbackReason: null,
+        createdAt: now,
+        updatedAt: now,
+      };
+      this.state.queued.push({ item, frame });
+      this.ackAccepted(frame.clientActionId, "send");
+      this.broadcastQueue();
+      this.appendChatEvent(
+        "queue.added",
+        frame.clientActionId,
+        null,
+        frame.messageId,
+        item.queueItemId,
+      );
       return;
     }
+    await this.deliverSend(frame);
+  }
 
+  private async deliverSend(frame: SendFrame): Promise<void> {
     const now = Date.now();
     const userMessage: UserMessage = {
       role: "user",
@@ -416,6 +495,7 @@ export class ChatSubscription {
       frame.clientActionId,
       null,
       frame.messageId,
+      null,
     );
 
     const turnId = randomUUID();
@@ -473,7 +553,7 @@ export class ChatSubscription {
         type: "turn.started",
         turnId,
       });
-      this.appendChatEvent("turn.started", null, turnId, userMessageId);
+      this.appendChatEvent("turn.started", null, turnId, userMessageId, null);
 
       const detach = await connection.sendChat({
         sessionKey: `traycer-${this.chatId}`,
@@ -608,7 +688,7 @@ export class ChatSubscription {
           turnId,
         },
       });
-      this.appendChatEvent("turn.completed", null, turnId, userMessageId);
+      this.appendChatEvent("turn.completed", null, turnId, userMessageId, null);
     } else if (outcome.kind === "stopped") {
       this.broadcast({
         kind: "blockDelta",
@@ -623,7 +703,7 @@ export class ChatSubscription {
           reason: "stopped by user",
         },
       });
-      this.appendChatEvent("turn.stopped", null, turnId, userMessageId);
+      this.appendChatEvent("turn.stopped", null, turnId, userMessageId, null);
     } else {
       this.broadcast({
         kind: "errorNotice",
@@ -637,13 +717,20 @@ export class ChatSubscription {
           clientActionId: null,
         },
       });
-      this.appendChatEvent("turn.interrupted", null, turnId, userMessageId);
+      this.appendChatEvent(
+        "turn.interrupted",
+        null,
+        turnId,
+        userMessageId,
+        null,
+      );
     }
 
     this.state.turn = null;
     this.state.runStatus = "idle";
     this.state.activeTurn = null;
     this.broadcastTurnState();
+    void this.drainQueue();
   }
 
   private handleStop(clientActionId: string): void {
@@ -669,7 +756,78 @@ export class ChatSubscription {
     this.broadcastTurnState();
   }
 
-  private ackAccepted(clientActionId: string, action: "send" | "stop"): void {
+  private queueWireState(): ChatQueueState {
+    return {
+      status: this.state.queuePaused
+        ? "paused"
+        : this.state.queued.length > 0
+          ? "running"
+          : "idle",
+      items: this.state.queued.map((entry) => entry.item),
+    };
+  }
+
+  private broadcastQueue(): void {
+    this.broadcast({
+      kind: "queueChanged",
+      hasBinaryPayload: false,
+      epicId: this.epicId,
+      chatId: this.chatId,
+      queue: this.queueWireState(),
+    });
+  }
+
+  /**
+   * Delivers the next queued send at a turn boundary. Fired (not awaited)
+   * from `finishTurn` and `resumeQueue`; each delivery re-enters this drain
+   * when its own turn finishes, so the queue empties one turn at a time.
+   */
+  private async drainQueue(): Promise<void> {
+    if (
+      this.state.runStatus !== "idle" ||
+      this.state.queuePaused ||
+      this.state.queued.length === 0
+    ) {
+      return;
+    }
+    const entry = this.state.queued.shift();
+    if (entry === undefined) {
+      return;
+    }
+    this.broadcastQueue();
+    this.appendChatEvent(
+      "queue.started",
+      null,
+      null,
+      entry.item.messageId,
+      entry.item.queueItemId,
+    );
+    await this.deliverSend(entry.frame);
+  }
+
+  private ackRejected(
+    clientActionId: string,
+    action: "send" | "stop" | "pauseQueue" | "resumeQueue" | "queueCancel",
+    reason: string,
+  ): void {
+    this.emit({
+      kind: "actionAck",
+      hasBinaryPayload: false,
+      epicId: this.epicId,
+      chatId: this.chatId,
+      clientActionId,
+      action,
+      status: "rejected",
+      reason,
+      code: "RPC_ERROR",
+      backgroundStopTaskIds: [],
+    });
+  }
+
+  private ackAccepted(
+    clientActionId: string,
+    action: "send" | "stop" | "pauseQueue" | "resumeQueue" | "queueCancel",
+  ): void {
     this.emit({
       kind: "actionAck",
       hasBinaryPayload: false,
@@ -689,6 +847,7 @@ export class ChatSubscription {
     clientActionId: string | null,
     turnId: string | null,
     messageId: string | null,
+    queueItemId: string | null,
   ): void {
     const event: ChatEvent = {
       eventId: randomUUID(),
@@ -699,7 +858,7 @@ export class ChatSubscription {
       message: null,
       turnId,
       messageId,
-      queueItemId: null,
+      queueItemId,
       approvalId: null,
       blockId: null,
       severity: "info",

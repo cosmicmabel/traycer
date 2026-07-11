@@ -89,11 +89,22 @@ removes the pid file on SIGTERM/SIGINT.
 - **Tool-call mapping**: gateway tool events (`session.tool`, agent tool
   phases) map onto `tool_call.started/completed/errored` runtime events and
   persist as `tool_call` content blocks ahead of the text block.
+- **Task associations + batch delete**: `epic.create` stamps
+  `repoIdentifiers`/`workspaces` onto the task row, `epic.batchDelete`
+  removes the index row, the epic Y.Doc blobs, and the persisted chat
+  transcripts per id (with per-id success results), and
+  `epic.listCollaborators` reports `collaboratorsAvailable: false` so the
+  GUI hides sharing UI on this single-user host.
+- **Chat queueing**: a `send` that arrives while a turn is running (or while
+  the queue is paused) is queued instead of rejected — `actionAck` +
+  `queueChanged` + a durable `queue.added` event — and drained one send per
+  turn boundary from `finishTurn`. `pauseQueue` / `resumeQueue` /
+  `queueCancel` are implemented; `queueEdit`/`queueReorder`/`queueSteerNow`
+  still answer rejected acks.
 
 ## Roadmap (in dependency order)
 
-1. Workspace association plumbing (`repoIdentifiers`/`workspaces` on task
-   rows), `epic.batchDelete`, chat queueing and approvals.
+1. Approvals surface (permission-mode prompts over `chat.subscribe`).
 2. Workspace/worktree surfaces, then terminals.
 
 Every unimplemented surface degrades per-request/per-subscription; the GUI's
