@@ -82,6 +82,62 @@ export class TaskIndex {
     await this.save();
   }
 
+  /**
+   * `workspace.resolvePathsByRepoIdentifiers`: repo → local workspace path,
+   * derived from the associations stamped at `epic.create`. Identifiers with
+   * no association (or whose task has no workspace) are omitted, which the
+   * GUI reads as "not on this host".
+   */
+  async resolveWorkspacePaths(
+    identifiers: readonly { readonly owner: string; readonly repo: string }[],
+  ): Promise<
+    Array<{
+      repoIdentifier: { owner: string; repo: string };
+      workspacePath: string;
+    }>
+  > {
+    const tasks = await this.loadAll();
+    return identifiers.flatMap((identifier) => {
+      for (const row of tasks) {
+        const associated = row.repos.some(
+          (repo) =>
+            repo.repoIdentifier !== null &&
+            repo.repoIdentifier.owner === identifier.owner &&
+            repo.repoIdentifier.repo === identifier.repo,
+        );
+        const workspacePath = row.workspaces[0]?.workspacePath;
+        if (associated && workspacePath !== undefined) {
+          return [{ repoIdentifier: { ...identifier }, workspacePath }];
+        }
+      }
+      return [];
+    });
+  }
+
+  /** `epic.removeRepo`: drops one repo association; false when absent. */
+  async removeRepo(
+    epicId: string,
+    identifier: { readonly owner: string; readonly repo: string },
+  ): Promise<boolean> {
+    const tasks = await this.loadAll();
+    const row = tasks.find((task) => task.light?.id === epicId);
+    if (row === undefined) {
+      return false;
+    }
+    const next = row.repos.filter(
+      (repo) =>
+        repo.repoIdentifier === null ||
+        repo.repoIdentifier.owner !== identifier.owner ||
+        repo.repoIdentifier.repo !== identifier.repo,
+    );
+    if (next.length === row.repos.length) {
+      return false;
+    }
+    row.repos = next;
+    await this.save();
+    return true;
+  }
+
   /** `epic.batchDelete` per-id removal; false when the id was not indexed. */
   async remove(epicId: string): Promise<boolean> {
     const tasks = await this.loadAll();

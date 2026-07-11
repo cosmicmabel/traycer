@@ -102,10 +102,21 @@ removes the pid file on SIGTERM/SIGINT.
   `queueCancel` are implemented; `queueEdit`/`queueReorder`/`queueSteerNow`
   still answer rejected acks.
 
+- **Workspace surface** (`src/workspace/workspace-service.ts`): local
+  filesystem + git behind `workspace.prepareFolders` (origin remote →
+  `{owner, repo}` identifier), `workspace.listFileTree` (`git ls-files` with
+  the user's own ignore rules, porcelain git status, `maxFiles` truncation),
+  `workspace.listDirectory`, `workspace.readFile` (byte-capped, rejects
+  paths escaping the root), the mention suggestion family
+  (`mentionFiles`/`mentionFolders`/`mentionWorktrees`/`mentionGitRoot`/
+  `mentionGitBranches`/`mentionGitCommits`), and
+  `workspace.resolvePathsByRepoIdentifiers` resolved from the task index's
+  epic associations. `epic.removeRepo` drops an association from the index.
+
 ## Roadmap (in dependency order)
 
 1. Approvals surface (permission-mode prompts over `chat.subscribe`).
-2. Workspace/worktree surfaces, then terminals.
+2. Worktree surfaces (`worktree.*`), then terminals.
 
 Every unimplemented surface degrades per-request/per-subscription; the GUI's
 boot gate (`host.status`) and the harness/provider catalogs already work

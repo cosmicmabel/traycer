@@ -14,9 +14,23 @@ import {
   epicDeleteChatV10,
   epicListCollaboratorsV10,
   epicListTasksV10,
+  epicRemoveRepoV10,
   epicRenameChatV10,
   epicUpdateTitleV10,
 } from "@traycer/protocol/host/epic/contracts";
+import {
+  workspaceListDirectoryV10,
+  workspaceListFileTreeV10,
+  workspaceMentionFilesV10,
+  workspaceMentionFoldersV10,
+  workspaceMentionGitBranchesV10,
+  workspaceMentionGitCommitsV10,
+  workspaceMentionGitRootV10,
+  workspaceMentionWorktreesV10,
+  workspacePrepareFoldersV10,
+  workspaceReadFileV10,
+  workspaceResolvePathsByRepoIdentifiersV10,
+} from "@traycer/protocol/host/workspace/contracts";
 import type { EpicLightWithPermission } from "@traycer/protocol/host/epic/unary-schemas";
 import {
   PROVIDER_DISPLAY_NAMES,
@@ -30,6 +44,18 @@ import { OPEN_HOST_VERSION } from "./config";
 import type { EpicStore } from "./epic/epic-store";
 import type { TaskIndex } from "./epic/task-index";
 import type { OpenClawGatewayProbe } from "./openclaw/gateway-client";
+import {
+  listDirectory,
+  listFileTree,
+  mentionFiles,
+  mentionFolders,
+  mentionGitBranches,
+  mentionGitCommits,
+  mentionGitRoot,
+  mentionWorktrees,
+  prepareWorkspaceFolders,
+  readWorkspaceFile,
+} from "./workspace/workspace-service";
 
 /**
  * Unary method handlers.
@@ -382,6 +408,100 @@ export function buildUnaryHandlers(
       await deps.epics.removeChat(request.epicId, request.chatId);
       return { deleted: true };
     }),
+  );
+
+  handlers.set(
+    epicRemoveRepoV10.method,
+    contractHandler(epicRemoveRepoV10, async (request) => ({
+      success: await deps.tasks.removeRepo(
+        request.epicId,
+        request.repoIdentifier,
+      ),
+    })),
+  );
+
+  // ── Workspace surface (local filesystem + git; see workspace-service) ────
+
+  handlers.set(
+    workspacePrepareFoldersV10.method,
+    contractHandler(workspacePrepareFoldersV10, async (request) =>
+      prepareWorkspaceFolders(request.folderPaths),
+    ),
+  );
+
+  handlers.set(
+    workspaceResolvePathsByRepoIdentifiersV10.method,
+    contractHandler(
+      workspaceResolvePathsByRepoIdentifiersV10,
+      async (request) => ({
+        mappings: await deps.tasks.resolveWorkspacePaths(
+          request.repoIdentifiers,
+        ),
+      }),
+    ),
+  );
+
+  handlers.set(
+    workspaceListFileTreeV10.method,
+    contractHandler(workspaceListFileTreeV10, async (request) =>
+      listFileTree(request),
+    ),
+  );
+
+  handlers.set(
+    workspaceListDirectoryV10.method,
+    contractHandler(workspaceListDirectoryV10, async (request) =>
+      listDirectory(request),
+    ),
+  );
+
+  handlers.set(
+    workspaceReadFileV10.method,
+    contractHandler(workspaceReadFileV10, async (request) =>
+      readWorkspaceFile(request),
+    ),
+  );
+
+  handlers.set(
+    workspaceMentionFilesV10.method,
+    contractHandler(workspaceMentionFilesV10, async (request) =>
+      mentionFiles(request),
+    ),
+  );
+
+  handlers.set(
+    workspaceMentionFoldersV10.method,
+    contractHandler(workspaceMentionFoldersV10, async (request) =>
+      mentionFolders(request),
+    ),
+  );
+
+  handlers.set(
+    workspaceMentionWorktreesV10.method,
+    contractHandler(workspaceMentionWorktreesV10, async (request) =>
+      mentionWorktrees(request),
+    ),
+  );
+
+  handlers.set(
+    workspaceMentionGitRootV10.method,
+    contractHandler(workspaceMentionGitRootV10, async (request) =>
+      mentionGitRoot(request),
+    ),
+  );
+
+  handlers.set(
+    workspaceMentionGitBranchesV10.method,
+    contractHandler(workspaceMentionGitBranchesV10, async (request) =>
+      mentionGitBranches(request),
+    ),
+  );
+
+  handlers.set(
+    workspaceMentionGitCommitsV10.method,
+    contractHandler(workspaceMentionGitCommitsV10, async (request) =>
+      mentionGitCommits(request),
+    ),
   );
 
   return handlers;
