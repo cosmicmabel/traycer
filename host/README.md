@@ -131,6 +131,15 @@ removes the pid file on SIGTERM/SIGINT.
   one empty projection — no app sample, no owners, `null` epic aggregate —
   then heartbeats only, since the open host tracks no process trees).
 
+- **Small single-shape methods**: `agent.list` (single-agent roster —
+  `agents: []`, caller can't message peers), `host.getRateLimitUsage`
+  (zeros + `providerRateLimits: null`; no Traycer-cloud aperture behind
+  this host), `epic.mentionEpics` (live suggestions from the task index,
+  `epic:<id>` ids matching the GUI's local builder for de-dupe),
+  `epic.mentionSpecs/Tickets/Stories/Reviews` + `comments.listThreads`
+  (empty, not failed — no artifact/comment store yet), and
+  `editor.openPaths` (best-effort `xdg-open` of the editor's URL scheme).
+
 ## Roadmap (in dependency order)
 
 1. Approvals surface (permission-mode prompts over `chat.subscribe`).

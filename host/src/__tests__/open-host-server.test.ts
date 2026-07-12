@@ -174,18 +174,62 @@ describe("open host /rpc", () => {
   });
 
   it("returns a structured RPC_ERROR for unimplemented methods", async () => {
+    // Uses a method with no open-host implementation; the error is produced
+    // before request parsing, so the params shape is irrelevant.
     const { error } = await callRpc(
-      "agent.list",
-      manifest["agent.list"],
-      {
-        epicId: "epic-1",
-        senderAgentId: "agent-1",
-        scope: "all",
-      },
+      "agent.create",
+      manifest["agent.create"],
+      {},
       manifest,
     );
     expect(error).toMatchObject({ code: "RPC_ERROR" });
     expect(error?.message).toContain("not implemented");
+  });
+
+  it("answers the small single-shape methods", async () => {
+    const roster = await callRpc(
+      "agent.list",
+      manifest["agent.list"],
+      { epicId: "epic-1", senderAgentId: "agent-1", scope: "all" },
+      manifest,
+    );
+    expect(roster.error).toBeNull();
+    expect(roster.result).toEqual({
+      caller: { agentId: "agent-1", canSendMessages: false },
+      scope: "all",
+      agents: [],
+    });
+
+    const usage = await callRpc(
+      "host.getRateLimitUsage",
+      manifest["host.getRateLimitUsage"],
+      {},
+      manifest,
+    );
+    expect(usage.error).toBeNull();
+    expect(usage.result).toMatchObject({
+      totalTokens: 0,
+      remainingTokens: 0,
+      providerRateLimits: null,
+    });
+
+    const threads = await callRpc(
+      "comments.listThreads",
+      manifest["comments.listThreads"],
+      { epicId: "epic-1", artifactPaths: null, status: "all" },
+      manifest,
+    );
+    expect(threads.error).toBeNull();
+    expect(threads.result).toEqual({ artifacts: [] });
+
+    const specs = await callRpc(
+      "epic.mentionSpecs",
+      manifest["epic.mentionSpecs"],
+      { query: "", limit: 10 },
+      manifest,
+    );
+    expect(specs.error).toBeNull();
+    expect(specs.result).toEqual({ entries: [] });
   });
 
   it("rejects an incompatible manifest with a fatalError frame", async () => {

@@ -6,6 +6,11 @@ import {
   agentGuiListModelsV10,
   agentGuiListCommandsV10,
 } from "@traycer/protocol/host/agent/gui/contracts";
+import { agentListV40 } from "@traycer/protocol/host/agent/contracts";
+import { commentsListThreadsV10 } from "@traycer/protocol/host/comments/contracts";
+import { editorOpenPathsV10 } from "@traycer/protocol/host/editor/contracts";
+import { EDITORS } from "@traycer/protocol/host/editor/unary-schemas";
+import { hostGetRateLimitUsageV20 } from "@traycer/protocol/host/rate-limit/contracts";
 import { providersListV40 } from "@traycer/protocol/host/registry";
 import {
   epicBatchDeleteV10,
@@ -14,6 +19,11 @@ import {
   epicDeleteChatV10,
   epicListCollaboratorsV10,
   epicListTasksV10,
+  epicMentionEpicsV10,
+  epicMentionReviewsV10,
+  epicMentionSpecsV10,
+  epicMentionStoriesV10,
+  epicMentionTicketsV10,
   epicRemoveRepoV10,
   epicRenameChatV10,
   epicUpdateTitleV10,
@@ -514,6 +524,107 @@ export function buildUnaryHandlers(
     contractHandler(workspaceMentionGitCommitsV10, async (request) =>
       mentionGitCommits(request),
     ),
+  );
+
+  // ── Small single-shape methods (agent roster, quotas, mentions, misc) ────
+
+  handlers.set(
+    agentListV40.method,
+    contractHandler(agentListV40, async (request) => ({
+      // No multi-agent runtime on the open host: the caller is the only
+      // agent it knows, and it cannot message peers.
+      caller: { agentId: request.senderAgentId, canSendMessages: false },
+      scope: request.scope,
+      agents: [],
+    })),
+  );
+
+  handlers.set(
+    hostGetRateLimitUsageV20.method,
+    contractHandler(hostGetRateLimitUsageV20, async () => ({
+      // The open host proxies no Traycer-cloud inference, so there is no
+      // aperture quota behind this method; zeros read as "no budget tracked".
+      totalTokens: 0,
+      remainingTokens: 0,
+      providerRateLimits: null,
+    })),
+  );
+
+  handlers.set(
+    epicMentionEpicsV10.method,
+    contractHandler(epicMentionEpicsV10, async (request) => {
+      const rows = await deps.tasks.list(request.limit * 4);
+      const query = request.query.toLowerCase();
+      return {
+        entries: rows
+          .flatMap((row) => (row.light === null ? [] : [row.light]))
+          .filter(
+            (light) =>
+              query.length === 0 || light.title.toLowerCase().includes(query),
+          )
+          .slice(0, request.limit)
+          .map((light) => ({
+            kind: "epic" as const,
+            // `epic:<id>` matches the GUI's local-epic suggestion builder so
+            // host and local copies of the same epic de-dupe to one entry.
+            id: `epic:${light.id}`,
+            token: `epic:${light.id}`,
+            epicId: light.id,
+            label: light.title,
+            description: light.initialUserPrompt,
+            status: light.status,
+            updatedAt: light.updatedAt,
+          })),
+      };
+    }),
+  );
+
+  // Artifact mentions (specs/tickets/stories/reviews) need the artifact
+  // index the closed host keeps; the open host has no artifacts yet, so the
+  // pickers get empty (not failed) suggestion lists.
+  handlers.set(
+    epicMentionSpecsV10.method,
+    contractHandler(epicMentionSpecsV10, async () => ({ entries: [] })),
+  );
+  handlers.set(
+    epicMentionTicketsV10.method,
+    contractHandler(epicMentionTicketsV10, async () => ({ entries: [] })),
+  );
+  handlers.set(
+    epicMentionStoriesV10.method,
+    contractHandler(epicMentionStoriesV10, async () => ({ entries: [] })),
+  );
+  handlers.set(
+    epicMentionReviewsV10.method,
+    contractHandler(epicMentionReviewsV10, async () => ({ entries: [] })),
+  );
+
+  handlers.set(
+    commentsListThreadsV10.method,
+    contractHandler(commentsListThreadsV10, async () => ({
+      // No comment-thread store on the open host yet; an empty artifact
+      // list renders as "no comments" rather than a failed panel.
+      artifacts: [],
+    })),
+  );
+
+  handlers.set(
+    editorOpenPathsV10.method,
+    contractHandler(editorOpenPathsV10, async (request) => {
+      // Best-effort on a headless host: hand the editor's URL scheme to the
+      // OS opener and ignore failures (the contract has no failure channel).
+      const editor = EDITORS.find((entry) => entry.id === request.editorId);
+      if (editor !== undefined) {
+        for (const path of request.paths) {
+          Bun.spawn(["xdg-open", `${editor.urlScheme}://file${path}`], {
+            stdout: "ignore",
+            stderr: "ignore",
+            stdin: "ignore",
+          }).exited.catch(() => undefined);
+        }
+      }
+      return {};
+    }),
   );
 
   // ── Git surface (status snapshots + stage-scoped diffs) ──────────────────

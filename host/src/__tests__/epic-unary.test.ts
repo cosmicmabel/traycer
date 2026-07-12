@@ -226,6 +226,25 @@ describe("epic unary surface", () => {
     expect(doc.getMap("chats").get("chat-u3")).toBeUndefined();
   }, 20_000);
 
+  it("suggests indexed epics for @-mentions", async () => {
+    const mentions = await callRpc("epic.mentionEpics", {
+      query: "second",
+      limit: 10,
+    });
+    expect(mentions.error).toBeNull();
+    expect(mentions.result).toMatchObject({
+      entries: [
+        {
+          kind: "epic",
+          id: "epic:epic-u2",
+          token: "epic:epic-u2",
+          epicId: "epic-u2",
+          label: "Second epic",
+        },
+      ],
+    });
+  }, 20_000);
+
   it("stamps repo/workspace associations and batch-deletes epics", async () => {
     const create = await callRpc("epic.create", {
       epic: epicLight("epic-u4", "Associated epic"),
