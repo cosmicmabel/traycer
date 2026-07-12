@@ -11,6 +11,12 @@ import { commentsListThreadsV10 } from "@traycer/protocol/host/comments/contract
 import { editorOpenPathsV10 } from "@traycer/protocol/host/editor/contracts";
 import { EDITORS } from "@traycer/protocol/host/editor/unary-schemas";
 import { hostGetRateLimitUsageV20 } from "@traycer/protocol/host/rate-limit/contracts";
+import {
+  terminalCreateV10,
+  terminalKillV10,
+  terminalListV10,
+  terminalRenameV10,
+} from "@traycer/protocol/host/terminal/contracts";
 import { providersListV40 } from "@traycer/protocol/host/registry";
 import {
   epicBatchDeleteV10,
@@ -60,6 +66,7 @@ import { OPEN_HOST_VERSION } from "./config";
 import type { EpicStore } from "./epic/epic-store";
 import type { TaskIndex } from "./epic/task-index";
 import type { OpenClawGatewayProbe } from "./openclaw/gateway-client";
+import type { TerminalStore } from "./terminal/terminal-store";
 import {
   getFileDiff,
   getFileDiffs,
@@ -139,6 +146,7 @@ export interface HandlerDeps {
   readonly tasks: TaskIndex;
   readonly chats: ChatSessionStore;
   readonly epics: EpicStore;
+  readonly terminals: TerminalStore;
 }
 
 const OPENCLAW_PROVIDER_ID: ProviderId = "openclaw";
@@ -625,6 +633,36 @@ export function buildUnaryHandlers(
       }
       return {};
     }),
+  );
+
+  // ── Terminal surface (host-owned PTYs; see terminal/terminal-store.ts) ───
+
+  handlers.set(
+    terminalCreateV10.method,
+    contractHandler(terminalCreateV10, async (request) => ({
+      session: deps.terminals.create(request),
+    })),
+  );
+
+  handlers.set(
+    terminalListV10.method,
+    contractHandler(terminalListV10, async (request) => ({
+      sessions: deps.terminals.list(request.epicId),
+    })),
+  );
+
+  handlers.set(
+    terminalKillV10.method,
+    contractHandler(terminalKillV10, async (request) => ({
+      killed: deps.terminals.kill(request.sessionId),
+    })),
+  );
+
+  handlers.set(
+    terminalRenameV10.method,
+    contractHandler(terminalRenameV10, async (request) => ({
+      updated: deps.terminals.rename(request.sessionId, request.title),
+    })),
   );
 
   // ── Git surface (status snapshots + stage-scoped diffs) ──────────────────

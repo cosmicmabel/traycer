@@ -273,8 +273,10 @@ describe("open host /stream", () => {
 
     session.send({
       kind: "subscribe",
-      method: "terminal.subscribe",
-      schemaVersion: { major: 1, minor: 3 },
+      // A stream method with no open-host session implementation (terminal,
+      // chat, epic, git, notifications, and resources all have one now).
+      method: "speech.dictate",
+      schemaVersion: { major: 1, minor: 0 },
       params: {},
     });
     const fatal: unknown = await session.next();

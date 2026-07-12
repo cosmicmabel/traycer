@@ -12,6 +12,7 @@ import { GitStatusBroadcaster } from "./git/git-status-broadcaster";
 import { buildUnaryHandlers } from "./handlers";
 import { NotificationStore } from "./notifications/notification-store";
 import { ResourcesSubscriptionFactory } from "./resources/resources-subscription";
+import { TerminalStore } from "./terminal/terminal-store";
 import { OpenClawGatewayProbe } from "./openclaw/gateway-client";
 import { RegistryRuntime } from "./registry-runtime";
 import { RpcConnection } from "./rpc-connection";
@@ -57,12 +58,14 @@ export function startOpenHostServer(config: OpenHostConfig): RunningOpenHost {
   const gitStatus = new GitStatusBroadcaster();
   const notifications = new NotificationStore(config.environment);
   const resources = new ResourcesSubscriptionFactory();
+  const terminals = new TerminalStore();
   const handlers = buildUnaryHandlers({
     protocolVersion: runtime.canonical("host.status"),
     openclaw,
     tasks,
     chats,
     epics,
+    terminals,
   });
 
   const server = Bun.serve<ConnectionData>({
@@ -123,6 +126,7 @@ export function startOpenHostServer(config: OpenHostConfig): RunningOpenHost {
                   gitStatus,
                   notifications,
                   resources,
+                  terminals,
                 },
                 socket,
               );
@@ -155,6 +159,7 @@ export function startOpenHostServer(config: OpenHostConfig): RunningOpenHost {
   return {
     port,
     stop: () => {
+      terminals.killAll();
       server.stop(true);
     },
   };

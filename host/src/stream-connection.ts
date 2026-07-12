@@ -26,6 +26,10 @@ import type {
   ResourcesSubscription,
   ResourcesSubscriptionFactory,
 } from "./resources/resources-subscription";
+import type {
+  TerminalStore,
+  TerminalSubscription,
+} from "./terminal/terminal-store";
 
 /**
  * Per-socket state machine for the streaming `/stream` endpoint.
@@ -59,6 +63,7 @@ export interface StreamConnectionDeps {
   readonly gitStatus: GitStatusBroadcaster;
   readonly notifications: NotificationStore;
   readonly resources: ResourcesSubscriptionFactory;
+  readonly terminals: TerminalStore;
 }
 
 export interface StreamSocket {
@@ -92,6 +97,7 @@ export class StreamConnection {
   private gitStatusSubscription: GitStatusSubscription | null = null;
   private notificationsSubscription: NotificationsSubscription | null = null;
   private resourcesSubscription: ResourcesSubscription | null = null;
+  private terminalSubscription: TerminalSubscription | null = null;
   /** Text envelope awaiting its paired binary frame (in-order correlation). */
   private pendingBinaryEnvelope: unknown | null = null;
 
@@ -112,6 +118,8 @@ export class StreamConnection {
     this.notificationsSubscription = null;
     this.resourcesSubscription?.dispose();
     this.resourcesSubscription = null;
+    this.terminalSubscription?.dispose();
+    this.terminalSubscription = null;
   }
 
   async handleBinary(bytes: Uint8Array): Promise<void> {
@@ -209,6 +217,35 @@ export class StreamConnection {
         // lets the initial frame through.
         this.phase = "subscribed";
         this.chatSubscription = subscription;
+        subscription.emitSnapshot();
+        return;
+      }
+      if (
+        subscribe.data.method === "terminal.subscribe" &&
+        this.userId !== null
+      ) {
+        const subscription = this.deps.terminals.subscribe({
+          params: subscribe.data.params,
+          emit: (frame) => {
+            if (this.phase === "subscribed") {
+              this.socket.send(JSON.stringify(frame));
+            }
+          },
+        });
+        if (subscription === null) {
+          // Missing session or bad params: terminal tabs are bound for life
+          // to their PTY, so this is terminal for the tile (it renders the
+          // dead-session state), not retryable.
+          this.fatal({
+            code: "RPC_ERROR",
+            reason: "terminal session not found on this host",
+            incompatibleMethods: null,
+            upgradeGuidance: null,
+          });
+          return;
+        }
+        this.phase = "subscribed";
+        this.terminalSubscription = subscription;
         subscription.emitSnapshot();
         return;
       }
@@ -322,6 +359,10 @@ export class StreamConnection {
           return;
         }
         this.notificationsSubscription.handleFrame(parsed, null);
+        return;
+      }
+      if (this.terminalSubscription !== null) {
+        this.terminalSubscription.handleFrame(parsed);
         return;
       }
       const ping = pingFrameSchema.safeParse(parsed);

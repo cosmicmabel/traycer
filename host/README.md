@@ -140,10 +140,23 @@ removes the pid file on SIGTERM/SIGINT.
   (empty, not failed — no artifact/comment store yet), and
   `editor.openPaths` (best-effort `xdg-open` of the editor's URL scheme).
 
+- **Terminal surface** (`src/terminal/terminal-store.ts`): real PTYs via
+  Bun's `terminal` spawn option. `terminal.create` (renderer-authoritative
+  session ids, stable across reconnects), `terminal.list` (exited sessions
+  stay listed until killed so the renderer can offer Restart),
+  `terminal.rename` (pushes `sessionUpdated` to attached viewers), and
+  `terminal.kill` (PTY close + SIGKILL — interactive shells ignore
+  SIGHUP/SIGTERM). `terminal.subscribe@1.3` sessions: snapshot with rolling
+  scrollback (2 MB cap, in-memory — PTYs don't survive restarts),
+  `data` fanout to every viewer, shared-grid sizing
+  (`min(cols/rows)` across viewers recomputed on attach/detach/resize with
+  `resized` broadcasts), sender-addressed `actionAck`s, live `exit`
+  frames, and `ackCreditSupported: false` (no ack-credit backpressure).
+
 ## Roadmap (in dependency order)
 
 1. Approvals surface (permission-mode prompts over `chat.subscribe`).
-2. Worktree surfaces (`worktree.*`), then terminals.
+2. Worktree surfaces (`worktree.*`).
 
 Every unimplemented surface degrades per-request/per-subscription; the GUI's
 boot gate (`host.status`) and the harness/provider catalogs already work
