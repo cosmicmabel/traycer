@@ -124,6 +124,13 @@ removes the pid file on SIGTERM/SIGINT.
   5s polling per running directory, snapshot on subscribe, `updated` events
   only when the fingerprint moves (with `changedPaths`).
 
+- **Boot-path streams**: `notifications.subscribe@1.0` (a per-user
+  notifications Y.Doc relayed like the epic docs, persisted to
+  `open-host-notifications/<user>.yupdate` — the host mints no rows of its
+  own yet) and `resources.subscribe` (the contract's documented quiet state:
+  one empty projection — no app sample, no owners, `null` epic aggregate —
+  then heartbeats only, since the open host tracks no process trees).
+
 ## Roadmap (in dependency order)
 
 1. Approvals surface (permission-mode prompts over `chat.subscribe`).

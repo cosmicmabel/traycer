@@ -18,6 +18,14 @@ import type {
   GitStatusBroadcaster,
   GitStatusSubscription,
 } from "./git/git-status-broadcaster";
+import type {
+  NotificationStore,
+  NotificationsSubscription,
+} from "./notifications/notification-store";
+import type {
+  ResourcesSubscription,
+  ResourcesSubscriptionFactory,
+} from "./resources/resources-subscription";
 
 /**
  * Per-socket state machine for the streaming `/stream` endpoint.
@@ -49,6 +57,8 @@ export interface StreamConnectionDeps {
   readonly chats: ChatSessionStore;
   readonly epics: EpicStore;
   readonly gitStatus: GitStatusBroadcaster;
+  readonly notifications: NotificationStore;
+  readonly resources: ResourcesSubscriptionFactory;
 }
 
 export interface StreamSocket {
@@ -80,6 +90,8 @@ export class StreamConnection {
   private chatSubscription: ChatSubscription | null = null;
   private epicSubscription: EpicSubscription | null = null;
   private gitStatusSubscription: GitStatusSubscription | null = null;
+  private notificationsSubscription: NotificationsSubscription | null = null;
+  private resourcesSubscription: ResourcesSubscription | null = null;
   /** Text envelope awaiting its paired binary frame (in-order correlation). */
   private pendingBinaryEnvelope: unknown | null = null;
 
@@ -96,6 +108,10 @@ export class StreamConnection {
     this.epicSubscription = null;
     this.gitStatusSubscription?.dispose();
     this.gitStatusSubscription = null;
+    this.notificationsSubscription?.dispose();
+    this.notificationsSubscription = null;
+    this.resourcesSubscription?.dispose();
+    this.resourcesSubscription = null;
   }
 
   async handleBinary(bytes: Uint8Array): Promise<void> {
@@ -108,6 +124,10 @@ export class StreamConnection {
     this.pendingBinaryEnvelope = null;
     if (this.epicSubscription !== null) {
       await this.epicSubscription.handleFrame(envelope, bytes);
+      return;
+    }
+    if (this.notificationsSubscription !== null) {
+      this.notificationsSubscription.handleFrame(envelope, bytes);
     }
   }
 
@@ -193,6 +213,53 @@ export class StreamConnection {
         return;
       }
       if (
+        subscribe.data.method === "notifications.subscribe" &&
+        this.userId !== null
+      ) {
+        const subscription = await this.deps.notifications.subscribe({
+          userId: this.userId,
+          emit: (frame, binary) => {
+            if (this.phase !== "subscribed") {
+              return;
+            }
+            this.socket.send(JSON.stringify(frame));
+            if (binary !== null) {
+              this.socket.sendBinary(binary);
+            }
+          },
+        });
+        this.phase = "subscribed";
+        this.notificationsSubscription = subscription;
+        subscription.emitSnapshot();
+        return;
+      }
+      if (
+        subscribe.data.method === "resources.subscribe" &&
+        this.userId !== null
+      ) {
+        const subscription = this.deps.resources.subscribe({
+          params: subscribe.data.params,
+          emit: (frame) => {
+            if (this.phase === "subscribed") {
+              this.socket.send(JSON.stringify(frame));
+            }
+          },
+        });
+        if (subscription === null) {
+          this.fatal({
+            code: "RPC_ERROR",
+            reason: "resources.subscribe params did not parse",
+            incompatibleMethods: null,
+            upgradeGuidance: null,
+          });
+          return;
+        }
+        this.phase = "subscribed";
+        this.resourcesSubscription = subscription;
+        subscription.emitSnapshot();
+        return;
+      }
+      if (
         subscribe.data.method === "git.subscribeStatus" &&
         this.userId !== null
       ) {
@@ -246,6 +313,15 @@ export class StreamConnection {
           return;
         }
         await this.epicSubscription.handleFrame(parsed, null);
+        return;
+      }
+      if (this.notificationsSubscription !== null) {
+        const envelope = binaryEnvelopeSchema.safeParse(parsed);
+        if (envelope.success && envelope.data.hasBinaryPayload) {
+          this.pendingBinaryEnvelope = parsed;
+          return;
+        }
+        this.notificationsSubscription.handleFrame(parsed, null);
         return;
       }
       const ping = pingFrameSchema.safeParse(parsed);

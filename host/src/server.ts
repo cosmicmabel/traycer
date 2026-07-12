@@ -10,6 +10,8 @@ import { TaskIndex } from "./epic/task-index";
 import type { OpenHostConfig } from "./config";
 import { GitStatusBroadcaster } from "./git/git-status-broadcaster";
 import { buildUnaryHandlers } from "./handlers";
+import { NotificationStore } from "./notifications/notification-store";
+import { ResourcesSubscriptionFactory } from "./resources/resources-subscription";
 import { OpenClawGatewayProbe } from "./openclaw/gateway-client";
 import { RegistryRuntime } from "./registry-runtime";
 import { RpcConnection } from "./rpc-connection";
@@ -53,6 +55,8 @@ export function startOpenHostServer(config: OpenHostConfig): RunningOpenHost {
   const epics = new EpicStore(config.environment);
   const tasks = new TaskIndex(config.environment);
   const gitStatus = new GitStatusBroadcaster();
+  const notifications = new NotificationStore(config.environment);
+  const resources = new ResourcesSubscriptionFactory();
   const handlers = buildUnaryHandlers({
     protocolVersion: runtime.canonical("host.status"),
     openclaw,
@@ -117,6 +121,8 @@ export function startOpenHostServer(config: OpenHostConfig): RunningOpenHost {
                   chats,
                   epics,
                   gitStatus,
+                  notifications,
+                  resources,
                 },
                 socket,
               );
