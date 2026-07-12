@@ -61,6 +61,7 @@ export function startOpenHostServer(config: OpenHostConfig): RunningOpenHost {
   const terminals = new TerminalStore();
   const handlers = buildUnaryHandlers({
     protocolVersion: runtime.canonical("host.status"),
+    environment: config.environment,
     openclaw,
     tasks,
     chats,

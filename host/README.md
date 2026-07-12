@@ -153,10 +153,24 @@ removes the pid file on SIGTERM/SIGINT.
   `resized` broadcasts), sender-addressed `actionAck`s, live `exit`
   frames, and `ackCreditSupported: false` (no ack-credit backpressure).
 
+- **Worktree read slice** (`src/worktree/worktree-service.ts`):
+  `worktree.listBranches` (current/remote-only flags, committerdate order,
+  the uncommitted-file count behind the "Working tree (N file changes)"
+  pseudo-entry), `worktree.listByWorkspacePaths@1.1` (per-workspace
+  disk truth — git eligibility, origin-parsed repo identifier, main
+  branch, `git worktree list` entries, on-disk `.traycer/environment.json`
+  scripts — plus committed-scripts-at-ref reads via `git show`),
+  `worktree.getBinding` (`null` — no binding store yet, renders
+  "not selected"), `worktree.listBindingsForEpic@1.1` (empty rows + a
+  lazily-minted host-owned `folderlessCwd` so folderless epics can launch
+  terminals), and `worktree.listAllForHost@1.1` (empty — the open host has
+  no worktree-create path yet). Worktree creation/import/delete remain
+  structured RPC errors.
+
 ## Roadmap (in dependency order)
 
 1. Approvals surface (permission-mode prompts over `chat.subscribe`).
-2. Worktree surfaces (`worktree.*`).
+2. Worktree mutations (`worktree.create`/`import`/`delete`, bindings).
 
 Every unimplemented surface degrades per-request/per-subscription; the GUI's
 boot gate (`host.status`) and the harness/provider catalogs already work

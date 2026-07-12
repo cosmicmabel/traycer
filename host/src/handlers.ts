@@ -17,7 +17,14 @@ import {
   terminalListV10,
   terminalRenameV10,
 } from "@traycer/protocol/host/terminal/contracts";
-import { providersListV40 } from "@traycer/protocol/host/registry";
+import {
+  providersListV40,
+  worktreeGetBindingV10,
+  worktreeListAllForHostV11,
+  worktreeListBindingsForEpicV11,
+  worktreeListBranchesV10,
+  worktreeListByWorkspacePathsV11,
+} from "@traycer/protocol/host/registry";
 import {
   epicBatchDeleteV10,
   epicCreateV10,
@@ -67,6 +74,11 @@ import type { EpicStore } from "./epic/epic-store";
 import type { TaskIndex } from "./epic/task-index";
 import type { OpenClawGatewayProbe } from "./openclaw/gateway-client";
 import type { TerminalStore } from "./terminal/terminal-store";
+import {
+  ensureFolderlessCwd,
+  listBranches,
+  listByWorkspacePaths,
+} from "./worktree/worktree-service";
 import {
   getFileDiff,
   getFileDiffs,
@@ -142,6 +154,7 @@ export interface HandlerDeps {
     readonly major: number;
     readonly minor: number;
   };
+  readonly environment: string;
   readonly openclaw: OpenClawGatewayProbe;
   readonly tasks: TaskIndex;
   readonly chats: ChatSessionStore;
@@ -633,6 +646,54 @@ export function buildUnaryHandlers(
       }
       return {};
     }),
+  );
+
+  // ── Worktree read slice (branch/workspace listings for the pickers) ──────
+
+  handlers.set(
+    worktreeListBranchesV10.method,
+    contractHandler(worktreeListBranchesV10, async (request) =>
+      listBranches(request),
+    ),
+  );
+
+  handlers.set(
+    worktreeListByWorkspacePathsV11.method,
+    contractHandler(worktreeListByWorkspacePathsV11, async (request) =>
+      listByWorkspacePaths(request),
+    ),
+  );
+
+  handlers.set(
+    worktreeGetBindingV10.method,
+    contractHandler(worktreeGetBindingV10, async () => ({
+      // No binding store yet: `null` renders "not selected" (never an
+      // error), and no bound paths means nothing can be missing on disk.
+      binding: null,
+      missingWorktreePaths: [],
+    })),
+  );
+
+  handlers.set(
+    worktreeListBindingsForEpicV11.method,
+    contractHandler(worktreeListBindingsForEpicV11, async (request) => ({
+      rows: [],
+      // Folderless epics still get terminals: a host-owned cwd is minted
+      // lazily under the host home for this epic.
+      folderlessCwd: await ensureFolderlessCwd(
+        deps.environment,
+        request.epicId,
+      ),
+    })),
+  );
+
+  handlers.set(
+    worktreeListAllForHostV11.method,
+    contractHandler(worktreeListAllForHostV11, async () => ({
+      // Disk-truth listing of `~/.traycer/worktrees/` — the open host has
+      // no worktree-create path yet, so there is nothing to enumerate.
+      worktrees: [],
+    })),
   );
 
   // ── Terminal surface (host-owned PTYs; see terminal/terminal-store.ts) ───
