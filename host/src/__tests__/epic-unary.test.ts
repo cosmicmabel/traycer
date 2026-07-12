@@ -93,6 +93,21 @@ async function callRpc(
   return { result: response.result, error: response.error };
 }
 
+/** Reads a chat card the way the GUI projector does: nested epic map. */
+function readChat(
+  doc: Y.Doc,
+  chatId: string,
+): Record<string, unknown> | undefined {
+  const chats = doc.getMap("epic").get("chats");
+  if (!(chats instanceof Y.Map)) {
+    return undefined;
+  }
+  const entry = chats.get(chatId);
+  return entry instanceof Y.Map
+    ? (entry.toJSON() as Record<string, unknown>)
+    : undefined;
+}
+
 function epicLight(id: string, title: string): Record<string, unknown> {
   const now = Date.now();
   return {
@@ -147,10 +162,13 @@ describe("epic unary surface", () => {
     ).tasks;
     expect(tasks.map((task) => task.epic?.light.id)).toContain("epic-u1");
 
-    // The folded chat seed is visible to an epic.subscribe snapshot.
+    // The folded chat seed is visible to an epic.subscribe snapshot, in the
+    // nested epic-map shape the GUI projector reads.
     const doc = await snapshotEpicDoc("epic-u1");
-    const chat = doc.getMap("chats").get("chat-u1");
-    expect(chat).toMatchObject({ id: "chat-u1", title: "First chat" });
+    expect(readChat(doc, "chat-u1")).toMatchObject({
+      id: "chat-u1",
+      title: "First chat",
+    });
   }, 20_000);
 
   it("epic.createChat seeds a chat record into an existing epic", async () => {
@@ -171,7 +189,7 @@ describe("epic unary surface", () => {
     expect(created.result).toMatchObject({ chatId: "chat-u2" });
 
     const doc = await snapshotEpicDoc("epic-u2");
-    expect(doc.getMap("chats").get("chat-u2")).toMatchObject({
+    expect(readChat(doc, "chat-u2")).toMatchObject({
       id: "chat-u2",
       title: "Later chat",
     });
@@ -212,10 +230,12 @@ describe("epic unary surface", () => {
     });
     expect(renamed.result).toMatchObject({ updated: true });
     let doc = await snapshotEpicDoc("epic-u3");
-    expect(doc.getMap("chats").get("chat-u3")).toMatchObject({
+    expect(readChat(doc, "chat-u3")).toMatchObject({
       title: "Renamed chat",
       isTitleEditedByUser: true,
     });
+    // The retitle also reached the doc header the canvas renders.
+    expect(doc.getMap("epic").get("title")).toBe("Renamed epic");
 
     const deleted = await callRpc("epic.deleteChat", {
       epicId: "epic-u3",
@@ -223,7 +243,101 @@ describe("epic unary surface", () => {
     });
     expect(deleted.result).toMatchObject({ deleted: true });
     doc = await snapshotEpicDoc("epic-u3");
-    expect(doc.getMap("chats").get("chat-u3")).toBeUndefined();
+    expect(readChat(doc, "chat-u3")).toBeUndefined();
+  }, 20_000);
+
+  it("creates, mutates, and trashes artifacts in the epic doc", async () => {
+    await callRpc("epic.create", {
+      epic: epicLight("epic-u5", "Artifact epic"),
+      repoIdentifiers: [],
+      workspaces: [],
+      chat: null,
+    });
+    const created = await callRpc("epic.createArtifact", {
+      epicId: "epic-u5",
+      parentId: null,
+      artifactType: "ticket",
+      title: "Fix the flaky test",
+    });
+    expect(created.error).toBeNull();
+    const artifactId = (created.result as { artifactId: string }).artifactId;
+    expect(artifactId.length).toBeGreaterThan(0);
+
+    let doc = await snapshotEpicDoc("epic-u5");
+    const readArtifact = (
+      target: Y.Doc,
+      id: string,
+    ): Record<string, unknown> | undefined => {
+      const artifacts = target.getMap("epic").get("artifacts");
+      if (!(artifacts instanceof Y.Map)) {
+        return undefined;
+      }
+      const entry = artifacts.get(id);
+      return entry instanceof Y.Map
+        ? (entry.toJSON() as Record<string, unknown>)
+        : undefined;
+    };
+    expect(readArtifact(doc, artifactId)).toMatchObject({
+      id: artifactId,
+      kind: "ticket",
+      title: "Fix the flaky test",
+      parentId: null,
+      status: 0,
+      createdManually: true,
+    });
+
+    const renamed = await callRpc("epic.renameArtifact", {
+      epicId: "epic-u5",
+      artifactId,
+      title: "Fix the flaky terminal test",
+    });
+    expect(renamed.result).toEqual({ updated: true });
+    const statusUpdated = await callRpc("epic.updateArtifactStatus", {
+      epicId: "epic-u5",
+      artifactId,
+      artifactType: "ticket",
+      status: 2,
+    });
+    expect(statusUpdated.result).toEqual({ updated: true });
+    doc = await snapshotEpicDoc("epic-u5");
+    expect(readArtifact(doc, artifactId)).toMatchObject({
+      title: "Fix the flaky terminal test",
+      status: 2,
+    });
+
+    const missing = await callRpc("epic.renameArtifact", {
+      epicId: "epic-u5",
+      artifactId: "does-not-exist",
+      title: "x",
+    });
+    expect(missing.result).toEqual({ updated: false });
+
+    const deleted = await callRpc("epic.deleteArtifact", {
+      epicId: "epic-u5",
+      artifactId,
+    });
+    expect(deleted.result).toEqual({ deleted: true });
+    doc = await snapshotEpicDoc("epic-u5");
+    expect(readArtifact(doc, artifactId)).toBeUndefined();
+    const trash = doc.getMap("epic").get("deletedArtifacts");
+    expect(trash instanceof Y.Map).toBe(true);
+    if (trash instanceof Y.Map) {
+      const entry = trash.get(artifactId);
+      expect(entry instanceof Y.Map).toBe(true);
+      if (entry instanceof Y.Map) {
+        expect(entry.toJSON()).toMatchObject({
+          kind: "ticket",
+          title: "Fix the flaky terminal test",
+          status: 2,
+        });
+      }
+    }
+
+    const resolved = await callRpc("epic.resolveArtifactByPath", {
+      epicId: "epic-u5",
+      filePath: "docs/spec.md",
+    });
+    expect(resolved.result).toEqual({ artifact: null });
   }, 20_000);
 
   it("suggests indexed epics for @-mentions", async () => {

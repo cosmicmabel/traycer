@@ -1,3 +1,4 @@
+import { randomUUID } from "node:crypto";
 import { mkdir, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import * as Y from "yjs";
@@ -99,10 +100,37 @@ export class EpicStore {
   }
 
   /**
-   * Host-side write path used by `epic.create` / `epic.createChat`: stores
-   * the persisted chat record in the root doc's `chats` map so every epic
-   * subscriber (current and future) projects the new chat card. Broadcast +
-   * flush ride the doc's `update` event above.
+   * The GUI's epic projector reads `doc.getMap("epic")` with nested
+   * `artifacts`/`chats`/`tuiAgents`/`deletedArtifacts` Y.Maps whose entries
+   * are themselves Y.Maps (see clients/gui-app .../open-epic/
+   * projection-helpers.ts). Every host-side write below targets that exact
+   * shape; broadcast + flush ride the doc's `update` event above.
+   */
+  private static section(doc: Y.Doc, key: string): Y.Map<unknown> {
+    const epicMap = doc.getMap<unknown>("epic");
+    const existing = epicMap.get(key);
+    if (existing instanceof Y.Map) {
+      return existing as Y.Map<unknown>;
+    }
+    const created = new Y.Map<unknown>();
+    epicMap.set(key, created);
+    return created;
+  }
+
+  private static entryOf(
+    doc: Y.Doc,
+    section: string,
+    id: string,
+  ): Y.Map<unknown> | null {
+    const entry = EpicStore.section(doc, section).get(id);
+    return entry instanceof Y.Map ? (entry as Y.Map<unknown>) : null;
+  }
+
+  /**
+   * Host-side write path used by `epic.create` / `epic.createChat` /
+   * `epic.renameChat`: projects the persisted chat record into the epic
+   * doc's `chats` section so every subscriber (current and future) renders
+   * the chat card.
    */
   async seedChat(
     epicId: string,
@@ -112,13 +140,167 @@ export class EpicStore {
     },
   ): Promise<void> {
     const state = await this.load(epicId);
-    state.doc.getMap("chats").set(chatRecord.id, chatRecord);
+    state.doc.transact(() => {
+      const entry = new Y.Map<unknown>();
+      for (const key of [
+        "id",
+        "title",
+        "parentId",
+        "createdAt",
+        "updatedAt",
+        "userId",
+        "hostId",
+        "isTitleEditedByUser",
+        "settings",
+      ]) {
+        const value = chatRecord[key];
+        if (value !== undefined) {
+          entry.set(key, value);
+        }
+      }
+      EpicStore.section(state.doc, "chats").set(chatRecord.id, entry);
+    });
   }
 
   /** Host-side delete mirror of `seedChat` (drives `epic.deleteChat`). */
   async removeChat(epicId: string, chatId: string): Promise<void> {
     const state = await this.load(epicId);
-    state.doc.getMap("chats").delete(chatId);
+    EpicStore.section(state.doc, "chats").delete(chatId);
+  }
+
+  /** `epic.reparentChat`: moves the chat card in the epic tree. */
+  async reparentChat(
+    epicId: string,
+    chatId: string,
+    newParentId: string | null,
+  ): Promise<boolean> {
+    const state = await this.load(epicId);
+    const entry = EpicStore.entryOf(state.doc, "chats", chatId);
+    if (entry === null) {
+      return false;
+    }
+    state.doc.transact(() => {
+      entry.set("parentId", newParentId);
+      entry.set("updatedAt", Date.now());
+    });
+    return true;
+  }
+
+  /** Mirrors `epic.updateTitle` into the doc header the canvas renders. */
+  async setTitle(epicId: string, title: string): Promise<void> {
+    const state = await this.load(epicId);
+    state.doc.transact(() => {
+      const epicMap = state.doc.getMap<unknown>("epic");
+      epicMap.set("title", title);
+      epicMap.set("isTitleEditedByUser", true);
+    });
+  }
+
+  /**
+   * `epic.createArtifact`: mints the artifact card with its own artifact
+   * room id so body edits ride the artifact-room relay this store already
+   * serves. Ticket/story artifacts start at status 0.
+   */
+  async createArtifact(
+    epicId: string,
+    input: {
+      readonly parentId: string | null;
+      readonly artifactType: "spec" | "ticket" | "story" | "review";
+      readonly title: string;
+    },
+  ): Promise<string> {
+    const state = await this.load(epicId);
+    const artifactId = randomUUID();
+    const now = Date.now();
+    state.doc.transact(() => {
+      const entry = new Y.Map<unknown>();
+      entry.set("id", artifactId);
+      entry.set("kind", input.artifactType);
+      entry.set("title", input.title);
+      entry.set("parentId", input.parentId);
+      entry.set("createdAt", now);
+      entry.set("updatedAt", now);
+      entry.set("artifactRoomId", randomUUID());
+      entry.set("createdManually", true);
+      if (input.artifactType === "ticket" || input.artifactType === "story") {
+        entry.set("status", 0);
+      }
+      EpicStore.section(state.doc, "artifacts").set(artifactId, entry);
+    });
+    return artifactId;
+  }
+
+  /**
+   * `epic.deleteArtifact`: moves the card into `deletedArtifacts` (the
+   * GUI's trash view reads id/kind/title/status/deletedAt from there) and
+   * drops it from `artifacts`.
+   */
+  async deleteArtifact(epicId: string, artifactId: string): Promise<boolean> {
+    const state = await this.load(epicId);
+    const entry = EpicStore.entryOf(state.doc, "artifacts", artifactId);
+    if (entry === null) {
+      return false;
+    }
+    state.doc.transact(() => {
+      const deleted = new Y.Map<unknown>();
+      for (const key of ["id", "kind", "title", "status"]) {
+        const value = entry.get(key);
+        if (value !== undefined) {
+          deleted.set(key, value);
+        }
+      }
+      deleted.set("deletedAt", new Date().toISOString());
+      EpicStore.section(state.doc, "deletedArtifacts").set(artifactId, deleted);
+      EpicStore.section(state.doc, "artifacts").delete(artifactId);
+    });
+    return true;
+  }
+
+  async renameArtifact(
+    epicId: string,
+    artifactId: string,
+    title: string,
+  ): Promise<boolean> {
+    return this.mutateArtifact(epicId, artifactId, (entry) => {
+      entry.set("title", title);
+    });
+  }
+
+  async reparentArtifact(
+    epicId: string,
+    artifactId: string,
+    newParentId: string | null,
+  ): Promise<boolean> {
+    return this.mutateArtifact(epicId, artifactId, (entry) => {
+      entry.set("parentId", newParentId);
+    });
+  }
+
+  async updateArtifactStatus(
+    epicId: string,
+    artifactId: string,
+    status: number,
+  ): Promise<boolean> {
+    return this.mutateArtifact(epicId, artifactId, (entry) => {
+      entry.set("status", status);
+    });
+  }
+
+  private async mutateArtifact(
+    epicId: string,
+    artifactId: string,
+    mutate: (entry: Y.Map<unknown>) => void,
+  ): Promise<boolean> {
+    const state = await this.load(epicId);
+    const entry = EpicStore.entryOf(state.doc, "artifacts", artifactId);
+    if (entry === null) {
+      return false;
+    }
+    state.doc.transact(() => {
+      mutate(entry);
+      entry.set("updatedAt", Date.now());
+    });
+    return true;
   }
 
   /**

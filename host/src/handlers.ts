@@ -35,8 +35,10 @@ import {
 } from "@traycer/protocol/host/registry";
 import {
   epicBatchDeleteV10,
+  epicCreateArtifactV10,
   epicCreateV10,
   epicCreateChatV10,
+  epicDeleteArtifactV10,
   epicDeleteChatV10,
   epicListCollaboratorsV10,
   epicListTasksV10,
@@ -46,7 +48,12 @@ import {
   epicMentionStoriesV10,
   epicMentionTicketsV10,
   epicRemoveRepoV10,
+  epicRenameArtifactV10,
   epicRenameChatV10,
+  epicReparentArtifactV10,
+  epicReparentChatV10,
+  epicResolveArtifactByPathV10,
+  epicUpdateArtifactStatusV10,
   epicUpdateTitleV10,
 } from "@traycer/protocol/host/epic/contracts";
 import {
@@ -443,11 +450,95 @@ export function buildUnaryHandlers(
 
   handlers.set(
     epicUpdateTitleV10.method,
-    contractHandler(epicUpdateTitleV10, async (request) => ({
-      updated:
-        request.epicDelta === null
-          ? false
-          : await deps.tasks.applyDelta(request.epicDelta),
+    contractHandler(epicUpdateTitleV10, async (request) => {
+      if (request.epicDelta === null) {
+        return { updated: false };
+      }
+      const updated = await deps.tasks.applyDelta(request.epicDelta);
+      if (updated && request.epicDelta.title !== undefined) {
+        // Mirror the new title into the epic doc so canvas headers update.
+        await deps.epics.setTitle(
+          request.epicDelta.id,
+          request.epicDelta.title,
+        );
+      }
+      return { updated };
+    }),
+  );
+
+  // ── Epic artifact + tree mutations (Y.Doc writes; see epic-store.ts) ─────
+
+  handlers.set(
+    epicCreateArtifactV10.method,
+    contractHandler(epicCreateArtifactV10, async (request) => ({
+      artifactId: await deps.epics.createArtifact(request.epicId, {
+        parentId: request.parentId,
+        artifactType: request.artifactType,
+        title: request.title,
+      }),
+    })),
+  );
+
+  handlers.set(
+    epicDeleteArtifactV10.method,
+    contractHandler(epicDeleteArtifactV10, async (request) => ({
+      deleted: await deps.epics.deleteArtifact(
+        request.epicId,
+        request.artifactId,
+      ),
+    })),
+  );
+
+  handlers.set(
+    epicRenameArtifactV10.method,
+    contractHandler(epicRenameArtifactV10, async (request) => ({
+      updated: await deps.epics.renameArtifact(
+        request.epicId,
+        request.artifactId,
+        request.title,
+      ),
+    })),
+  );
+
+  handlers.set(
+    epicReparentArtifactV10.method,
+    contractHandler(epicReparentArtifactV10, async (request) => ({
+      updated: await deps.epics.reparentArtifact(
+        request.epicId,
+        request.artifactId,
+        request.newParentId,
+      ),
+    })),
+  );
+
+  handlers.set(
+    epicUpdateArtifactStatusV10.method,
+    contractHandler(epicUpdateArtifactStatusV10, async (request) => ({
+      updated: await deps.epics.updateArtifactStatus(
+        request.epicId,
+        request.artifactId,
+        request.status,
+      ),
+    })),
+  );
+
+  handlers.set(
+    epicReparentChatV10.method,
+    contractHandler(epicReparentChatV10, async (request) => ({
+      updated: await deps.epics.reparentChat(
+        request.epicId,
+        request.chatId,
+        request.newParentId,
+      ),
+    })),
+  );
+
+  handlers.set(
+    epicResolveArtifactByPathV10.method,
+    contractHandler(epicResolveArtifactByPathV10, async () => ({
+      // The open host keeps no artifact→file-path index; `null` renders the
+      // "no linked artifact" state rather than an error.
+      artifact: null,
     })),
   );
 

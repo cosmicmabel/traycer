@@ -180,6 +180,17 @@ removes the pid file on SIGTERM/SIGINT.
     → remove → complete). Bindings persist to
     `open-host-worktree-bindings.json` per owner (epicId/ownerKind/ownerId).
 
+- **Epic artifact CRUD + tree mutations**: host-side Y.Doc writes target
+  the exact nested shape the GUI projector reads
+  (`doc.getMap("epic")` → `artifacts`/`chats`/`deletedArtifacts` Y.Maps of
+  per-entry Y.Maps). `epic.createArtifact` mints the card with its own
+  artifact-room id (bodies ride the existing room relay; ticket/story
+  start at status 0), `epic.renameArtifact` / `epic.reparentArtifact` /
+  `epic.updateArtifactStatus` mutate entries in place,
+  `epic.deleteArtifact` moves the card into the trash section, and
+  `epic.reparentChat` moves chat cards. `epic.updateTitle` now also
+  mirrors the new title into the doc header the canvas renders.
+  `epic.resolveArtifactByPath` answers `null` (no path index).
 - **Chat approvals**: gateway approval prompts (`exec.approval.requested`
   and friends — event names and payload keys are matched tolerantly) map
   onto `approvalRequested` frames and land in snapshot `pendingApprovals`;
@@ -191,9 +202,8 @@ removes the pid file on SIGTERM/SIGINT.
 ## Roadmap
 
 Remaining gaps (all degrade per-request/per-subscription — the GUI's core
-flows work against this host): epic artifact CRUD (`epic.createArtifact`
-and friends), comment-thread mutations, TUI-agent rows and the
-`agent.tui.*` launch surface, provider settings mutations
+flows work against this host): comment-thread mutations, TUI-agent rows
+and the `agent.tui.*` launch surface, provider settings mutations
 (`providers.set*` / login flows), the selection guide, speech, snapshots,
 and `agent.inbox`/`agent.sendMessage` multi-agent messaging.
 
