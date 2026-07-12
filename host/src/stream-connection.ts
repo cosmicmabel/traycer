@@ -14,6 +14,10 @@ import { z } from "zod";
 import type { BearerVerifier } from "./auth";
 import type { ChatSessionStore, ChatSubscription } from "./chat/chat-session";
 import type { EpicStore, EpicSubscription } from "./epic/epic-store";
+import type {
+  GitStatusBroadcaster,
+  GitStatusSubscription,
+} from "./git/git-status-broadcaster";
 
 /**
  * Per-socket state machine for the streaming `/stream` endpoint.
@@ -44,6 +48,7 @@ export interface StreamConnectionDeps {
   readonly verifier: BearerVerifier;
   readonly chats: ChatSessionStore;
   readonly epics: EpicStore;
+  readonly gitStatus: GitStatusBroadcaster;
 }
 
 export interface StreamSocket {
@@ -74,6 +79,7 @@ export class StreamConnection {
   private userId: string | null = null;
   private chatSubscription: ChatSubscription | null = null;
   private epicSubscription: EpicSubscription | null = null;
+  private gitStatusSubscription: GitStatusSubscription | null = null;
   /** Text envelope awaiting its paired binary frame (in-order correlation). */
   private pendingBinaryEnvelope: unknown | null = null;
 
@@ -88,6 +94,8 @@ export class StreamConnection {
     this.chatSubscription = null;
     this.epicSubscription?.dispose();
     this.epicSubscription = null;
+    this.gitStatusSubscription?.dispose();
+    this.gitStatusSubscription = null;
   }
 
   async handleBinary(bytes: Uint8Array): Promise<void> {
@@ -182,6 +190,35 @@ export class StreamConnection {
         this.phase = "subscribed";
         this.chatSubscription = subscription;
         subscription.emitSnapshot();
+        return;
+      }
+      if (
+        subscribe.data.method === "git.subscribeStatus" &&
+        this.userId !== null
+      ) {
+        // Unlike chat/epic (separate emitSnapshot call), the broadcaster
+        // emits the initial snapshot INSIDE subscribe(), so the phase must
+        // flip first or the emit gate below would drop it. A parse failure
+        // still terminates cleanly: fatal() moves the phase to done.
+        this.phase = "subscribed";
+        const subscription = await this.deps.gitStatus.subscribe({
+          params: subscribe.data.params,
+          emit: (event) => {
+            if (this.phase === "subscribed") {
+              this.socket.send(JSON.stringify(event));
+            }
+          },
+        });
+        if (subscription === null) {
+          this.fatal({
+            code: "RPC_ERROR",
+            reason: "git.subscribeStatus params did not parse",
+            incompatibleMethods: null,
+            upgradeGuidance: null,
+          });
+          return;
+        }
+        this.gitStatusSubscription = subscription;
         return;
       }
       // Remaining stream methods are rejected terminally so the client does

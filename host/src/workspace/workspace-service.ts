@@ -20,6 +20,7 @@ import type {
   WorkspaceReadFileResponse,
   WorkspaceWorktreeMentionSuggestion,
 } from "@traycer/protocol/host/workspace/unary-schemas";
+import { runGit as runGitExpectingExitCodes } from "../git/git-exec";
 
 /**
  * Local filesystem + git backing for the `workspace.*` unary surface.
@@ -39,19 +40,7 @@ async function runGit(
   cwd: string,
   args: readonly string[],
 ): Promise<string | null> {
-  try {
-    const child = Bun.spawn(["git", ...args], {
-      cwd,
-      stdout: "pipe",
-      stderr: "ignore",
-      stdin: "ignore",
-    });
-    const output = await new Response(child.stdout).text();
-    const exitCode = await child.exited;
-    return exitCode === 0 ? output.replace(/\n$/, "") : null;
-  } catch {
-    return null;
-  }
+  return runGitExpectingExitCodes(cwd, args, [0]);
 }
 
 /**

@@ -113,6 +113,17 @@ removes the pid file on SIGTERM/SIGINT.
   `workspace.resolvePathsByRepoIdentifiers` resolved from the task index's
   epic associations. `epic.removeRepo` drops an association from the index.
 
+- **Git surface** (`src/git/`): `git.getCapabilities` (git version + work-tree
+  detection), `git.listChangedFiles@1.1` (porcelain-v2 parsing into the
+  two-axis staged/unstaged/untracked/conflicted row model with per-stage
+  numstat counts, index-side OIDs, repo-state detection for
+  merge/rebase/am/cherry-pick/revert/bisect; parent-only view —
+  `submodules: []`), `git.getFileDiff` / `git.getFileDiffs` (stage-scoped
+  patches, `--no-index` for untracked, whitespace toggle, byte budgets with
+  truncation flags), and the `git.subscribeStatus@1.0` stream: ref-counted
+  5s polling per running directory, snapshot on subscribe, `updated` events
+  only when the fingerprint moves (with `changedPaths`).
+
 ## Roadmap (in dependency order)
 
 1. Approvals surface (permission-mode prompts over `chat.subscribe`).

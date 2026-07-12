@@ -19,6 +19,12 @@ import {
   epicUpdateTitleV10,
 } from "@traycer/protocol/host/epic/contracts";
 import {
+  gitGetCapabilitiesV10,
+  gitGetFileDiffV10,
+  gitGetFileDiffsV10,
+  gitListChangedFilesV11,
+} from "@traycer/protocol/host/git-contracts";
+import {
   workspaceListDirectoryV10,
   workspaceListFileTreeV10,
   workspaceMentionFilesV10,
@@ -44,6 +50,12 @@ import { OPEN_HOST_VERSION } from "./config";
 import type { EpicStore } from "./epic/epic-store";
 import type { TaskIndex } from "./epic/task-index";
 import type { OpenClawGatewayProbe } from "./openclaw/gateway-client";
+import {
+  getFileDiff,
+  getFileDiffs,
+  getGitCapabilities,
+  gitStatusSnapshot,
+} from "./git/git-service";
 import {
   listDirectory,
   listFileTree,
@@ -501,6 +513,42 @@ export function buildUnaryHandlers(
     workspaceMentionGitCommitsV10.method,
     contractHandler(workspaceMentionGitCommitsV10, async (request) =>
       mentionGitCommits(request),
+    ),
+  );
+
+  // ── Git surface (status snapshots + stage-scoped diffs) ──────────────────
+
+  handlers.set(
+    gitGetCapabilitiesV10.method,
+    contractHandler(gitGetCapabilitiesV10, async (request) =>
+      getGitCapabilities(request.runningDir),
+    ),
+  );
+
+  handlers.set(
+    gitListChangedFilesV11.method,
+    contractHandler(gitListChangedFilesV11, async (request) => {
+      // Canonical v1.1: parent-only view. The open host does not fan out
+      // into submodules yet, so every row carries `gitlink: null` and
+      // `submodules` stays empty even when `includeSubmodules` is set.
+      const snapshot = await gitStatusSnapshot(request.runningDir);
+      return {
+        ...snapshot,
+        files: snapshot.files.map((file) => ({ ...file, gitlink: null })),
+        submodules: [],
+      };
+    }),
+  );
+
+  handlers.set(
+    gitGetFileDiffV10.method,
+    contractHandler(gitGetFileDiffV10, async (request) => getFileDiff(request)),
+  );
+
+  handlers.set(
+    gitGetFileDiffsV10.method,
+    contractHandler(gitGetFileDiffsV10, async (request) =>
+      getFileDiffs(request),
     ),
   );
 

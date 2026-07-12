@@ -8,6 +8,7 @@ import { ChatSessionStore } from "./chat/chat-session";
 import { EpicStore } from "./epic/epic-store";
 import { TaskIndex } from "./epic/task-index";
 import type { OpenHostConfig } from "./config";
+import { GitStatusBroadcaster } from "./git/git-status-broadcaster";
 import { buildUnaryHandlers } from "./handlers";
 import { OpenClawGatewayProbe } from "./openclaw/gateway-client";
 import { RegistryRuntime } from "./registry-runtime";
@@ -51,6 +52,7 @@ export function startOpenHostServer(config: OpenHostConfig): RunningOpenHost {
   const chats = new ChatSessionStore(gatewayOptions, config.environment);
   const epics = new EpicStore(config.environment);
   const tasks = new TaskIndex(config.environment);
+  const gitStatus = new GitStatusBroadcaster();
   const handlers = buildUnaryHandlers({
     protocolVersion: runtime.canonical("host.status"),
     openclaw,
@@ -114,6 +116,7 @@ export function startOpenHostServer(config: OpenHostConfig): RunningOpenHost {
                   verifier,
                   chats,
                   epics,
+                  gitStatus,
                 },
                 socket,
               );
