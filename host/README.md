@@ -153,24 +153,36 @@ removes the pid file on SIGTERM/SIGINT.
   `resized` broadcasts), sender-addressed `actionAck`s, live `exit`
   frames, and `ackCreditSupported: false` (no ack-credit backpressure).
 
-- **Worktree read slice** (`src/worktree/worktree-service.ts`):
-  `worktree.listBranches` (current/remote-only flags, committerdate order,
-  the uncommitted-file count behind the "Working tree (N file changes)"
-  pseudo-entry), `worktree.listByWorkspacePaths@1.1` (per-workspace
-  disk truth — git eligibility, origin-parsed repo identifier, main
-  branch, `git worktree list` entries, on-disk `.traycer/environment.json`
-  scripts — plus committed-scripts-at-ref reads via `git show`),
-  `worktree.getBinding` (`null` — no binding store yet, renders
-  "not selected"), `worktree.listBindingsForEpic@1.1` (empty rows + a
-  lazily-minted host-owned `folderlessCwd` so folderless epics can launch
-  terminals), and `worktree.listAllForHost@1.1` (empty — the open host has
-  no worktree-create path yet). Worktree creation/import/delete remain
-  structured RPC errors.
+- **Worktree surface** (`src/worktree/`): the full local worktree
+  lifecycle.
+  - Reads: `worktree.listBranches` (current/remote-only flags, the
+    uncommitted-file count behind the "Working tree (N file changes)"
+    pseudo-entry), `worktree.listByWorkspacePaths@1.1` (per-workspace disk
+    truth + committed-scripts-at-ref reads via `git show`),
+    `worktree.getBinding` (persisted binding + disk-truth
+    `missingWorktreePaths`), `worktree.listBindingsForEpic@1.1` (selector
+    rows deduped by running directory with merged source owners, plus a
+    lazily-minted `folderlessCwd`), and `worktree.listAllForHost@1.1`
+    (disk-truth walk of the host worktree root cross-referenced with
+    binding owners; local-ancestry `mergedIntoDefault` when activity is
+    requested).
+  - Mutations: `worktree.create` (`git worktree add` under
+    `<hostHome>/open-host-worktrees/<repo>/<branch>`, new/existing branch
+    selections, tracked-changes carry via a stash commit, per-entry script
+    overrides written into the worktree, and setup scripts running in REAL
+    terminal sessions — the binding records `setupTerminalSessionId` so
+    the GUI can attach, and `setupState` flips succeeded/failed on exit),
+    `worktree.createPaths` (ownerless), `worktree.import`,
+    `worktree.setEntryMode`, `workspaceBinding.removeEntry`,
+    `worktree.retrySetup`, `worktree.setRepoScripts`
+    (`.traycer/environment.json` writes), `worktree.delete`, and the
+    `worktree.deleteByPath@1.0` stream (started → streamed teardown output
+    → remove → complete). Bindings persist to
+    `open-host-worktree-bindings.json` per owner (epicId/ownerKind/ownerId).
 
 ## Roadmap (in dependency order)
 
 1. Approvals surface (permission-mode prompts over `chat.subscribe`).
-2. Worktree mutations (`worktree.create`/`import`/`delete`, bindings).
 
 Every unimplemented surface degrades per-request/per-subscription; the GUI's
 boot gate (`host.status`) and the harness/provider catalogs already work

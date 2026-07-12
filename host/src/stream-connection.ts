@@ -30,6 +30,10 @@ import type {
   TerminalStore,
   TerminalSubscription,
 } from "./terminal/terminal-store";
+import type {
+  WorktreeDeleteStream,
+  WorktreeDeleteSubscription,
+} from "./worktree/delete-stream";
 
 /**
  * Per-socket state machine for the streaming `/stream` endpoint.
@@ -64,6 +68,7 @@ export interface StreamConnectionDeps {
   readonly notifications: NotificationStore;
   readonly resources: ResourcesSubscriptionFactory;
   readonly terminals: TerminalStore;
+  readonly worktreeDeletes: WorktreeDeleteStream;
 }
 
 export interface StreamSocket {
@@ -98,6 +103,7 @@ export class StreamConnection {
   private notificationsSubscription: NotificationsSubscription | null = null;
   private resourcesSubscription: ResourcesSubscription | null = null;
   private terminalSubscription: TerminalSubscription | null = null;
+  private worktreeDeleteSubscription: WorktreeDeleteSubscription | null = null;
   /** Text envelope awaiting its paired binary frame (in-order correlation). */
   private pendingBinaryEnvelope: unknown | null = null;
 
@@ -120,6 +126,8 @@ export class StreamConnection {
     this.resourcesSubscription = null;
     this.terminalSubscription?.dispose();
     this.terminalSubscription = null;
+    this.worktreeDeleteSubscription?.dispose();
+    this.worktreeDeleteSubscription = null;
   }
 
   async handleBinary(bytes: Uint8Array): Promise<void> {
@@ -218,6 +226,32 @@ export class StreamConnection {
         this.phase = "subscribed";
         this.chatSubscription = subscription;
         subscription.emitSnapshot();
+        return;
+      }
+      if (
+        subscribe.data.method === "worktree.deleteByPath" &&
+        this.userId !== null
+      ) {
+        const subscription = this.deps.worktreeDeletes.subscribe({
+          params: subscribe.data.params,
+          emit: (frame) => {
+            if (this.phase === "subscribed") {
+              this.socket.send(JSON.stringify(frame));
+            }
+          },
+        });
+        if (subscription === null) {
+          this.fatal({
+            code: "RPC_ERROR",
+            reason: "worktree.deleteByPath params did not parse",
+            incompatibleMethods: null,
+            upgradeGuidance: null,
+          });
+          return;
+        }
+        this.phase = "subscribed";
+        this.worktreeDeleteSubscription = subscription;
+        void subscription.run();
         return;
       }
       if (
@@ -363,6 +397,10 @@ export class StreamConnection {
       }
       if (this.terminalSubscription !== null) {
         this.terminalSubscription.handleFrame(parsed);
+        return;
+      }
+      if (this.worktreeDeleteSubscription !== null) {
+        this.worktreeDeleteSubscription.handleFrame(parsed);
         return;
       }
       const ping = pingFrameSchema.safeParse(parsed);

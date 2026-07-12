@@ -1,9 +1,11 @@
-import { mkdir, readFile } from "node:fs/promises";
+import { mkdir, readdir, readFile, stat } from "node:fs/promises";
 import { join } from "node:path";
 import {
   workspaceScriptsSchema,
   type WorkspaceScripts,
+  type WorktreeBindingSelectorRow,
   type WorktreeBranch,
+  type WorktreeHostEntryV11,
   type WorktreeListBranchesResponse,
   type WorktreeListByWorkspacePathsRequestV11,
   type WorktreeListByWorkspacePathsResponseV11,
@@ -13,13 +15,14 @@ import {
 import { runGit } from "../git/git-exec";
 import { hostHomeDir } from "../pid-file";
 import { parseRepoIdentifierFromRemoteUrl } from "../workspace/workspace-service";
+import type { BindingRow, BindingStore } from "./binding-store";
+import { worktreesRoot } from "./worktree-mutations";
 
 /**
- * Read-only slice of the `worktree.*` surface: branch listings and the
- * pre-Epic disk-truth workspace summaries the Create-worktree modal reads.
- * Worktree CREATION (bindings, setup scripts, carry-stash) is not
- * implemented yet — the open host answers the read methods so pickers
- * populate, and the mutating methods still return structured RPC errors.
+ * Read side of the `worktree.*` surface: branch listings, the pre-Epic
+ * disk-truth workspace summaries the Create-worktree modal reads, the
+ * binding selector rows, and the host-wide worktree listing. The mutating
+ * half (create/import/delete, setup runs) lives in worktree-mutations.ts.
  */
 const OK = [0];
 
@@ -203,6 +206,204 @@ export async function listByWorkspacePaths(
     });
   }
   return { workspaces, scriptsAtRefs };
+}
+
+const SETUP_DISABLED_REASONS = {
+  pending: "setup_pending",
+  running: "setup_running",
+  failed: "setup_failed",
+  cancelled: "setup_cancelled",
+} as const;
+
+/**
+ * `worktree.listBindingsForEpic` rows: every binding entry for the epic,
+ * deduped by effective running directory with source owner refs merged, and
+ * a disabled reason derived from setup state / on-disk presence.
+ */
+export async function listBindingSelectorRows(
+  bindings: BindingStore,
+  epicId: string,
+): Promise<WorktreeBindingSelectorRow[]> {
+  const rowsByDir = new Map<string, WorktreeBindingSelectorRow>();
+  for (const row of await bindings.listForEpic(epicId)) {
+    for (const entry of row.binding.entries) {
+      const runningDir = entry.worktreePath ?? entry.workspacePath;
+      const source = {
+        ownerKind: row.ownerKind,
+        ownerId: row.ownerId,
+        workspacePath: entry.workspacePath,
+        isPrimary: entry.isPrimary,
+        mode: entry.mode,
+      };
+      const existing = rowsByDir.get(runningDir);
+      if (existing !== undefined) {
+        existing.sources.push(source);
+        continue;
+      }
+      const onDisk = await stat(runningDir).catch(() => null);
+      const inRepo = await runGit(
+        runningDir,
+        ["rev-parse", "--is-inside-work-tree"],
+        OK,
+      );
+      const setupReason =
+        entry.setupState === "pending" ||
+        entry.setupState === "running" ||
+        entry.setupState === "failed" ||
+        entry.setupState === "cancelled"
+          ? SETUP_DISABLED_REASONS[entry.setupState]
+          : null;
+      rowsByDir.set(runningDir, {
+        hostId: "open-host",
+        runningDir,
+        workspacePath: entry.workspacePath,
+        worktreePath: entry.worktreePath,
+        mode: entry.mode,
+        isGitRepo: inRepo === "true",
+        repoIdentifier: entry.repoIdentifier,
+        branch: entry.branch,
+        isPrimary: entry.isPrimary,
+        isImported: entry.isImported,
+        setupState: entry.setupState,
+        disabledReason:
+          onDisk === null || !onDisk.isDirectory()
+            ? "missing_worktree_path"
+            : setupReason,
+        sources: [source],
+      });
+    }
+  }
+  return [...rowsByDir.values()];
+}
+
+function ownersReferencing(
+  rows: readonly BindingRow[],
+  worktreePath: string,
+): WorktreeHostEntryV11["owners"] {
+  return rows.flatMap((row) =>
+    row.binding.entries.some(
+      (entry) => (entry.worktreePath ?? entry.workspacePath) === worktreePath,
+    )
+      ? [
+          {
+            epicId: row.epicId,
+            ownerKind: row.ownerKind,
+            ownerId: row.ownerId,
+            updatedAt: row.updatedAt,
+          },
+        ]
+      : [],
+  );
+}
+
+/**
+ * `worktree.listAllForHost@1.1`: disk-truth walk of the host worktree root
+ * (`<hostHome>/open-host-worktrees/<bucket>/<name>`), cross-referenced with
+ * binding rows for `inUse`/`owners`. Activity probes are best-effort and
+ * only run when requested: `branchStatus.mergedIntoDefault` from local
+ * ancestry, PR probing is not attempted (`prState: "none"` when probed).
+ */
+export async function listHostWorktrees(input: {
+  readonly environment: string;
+  readonly bindings: BindingStore;
+  readonly includeActivity: boolean;
+  readonly activityPaths: readonly string[] | null;
+}): Promise<WorktreeHostEntryV11[]> {
+  const root = worktreesRoot(input.environment);
+  const buckets = await readdir(root, { withFileTypes: true }).catch(() => []);
+  const bindingRows = await input.bindings.listAll();
+  const entries: WorktreeHostEntryV11[] = [];
+  for (const bucket of buckets) {
+    if (!bucket.isDirectory()) {
+      continue;
+    }
+    const bucketDir = join(root, bucket.name);
+    const names = await readdir(bucketDir, { withFileTypes: true }).catch(
+      () => [],
+    );
+    for (const name of names) {
+      if (!name.isDirectory()) {
+        continue;
+      }
+      const worktreePath = join(bucketDir, name.name);
+      if (
+        input.activityPaths !== null &&
+        !input.activityPaths.includes(worktreePath)
+      ) {
+        continue;
+      }
+      const enrich = input.includeActivity || input.activityPaths !== null;
+      const inRepo = await runGit(
+        worktreePath,
+        ["rev-parse", "--is-inside-work-tree"],
+        OK,
+      );
+      const branch = await runGit(
+        worktreePath,
+        ["rev-parse", "--abbrev-ref", "HEAD"],
+        OK,
+      );
+      const remoteUrl = await runGit(
+        worktreePath,
+        ["remote", "get-url", "origin"],
+        OK,
+      );
+      const repoIdentifier =
+        remoteUrl === null ? null : parseRepoIdentifierFromRemoteUrl(remoteUrl);
+      const status = await runGit(
+        worktreePath,
+        ["status", "--porcelain", "-uall"],
+        OK,
+      );
+      const owners = ownersReferencing(bindingRows, worktreePath);
+      const dirInfo = await stat(worktreePath).catch(() => null);
+      let mergedIntoDefault: boolean | null = null;
+      if (enrich) {
+        const originHead = await runGit(
+          worktreePath,
+          ["symbolic-ref", "--short", "refs/remotes/origin/HEAD"],
+          OK,
+        );
+        if (originHead !== null) {
+          mergedIntoDefault =
+            (await runGit(
+              worktreePath,
+              ["merge-base", "--is-ancestor", "HEAD", originHead],
+              OK,
+            )) !== null;
+        }
+      }
+      entries.push({
+        worktreePath,
+        repoLabel:
+          repoIdentifier === null
+            ? name.name
+            : `${repoIdentifier.owner}/${repoIdentifier.repo}`,
+        repoIdentifier,
+        branch: branch === "HEAD" ? null : branch,
+        inUse: owners.length > 0,
+        uncommittedCount: (status ?? "")
+          .split("\n")
+          .filter((line) => line.length > 3).length,
+        gitRemovable: inRepo === "true",
+        scripts: await readScriptsAt(worktreePath, null),
+        lastActivityAt: null,
+        owners,
+        branchStatus:
+          mergedIntoDefault === null
+            ? null
+            : { ahead: null, behind: null, mergedIntoDefault },
+        createdAt: dirInfo === null ? null : Math.round(dirInfo.mtimeMs),
+        prState: enrich ? "none" : null,
+        prNumber: null,
+        prUrl: null,
+        mergedHeadShaMatches: false,
+        submodules: [],
+        atBaseCommit: false,
+      });
+    }
+  }
+  return entries;
 }
 
 /**

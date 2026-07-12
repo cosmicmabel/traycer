@@ -19,11 +19,19 @@ import {
 } from "@traycer/protocol/host/terminal/contracts";
 import {
   providersListV40,
+  workspaceBindingRemoveEntryV10,
+  worktreeCreatePathsV10,
+  worktreeCreateV10,
+  worktreeDeleteV10,
   worktreeGetBindingV10,
+  worktreeImportV10,
   worktreeListAllForHostV11,
   worktreeListBindingsForEpicV11,
   worktreeListBranchesV10,
   worktreeListByWorkspacePathsV11,
+  worktreeRetrySetupV10,
+  worktreeSetEntryModeV10,
+  worktreeSetRepoScriptsV10,
 } from "@traycer/protocol/host/registry";
 import {
   epicBatchDeleteV10,
@@ -74,10 +82,22 @@ import type { EpicStore } from "./epic/epic-store";
 import type { TaskIndex } from "./epic/task-index";
 import type { OpenClawGatewayProbe } from "./openclaw/gateway-client";
 import type { TerminalStore } from "./terminal/terminal-store";
+import type { BindingStore } from "./worktree/binding-store";
+import {
+  createWorktreeAt,
+  materializeIntent,
+  perEntryFailed,
+  perEntryOk,
+  removeWorktreeDir,
+  startSetupIfConfigured,
+  writeScriptsFile,
+} from "./worktree/worktree-mutations";
 import {
   ensureFolderlessCwd,
+  listBindingSelectorRows,
   listBranches,
   listByWorkspacePaths,
+  listHostWorktrees,
 } from "./worktree/worktree-service";
 import {
   getFileDiff,
@@ -160,6 +180,7 @@ export interface HandlerDeps {
   readonly chats: ChatSessionStore;
   readonly epics: EpicStore;
   readonly terminals: TerminalStore;
+  readonly bindings: BindingStore;
 }
 
 const OPENCLAW_PROVIDER_ID: ProviderId = "openclaw";
@@ -666,18 +687,21 @@ export function buildUnaryHandlers(
 
   handlers.set(
     worktreeGetBindingV10.method,
-    contractHandler(worktreeGetBindingV10, async () => ({
-      // No binding store yet: `null` renders "not selected" (never an
-      // error), and no bound paths means nothing can be missing on disk.
-      binding: null,
-      missingWorktreePaths: [],
-    })),
+    contractHandler(worktreeGetBindingV10, async (request) => {
+      const row = await deps.bindings.get(request);
+      return {
+        binding: row?.binding ?? null,
+        missingWorktreePaths: await deps.bindings.missingWorktreePaths(
+          row?.binding ?? null,
+        ),
+      };
+    }),
   );
 
   handlers.set(
     worktreeListBindingsForEpicV11.method,
     contractHandler(worktreeListBindingsForEpicV11, async (request) => ({
-      rows: [],
+      rows: await listBindingSelectorRows(deps.bindings, request.epicId),
       // Folderless epics still get terminals: a host-owned cwd is minted
       // lazily under the host home for this epic.
       folderlessCwd: await ensureFolderlessCwd(
@@ -689,10 +713,208 @@ export function buildUnaryHandlers(
 
   handlers.set(
     worktreeListAllForHostV11.method,
-    contractHandler(worktreeListAllForHostV11, async () => ({
-      // Disk-truth listing of `~/.traycer/worktrees/` — the open host has
-      // no worktree-create path yet, so there is nothing to enumerate.
-      worktrees: [],
+    contractHandler(worktreeListAllForHostV11, async (request) => ({
+      worktrees: await listHostWorktrees({
+        environment: deps.environment,
+        bindings: deps.bindings,
+        includeActivity: request.includeActivity,
+        activityPaths: request.activityPaths,
+      }),
+    })),
+  );
+
+  handlers.set(
+    worktreeCreateV10.method,
+    contractHandler(worktreeCreateV10, async (request) => {
+      const owner = {
+        epicId: request.epicId,
+        ownerKind: request.ownerKind,
+        ownerId: request.ownerId,
+      };
+      const entries = [];
+      const perEntry = [];
+      for (const intent of request.entries) {
+        const outcome = await materializeIntent({
+          environment: deps.environment,
+          terminals: deps.terminals,
+          bindings: deps.bindings,
+          owner,
+          intent,
+        });
+        if (outcome.entry !== null) {
+          entries.push(outcome.entry);
+        }
+        perEntry.push(outcome.perEntry);
+      }
+      const binding = {
+        workspaceMode:
+          entries.length === 0 ? ("folderless" as const) : ("inherit" as const),
+        entries,
+      };
+      await deps.bindings.set(owner, binding);
+      return { binding, perEntry };
+    }),
+  );
+
+  handlers.set(
+    worktreeCreatePathsV10.method,
+    contractHandler(worktreeCreatePathsV10, async (request) => {
+      const entries = [];
+      const perEntry = [];
+      for (const entry of request.entries) {
+        const created = await createWorktreeAt(
+          deps.environment,
+          entry.workspacePath,
+          entry.branch,
+        );
+        if ("errorMessage" in created) {
+          perEntry.push(
+            perEntryFailed(entry.workspacePath, created.errorMessage),
+          );
+          continue;
+        }
+        entries.push({
+          workspacePath: entry.workspacePath,
+          path: created.worktreePath,
+          mode: "worktree" as const,
+          repoIdentifier: created.repoIdentifier,
+          branch: created.branch,
+        });
+        perEntry.push(
+          perEntryOk(entry.workspacePath, created.worktreePath, created.branch),
+        );
+      }
+      return { entries, perEntry };
+    }),
+  );
+
+  handlers.set(
+    worktreeImportV10.method,
+    contractHandler(worktreeImportV10, async (request) => {
+      const owner = {
+        epicId: request.epicId,
+        ownerKind: request.ownerKind,
+        ownerId: request.ownerId,
+      };
+      const entries = [];
+      for (const entry of request.entries) {
+        const outcome = await materializeIntent({
+          environment: deps.environment,
+          terminals: deps.terminals,
+          bindings: deps.bindings,
+          owner,
+          intent:
+            entry.worktreePath === null
+              ? {
+                  kind: "local",
+                  workspacePath: entry.workspacePath,
+                  repoIdentifier: entry.repoIdentifier,
+                  isPrimary: entry.isPrimary,
+                }
+              : {
+                  kind: "import",
+                  workspacePath: entry.workspacePath,
+                  repoIdentifier: entry.repoIdentifier,
+                  isPrimary: entry.isPrimary,
+                  worktreePath: entry.worktreePath,
+                },
+        });
+        if (outcome.entry !== null) {
+          entries.push(outcome.entry);
+        }
+      }
+      const binding = { workspaceMode: "inherit" as const, entries };
+      await deps.bindings.set(owner, binding);
+      return { binding };
+    }),
+  );
+
+  handlers.set(
+    worktreeSetEntryModeV10.method,
+    contractHandler(worktreeSetEntryModeV10, async (request) => ({
+      binding: await deps.bindings.update(request, (binding) => ({
+        ...binding,
+        entries: binding.entries.map((entry) =>
+          entry.workspacePath === request.workspacePath
+            ? { ...entry, mode: "local" as const }
+            : entry,
+        ),
+      })),
+    })),
+  );
+
+  handlers.set(
+    workspaceBindingRemoveEntryV10.method,
+    contractHandler(workspaceBindingRemoveEntryV10, async (request) => ({
+      binding: await deps.bindings.update(request, (binding) => ({
+        ...binding,
+        entries: binding.entries.filter(
+          (entry) => entry.workspacePath !== request.workspacePath,
+        ),
+      })),
+    })),
+  );
+
+  handlers.set(
+    worktreeRetrySetupV10.method,
+    contractHandler(worktreeRetrySetupV10, async (request) => {
+      const row = await deps.bindings.get(request);
+      const entry = row?.binding.entries.find(
+        (candidate) => candidate.workspacePath === request.workspacePath,
+      );
+      if (
+        row === null ||
+        row === undefined ||
+        entry === undefined ||
+        entry.worktreePath === null
+      ) {
+        return {
+          binding: row?.binding ?? { entries: [] },
+          terminalSessionId: null,
+        };
+      }
+      const setup = await startSetupIfConfigured({
+        terminals: deps.terminals,
+        bindings: deps.bindings,
+        owner: request,
+        workspacePath: request.workspacePath,
+        worktreePath: entry.worktreePath,
+      });
+      const binding = await deps.bindings.update(request, (current) => ({
+        ...current,
+        entries: current.entries.map((candidate) =>
+          candidate.workspacePath === request.workspacePath
+            ? {
+                ...candidate,
+                setupState:
+                  setup.setupState === "running"
+                    ? ("running" as const)
+                    : ("not_required" as const),
+                setupTerminalSessionId: setup.terminalSessionId,
+                setupExitCode: null,
+                setupFailedAt: null,
+              }
+            : candidate,
+        ),
+      }));
+      return { binding, terminalSessionId: setup.terminalSessionId };
+    }),
+  );
+
+  handlers.set(
+    worktreeSetRepoScriptsV10.method,
+    contractHandler(worktreeSetRepoScriptsV10, async (request) => ({
+      updated: await writeScriptsFile(request.workspacePath, {
+        setup: request.setup,
+        teardown: request.teardown,
+      }),
+    })),
+  );
+
+  handlers.set(
+    worktreeDeleteV10.method,
+    contractHandler(worktreeDeleteV10, async (request) => ({
+      deleted: await removeWorktreeDir(request.worktreePath),
     })),
   );
 

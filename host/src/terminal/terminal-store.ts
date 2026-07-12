@@ -135,6 +135,25 @@ export class TerminalStore {
     return info;
   }
 
+  /**
+   * Observes a session's process exit (used by the worktree setup runner to
+   * flip binding setupState). Fires immediately for an already-exited
+   * session; no-op for an unknown id.
+   */
+  watchExit(sessionId: string, onExit: (exitCode: number) => void): void {
+    const state = this.sessions.get(sessionId);
+    if (state === undefined) {
+      return;
+    }
+    if (state.info.status === "exited") {
+      onExit(state.info.exitCode ?? 0);
+      return;
+    }
+    void state.proc?.exited.then((exitCode) => {
+      onExit(exitCode);
+    });
+  }
+
   list(epicId: string): TerminalSessionInfo[] {
     return [...this.sessions.values()]
       .filter((state) => state.info.epicId === epicId)

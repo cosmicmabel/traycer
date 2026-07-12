@@ -13,6 +13,8 @@ import { buildUnaryHandlers } from "./handlers";
 import { NotificationStore } from "./notifications/notification-store";
 import { ResourcesSubscriptionFactory } from "./resources/resources-subscription";
 import { TerminalStore } from "./terminal/terminal-store";
+import { BindingStore } from "./worktree/binding-store";
+import { WorktreeDeleteStream } from "./worktree/delete-stream";
 import { OpenClawGatewayProbe } from "./openclaw/gateway-client";
 import { RegistryRuntime } from "./registry-runtime";
 import { RpcConnection } from "./rpc-connection";
@@ -59,6 +61,8 @@ export function startOpenHostServer(config: OpenHostConfig): RunningOpenHost {
   const notifications = new NotificationStore(config.environment);
   const resources = new ResourcesSubscriptionFactory();
   const terminals = new TerminalStore();
+  const bindings = new BindingStore(config.environment);
+  const worktreeDeletes = new WorktreeDeleteStream();
   const handlers = buildUnaryHandlers({
     protocolVersion: runtime.canonical("host.status"),
     environment: config.environment,
@@ -67,6 +71,7 @@ export function startOpenHostServer(config: OpenHostConfig): RunningOpenHost {
     chats,
     epics,
     terminals,
+    bindings,
   });
 
   const server = Bun.serve<ConnectionData>({
@@ -128,6 +133,7 @@ export function startOpenHostServer(config: OpenHostConfig): RunningOpenHost {
                   notifications,
                   resources,
                   terminals,
+                  worktreeDeletes,
                 },
                 socket,
               );
