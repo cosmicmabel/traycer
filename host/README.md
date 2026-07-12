@@ -191,6 +191,19 @@ removes the pid file on SIGTERM/SIGINT.
   `epic.reparentChat` moves chat cards. `epic.updateTitle` now also
   mirrors the new title into the doc header the canvas renders.
   `epic.resolveArtifactByPath` answers `null` (no path index).
+- **Comment threads** (`src/epic/comment-store.ts`): the full
+  `epic.*CommentThread*`/`epic.*Comment*` lifecycle against a local JSON
+  store in the canonical wire shape — create (author + quoted span), reply,
+  edit, delete (last-comment deletion removes the thread), resolve, and
+  list. Missing thread/comment ids surface as structured RPC errors.
+- **TUI-agent cards**: `epic.createTuiAgent`/`renameTuiAgent`/
+  `deleteTuiAgent` write the `tuiAgents` section of the epic doc (cards
+  render in the tree); the `agent.tui.*` launch surface remains
+  unimplemented.
+- **Snapshots / speech / inbox**: `snapshots.getLocalStorageSize` (0),
+  `clearLocalSnapshots` (0), `readSnapshotDiff` (`blob_missing` — no
+  content-addressed store), `speech.getModelStatus`/`ensureModel`
+  (engine unavailable — the mic never shows), `agent.inbox.read` (empty).
 - **Chat approvals**: gateway approval prompts (`exec.approval.requested`
   and friends — event names and payload keys are matched tolerantly) map
   onto `approvalRequested` frames and land in snapshot `pendingApprovals`;
@@ -202,10 +215,10 @@ removes the pid file on SIGTERM/SIGINT.
 ## Roadmap
 
 Remaining gaps (all degrade per-request/per-subscription — the GUI's core
-flows work against this host): comment-thread mutations, TUI-agent rows
-and the `agent.tui.*` launch surface, provider settings mutations
-(`providers.set*` / login flows), the selection guide, speech, snapshots,
-and `agent.inbox`/`agent.sendMessage` multi-agent messaging.
+flows work against this host): the `agent.tui.*` launch surface, provider
+settings mutations (`providers.set*` / login flows), the selection guide,
+`agent.sendMessage`/`agent.create` multi-agent messaging, and the
+`migration.run` / `agent.inbox.subscribe` / `speech.dictate` streams.
 
 ## Tests
 

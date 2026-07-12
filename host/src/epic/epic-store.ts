@@ -286,6 +286,69 @@ export class EpicStore {
     });
   }
 
+  /** `epic.createTuiAgent`: seeds a TUI-agent card the projector renders. */
+  async seedTuiAgent(
+    epicId: string,
+    record: {
+      readonly id: string;
+      readonly title: string;
+      readonly parentId: string | null;
+      readonly userId: string;
+      readonly hostId: string;
+      readonly harnessId: string;
+      readonly harnessSessionId: string | null;
+      readonly workspaceFolders: readonly string[];
+      readonly workspaceMode: string | null;
+    },
+  ): Promise<void> {
+    const state = await this.load(epicId);
+    const now = Date.now();
+    state.doc.transact(() => {
+      const entry = new Y.Map<unknown>();
+      entry.set("id", record.id);
+      entry.set("title", record.title);
+      entry.set("parentId", record.parentId);
+      entry.set("createdAt", now);
+      entry.set("updatedAt", now);
+      entry.set("userId", record.userId);
+      entry.set("hostId", record.hostId);
+      entry.set("harnessId", record.harnessId);
+      entry.set("harnessSessionId", record.harnessSessionId);
+      entry.set("workspaceFolders", [...record.workspaceFolders]);
+      if (record.workspaceMode !== null) {
+        entry.set("workspaceMode", record.workspaceMode);
+      }
+      EpicStore.section(state.doc, "tuiAgents").set(record.id, entry);
+    });
+  }
+
+  async renameTuiAgent(
+    epicId: string,
+    tuiAgentId: string,
+    title: string,
+  ): Promise<boolean> {
+    const state = await this.load(epicId);
+    const entry = EpicStore.entryOf(state.doc, "tuiAgents", tuiAgentId);
+    if (entry === null) {
+      return false;
+    }
+    state.doc.transact(() => {
+      entry.set("title", title);
+      entry.set("updatedAt", Date.now());
+    });
+    return true;
+  }
+
+  async deleteTuiAgent(epicId: string, tuiAgentId: string): Promise<boolean> {
+    const state = await this.load(epicId);
+    const section = EpicStore.section(state.doc, "tuiAgents");
+    if (!(section.get(tuiAgentId) instanceof Y.Map)) {
+      return false;
+    }
+    section.delete(tuiAgentId);
+    return true;
+  }
+
   private async mutateArtifact(
     epicId: string,
     artifactId: string,

@@ -340,6 +340,99 @@ describe("epic unary surface", () => {
     expect(resolved.result).toEqual({ artifact: null });
   }, 20_000);
 
+  it("runs the comment-thread lifecycle against the local store", async () => {
+    const ref = {
+      epicId: "epic-u5",
+      artifactType: "spec",
+      artifactId: "artifact-c1",
+    };
+    const paragraph = (text: string): Record<string, unknown> => ({
+      type: "doc",
+      content: [{ type: "paragraph", content: [{ type: "text", text }] }],
+    });
+
+    const created = await callRpc("epic.createCommentThread", {
+      ...ref,
+      content: paragraph("First comment"),
+      quotedText: "the quoted span",
+    });
+    expect(created.error).toBeNull();
+    const threadId = (created.result as { threadId: string }).threadId;
+
+    const replied = await callRpc("epic.replyToCommentThread", {
+      ...ref,
+      threadId,
+      content: paragraph("A reply"),
+    });
+    expect(replied.result).toEqual({ ok: true });
+
+    let listed = await callRpc("epic.listCommentThreads", ref);
+    expect(listed.error).toBeNull();
+    const threads = (
+      listed.result as {
+        threads: Array<{
+          threadId: string;
+          resolved: boolean;
+          comments: Array<{ commentId: string }>;
+          data: { quotedText?: string };
+        }>;
+      }
+    ).threads;
+    expect(threads).toHaveLength(1);
+    expect(threads[0].threadId).toBe(threadId);
+    expect(threads[0].comments).toHaveLength(2);
+    expect(threads[0].data.quotedText).toBe("the quoted span");
+    const replyId = threads[0].comments[1].commentId;
+
+    const edited = await callRpc("epic.editComment", {
+      ...ref,
+      threadId,
+      commentId: replyId,
+      content: paragraph("An edited reply"),
+    });
+    expect(edited.result).toEqual({ ok: true });
+
+    const resolvedResult = await callRpc("epic.setCommentThreadResolved", {
+      ...ref,
+      threadId,
+      resolved: true,
+    });
+    expect(resolvedResult.result).toEqual({ ok: true });
+
+    const deletedComment = await callRpc("epic.deleteComment", {
+      ...ref,
+      threadId,
+      commentId: replyId,
+    });
+    expect(deletedComment.result).toEqual({ ok: true });
+
+    listed = await callRpc("epic.listCommentThreads", ref);
+    const after = (
+      listed.result as {
+        threads: Array<{ resolved: boolean; comments: unknown[] }>;
+      }
+    ).threads;
+    expect(after[0].resolved).toBe(true);
+    expect(after[0].comments).toHaveLength(1);
+
+    const deletedThread = await callRpc("epic.deleteCommentThread", {
+      ...ref,
+      threadId,
+    });
+    expect(deletedThread.result).toEqual({ ok: true });
+    listed = await callRpc("epic.listCommentThreads", ref);
+    expect((listed.result as { threads: unknown[] }).threads).toEqual([]);
+
+    // Unknown thread ids surface as structured RPC errors.
+    const missing = await callRpc("epic.replyToCommentThread", {
+      ...ref,
+      threadId: "nope",
+      content: paragraph("x"),
+    });
+    expect(missing.result).toBeNull();
+    expect(missing.error).not.toBeNull();
+  }, 20_000);
+
   it("suggests indexed epics for @-mentions", async () => {
     const mentions = await callRpc("epic.mentionEpics", {
       query: "second",

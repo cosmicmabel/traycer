@@ -1,4 +1,15 @@
+import { randomUUID } from "node:crypto";
 import type { z } from "zod";
+import { agentInboxReadV10 } from "@traycer/protocol/host/agent/inbox";
+import {
+  snapshotsClearLocalSnapshotsV10,
+  snapshotsGetLocalStorageSizeV10,
+  snapshotsReadSnapshotDiffV10,
+} from "@traycer/protocol/host/registry";
+import {
+  speechEnsureModelV10,
+  speechGetModelStatusV10,
+} from "@traycer/protocol/host/speech/contracts";
 import { hostStatusV10 } from "@traycer/protocol/host/status/contracts";
 import { hostGetRuntimeCapabilitiesV10 } from "@traycer/protocol/host/runtime-capabilities/contracts";
 import {
@@ -47,12 +58,22 @@ import {
   epicMentionSpecsV10,
   epicMentionStoriesV10,
   epicMentionTicketsV10,
+  epicCreateCommentThreadV10,
+  epicCreateTuiAgentV10,
+  epicDeleteCommentThreadV10,
+  epicDeleteCommentV10,
+  epicDeleteTuiAgentV10,
+  epicRenameTuiAgentV10,
+  epicEditCommentV10,
+  epicListCommentThreadsV10,
   epicRemoveRepoV10,
   epicRenameArtifactV10,
   epicRenameChatV10,
   epicReparentArtifactV10,
   epicReparentChatV10,
   epicResolveArtifactByPathV10,
+  epicReplyToCommentThreadV10,
+  epicSetCommentThreadResolvedV10,
   epicUpdateArtifactStatusV10,
   epicUpdateTitleV10,
 } from "@traycer/protocol/host/epic/contracts";
@@ -85,6 +106,7 @@ import {
 import type { GuiHarnessOption } from "@traycer/protocol/host/agent/gui/unary-schemas";
 import type { ChatSessionStore } from "./chat/chat-session";
 import { OPEN_HOST_VERSION } from "./config";
+import type { CommentStore } from "./epic/comment-store";
 import type { EpicStore } from "./epic/epic-store";
 import type { TaskIndex } from "./epic/task-index";
 import type { OpenClawGatewayProbe } from "./openclaw/gateway-client";
@@ -188,6 +210,7 @@ export interface HandlerDeps {
   readonly epics: EpicStore;
   readonly terminals: TerminalStore;
   readonly bindings: BindingStore;
+  readonly comments: CommentStore;
 }
 
 const OPENCLAW_PROVIDER_ID: ProviderId = "openclaw";
@@ -230,6 +253,31 @@ function providerRow(
     envOverrides: [],
     loginCapability: null,
     availabilityPending: false,
+  };
+}
+
+/**
+ * The dictation engine (sherpa addon) does not ship with the open host, so
+ * every speech RPC reports the same "engine unavailable" snapshot — the
+ * renderer never shows the mic or attempts a model download.
+ */
+function speechUnavailable(modelId: string | null): {
+  modelId: string;
+  installed: boolean;
+  downloadState: "absent";
+  downloadProgress: null;
+  sizeBytes: null;
+  errorMessage: null;
+  engineAvailable: boolean;
+} {
+  return {
+    modelId: modelId ?? "default",
+    installed: false,
+    downloadState: "absent",
+    downloadProgress: null,
+    sizeBytes: null,
+    errorMessage: null,
+    engineAvailable: false,
   };
 }
 
@@ -540,6 +588,178 @@ export function buildUnaryHandlers(
       // "no linked artifact" state rather than an error.
       artifact: null,
     })),
+  );
+
+  // ── TUI-agent cards (Y.Doc `tuiAgents` section; launch stays TBD) ────────
+
+  handlers.set(
+    epicCreateTuiAgentV10.method,
+    contractHandler(epicCreateTuiAgentV10, async (request, context) => {
+      const tuiAgentId = request.tuiAgentId ?? randomUUID();
+      await deps.epics.seedTuiAgent(request.epicId, {
+        id: tuiAgentId,
+        title: request.title,
+        parentId: request.parentId,
+        userId: context.userId,
+        hostId: request.hostId,
+        harnessId: request.harnessId,
+        harnessSessionId: request.harnessSessionId,
+        workspaceFolders: request.workspaceFolders,
+        workspaceMode: request.workspaceMode ?? null,
+      });
+      return { tuiAgentId };
+    }),
+  );
+
+  handlers.set(
+    epicRenameTuiAgentV10.method,
+    contractHandler(epicRenameTuiAgentV10, async (request) => ({
+      updated: await deps.epics.renameTuiAgent(
+        request.epicId,
+        request.tuiAgentId,
+        request.title,
+      ),
+    })),
+  );
+
+  handlers.set(
+    epicDeleteTuiAgentV10.method,
+    contractHandler(epicDeleteTuiAgentV10, async (request) => ({
+      deleted: await deps.epics.deleteTuiAgent(
+        request.epicId,
+        request.tuiAgentId,
+      ),
+    })),
+  );
+
+  // ── Snapshots / speech / inbox (no local stores behind them) ─────────────
+
+  handlers.set(
+    snapshotsGetLocalStorageSizeV10.method,
+    contractHandler(snapshotsGetLocalStorageSizeV10, async () => ({
+      // No file-edit snapshot store on the open host yet.
+      bytes: 0,
+    })),
+  );
+
+  handlers.set(
+    snapshotsClearLocalSnapshotsV10.method,
+    contractHandler(snapshotsClearLocalSnapshotsV10, async () => ({
+      clearedBytes: 0,
+    })),
+  );
+
+  handlers.set(
+    snapshotsReadSnapshotDiffV10.method,
+    contractHandler(snapshotsReadSnapshotDiffV10, async () => ({
+      // Content-addressed blobs never existed here; `blob_missing` renders
+      // the block's "content unavailable" state.
+      beforeContent: null,
+      afterContent: null,
+      reason: "blob_missing" as const,
+    })),
+  );
+
+  handlers.set(
+    speechGetModelStatusV10.method,
+    contractHandler(speechGetModelStatusV10, async (request) =>
+      speechUnavailable(request.modelId),
+    ),
+  );
+
+  handlers.set(
+    speechEnsureModelV10.method,
+    contractHandler(speechEnsureModelV10, async (request) =>
+      speechUnavailable(request.modelId),
+    ),
+  );
+
+  handlers.set(
+    agentInboxReadV10.method,
+    contractHandler(agentInboxReadV10, async () => ({
+      // No multi-agent broker on the open host; an empty inbox is the
+      // correct reading, not a failure.
+      messages: [],
+    })),
+  );
+
+  // ── Comment threads (local JSON store; see epic/comment-store.ts) ────────
+
+  handlers.set(
+    epicListCommentThreadsV10.method,
+    contractHandler(epicListCommentThreadsV10, async (request) => ({
+      threads: await deps.comments.list(request),
+    })),
+  );
+
+  handlers.set(
+    epicCreateCommentThreadV10.method,
+    contractHandler(epicCreateCommentThreadV10, async (request, context) => ({
+      threadId: await deps.comments.createThread({
+        ref: request,
+        userId: context.userId,
+        content: request.content,
+        quotedText: request.quotedText,
+      }),
+    })),
+  );
+
+  handlers.set(
+    epicReplyToCommentThreadV10.method,
+    contractHandler(epicReplyToCommentThreadV10, async (request, context) => {
+      await deps.comments.reply({
+        ref: request,
+        threadId: request.threadId,
+        userId: context.userId,
+        content: request.content,
+      });
+      return { ok: true as const };
+    }),
+  );
+
+  handlers.set(
+    epicEditCommentV10.method,
+    contractHandler(epicEditCommentV10, async (request) => {
+      await deps.comments.editComment({
+        ref: request,
+        threadId: request.threadId,
+        commentId: request.commentId,
+        content: request.content,
+      });
+      return { ok: true as const };
+    }),
+  );
+
+  handlers.set(
+    epicDeleteCommentV10.method,
+    contractHandler(epicDeleteCommentV10, async (request) => {
+      await deps.comments.deleteComment({
+        ref: request,
+        threadId: request.threadId,
+        commentId: request.commentId,
+      });
+      return { ok: true as const };
+    }),
+  );
+
+  handlers.set(
+    epicSetCommentThreadResolvedV10.method,
+    contractHandler(epicSetCommentThreadResolvedV10, async (request) => {
+      await deps.comments.setResolved(
+        request,
+        request.threadId,
+        request.resolved,
+      );
+      return { ok: true as const };
+    }),
+  );
+
+  handlers.set(
+    epicDeleteCommentThreadV10.method,
+    contractHandler(epicDeleteCommentThreadV10, async (request) => {
+      await deps.comments.deleteThread(request, request.threadId);
+      return { ok: true as const };
+    }),
   );
 
   handlers.set(
