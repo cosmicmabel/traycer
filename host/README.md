@@ -180,13 +180,22 @@ removes the pid file on SIGTERM/SIGINT.
     → remove → complete). Bindings persist to
     `open-host-worktree-bindings.json` per owner (epicId/ownerKind/ownerId).
 
-## Roadmap (in dependency order)
+- **Chat approvals**: gateway approval prompts (`exec.approval.requested`
+  and friends — event names and payload keys are matched tolerantly) map
+  onto `approvalRequested` frames and land in snapshot `pendingApprovals`;
+  the owner's `approvalDecision` resolves locally (accepted ack +
+  `approvalResolved` broadcast + durable event) and forwards to the gateway
+  as `approval.resolve`. A turn boundary auto-resolves anything still
+  outstanding as denied ("the turn ended").
 
-1. Approvals surface (permission-mode prompts over `chat.subscribe`).
+## Roadmap
 
-Every unimplemented surface degrades per-request/per-subscription; the GUI's
-boot gate (`host.status`) and the harness/provider catalogs already work
-against this host.
+Remaining gaps (all degrade per-request/per-subscription — the GUI's core
+flows work against this host): epic artifact CRUD (`epic.createArtifact`
+and friends), comment-thread mutations, TUI-agent rows and the
+`agent.tui.*` launch surface, provider settings mutations
+(`providers.set*` / login flows), the selection guide, speech, snapshots,
+and `agent.inbox`/`agent.sendMessage` multi-agent messaging.
 
 ## Tests
 

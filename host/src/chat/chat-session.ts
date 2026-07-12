@@ -5,6 +5,7 @@ import type { z } from "zod";
 import {
   chatSubscribeClientFrameSchema,
   chatSubscribeOpenRequestSchema,
+  type ChatApprovalState,
   type ChatQueuedItem,
   type ChatQueueState,
   type ChatRunSettings,
@@ -27,12 +28,15 @@ import {
 /**
  * `chat.subscribe@1.3` stream session backed by the OpenClaw Gateway.
  *
- * Scope (first milestone of the host/README.md roadmap): snapshot on
- * subscribe, `send` → actionAck / messageAccepted / turnStateChanged /
- * blockDelta runtime events / durable eventAppended rows / turn completion,
- * and `stop`. Queueing, approvals, checkpoints, worktrees, and the other
- * owner actions are acknowledged as rejected ("not supported yet") so the
- * GUI's per-action error surface reports them without dropping the stream.
+ * Implemented actions: snapshot on subscribe, `send` → actionAck /
+ * messageAccepted / turnStateChanged / blockDelta runtime events / durable
+ * eventAppended rows / turn completion, `stop`, queueing
+ * (pause/resume/cancel + drain at turn boundaries), and approvals (gateway
+ * approval prompts mapped onto approvalRequested/approvalResolved, decided
+ * via `approvalDecision` → gateway `approval.resolve`). The remaining owner
+ * actions (checkpoints, queue edit/reorder/steer, interviews) are
+ * acknowledged as rejected ("not supported yet") so the GUI's per-action
+ * error surface reports them without dropping the stream.
  *
  * Chats are stored in-memory per host process (keyed epicId/chatId, created
  * lazily on first subscribe). The OpenClaw Gateway owns the durable agent
@@ -50,6 +54,7 @@ interface ChatKeyState {
     readonly item: ChatQueuedItem;
     readonly frame: SendFrame;
   }>;
+  readonly pendingApprovals: ChatApprovalState[];
   readonly emitters: Set<(frame: ChatSubscribeServerFrame) => void>;
   flushTimer: NodeJS.Timeout | null;
 }
@@ -273,6 +278,7 @@ export class ChatSessionStore {
       turn: null,
       queuePaused: false,
       queued: [],
+      pendingApprovals: [],
       emitters: new Set(),
       flushTimer: null,
     };
@@ -337,7 +343,7 @@ export class ChatSubscription {
         queue: this.queueWireState(),
         runStatus: this.state.runStatus,
         activeTurn: this.state.activeTurn,
-        pendingApprovals: [],
+        pendingApprovals: this.state.pendingApprovals,
         pendingInterviews: [],
         worktreeBinding: null,
         missingWorktreePaths: [],
@@ -391,6 +397,48 @@ export class ChatSubscription {
         null,
       );
       void this.drainQueue();
+      return;
+    }
+    if (data.kind === "approvalDecision") {
+      const index = this.state.pendingApprovals.findIndex(
+        (approval) => approval.approvalId === data.approvalId,
+      );
+      if (index === -1) {
+        this.ackRejected(data.clientActionId, data.kind, "approval not found");
+        return;
+      }
+      this.state.pendingApprovals.splice(index, 1);
+      const connection = this.state.turn?.connection ?? null;
+      if (connection !== null) {
+        // Both id spellings ride along; gateway builds differ on which one
+        // they read. Failures are swallowed — the local resolve already
+        // happened and the gateway treats an unanswered prompt as denied.
+        void connection
+          .request("approval.resolve", {
+            id: data.approvalId,
+            approvalId: data.approvalId,
+            approved: data.decision.approved,
+            reason: data.decision.reason ?? null,
+          })
+          .catch(() => undefined);
+      }
+      this.ackAccepted(data.clientActionId, data.kind);
+      this.broadcast({
+        kind: "approvalResolved",
+        hasBinaryPayload: false,
+        epicId: this.epicId,
+        chatId: this.chatId,
+        approvalId: data.approvalId,
+        decision: data.decision,
+        resolvedAt: Date.now(),
+      });
+      this.appendChatEvent(
+        "approval.resolved",
+        data.clientActionId,
+        null,
+        null,
+        null,
+      );
       return;
     }
     if (data.kind === "queueCancel") {
@@ -559,6 +607,11 @@ export class ChatSubscription {
         sessionKey: `traycer-${this.chatId}`,
         message: prompt,
         onAgentEvent: (event) => {
+          const approvalRequest = extractApprovalRequest(event);
+          if (approvalRequest !== null) {
+            this.registerApproval(approvalRequest, event.payload);
+            return;
+          }
           if (tools.handle(event)) {
             return;
           }
@@ -726,11 +779,62 @@ export class ChatSubscription {
       );
     }
 
+    // A turn boundary moots any approval the gateway still had outstanding —
+    // the prompt's process is gone, so unanswered reads as denied.
+    for (const approval of this.state.pendingApprovals.splice(0)) {
+      this.broadcast({
+        kind: "approvalResolved",
+        hasBinaryPayload: false,
+        epicId: this.epicId,
+        chatId: this.chatId,
+        approvalId: approval.approvalId,
+        decision: { approved: false, reason: "the turn ended" },
+        resolvedAt: now,
+      });
+    }
+
     this.state.turn = null;
     this.state.runStatus = "idle";
     this.state.activeTurn = null;
     this.broadcastTurnState();
     void this.drainQueue();
+  }
+
+  /** Registers a gateway approval prompt and broadcasts it to subscribers. */
+  private registerApproval(
+    request: {
+      readonly approvalId: string;
+      readonly toolName: string;
+      readonly description: string;
+    },
+    payload: unknown,
+  ): void {
+    if (
+      this.state.pendingApprovals.some(
+        (approval) => approval.approvalId === request.approvalId,
+      )
+    ) {
+      return;
+    }
+    const approval: ChatApprovalState = {
+      approvalId: request.approvalId,
+      toolName: request.toolName,
+      description: request.description,
+      input: payload ?? null,
+      requestedAt: Date.now(),
+      kind: "tool",
+      planId: null,
+      actions: [],
+    };
+    this.state.pendingApprovals.push(approval);
+    this.broadcast({
+      kind: "approvalRequested",
+      hasBinaryPayload: false,
+      epicId: this.epicId,
+      chatId: this.chatId,
+      approval,
+    });
+    this.appendChatEvent("approval.requested", null, null, null, null);
   }
 
   private handleStop(clientActionId: string): void {
@@ -807,7 +911,13 @@ export class ChatSubscription {
 
   private ackRejected(
     clientActionId: string,
-    action: "send" | "stop" | "pauseQueue" | "resumeQueue" | "queueCancel",
+    action:
+      | "send"
+      | "stop"
+      | "pauseQueue"
+      | "resumeQueue"
+      | "queueCancel"
+      | "approvalDecision",
     reason: string,
   ): void {
     this.emit({
@@ -826,7 +936,13 @@ export class ChatSubscription {
 
   private ackAccepted(
     clientActionId: string,
-    action: "send" | "stop" | "pauseQueue" | "resumeQueue" | "queueCancel",
+    action:
+      | "send"
+      | "stop"
+      | "pauseQueue"
+      | "resumeQueue"
+      | "queueCancel"
+      | "approvalDecision",
   ): void {
     this.emit({
       kind: "actionAck",
@@ -1107,6 +1223,47 @@ export function promptTextFromContent(content: unknown): string {
  * families carry plain `text`/`delta` fields. Cumulative payloads are
  * diffed against what has already been emitted.
  */
+/**
+ * Tolerant extraction of a gateway approval prompt. Gateway builds differ on
+ * the event name (`exec.approval.requested`, `approval.requested`, …) and on
+ * which key carries the id, so this matches any approval-request event and
+ * reads the first plausible id/tool/description fields. Returns null for
+ * non-approval events.
+ */
+export function extractApprovalRequest(event: {
+  readonly event: string;
+  readonly payload: unknown;
+}): {
+  approvalId: string;
+  toolName: string;
+  description: string;
+} | null {
+  if (!event.event.includes("approval") || !event.event.includes("request")) {
+    return null;
+  }
+  const payload = event.payload;
+  const read = (key: string): string | null => {
+    if (payload === null || typeof payload !== "object") {
+      return null;
+    }
+    const value = Reflect.get(payload, key);
+    return typeof value === "string" && value.length > 0 ? value : null;
+  };
+  const approvalId = read("id") ?? read("approvalId") ?? read("requestId");
+  if (approvalId === null) {
+    return null;
+  }
+  const command = read("command");
+  const toolName =
+    read("tool") ?? read("toolName") ?? (command === null ? "tool" : "exec");
+  const description =
+    read("description") ??
+    read("summary") ??
+    command ??
+    "Approval requested by the OpenClaw agent";
+  return { approvalId, toolName, description };
+}
+
 export function extractTextDelta(
   payload: unknown,
   accumulated: string,

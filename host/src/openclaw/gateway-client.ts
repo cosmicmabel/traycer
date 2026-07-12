@@ -131,7 +131,11 @@ export class OpenClawGatewayConnection {
       if (
         event.event.startsWith("chat") ||
         event.event.startsWith("agent") ||
-        event.event.startsWith("session")
+        event.event.startsWith("session") ||
+        // Exec/tool approval prompts (e.g. `exec.approval.requested`) ride
+        // the same session; the chat layer maps them onto Traycer approvals.
+        event.event.startsWith("exec") ||
+        event.event.includes("approval")
       ) {
         input.onAgentEvent(event);
       }
