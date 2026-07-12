@@ -232,6 +232,73 @@ describe("open host /rpc", () => {
     expect(specs.result).toEqual({ entries: [] });
   });
 
+  it("persists provider settings and echoes them in the state", async () => {
+    const enabledResult = await callRpc(
+      "providers.setEnabled",
+      manifest["providers.setEnabled"],
+      { providerId: "claude-code", enabled: true },
+      manifest,
+    );
+    expect(enabledResult.error).toBeNull();
+    expect(enabledResult.result).toMatchObject({
+      state: { providerId: "claude-code", enabled: true },
+    });
+
+    const envResult = await callRpc(
+      "providers.setEnvOverride",
+      manifest["providers.setEnvOverride"],
+      { providerId: "claude-code", key: "FOO", value: "bar" },
+      manifest,
+    );
+    expect(envResult.result).toMatchObject({
+      state: { envOverrides: [{ key: "FOO", value: "bar" }] },
+    });
+
+    const args = await callRpc(
+      "providers.setTerminalAgentArgs",
+      manifest["providers.setTerminalAgentArgs"],
+      { providerId: "openclaw", terminalAgentArgs: "--verbose" },
+      manifest,
+    );
+    expect(args.result).toMatchObject({
+      state: { providerId: "openclaw", terminalAgentArgs: "--verbose" },
+    });
+
+    // providers.list reflects every persisted setting.
+    const listed = await callRpc(
+      "providers.list",
+      manifest["providers.list"],
+      {},
+      manifest,
+    );
+    const providers = (
+      listed.result as {
+        providers: Array<{
+          providerId: string;
+          enabled: boolean;
+          terminalAgentArgs: string;
+          envOverrides: Array<{ key: string; value: string | null }>;
+        }>;
+      }
+    ).providers;
+    const claude = providers.find((row) => row.providerId === "claude-code");
+    expect(claude).toMatchObject({
+      enabled: true,
+      envOverrides: [{ key: "FOO", value: "bar" }],
+    });
+    const openclaw = providers.find((row) => row.providerId === "openclaw");
+    expect(openclaw).toMatchObject({ terminalAgentArgs: "--verbose" });
+
+    // Login flows never start on the open host.
+    const login = await callRpc(
+      "providers.startLogin",
+      manifest["providers.startLogin"],
+      { providerId: "claude-code" },
+      manifest,
+    );
+    expect(login.result).toMatchObject({ started: false, url: null });
+  });
+
   it("rejects an incompatible manifest with a fatalError frame", async () => {
     // A client that does not know `host.status` at all: the oracle reports
     // client-missing-method, which is blocking for the whole connection.

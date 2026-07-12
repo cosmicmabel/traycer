@@ -29,7 +29,20 @@ import {
   terminalRenameV10,
 } from "@traycer/protocol/host/terminal/contracts";
 import {
+  providersAddCustomPathV20,
+  providersAwaitLoginV20,
+  providersCancelLoginV10,
+  providersClearApiKeyV20,
+  providersDeleteEnvOverrideV20,
+  providersDetectVersionV10,
   providersListV40,
+  providersRemoveCustomPathV20,
+  providersSetApiKeyV20,
+  providersSetEnabledV20,
+  providersSetEnvOverrideV20,
+  providersSetSelectionV20,
+  providersSetTerminalAgentArgsV20,
+  providersStartLoginV10,
   workspaceBindingRemoveEntryV10,
   worktreeCreatePathsV10,
   worktreeCreateV10,
@@ -110,6 +123,10 @@ import type { CommentStore } from "./epic/comment-store";
 import type { EpicStore } from "./epic/epic-store";
 import type { TaskIndex } from "./epic/task-index";
 import type { OpenClawGatewayProbe } from "./openclaw/gateway-client";
+import {
+  buildProviderState,
+  type ProviderSettingsStore,
+} from "./providers/provider-settings";
 import type { TerminalStore } from "./terminal/terminal-store";
 import type { BindingStore } from "./worktree/binding-store";
 import {
@@ -211,6 +228,7 @@ export interface HandlerDeps {
   readonly terminals: TerminalStore;
   readonly bindings: BindingStore;
   readonly comments: CommentStore;
+  readonly providerSettings: ProviderSettingsStore;
 }
 
 const OPENCLAW_PROVIDER_ID: ProviderId = "openclaw";
@@ -221,40 +239,6 @@ const OPENCLAW_PROVIDER_ID: ProviderId = "openclaw";
  * advertises a single "gateway default" entry and forwards the slug as-is.
  */
 const OPENCLAW_DEFAULT_MODEL_SLUG = "openclaw/default";
-
-function providerRow(
-  providerId: ProviderId,
-  input: {
-    readonly enabled: boolean;
-    readonly available: boolean;
-    readonly detail: string | null;
-  },
-): ProviderCliState {
-  return {
-    providerId,
-    enabled: input.enabled,
-    disabledBy: null,
-    selected: { kind: "bundled" },
-    candidates: [],
-    auth: {
-      status: input.available
-        ? "authenticated"
-        : input.enabled
-          ? "unknown"
-          : "unavailable",
-      badgeText: null,
-      label: input.available ? PROVIDER_DISPLAY_NAMES[providerId] : null,
-      detail: input.detail,
-    },
-    authPending: false,
-    checkedAt: Date.now(),
-    apiKey: { supported: false, configured: false, source: null },
-    terminalAgentArgs: "",
-    envOverrides: [],
-    loginCapability: null,
-    availabilityPending: false,
-  };
-}
 
 /**
  * The dictation engine (sherpa addon) does not ship with the open host, so
@@ -327,28 +311,183 @@ export function buildUnaryHandlers(
     })),
   );
 
+  const stateFor = async (providerId: ProviderId) =>
+    buildProviderState(
+      await deps.providerSettings.get(providerId),
+      providerId === OPENCLAW_PROVIDER_ID
+        ? await deps.openclaw.isReachable()
+        : false,
+    );
+
   handlers.set(
     providersListV40.method,
-    contractHandler(providersListV40, async () => {
-      const gatewayReachable = await deps.openclaw.isReachable();
-      return {
-        providers: providerIdSchema.options.map((providerId) =>
-          providerId === OPENCLAW_PROVIDER_ID
-            ? providerRow(providerId, {
-                enabled: true,
-                available: gatewayReachable,
-                detail: gatewayReachable
-                  ? "Local OpenClaw Gateway"
-                  : "Start the OpenClaw Gateway to enable this provider",
-              })
-            : providerRow(providerId, {
-                enabled: false,
-                available: false,
-                detail: "Not implemented in @traycer/open-host yet",
-              }),
-        ),
-      };
+    contractHandler(providersListV40, async () => ({
+      providers: await Promise.all(
+        providerIdSchema.options.map((providerId) => stateFor(providerId)),
+      ),
+    })),
+  );
+
+  // ── Provider settings mutations (persisted; echoed in every state) ───────
+
+  handlers.set(
+    providersSetEnabledV20.method,
+    contractHandler(providersSetEnabledV20, async (request) => {
+      await deps.providerSettings.mutate(request.providerId, (row) => ({
+        ...row,
+        enabled: request.enabled,
+      }));
+      return { state: await stateFor(request.providerId) };
     }),
+  );
+
+  handlers.set(
+    providersSetTerminalAgentArgsV20.method,
+    contractHandler(providersSetTerminalAgentArgsV20, async (request) => {
+      await deps.providerSettings.mutate(request.providerId, (row) => ({
+        ...row,
+        terminalAgentArgs: request.terminalAgentArgs,
+      }));
+      return { state: await stateFor(request.providerId) };
+    }),
+  );
+
+  handlers.set(
+    providersSetEnvOverrideV20.method,
+    contractHandler(providersSetEnvOverrideV20, async (request) => {
+      await deps.providerSettings.mutate(request.providerId, (row) => ({
+        ...row,
+        envOverrides: [
+          ...row.envOverrides.filter((entry) => entry.key !== request.key),
+          { key: request.key, value: request.value },
+        ],
+      }));
+      return { state: await stateFor(request.providerId) };
+    }),
+  );
+
+  handlers.set(
+    providersDeleteEnvOverrideV20.method,
+    contractHandler(providersDeleteEnvOverrideV20, async (request) => {
+      await deps.providerSettings.mutate(request.providerId, (row) => ({
+        ...row,
+        envOverrides: row.envOverrides.filter(
+          (entry) => entry.key !== request.key,
+        ),
+      }));
+      return { state: await stateFor(request.providerId) };
+    }),
+  );
+
+  handlers.set(
+    providersSetApiKeyV20.method,
+    contractHandler(providersSetApiKeyV20, async (request) => {
+      await deps.providerSettings.mutate(request.providerId, (row) => ({
+        ...row,
+        apiKey: request.apiKey,
+      }));
+      return { state: await stateFor(request.providerId) };
+    }),
+  );
+
+  handlers.set(
+    providersClearApiKeyV20.method,
+    contractHandler(providersClearApiKeyV20, async (request) => {
+      await deps.providerSettings.mutate(request.providerId, (row) => ({
+        ...row,
+        apiKey: null,
+      }));
+      return { state: await stateFor(request.providerId) };
+    }),
+  );
+
+  handlers.set(
+    providersAddCustomPathV20.method,
+    contractHandler(providersAddCustomPathV20, async (request) => {
+      await deps.providerSettings.mutate(request.providerId, (row) => ({
+        ...row,
+        customPaths: [
+          ...row.customPaths.filter((path) => path !== request.path),
+          request.path,
+        ],
+      }));
+      return { state: await stateFor(request.providerId) };
+    }),
+  );
+
+  handlers.set(
+    providersRemoveCustomPathV20.method,
+    contractHandler(providersRemoveCustomPathV20, async (request) => {
+      await deps.providerSettings.mutate(request.providerId, (row) => ({
+        ...row,
+        customPaths: row.customPaths.filter((path) => path !== request.path),
+        selection:
+          row.selection.kind === "custom" && row.selection.path === request.path
+            ? { kind: "bundled" as const }
+            : row.selection,
+      }));
+      return { state: await stateFor(request.providerId) };
+    }),
+  );
+
+  handlers.set(
+    providersSetSelectionV20.method,
+    contractHandler(providersSetSelectionV20, async (request) => {
+      await deps.providerSettings.mutate(request.providerId, (row) => ({
+        ...row,
+        selection: request.selection,
+      }));
+      return { state: await stateFor(request.providerId) };
+    }),
+  );
+
+  handlers.set(
+    providersDetectVersionV10.method,
+    contractHandler(providersDetectVersionV10, async (request) => {
+      // Probe the candidate binary with `--version`; a non-executable or
+      // failing binary reports executable: false.
+      try {
+        const child = Bun.spawn([request.candidatePath, "--version"], {
+          stdout: "pipe",
+          stderr: "ignore",
+          stdin: "ignore",
+        });
+        const output = await new Response(child.stdout).text();
+        const exitCode = await child.exited;
+        return {
+          executable: exitCode === 0,
+          version: exitCode === 0 ? output.trim().split("\n")[0] : null,
+        };
+      } catch {
+        return { executable: false, version: null };
+      }
+    }),
+  );
+
+  handlers.set(
+    providersStartLoginV10.method,
+    contractHandler(providersStartLoginV10, async () => ({
+      // No provider CLI login flows on the open host (the OpenClaw Gateway
+      // owns its own auth); `started: false` renders the "can't start
+      // login" state instead of hanging a spinner.
+      url: null,
+      started: false,
+    })),
+  );
+
+  handlers.set(
+    providersAwaitLoginV20.method,
+    contractHandler(providersAwaitLoginV20, async () => ({
+      // Nothing to await: no login is ever in flight on this host.
+      state: null,
+    })),
+  );
+
+  handlers.set(
+    providersCancelLoginV10.method,
+    contractHandler(providersCancelLoginV10, async () => ({
+      cancelled: false,
+    })),
   );
 
   handlers.set(

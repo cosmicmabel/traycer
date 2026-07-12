@@ -200,6 +200,15 @@ removes the pid file on SIGTERM/SIGINT.
   `deleteTuiAgent` write the `tuiAgents` section of the epic doc (cards
   render in the tree); the `agent.tui.*` launch surface remains
   unimplemented.
+- **Provider settings** (`src/providers/provider-settings.ts`): the full
+  `providers.set*` mutation family persisted per provider and echoed in
+  every `ProviderCliState` — enabled flags (default: openclaw on, others
+  off), terminal-agent args, env overrides (set/delete), stored API keys
+  (set/clear, `source: "stored"`), custom binary paths (surfaced as
+  candidates; removal resets a custom selection), selection, and
+  `providers.detectVersion` (a real `--version` probe). Login flows report
+  `started: false` / `state: null` / `cancelled: false` — the OpenClaw
+  Gateway owns its own auth.
 - **Snapshots / speech / inbox**: `snapshots.getLocalStorageSize` (0),
   `clearLocalSnapshots` (0), `readSnapshotDiff` (`blob_missing` — no
   content-addressed store), `speech.getModelStatus`/`ensureModel`
@@ -214,11 +223,14 @@ removes the pid file on SIGTERM/SIGINT.
 
 ## Roadmap
 
-Remaining gaps (all degrade per-request/per-subscription — the GUI's core
-flows work against this host): the `agent.tui.*` launch surface, provider
-settings mutations (`providers.set*` / login flows), the selection guide,
-`agent.sendMessage`/`agent.create` multi-agent messaging, and the
-`migration.run` / `agent.inbox.subscribe` / `speech.dictate` streams.
+Remaining gaps (all degrade per-request/per-subscription — everything the
+GUI exercises against an OpenClaw-only host works): the `agent.tui.*`
+launch surface (TUI harnesses target the closed providers), multi-agent
+messaging (`agent.create`/`sendMessage`/`stop`/`getTranscript`/
+`agent.inbox.subscribe`), the selection guide, collaborator mutations
+(`epic.grantAccess`/`batchUpdateRoles`/`revokeCollaborator` — no cloud
+directory), `phase.migrateToEpic` + the `migration.run` stream (no legacy
+local data to migrate), and `speech.dictate` (no dictation engine).
 
 ## Tests
 

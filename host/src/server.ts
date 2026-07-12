@@ -13,6 +13,7 @@ import { buildUnaryHandlers } from "./handlers";
 import { NotificationStore } from "./notifications/notification-store";
 import { ResourcesSubscriptionFactory } from "./resources/resources-subscription";
 import { CommentStore } from "./epic/comment-store";
+import { ProviderSettingsStore } from "./providers/provider-settings";
 import { TerminalStore } from "./terminal/terminal-store";
 import { BindingStore } from "./worktree/binding-store";
 import { WorktreeDeleteStream } from "./worktree/delete-stream";
@@ -74,6 +75,7 @@ export function startOpenHostServer(config: OpenHostConfig): RunningOpenHost {
     terminals,
     bindings,
     comments: new CommentStore(config.environment),
+    providerSettings: new ProviderSettingsStore(config.environment),
   });
 
   const server = Bun.serve<ConnectionData>({
