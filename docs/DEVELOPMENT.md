@@ -20,13 +20,15 @@ Install the hygiene hooks once with `pipx install pre-commit && pre-commit insta
 
 ## Workspace layout
 
-| Path                   | Package                        | Responsibility                                                                      |
-| ---------------------- | ------------------------------ | ----------------------------------------------------------------------------------- |
-| `protocol/`            | `@traycer/protocol`            | The versioned client⇄host wire contract (schemas, RPC, framework versioning).       |
-| `clients/traycer-cli/` | `@traycer-clients/traycer-cli` | The `traycer` CLI — provisions/upgrades the host, auth, agent & workspace commands. |
-| `clients/shared/`      | `@traycer-clients/shared`      | Transport (WebSocket/RPC), auth (PKCE/bearer), comment & agent formatting.          |
-| `clients/gui-app/`     | `@traycer-clients/gui-app`     | The GUI renderer (React).                                                           |
-| `clients/desktop/`     | `@traycer-clients/desktop`     | Electron shell around `gui-app`.                                                    |
+| Path                   | Package                        | Responsibility                                                                                |
+| ---------------------- | ------------------------------ | --------------------------------------------------------------------------------------------- |
+| `protocol/`            | `@traycer/protocol`            | The versioned client⇄host wire contract (schemas, RPC, framework versioning).                 |
+| `clients/traycer-cli/` | `@traycer-clients/traycer-cli` | The `traycer` CLI — provisions/upgrades the host, auth, agent & workspace commands.           |
+| `clients/shared/`      | `@traycer-clients/shared`      | Transport (WebSocket/RPC), auth (PKCE/bearer), comment & agent formatting.                    |
+| `clients/gui-app/`     | `@traycer-clients/gui-app`     | The GUI renderer (React).                                                                     |
+| `clients/desktop/`     | `@traycer-clients/desktop`     | Electron shell around `gui-app`.                                                              |
+| `clients/web/`         | `@traycer-clients/web`         | Browser shell + Bun serve process — the GUI as a webapp ([README](../clients/web/README.md)). |
+| `host/`                | `@traycer/open-host`           | Open-source host server implementing the wire contract ([README](../host/README.md)).         |
 
 ## Protocol versioning
 
@@ -35,6 +37,17 @@ Install the hygiene hooks once with `pipx install pre-commit && pre-commit insta
 ## Config targets (dev / staging / production)
 
 Each client's `src/config.ts` defaults to **dev** — `localhost` endpoints, empty host trust keys, no pinned host version. Production values (real endpoints, the host's trusted minisign public keys, the pinned host version) are **stamped at release time** by `scripts/set-deploy-target.cjs --target=production` from CI environment variables; they are never committed. The embedded host public keys are public trust anchors (safe to ship), and `--restore` returns the file to dev defaults after a build.
+
+## Running fully open (no signed host)
+
+`host/` is an open-source host implementation: `bun host/src/index.ts`
+starts it, writes the same `pid.json` discovery contract as the signed
+host, and serves the wire contract against a local OpenClaw Gateway. Pair
+it with `make serve-web` for a browser-hosted GUI, and run its wire tests
+with `cd host && bun test src` (Bun runtime, not vitest — the server is
+built on `Bun.serve`). Install/operate steps live in
+[`AGENT_SETUP.md`](AGENT_SETUP.md); the implemented surface is documented
+in [`host/README.md`](../host/README.md).
 
 ## Running against a local host
 

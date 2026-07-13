@@ -2,6 +2,9 @@
 
 Browser shell + serve process that hosts the Traycer GUI (`clients/gui-app`)
 as a **webapp on a Linux machine running the Traycer host** — no Electron.
+Works with the signed host binary or the fully open-source
+[`@traycer/open-host`](../../host/README.md). Full install/configure/verify
+steps: [`docs/AGENT_SETUP.md`](../../docs/AGENT_SETUP.md).
 
 ## How it works
 

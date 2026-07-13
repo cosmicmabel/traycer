@@ -8,19 +8,26 @@ Traycer is an AI-powered pair-programming platform. This repository holds the
 machine and talk to the Traycer host. It uses **Bun workspaces** and **Nx** for
 task orchestration.
 
-The Traycer Host and cloud backend are **not** part of this repo: the CLI
-provisions a signed **host** binary from GitHub Releases, and the clients run
-against the production cloud. See [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md).
+The upstream Traycer Host and cloud backend are **not** part of this repo:
+the CLI provisions a signed **host** binary from GitHub Releases, and the
+clients run against the production cloud. See
+[`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md). **This fork additionally
+ships `host/` (`@traycer/open-host`)** — an open-source host implementing
+the same wire contract against a local OpenClaw Gateway — and
+`clients/web/`, a browser shell + serve process. Operating instructions
+for both: [`docs/AGENT_SETUP.md`](docs/AGENT_SETUP.md).
 
 ### Workspaces
 
-| Path | Package | Responsibility |
-|---|---|---|
-| `protocol/` | `@traycer/protocol` | Versioned, runtime-negotiated client⇄host wire contract (schemas, RPC). |
-| `clients/traycer-cli/` | `@traycer-clients/traycer-cli` | The `traycer` CLI — provisions/upgrades the host, auth, agent & workspace commands. |
-| `clients/shared/` | `@traycer-clients/shared` | Transport (WebSocket/RPC), auth (PKCE/bearer), and formatting shared across clients. |
-| `clients/gui-app/` | `@traycer-clients/gui-app` | GUI renderer (React + Vite + TanStack Router/Query + Zustand + shadcn/ui). |
-| `clients/desktop/` | `@traycer-clients/desktop` | Electron shell around `gui-app`. |
+| Path                   | Package                        | Responsibility                                                                       |
+| ---------------------- | ------------------------------ | ------------------------------------------------------------------------------------ |
+| `protocol/`            | `@traycer/protocol`            | Versioned, runtime-negotiated client⇄host wire contract (schemas, RPC).              |
+| `clients/traycer-cli/` | `@traycer-clients/traycer-cli` | The `traycer` CLI — provisions/upgrades the host, auth, agent & workspace commands.  |
+| `clients/shared/`      | `@traycer-clients/shared`      | Transport (WebSocket/RPC), auth (PKCE/bearer), and formatting shared across clients. |
+| `clients/gui-app/`     | `@traycer-clients/gui-app`     | GUI renderer (React + Vite + TanStack Router/Query + Zustand + shadcn/ui).           |
+| `clients/desktop/`     | `@traycer-clients/desktop`     | Electron shell around `gui-app`.                                                     |
+| `clients/web/`         | `@traycer-clients/web`         | Browser shell + Bun serve process — the GUI as a webapp on Linux.                    |
+| `host/`                | `@traycer/open-host`           | Open-source host server (wire contract over a local OpenClaw Gateway).               |
 
 ### Workspace-Specific Agent Docs
 
@@ -28,6 +35,9 @@ against the production cloud. See [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md).
   before app-specific changes; it lists the GUI-focused skills in
   `.agents/skills/` to prefer there.
 - `clients/desktop/` — read [`clients/desktop/AGENTS.md`](clients/desktop/AGENTS.md).
+- `host/` — read [`host/README.md`](host/README.md) before host changes; its
+  tests run under `bun test` (from `host/`), NOT vitest, and each test run
+  must use a unique `--environment` because persistence is real.
 
 ## Common Commands
 

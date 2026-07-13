@@ -8,6 +8,10 @@ canonical schemas in `protocol/src/framework/ws-protocol.ts` /
 `stream-ws-protocol.ts`, and compatibility uses the same oracle
 (`checkCompatibility`) both sides share.
 
+Operating instructions (install → configure → verify, written for agents
+and humans) live in [`docs/AGENT_SETUP.md`](../docs/AGENT_SETUP.md); this
+file documents the implemented wire surface and its design decisions.
+
 ## Run it
 
 ```bash

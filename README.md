@@ -21,6 +21,16 @@ Traycer is an open-source AI orchestration app for advanced agent orchestration.
 
 Switch models instantly within the same chat, orchestrate agent-to-agent communication, and collaborate in real time.
 
+## This fork
+
+This fork extends upstream Traycer with three self-hosting-oriented additions:
+
+- **OpenClaw agent harness** — [OpenClaw](https://openclaw.ai) is wired through the versioned protocol (new `openclaw` harness/provider ids with v4.0 wire bridges) and the GUI, driven by a local OpenClaw Gateway.
+- **Web hosting on Linux** — [`clients/web/`](clients/web/README.md): a browser shell plus a Bun serve process (and a [`Dockerfile`](Dockerfile)), so the GUI runs as a webapp instead of the Electron desktop. `make serve-web` → `http://127.0.0.1:8788`.
+- **`@traycer/open-host`** — [`host/`](host/README.md): an open-source host server implementing the client⇄host wire contract, so the entire stack runs with no closed-source components — chats (queueing, approvals), epics (artifacts, comments, collaborative sync), real PTY terminals, git worktrees with setup scripts, diffs, and more.
+
+**Start here:** [`docs/AGENT_SETUP.md`](docs/AGENT_SETUP.md) — a step-by-step install/configure/verify guide, written to be followed by AI agents and humans alike.
+
 [![Traycer Demo Video](https://github.com/user-attachments/assets/a5efda0c-16f2-453b-9f8d-50d09df25aa4)](https://youtu.be/doh2yz3ZFvU)
 
 ## Features
@@ -34,14 +44,14 @@ Switch models instantly within the same chat, orchestrate agent-to-agent communi
 
 ## Installation
 
-| Platform                | Install                                                                                                                                                |
-| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| macOS (Apple Silicon)   | [Download .dmg (arm64)](https://github.com/traycerai/traycer/releases/latest/download/traycer-desktop-macos-arm64.dmg)                                 |
-| macOS (Intel)           | [Download .dmg (x64)](https://github.com/traycerai/traycer/releases/latest/download/traycer-desktop-macos-x64.dmg)                                     |
-| Linux (AppImage)        | [Download .AppImage](https://github.com/traycerai/traycer/releases/latest/download/traycer-desktop-linux-x86_64.AppImage)                              |
-| Linux (Debian/Ubuntu)   | [Download .deb](https://github.com/traycerai/traycer/releases/latest/download/traycer-desktop-linux-amd64.deb)                                         |
-| Linux (Fedora/RHEL)     | [Download .rpm](https://github.com/traycerai/traycer/releases/latest/download/traycer-desktop-linux-x86_64.rpm)                                        |
-| Windows                 | Coming soon                                                                                                                                            |
+| Platform              | Install                                                                                                                   |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| macOS (Apple Silicon) | [Download .dmg (arm64)](https://github.com/traycerai/traycer/releases/latest/download/traycer-desktop-macos-arm64.dmg)    |
+| macOS (Intel)         | [Download .dmg (x64)](https://github.com/traycerai/traycer/releases/latest/download/traycer-desktop-macos-x64.dmg)        |
+| Linux (AppImage)      | [Download .AppImage](https://github.com/traycerai/traycer/releases/latest/download/traycer-desktop-linux-x86_64.AppImage) |
+| Linux (Debian/Ubuntu) | [Download .deb](https://github.com/traycerai/traycer/releases/latest/download/traycer-desktop-linux-amd64.deb)            |
+| Linux (Fedora/RHEL)   | [Download .rpm](https://github.com/traycerai/traycer/releases/latest/download/traycer-desktop-linux-x86_64.rpm)           |
+| Windows               | Coming soon                                                                                                               |
 
 See the [latest release](https://github.com/traycerai/traycer/releases/latest) for all available builds.
 
@@ -49,13 +59,14 @@ See the [latest release](https://github.com/traycerai/traycer/releases/latest) f
 
 Traycer connects seamlessly with the subscriptions you already own. We focus on providing high-quality orchestration features rather than locking you into an isolated ecosystem. Supported agents currently include:
 
-| Agent                                                    | Status                        |
-| :------------------------------------------------------- | :---------------------------- |
-| [Claude Code](https://claude.com/product/claude-code)    | Fully supported               |
-| [Codex](https://openai.com/codex)                        | Fully supported               |
-| [Cursor](https://cursor.com/)                            | Fully supported               |
-| [OpenCode](https://opencode.ai)                          | Fully supported               |
-| [Traycer](https://traycer.ai)                            | Native inference subscription |
+| Agent                                                 | Status                                    |
+| :---------------------------------------------------- | :---------------------------------------- |
+| [Claude Code](https://claude.com/product/claude-code) | Fully supported                           |
+| [Codex](https://openai.com/codex)                     | Fully supported                           |
+| [Cursor](https://cursor.com/)                         | Fully supported                           |
+| [OpenCode](https://opencode.ai)                       | Fully supported                           |
+| [OpenClaw](https://openclaw.ai)                       | This fork, via the local OpenClaw Gateway |
+| [Traycer](https://traycer.ai)                         | Native inference subscription             |
 
 See [Coding Agents](https://docs.traycer.ai/agents-and-models/coding-agents) for setup commands and provider-specific configurations.
 
