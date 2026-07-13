@@ -299,6 +299,122 @@ describe("open host /rpc", () => {
     expect(login.result).toMatchObject({ started: false, url: null });
   });
 
+  it("serves the selection guide, collaborator echoes, and agent fills", async () => {
+    const got = await callRpc(
+      "agent.selectionGuide.getGlobal",
+      manifest["agent.selectionGuide.getGlobal"],
+      {},
+      manifest,
+    );
+    expect(got.error).toBeNull();
+    const gotResult = got.result as {
+      content: string;
+      generatedDefaultContent: string;
+    };
+    expect(gotResult.content).toContain("OpenClaw");
+    expect(gotResult.content).toBe(gotResult.generatedDefaultContent);
+
+    const set = await callRpc(
+      "agent.selectionGuide.setGlobal",
+      manifest["agent.selectionGuide.setGlobal"],
+      { content: "Always pick the openclaw harness." },
+      manifest,
+    );
+    expect(set.result).toMatchObject({
+      content: "Always pick the openclaw harness.",
+    });
+
+    const evaluated = await callRpc(
+      "agent.selectionGuide",
+      manifest["agent.selectionGuide"],
+      { epicId: "epic-1", senderAgentId: "agent-1" },
+      manifest,
+    );
+    expect(evaluated.result).toMatchObject({
+      status: "found",
+      sources: [
+        { kind: "global", content: "Always pick the openclaw harness." },
+      ],
+    });
+
+    const reset = await callRpc(
+      "agent.selectionGuide.resetGlobalToDefault",
+      manifest["agent.selectionGuide.resetGlobalToDefault"],
+      {},
+      manifest,
+    );
+    expect((reset.result as { content: string }).content).toContain("OpenClaw");
+
+    const draft = await callRpc(
+      "agent.selectionGuide.getGlobalOnboardingDraft",
+      manifest["agent.selectionGuide.getGlobalOnboardingDraft"],
+      {},
+      manifest,
+    );
+    expect(draft.result).toMatchObject({
+      content: null,
+      providersSettled: true,
+    });
+
+    const granted = await callRpc(
+      "epic.grantAccess",
+      manifest["epic.grantAccess"],
+      { epicId: "epic-1", input: { kind: "users", invites: [] } },
+      manifest,
+    );
+    expect(granted.error).toBeNull();
+    expect(granted.result).toEqual({
+      collaborators: [],
+      collaboratorsAvailable: false,
+    });
+
+    const tuiHarnesses = await callRpc(
+      "agent.tui.listHarnesses",
+      manifest["agent.tui.listHarnesses"],
+      {},
+      manifest,
+    );
+    expect(tuiHarnesses.result).toEqual({ harnesses: [] });
+
+    const title = await callRpc(
+      "agent.tui.generateTitle",
+      manifest["agent.tui.generateTitle"],
+      { harnessId: "claude", promptText: "hello there" },
+      manifest,
+    );
+    expect(title.result).toEqual({ accepted: false });
+
+    const models = await callRpc(
+      "agent.listHarnessModels",
+      manifest["agent.listHarnessModels"],
+      { harnessId: "openclaw", epicId: null, senderAgentId: null },
+      manifest,
+    );
+    expect(models.result).toMatchObject({
+      harnessId: "openclaw",
+      models: [{ id: "openclaw/default" }],
+    });
+
+    const transcript = await callRpc(
+      "agent.getTranscript",
+      manifest["agent.getTranscript"],
+      { epicId: "epic-1", agentId: "agent-1" },
+      manifest,
+    );
+    expect(transcript.result).toEqual({ transcript: "" });
+
+    const plan = await callRpc(
+      "agent.gui.getPlan",
+      manifest["agent.gui.getPlan"],
+      { epicId: "epic-1", chatId: "chat-1", planId: "plan-1" },
+      manifest,
+    );
+    expect(plan.result).toMatchObject({
+      planId: "plan-1",
+      unavailableReason: "blob_missing",
+    });
+  });
+
   it("rejects an incompatible manifest with a fatalError frame", async () => {
     // A client that does not know `host.status` at all: the oracle reports
     // client-missing-method, which is blocking for the whole connection.

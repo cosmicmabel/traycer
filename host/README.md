@@ -213,6 +213,21 @@ removes the pid file on SIGTERM/SIGINT.
   `clearLocalSnapshots` (0), `readSnapshotDiff` (`blob_missing` — no
   content-addressed store), `speech.getModelStatus`/`ensureModel`
   (engine unavailable — the mic never shows), `agent.inbox.read` (empty).
+- **Selection guide** (`src/agent/selection-guide-store.ts`): the global
+  guide as a markdown file under the host home — `getGlobal`/`setGlobal`/
+  `resetGlobalToDefault`/`getGlobalOnboardingDraft` (providers always
+  settled), and `agent.selectionGuide` resolves it as the single global
+  source (`not_found` when effectively empty).
+- **Collaborator mutations**: `epic.grantAccess`/`batchUpdateRoles`/
+  `revokeCollaborator` echo the empty collaborator list with
+  `collaboratorsAvailable: false` (single-user host, no cloud directory).
+- **Agent misc**: `agent.tui.listHarnesses` (empty catalog — TUI harnesses
+  target the closed providers), `agent.tui.generateTitle`/`turnEnded`/
+  `recordActivity` (`accepted: false`, the contract's benign no-op),
+  `agent.gui.getPlan` (`blob_missing`), `agent.getTranscript` (empty —
+  transcripts live in the gateway), `agent.listHarnessModels@2.0`
+  (the gateway-default model row for openclaw), and a quiet
+  `agent.inbox.subscribe` stream (no broker; heartbeats only).
 - **Chat approvals**: gateway approval prompts (`exec.approval.requested`
   and friends — event names and payload keys are matched tolerantly) map
   onto `approvalRequested` frames and land in snapshot `pendingApprovals`;
@@ -223,14 +238,13 @@ removes the pid file on SIGTERM/SIGINT.
 
 ## Roadmap
 
-Remaining gaps (all degrade per-request/per-subscription — everything the
-GUI exercises against an OpenClaw-only host works): the `agent.tui.*`
-launch surface (TUI harnesses target the closed providers), multi-agent
-messaging (`agent.create`/`sendMessage`/`stop`/`getTranscript`/
-`agent.inbox.subscribe`), the selection guide, collaborator mutations
-(`epic.grantAccess`/`batchUpdateRoles`/`revokeCollaborator` — no cloud
-directory), `phase.migrateToEpic` + the `migration.run` stream (no legacy
-local data to migrate), and `speech.dictate` (no dictation engine).
+The handful of methods still answering structured RPC errors are the ones
+that structurally cannot exist on this host, and every one degrades
+per-request without breaking a surface: `agent.tui.prepareLaunch` (would
+launch a closed-provider TUI harness), `agent.create`/`sendMessage`/
+`agent.stop` (the multi-agent broker), `phase.migrateToEpic` + the
+`migration.run` stream (no legacy local data to migrate), and
+`speech.dictate` (no dictation engine ships with this host).
 
 ## Tests
 

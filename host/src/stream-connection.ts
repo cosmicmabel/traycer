@@ -11,6 +11,10 @@ import type {
 } from "@traycer/protocol/framework/ws-protocol";
 import { checkStreamCompatibility } from "@traycer/protocol/framework/stream-compat";
 import { z } from "zod";
+import type {
+  AgentInboxStream,
+  AgentInboxSubscription,
+} from "./agent/inbox-subscription";
 import type { BearerVerifier } from "./auth";
 import type { ChatSessionStore, ChatSubscription } from "./chat/chat-session";
 import type { EpicStore, EpicSubscription } from "./epic/epic-store";
@@ -69,6 +73,7 @@ export interface StreamConnectionDeps {
   readonly resources: ResourcesSubscriptionFactory;
   readonly terminals: TerminalStore;
   readonly worktreeDeletes: WorktreeDeleteStream;
+  readonly agentInbox: AgentInboxStream;
 }
 
 export interface StreamSocket {
@@ -104,6 +109,7 @@ export class StreamConnection {
   private resourcesSubscription: ResourcesSubscription | null = null;
   private terminalSubscription: TerminalSubscription | null = null;
   private worktreeDeleteSubscription: WorktreeDeleteSubscription | null = null;
+  private agentInboxSubscription: AgentInboxSubscription | null = null;
   /** Text envelope awaiting its paired binary frame (in-order correlation). */
   private pendingBinaryEnvelope: unknown | null = null;
 
@@ -128,6 +134,8 @@ export class StreamConnection {
     this.terminalSubscription = null;
     this.worktreeDeleteSubscription?.dispose();
     this.worktreeDeleteSubscription = null;
+    this.agentInboxSubscription?.dispose();
+    this.agentInboxSubscription = null;
   }
 
   async handleBinary(bytes: Uint8Array): Promise<void> {
@@ -226,6 +234,33 @@ export class StreamConnection {
         this.phase = "subscribed";
         this.chatSubscription = subscription;
         subscription.emitSnapshot();
+        return;
+      }
+      if (
+        subscribe.data.method === "agent.inbox.subscribe" &&
+        this.userId !== null
+      ) {
+        const subscription = this.deps.agentInbox.subscribe({
+          params: subscribe.data.params,
+          emit: (frame) => {
+            if (this.phase === "subscribed") {
+              this.socket.send(JSON.stringify(frame));
+            }
+          },
+        });
+        if (subscription === null) {
+          this.fatal({
+            code: "RPC_ERROR",
+            reason: "agent.inbox.subscribe params did not parse",
+            incompatibleMethods: null,
+            upgradeGuidance: null,
+          });
+          return;
+        }
+        // Quiet stream: no broker exists, so no snapshot frame — the
+        // monitor sees heartbeats only.
+        this.phase = "subscribed";
+        this.agentInboxSubscription = subscription;
         return;
       }
       if (
@@ -401,6 +436,10 @@ export class StreamConnection {
       }
       if (this.worktreeDeleteSubscription !== null) {
         this.worktreeDeleteSubscription.handleFrame(parsed);
+        return;
+      }
+      if (this.agentInboxSubscription !== null) {
+        this.agentInboxSubscription.handleFrame(parsed);
         return;
       }
       const ping = pingFrameSchema.safeParse(parsed);

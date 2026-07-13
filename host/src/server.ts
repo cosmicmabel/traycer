@@ -12,6 +12,8 @@ import { GitStatusBroadcaster } from "./git/git-status-broadcaster";
 import { buildUnaryHandlers } from "./handlers";
 import { NotificationStore } from "./notifications/notification-store";
 import { ResourcesSubscriptionFactory } from "./resources/resources-subscription";
+import { AgentInboxStream } from "./agent/inbox-subscription";
+import { SelectionGuideStore } from "./agent/selection-guide-store";
 import { CommentStore } from "./epic/comment-store";
 import { ProviderSettingsStore } from "./providers/provider-settings";
 import { TerminalStore } from "./terminal/terminal-store";
@@ -76,7 +78,9 @@ export function startOpenHostServer(config: OpenHostConfig): RunningOpenHost {
     bindings,
     comments: new CommentStore(config.environment),
     providerSettings: new ProviderSettingsStore(config.environment),
+    selectionGuide: new SelectionGuideStore(config.environment),
   });
+  const agentInbox = new AgentInboxStream();
 
   const server = Bun.serve<ConnectionData>({
     hostname: "127.0.0.1",
@@ -138,6 +142,7 @@ export function startOpenHostServer(config: OpenHostConfig): RunningOpenHost {
                   resources,
                   terminals,
                   worktreeDeletes,
+                  agentInbox,
                 },
                 socket,
               );

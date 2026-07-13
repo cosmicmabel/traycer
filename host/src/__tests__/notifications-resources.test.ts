@@ -172,6 +172,26 @@ describe("notifications.subscribe", () => {
   }, 20_000);
 });
 
+describe("agent.inbox.subscribe", () => {
+  it("holds a quiet subscription that answers heartbeats", async () => {
+    const session = await openAndSubscribe(
+      "agent.inbox.subscribe",
+      { major: 1, minor: 0 },
+      { agentId: "agent-1", epicId: "epic-i" },
+    );
+    // No broker exists, so no snapshot/message frames arrive — the first
+    // traffic is our own heartbeat's pong.
+    session.sendText({ kind: "ping", hasBinaryPayload: false });
+    const pong = await session.next();
+    expect(
+      pong.text !== null && typeof pong.text === "object"
+        ? Reflect.get(pong.text, "kind")
+        : "",
+    ).toBe("pong");
+    session.close();
+  }, 20_000);
+});
+
 describe("resources.subscribe", () => {
   it("emits the quiet empty projection", async () => {
     const session = await openAndSubscribe(

@@ -17,7 +17,23 @@ import {
   agentGuiListModelsV10,
   agentGuiListCommandsV10,
 } from "@traycer/protocol/host/agent/gui/contracts";
-import { agentListV40 } from "@traycer/protocol/host/agent/contracts";
+import {
+  agentGetTranscriptV10,
+  agentListHarnessModelsV20,
+  agentListV40,
+  agentSelectionGuideGlobalGetV10,
+  agentSelectionGuideGlobalOnboardingDraftGetV10,
+  agentSelectionGuideGlobalResetV10,
+  agentSelectionGuideGlobalSetV10,
+  agentSelectionGuideV10,
+} from "@traycer/protocol/host/agent/contracts";
+import {
+  agentTuiGenerateTitleV10,
+  agentTuiListHarnessesV10,
+  agentTuiRecordActivityV10,
+  agentTuiTurnEndedV10,
+} from "@traycer/protocol/host/agent/tui/contracts";
+import { agentGuiGetPlanV10 } from "@traycer/protocol/host/agent/gui/contracts";
 import { commentsListThreadsV10 } from "@traycer/protocol/host/comments/contracts";
 import { editorOpenPathsV10 } from "@traycer/protocol/host/editor/contracts";
 import { EDITORS } from "@traycer/protocol/host/editor/unary-schemas";
@@ -71,8 +87,11 @@ import {
   epicMentionSpecsV10,
   epicMentionStoriesV10,
   epicMentionTicketsV10,
+  epicBatchUpdateRolesV10,
   epicCreateCommentThreadV10,
   epicCreateTuiAgentV10,
+  epicGrantAccessV10,
+  epicRevokeCollaboratorV10,
   epicDeleteCommentThreadV10,
   epicDeleteCommentV10,
   epicDeleteTuiAgentV10,
@@ -117,6 +136,7 @@ import {
   type ProviderId,
 } from "@traycer/protocol/host/provider-schemas";
 import type { GuiHarnessOption } from "@traycer/protocol/host/agent/gui/unary-schemas";
+import type { SelectionGuideStore } from "./agent/selection-guide-store";
 import type { ChatSessionStore } from "./chat/chat-session";
 import { OPEN_HOST_VERSION } from "./config";
 import type { CommentStore } from "./epic/comment-store";
@@ -229,6 +249,7 @@ export interface HandlerDeps {
   readonly bindings: BindingStore;
   readonly comments: CommentStore;
   readonly providerSettings: ProviderSettingsStore;
+  readonly selectionGuide: SelectionGuideStore;
 }
 
 const OPENCLAW_PROVIDER_ID: ProviderId = "openclaw";
@@ -768,6 +789,163 @@ export function buildUnaryHandlers(
         request.epicId,
         request.tuiAgentId,
       ),
+    })),
+  );
+
+  // ── Selection guide (global markdown file; see selection-guide-store) ────
+
+  handlers.set(
+    agentSelectionGuideV10.method,
+    contractHandler(agentSelectionGuideV10, async () =>
+      deps.selectionGuide.evaluate(),
+    ),
+  );
+
+  handlers.set(
+    agentSelectionGuideGlobalGetV10.method,
+    contractHandler(agentSelectionGuideGlobalGetV10, async () => ({
+      content: await deps.selectionGuide.effectiveContent(),
+      generatedDefaultContent: deps.selectionGuide.generatedDefault(),
+    })),
+  );
+
+  handlers.set(
+    agentSelectionGuideGlobalSetV10.method,
+    contractHandler(agentSelectionGuideGlobalSetV10, async (request) => {
+      await deps.selectionGuide.set(request.content);
+      return {
+        content: request.content,
+        generatedDefaultContent: deps.selectionGuide.generatedDefault(),
+      };
+    }),
+  );
+
+  handlers.set(
+    agentSelectionGuideGlobalResetV10.method,
+    contractHandler(agentSelectionGuideGlobalResetV10, async () => {
+      await deps.selectionGuide.reset();
+      return {
+        content: deps.selectionGuide.generatedDefault(),
+        generatedDefaultContent: deps.selectionGuide.generatedDefault(),
+      };
+    }),
+  );
+
+  handlers.set(
+    agentSelectionGuideGlobalOnboardingDraftGetV10.method,
+    contractHandler(
+      agentSelectionGuideGlobalOnboardingDraftGetV10,
+      async () => ({
+        // No onboarding draft is ever staged (providers are settled from
+        // boot — the openclaw provider is the fixed lineup).
+        content: await deps.selectionGuide.readStored(),
+        generatedDefaultContent: deps.selectionGuide.generatedDefault(),
+        providersSettled: true,
+      }),
+    ),
+  );
+
+  // ── Collaborator mutations (single-user host: nothing to grant) ──────────
+  // Responses reuse the collaborator-list shape; `collaboratorsAvailable:
+  // false` keeps sharing UI hidden, exactly like epic.listCollaborators.
+
+  handlers.set(
+    epicGrantAccessV10.method,
+    contractHandler(epicGrantAccessV10, async () => ({
+      collaborators: [],
+      collaboratorsAvailable: false,
+    })),
+  );
+
+  handlers.set(
+    epicBatchUpdateRolesV10.method,
+    contractHandler(epicBatchUpdateRolesV10, async () => ({
+      collaborators: [],
+      collaboratorsAvailable: false,
+    })),
+  );
+
+  handlers.set(
+    epicRevokeCollaboratorV10.method,
+    contractHandler(epicRevokeCollaboratorV10, async () => ({
+      collaborators: [],
+      collaboratorsAvailable: false,
+    })),
+  );
+
+  // ── agent.tui.* signal endpoints + misc agent reads ──────────────────────
+
+  handlers.set(
+    agentTuiListHarnessesV10.method,
+    contractHandler(agentTuiListHarnessesV10, async () => ({
+      // No TUI harness can launch here (they target the closed providers),
+      // so the CLI's picker gets an empty catalog, not an error.
+      harnesses: [],
+    })),
+  );
+
+  handlers.set(
+    agentTuiGenerateTitleV10.method,
+    contractHandler(agentTuiGenerateTitleV10, async () => ({
+      // No title generator on this host; `accepted: false` is the benign
+      // no-op reading the hook contract defines.
+      accepted: false,
+    })),
+  );
+
+  handlers.set(
+    agentTuiTurnEndedV10.method,
+    contractHandler(agentTuiTurnEndedV10, async () => ({ accepted: false })),
+  );
+
+  handlers.set(
+    agentTuiRecordActivityV10.method,
+    contractHandler(agentTuiRecordActivityV10, async () => ({
+      accepted: false,
+    })),
+  );
+
+  handlers.set(
+    agentGuiGetPlanV10.method,
+    contractHandler(agentGuiGetPlanV10, async (request) => ({
+      // No plan blob store; `blob_missing` renders the plan card's
+      // "content unavailable" state.
+      planId: request.planId,
+      markdown: "",
+      source: {
+        harnessId: "openclaw" as const,
+        sessionId: null,
+        turnId: null,
+        kind: "unavailable",
+      },
+      planStatus: "ready" as const,
+      contentHash: null,
+      unavailableReason: "blob_missing" as const,
+    })),
+  );
+
+  handlers.set(
+    agentGetTranscriptV10.method,
+    contractHandler(agentGetTranscriptV10, async () => ({
+      // Transcripts live in the OpenClaw Gateway's own session store.
+      transcript: "",
+    })),
+  );
+
+  handlers.set(
+    agentListHarnessModelsV20.method,
+    contractHandler(agentListHarnessModelsV20, async (request) => ({
+      harnessId: request.harnessId,
+      models:
+        request.harnessId === "openclaw"
+          ? [
+              {
+                id: OPENCLAW_DEFAULT_MODEL_SLUG,
+                reasoningEfforts: [],
+                fastModeAvailable: false,
+              },
+            ]
+          : [],
     })),
   );
 
