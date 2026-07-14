@@ -22,7 +22,7 @@ export const LOCAL_BEARER_TOKEN = "traycer-local";
 export const LOCAL_REFRESH_TOKEN = "traycer-local-refresh";
 
 /** Mirror of the open host's local-user verdict (host/src/auth.ts). */
-export const LOCAL_USER_ID = "insecure-local-user";
+export const LOCAL_USER_ID = "local-user";
 const LOCAL_USER_NAME = "Local User";
 const LOCAL_USER_EMAIL = "local@localhost";
 

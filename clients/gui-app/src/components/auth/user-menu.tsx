@@ -9,11 +9,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
 import { computeInitials } from "@/lib/auth/compute-initials";
-import { resolveManageSubscriptionUrl } from "@/lib/auth/manage-subscription-url";
 import { useAuthService } from "@/lib/host";
-import { useRunnerHost } from "@/providers/use-runner-host";
 import { getSystemTabModalApi } from "@/stores/tabs/system-tab-modal-bridge";
-import { ExternalLink, LogOut, Settings } from "lucide-react";
+import { LogOut, Settings } from "lucide-react";
 import { useState } from "react";
 
 export interface UserMenuProps {
@@ -31,12 +29,8 @@ export interface UserMenuProps {
  */
 export function UserMenu(props: UserMenuProps) {
   const auth = useAuthService();
-  const runnerHost = useRunnerHost();
   const [open, setOpen] = useState<boolean>(false);
   const initials = computeInitials(props.userName, props.email);
-  const manageSubscriptionUrl = resolveManageSubscriptionUrl(
-    runnerHost.authnBaseUrl,
-  );
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <TooltipWrapper
@@ -98,16 +92,6 @@ export function UserMenu(props: UserMenuProps) {
             App settings
           </DropdownMenuItem>
         ) : null}
-        <DropdownMenuItem
-          data-testid="user-menu-manage-subscription"
-          onSelect={() => {
-            setOpen(false);
-            void runnerHost.openExternalLink(manageSubscriptionUrl);
-          }}
-        >
-          <ExternalLink className="size-3.5" />
-          Manage subscription
-        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
           data-testid="user-menu-sign-out"

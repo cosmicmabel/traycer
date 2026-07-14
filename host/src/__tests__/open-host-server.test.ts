@@ -27,8 +27,6 @@ beforeAll(() => {
   server = startOpenHostServer({
     port: 0,
     environment: "test",
-    authnBaseUrl: "http://127.0.0.1:9", // never reachable - tests use no-auth
-    insecureNoAuth: true,
     // Discard port: the gateway probe must fail fast and report unreachable.
     openclawGatewayUrl: "ws://127.0.0.1:9",
     openclawGatewayToken: null,

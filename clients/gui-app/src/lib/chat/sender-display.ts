@@ -142,8 +142,6 @@ function agentProviderLabel(provider: GuiHarnessId): string {
       return "Codex";
     case "opencode":
       return "OpenCode";
-    case "traycer":
-      return "Traycer";
     case "openrouter":
       return "OpenRouter";
     case "cursor":

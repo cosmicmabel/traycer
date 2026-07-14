@@ -465,16 +465,6 @@ export class StreamConnection {
       });
       return;
     }
-    if (verdict.kind === "unavailable") {
-      this.fatal({
-        code: "UNAUTHORIZED",
-        reason: "bearer verification is temporarily unavailable",
-        incompatibleMethods: null,
-        upgradeGuidance: null,
-        retryable: true,
-      });
-      return;
-    }
 
     const compat = checkStreamCompatibility(
       this.deps.registry,

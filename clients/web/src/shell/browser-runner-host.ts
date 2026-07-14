@@ -1,18 +1,4 @@
-import {
-  refreshAuthTokenViaHttp,
-  validateAuthTokenIdentityViaHttp,
-  validateAuthTokenViaHttp,
-} from "@traycer-clients/shared/auth/auth-validation";
 import type { AuthIdentityValidationResult } from "@traycer-clients/shared/auth/auth-validation-types";
-import {
-  applySlowDown,
-  createPollSchedule,
-  isDeviceExpired,
-  pollDeviceToken,
-  startDeviceAuthorization,
-  DEFAULT_DEVICE_REQUEST_TIMEOUT_MS,
-  type DevicePollSchedule,
-} from "@traycer-clients/shared/auth/device-auth";
 import type {
   AuthTokenRefreshResult,
   AuthTokenValidationResult,
@@ -59,15 +45,10 @@ export interface BrowserRunnerHostOptions {
  * Capability posture (see the interface docs in
  * clients/shared/platform/runner-host.ts, which describe the web shell for
  * every member):
- *  - Auth (validate/refresh + RFC 8628 device flow) runs in-page against the
- *    serve process's same-origin `/authn/*` reverse proxy, which is what makes
- *    the direct HTTP helpers CORS-safe here (desktop needs Electron main for
- *    the same reason).
- *  - In LOCAL MODE (`config.localMode`, i.e. the serve process fronts the
- *    open host or was started with `--local`) no authn is involved at all:
+ *  - Auth is LOCAL-ONLY: there is no account and no auth service anywhere.
  *    validate/refresh answer with the synthetic local identity
- *    (local-session.ts) and the device flow settles instantly - the page
- *    never shows a Traycer sign-in.
+ *    (local-session.ts) and the "device flow" settles instantly - the page
+ *    never shows a sign-in.
  *  - `hasLocalHost: true`: the serve process fronts a real local host; the
  *    snapshot stream polls `/api/runtime-config` and advertises the
  *    same-origin `/host/rpc` WebSocket proxy as the dial URL.
@@ -132,23 +113,18 @@ export class BrowserRunnerHost implements IRunnerHost {
   readonly hostManagement: null = null;
   readonly hostTray: null = null;
 
-  private readonly localMode: boolean;
   private localHost: LocalHostSnapshot | null;
   private readonly localHostHandlers = new Set<
     (snapshot: LocalHostSnapshot | null) => void
   >();
 
   constructor(options: BrowserRunnerHostOptions) {
-    this.signInUrl = options.config.signInUrl;
-    this.authnBaseUrl = `${window.location.origin}/authn`;
-    this.localMode = options.config.localMode;
+    // There is no sign-in page and no auth service; these URL members exist
+    // only to satisfy the platform contract, so they point at the page itself.
+    this.signInUrl = window.location.origin;
+    this.authnBaseUrl = window.location.origin;
     this.localHost = snapshotFromConfig(options.config);
-    this.deviceFlow = this.localMode
-      ? new LocalDeviceFlowHost()
-      : new BrowserDeviceFlowHost({
-          authnBaseUrl: this.authnBaseUrl,
-          hostLabel: hostLabelFromConfig(options.config),
-        });
+    this.deviceFlow = new LocalDeviceFlowHost();
     // Track host restarts/upgrades for the lifetime of the page. The page and
     // this runner host share that lifetime, so the interval is never cleared.
     window.setInterval(() => {
@@ -160,39 +136,32 @@ export class BrowserRunnerHost implements IRunnerHost {
     token: string,
     refreshToken: string,
   ): Promise<AuthTokenValidationResult> {
-    if (this.localMode) {
-      return { kind: "valid", profile: localAuthProfile() };
-    }
-    return validateAuthTokenViaHttp(this.authnBaseUrl, token, refreshToken);
+    void token;
+    void refreshToken;
+    return { kind: "valid", profile: localAuthProfile() };
   }
 
   async validateAuthTokenIdentity(
     token: string,
     refreshToken: string,
   ): Promise<AuthIdentityValidationResult> {
-    if (this.localMode) {
-      return { kind: "valid", user: localAuthenticatedUser() };
-    }
-    return validateAuthTokenIdentityViaHttp(
-      this.authnBaseUrl,
-      token,
-      refreshToken,
-    );
+    void token;
+    void refreshToken;
+    return { kind: "valid", user: localAuthenticatedUser() };
   }
 
   async refreshAuthToken(
     token: string,
     refreshToken: string,
   ): Promise<AuthTokenRefreshResult> {
-    if (this.localMode) {
-      // The constant local credential never expires; hand it straight back.
-      return {
-        kind: "refreshed",
-        token: LOCAL_BEARER_TOKEN,
-        refreshToken: LOCAL_REFRESH_TOKEN,
-      };
-    }
-    return refreshAuthTokenViaHttp(this.authnBaseUrl, token, refreshToken);
+    void token;
+    void refreshToken;
+    // The constant local credential never expires; hand it straight back.
+    return {
+      kind: "refreshed",
+      token: LOCAL_BEARER_TOKEN,
+      refreshToken: LOCAL_REFRESH_TOKEN,
+    };
   }
 
   async openExternalLink(url: string): Promise<void> {
@@ -299,12 +268,6 @@ function sameSnapshot(
   );
 }
 
-function hostLabelFromConfig(config: WebRuntimeConfig): string {
-  return config.systemHostName.length > 0
-    ? `Web (${config.systemHostName})`
-    : `Web (${window.location.hostname})`;
-}
-
 // ─── Device flow (local mode, instant) ──────────────────────────────────────
 
 /**
@@ -351,189 +314,6 @@ class LocalDeviceFlowSession implements DeviceFlowSession {
 
   cancel(): void {
     this.cancelled = true;
-  }
-}
-
-// ─── Device flow (RFC 8628, in-page) ────────────────────────────────────────
-
-interface BrowserDeviceFlowOptions {
-  readonly authnBaseUrl: string;
-  readonly hostLabel: string;
-}
-
-/**
- * In-page device-flow controller. Desktop runs this loop in Electron main
- * purely to dodge renderer CORS; the web shell's authn traffic rides the
- * same-origin `/authn/*` proxy, so the shared RFC 8628 helpers can run
- * directly in the page. The poll loop lives for the tab: a closed tab simply
- * abandons the device code, which expires server-side.
- */
-class BrowserDeviceFlowHost implements IDeviceFlowHost {
-  private readonly options: BrowserDeviceFlowOptions;
-
-  constructor(options: BrowserDeviceFlowOptions) {
-    this.options = options;
-  }
-
-  async start(): Promise<DeviceFlowSession | null> {
-    const authorization = await startDeviceAuthorization(
-      this.options.authnBaseUrl,
-      { clientId: "desktop", hostLabel: this.options.hostLabel },
-      { signal: undefined, timeoutMs: DEFAULT_DEVICE_REQUEST_TIMEOUT_MS },
-    );
-    if (authorization.kind !== "started") {
-      return null;
-    }
-    return new BrowserDeviceFlowSession(
-      this.options.authnBaseUrl,
-      authorization.deviceCode,
-      {
-        userCode: authorization.userCode,
-        verificationUri: authorization.verificationUri,
-        verificationUriComplete: authorization.verificationUriComplete,
-        expiresInSeconds: authorization.expiresInSeconds,
-        intervalSeconds: authorization.intervalSeconds,
-      },
-    );
-  }
-}
-
-class BrowserDeviceFlowSession implements DeviceFlowSession {
-  readonly authorization: DeviceFlowAuthorization;
-
-  private readonly authnBaseUrl: string;
-  private readonly deviceCode: string;
-  private schedule: DevicePollSchedule;
-  private readonly abort = new AbortController();
-  private readonly handlers = new Set<(result: DeviceFlowResult) => void>();
-  private settledResult: DeviceFlowResult | null = null;
-  private cancelled = false;
-  private polling = false;
-  private timer: number | null = null;
-
-  constructor(
-    authnBaseUrl: string,
-    deviceCode: string,
-    authorization: DeviceFlowAuthorization,
-  ) {
-    this.authnBaseUrl = authnBaseUrl;
-    this.deviceCode = deviceCode;
-    this.authorization = authorization;
-    this.schedule = createPollSchedule({
-      intervalSeconds: authorization.intervalSeconds,
-      expiresInSeconds: authorization.expiresInSeconds,
-      startedAtMs: Date.now(),
-    });
-    this.scheduleNextPoll();
-  }
-
-  onResult(handler: (result: DeviceFlowResult) => void): Disposable {
-    // Replay a result that settled before the subscription so a fast poll
-    // can't be missed (same contract as the desktop controller).
-    if (this.settledResult !== null) {
-      handler(this.settledResult);
-      return { dispose: () => undefined };
-    }
-    this.handlers.add(handler);
-    return {
-      dispose: () => {
-        this.handlers.delete(handler);
-      },
-    };
-  }
-
-  pollNow(): void {
-    if (this.settledResult !== null || this.cancelled || this.polling) {
-      return;
-    }
-    if (this.timer !== null) {
-      window.clearTimeout(this.timer);
-      this.timer = null;
-    }
-    void this.pollOnce();
-  }
-
-  cancel(): void {
-    this.cancelled = true;
-    this.abort.abort();
-    if (this.timer !== null) {
-      window.clearTimeout(this.timer);
-      this.timer = null;
-    }
-    this.handlers.clear();
-  }
-
-  private scheduleNextPoll(): void {
-    if (this.settledResult !== null || this.cancelled) {
-      return;
-    }
-    this.timer = window.setTimeout(() => {
-      this.timer = null;
-      void this.pollOnce();
-    }, this.schedule.intervalMs);
-  }
-
-  private async pollOnce(): Promise<void> {
-    if (this.settledResult !== null || this.cancelled || this.polling) {
-      return;
-    }
-    if (isDeviceExpired(this.schedule, Date.now())) {
-      this.settle({ kind: "expired" });
-      return;
-    }
-    this.polling = true;
-    const result = await pollDeviceToken(
-      this.authnBaseUrl,
-      this.deviceCode,
-      "desktop",
-      {
-        signal: this.abort.signal,
-        timeoutMs: DEFAULT_DEVICE_REQUEST_TIMEOUT_MS,
-      },
-    );
-    this.polling = false;
-    if (this.settledResult !== null || this.cancelled) {
-      return;
-    }
-    switch (result.kind) {
-      case "authorized":
-        this.settle({
-          kind: "authorized",
-          token: result.token,
-          refreshToken: result.refreshToken,
-        });
-        return;
-      case "access-denied":
-        this.settle({ kind: "denied" });
-        return;
-      case "expired":
-        this.settle({ kind: "expired" });
-        return;
-      case "invalid":
-        this.settle({ kind: "error" });
-        return;
-      case "slow-down":
-        this.schedule = applySlowDown(this.schedule, result.retryAfterSeconds);
-        this.scheduleNextPoll();
-        return;
-      case "authorization-pending":
-      case "network-error":
-        // Transient: keep polling until the device_code TTL elapses.
-        this.scheduleNextPoll();
-        return;
-    }
-  }
-
-  private settle(result: DeviceFlowResult): void {
-    this.settledResult = result;
-    if (this.timer !== null) {
-      window.clearTimeout(this.timer);
-      this.timer = null;
-    }
-    for (const handler of this.handlers) {
-      handler(result);
-    }
-    this.handlers.clear();
   }
 }
 

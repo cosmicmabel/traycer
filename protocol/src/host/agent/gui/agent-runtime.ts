@@ -792,12 +792,6 @@ export const cursorUserMessageAnchorResolvedSchema = z.object({
   cursorRunId: z.string().nullable(),
 });
 
-export const traycerUserMessageAnchorResolvedSchema = z.object({
-  harnessId: z.literal("traycer"),
-  sessionId: z.string(),
-  opencodeUserMessageId: z.string(),
-});
-
 export const openRouterUserMessageAnchorResolvedSchema = z.object({
   harnessId: z.literal("openrouter"),
   sessionId: z.string(),
@@ -888,7 +882,6 @@ export const userMessageAnchorResolvedEventSchema = z.object({
     codexUserMessageAnchorResolvedSchema,
     openCodeUserMessageAnchorResolvedSchema,
     cursorUserMessageAnchorResolvedSchema,
-    traycerUserMessageAnchorResolvedSchema,
     openRouterUserMessageAnchorResolvedSchema,
     grokUserMessageAnchorResolvedSchema,
     qwenUserMessageAnchorResolvedSchema,

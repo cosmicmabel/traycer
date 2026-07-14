@@ -52,7 +52,7 @@ describe("isRateLimitCapableProvider", () => {
     expect(isRateLimitCapableProvider("codex")).toBe(true);
     expect(isRateLimitCapableProvider("kilocode")).toBe(true);
     expect(isRateLimitCapableProvider("cursor")).toBe(false);
-    expect(isRateLimitCapableProvider("traycer")).toBe(false);
+    expect(isRateLimitCapableProvider("qwen")).toBe(false);
   });
 });
 

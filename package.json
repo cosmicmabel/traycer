@@ -2,9 +2,8 @@
   "name": "traycer",
   "version": "0.0.0",
   "scripts": {
-    "dev-desktop": "bun scripts/dev-desktop.js",
     "compile": "nx run-many --target=compile --all --tui=false",
-    "build": "nx run-many --target=build --all --exclude=@traycer-clients/desktop --tui=false",
+    "build": "nx run-many --target=build --all --tui=false",
     "format": "nx run-many --target=format --all --tui=false",
     "lint": "nx run-many --target=lint --all --tui=false",
     "test": "nx run-many --target=test --all --tui=false",
@@ -36,11 +35,6 @@
     "@pierre/diffs": "1.2.9",
     "@pierre/trees": "^1.0.0-beta.5",
     "@rolldown/plugin-babel": "^0.2.3",
-    "@sentry/browser": "10.62.0",
-    "@sentry/electron": "^7.15.0",
-    "@sentry/esbuild-plugin": "^5.3.0",
-    "@sentry/node": "^10.63.0",
-    "@sentry/vite-plugin": "^5.3.0",
     "@tailwindcss/typography": "^0.5.20",
     "@tailwindcss/vite": "^4.3.2",
     "@tanstack/eslint-plugin-query": "^5.101.2",
@@ -88,15 +82,10 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
-    "commander": "^15.0.0",
     "culori": "^4.0.2",
     "date-fns": "^4.4.0",
     "diff": "^9.0.0",
     "dompurify": "^3.4.11",
-    "electron": "^42.6.0",
-    "electron-builder": "^26.15.3",
-    "electron-log": "^5.4.4",
-    "encrypt-storage": "^2.14.7",
     "esbuild": "^0.28.1",
     "eslint": "^9.39.4",
     "eslint-plugin-jsx-a11y": "^6.10.2",
@@ -114,9 +103,7 @@
     "mermaid": "^11.16.0",
     "motion": "^12.42.2",
     "next-themes": "^0.4.6",
-    "node-stream-zip": "^1.15.0",
     "pathe": "^2.0.3",
-    "posthog-js": "^1.396.6",
     "prettier": "^3.9.4",
     "radix-ui": "1.6.0",
     "react": "^19.2.7",
@@ -155,10 +142,8 @@
     "@eslint/js": "catalog:",
     "@tanstack/eslint-plugin-query": "catalog:",
     "@tanstack/eslint-plugin-router": "catalog:",
-    "@types/jsonwebtoken": "^9.0.10",
     "@typescript-eslint/eslint-plugin": "catalog:",
     "@typescript-eslint/parser": "catalog:",
-    "concurrently": "^10.0.3",
     "esbuild": "catalog:",
     "eslint": "catalog:",
     "eslint-plugin-jsx-a11y": "catalog:",
@@ -167,10 +152,8 @@
     "eslint-plugin-react-refresh": "catalog:",
     "globals": "catalog:",
     "nx": "^22.7.6",
-    "postject": "^1.0.0-alpha.6",
     "typescript-eslint": "catalog:",
-    "vitest": "^4.1.9",
-    "wait-on": "^9.0.10"
+    "vitest": "^4.1.9"
   },
   "overrides": {
     "@codemirror/state": "^6.7.0",
@@ -190,11 +173,7 @@
     "undici": "^7.25.0",
     "uuid": "^14.0.1"
   },
-  "trustedDependencies": [
-    "electron"
-  ],
   "dependencies": {
-    "inversify": "^8.1.1",
     "jsdom": "^29.1.1",
     "typescript": "^6.0.3"
   }

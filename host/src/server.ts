@@ -49,10 +49,7 @@ export function startOpenHostServer(config: OpenHostConfig): RunningOpenHost {
   const runtime = new RegistryRuntime(hostRpcRegistry);
   const rpcManifest = runtime.buildManifest();
   const streamManifest = buildStreamManifest(hostStreamRpcRegistry);
-  const verifier = new BearerVerifier(
-    config.authnBaseUrl,
-    config.insecureNoAuth,
-  );
+  const verifier = new BearerVerifier();
   const gatewayOptions = {
     url: config.openclawGatewayUrl,
     token: config.openclawGatewayToken,

@@ -41,13 +41,6 @@ interface AccountLine {
 
 /** Mirrors `ProviderAuthLine`, restyled for the cinematic copy column. */
 function accountLineFor(state: ProviderCliState): AccountLine {
-  if (state.providerId === "traycer" && state.enabled) {
-    return {
-      text: "Ready with your Traycer subscription",
-      tone: "good",
-      title: null,
-    };
-  }
   if (!state.enabled) return { text: "Disabled", tone: "muted", title: null };
   const { auth } = state;
   if (state.authPending) {
@@ -84,11 +77,9 @@ function accountLineFor(state: ProviderCliState): AccountLine {
 }
 
 function installLabelFor(
-  traycerProvider: boolean,
   hostUnavailable: boolean,
   installState: InstallState,
 ): string {
-  if (traycerProvider) return "Built in";
   if (hostUnavailable) return "Unavailable";
   return INSTALL_LABELS[installState];
 }
@@ -207,15 +198,9 @@ export function OnboardingDetectedAgents() {
   const rows = ORDERED_PROVIDERS.map(({ providerId }): ProviderListRow => {
     const state = providerStateFor(providers, providerId);
     const enabled = enabledForProvider(state);
-    const traycerProvider = providerId === "traycer";
-    const installState = traycerProvider ? "detected" : installStateFor(state);
-    const installLabel = installLabelFor(
-      traycerProvider,
-      hostUnavailable,
-      installState,
-    );
-    const installDetected =
-      traycerProvider || (!hostUnavailable && installState === "detected");
+    const installState = installStateFor(state);
+    const installLabel = installLabelFor(hostUnavailable, installState);
+    const installDetected = !hostUnavailable && installState === "detected";
     const disablingLastEnabled = disablingLastEnabledFor(
       state,
       enabled,

@@ -12,7 +12,7 @@ import type {
 import type { ProviderRateLimitEnvelope } from "@/lib/rate-limits/rate-limit-envelope";
 import { Badge } from "@/components/ui/badge";
 import { MutedAgentSpinner } from "@/components/ui/agent-spinning-dots";
-import { MeterRow } from "@/components/settings/panels/traycer-subscription-views";
+import { MeterRow } from "@/components/settings/panels/meter-row";
 import { contextUsageTone } from "@/components/chat/context-usage";
 import {
   formatUnavailableReason,
@@ -42,7 +42,9 @@ import { cn } from "@/lib/utils";
  *   the single-provider tab.
  */
 export type RateLimitViewVariant =
-  "settings" | "popover-detail" | "popover-overview";
+  | "settings"
+  | "popover-detail"
+  | "popover-overview";
 
 /**
  * The condensed Overview surface. Fields the single-provider detail keeps but

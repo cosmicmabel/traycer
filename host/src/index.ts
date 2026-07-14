@@ -3,14 +3,12 @@ import { loadOrMintHostId, removePidFile, writePidFile } from "./pid-file";
 import { startOpenHostServer } from "./server";
 
 /**
- * `bun host/src/index.ts [--port N] [--environment production] [--authn-url …]
- *   [--require-auth] [--openclaw-gateway-url ws://127.0.0.1:18789]
- *   [--openclaw-gateway-token …]`
+ * `bun host/src/index.ts [--port N] [--environment production]
+ *   [--openclaw-gateway-url ws://127.0.0.1:18789] [--openclaw-gateway-token …]`
  *
- * Starts the open-source Traycer host, writes the pid.json the clients
- * discover it through, and removes it again on shutdown. Runs local-only by
- * default (no Traycer account: any bearer maps to the single local user);
- * `--require-auth` opts back into verifying bearers against authn.
+ * Starts the host server, writes the pid.json the clients discover it
+ * through, and removes it again on shutdown. Local-only: no accounts, no
+ * external services - every connection is the single local user.
  */
 async function main(): Promise<void> {
   const config = parseOpenHostArgs(process.argv.slice(2));
@@ -26,15 +24,9 @@ async function main(): Promise<void> {
   console.log(
     `open host ${OPEN_HOST_VERSION} listening on ws://127.0.0.1:${server.port}/rpc (hostId ${hostId}, pid file ${pidPath})`,
   );
-  if (config.insecureNoAuth) {
-    console.log(
-      "auth: local mode (default) - no Traycer account required; every connection is the local user. Pass --require-auth to verify bearers against authn.",
-    );
-  } else {
-    console.log(
-      `auth: verifying bearers against ${config.authnBaseUrl} (--require-auth)`,
-    );
-  }
+  console.log(
+    "local-only: no accounts, no external services - every connection is the local user.",
+  );
 
   const shutdown = (): void => {
     void removePidFile(config.environment).finally(() => {

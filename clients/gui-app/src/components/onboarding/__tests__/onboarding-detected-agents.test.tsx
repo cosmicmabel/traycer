@@ -28,7 +28,6 @@ describe("OnboardingDetectedAgents", () => {
       "Codex",
       "Claude Code",
       "OpenCode",
-      "Traycer Inference",
       "OpenRouter",
       "Droid",
       "Cursor",

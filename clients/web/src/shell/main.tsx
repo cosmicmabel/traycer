@@ -28,12 +28,10 @@ async function bootstrap(): Promise<void> {
 
   const host = new BrowserRunnerHost({ config });
 
-  // Local-only deployments (the open host / `--local`): seed the constant
-  // local credential BEFORE the app renders so `AuthService.start()`
-  // rehydrates straight into the signed-in state - no Traycer login screen.
-  if (config.localMode) {
-    await ensureLocalSessionSeeded(host.tokenStore);
-  }
+  // Seed the constant local credential BEFORE the app renders so
+  // `AuthService.start()` rehydrates straight into the signed-in state -
+  // there is no login screen, ever.
+  await ensureLocalSessionSeeded(host.tokenStore);
 
   createRoot(container).render(
     <StrictMode>

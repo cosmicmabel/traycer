@@ -5,12 +5,9 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { useIsFetching, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { Gauge, Settings } from "lucide-react";
-import {
-  DEFAULT_ACCOUNT_CONTEXT,
-  type AccountContext,
-} from "@traycer/protocol/common/schemas";
+import { DEFAULT_ACCOUNT_CONTEXT } from "@traycer/protocol/common/schemas";
 import { Badge } from "@/components/ui/badge";
 import { MutedAgentSpinner } from "@/components/ui/agent-spinning-dots";
 import { PopoverContent } from "@/components/ui/popover";
@@ -55,80 +52,29 @@ import { type RateLimitProviderId } from "@/lib/rate-limit-providers";
 import { useRelativeTimestamp } from "@/lib/relative-time";
 import { useSystemTabModalActions } from "@/stores/tabs/use-system-tab-modal";
 import type { ProviderId } from "@traycer/protocol/host/provider-schemas";
-import { useAuthUser } from "@/hooks/auth/use-auth-user-query";
-import {
-  resolveAccountContext,
-  useAccountContextStore,
-} from "@/stores/auth/account-context-store";
-import {
-  accountContextValue,
-  isCreditBasedPricing,
-  isTraycerEligible,
-  parseAccountContextValue,
-  resolveTraycerSubscriptionState,
-  selectSubscription,
-  subscriptionPlanLabel,
-  type TraycerSubscriptionState,
-} from "@/lib/auth/traycer-subscription-content";
-import {
-  TraycerAccountSelect,
-  TraycerSubscriptionView,
-} from "@/components/settings/panels/traycer-subscription-views";
 import {
   useRateLimitPopoverStore,
   type RateLimitPopoverTab,
 } from "@/stores/rate-limits/rate-limit-popover-store";
 import { cn } from "@/lib/utils";
 
-/**
- * A rail/Overview entry, in draw order: either a host-RPC provider or the
- * synthetic Traycer entry. `railTabProviderId` maps each to a `ProviderId` so a
- * single `sortProviderStatesByProviderOrder` positions Traycer at its
- * `PROVIDER_ID_ORDER` slot among the providers.
- */
-type RailTabDescriptor =
-  | { readonly kind: "provider"; readonly providerId: RateLimitProviderId }
-  | { readonly kind: "traycer" };
-
-function railTabProviderId(tab: RailTabDescriptor): ProviderId {
-  return tab.kind === "traycer" ? "traycer" : tab.providerId;
+/** A rail/Overview entry, in draw order: one per host-RPC provider. */
+interface RailTabDescriptor {
+  readonly kind: "provider";
+  readonly providerId: RateLimitProviderId;
 }
 
-function useTraycerSubscription() {
-  const query = useAuthUser();
-  const storedAccountContext = useAccountContextStore((s) => s.accountContext);
-  const user = query.data ?? null;
-  const teams = user?.teamSubscriptions ?? [];
-  const teamIds = new Set(teams.map((team) => team.team.id));
-  const resolvedAccountContext = resolveAccountContext(
-    storedAccountContext,
-    teamIds,
-  );
-  const subscription = selectSubscription(user, resolvedAccountContext, teams);
-  const eligible = subscription !== null && isTraycerEligible(subscription);
-  const rateLimitBased =
-    subscription !== null &&
-    !isCreditBasedPricing(subscription.subscriptionStatus);
-  return {
-    query,
-    storedAccountContext,
-    resolvedAccountContext,
-    teams,
-    subscription,
-    eligible,
-    rateLimitBased,
-  };
+function railTabProviderId(tab: RailTabDescriptor): ProviderId {
+  return tab.providerId;
 }
 
 function orderRailTabs(
   providers: ReadonlyArray<ConfiguredRateLimitProvider>,
-  includeTraycer: boolean,
 ): ReadonlyArray<RailTabDescriptor> {
   const descriptors: RailTabDescriptor[] = providers.map((provider) => ({
     kind: "provider",
     providerId: provider.providerId,
   }));
-  if (includeTraycer) descriptors.push({ kind: "traycer" });
   return sortProviderStatesByProviderOrder(
     descriptors.map((descriptor) => ({
       providerId: railTabProviderId(descriptor),
@@ -185,33 +131,19 @@ function RateLimitPopoverBody({
     [displayProviders],
   );
 
-  // Traycer is a GUI-only rail entry (AuthService subscription, not a host RPC),
-  // gated on the *selected* account being paid or credit-bundled. Recomputed
-  // reactively from the auth query + account-context store, so the tab appears /
-  // disappears live as either changes - not snapshotted at popover-open time.
-  const traycerSubscription = useTraycerSubscription();
-
-  const railTabs = useMemo(
-    () => orderRailTabs(providers, traycerSubscription.eligible),
-    [providers, traycerSubscription.eligible],
-  );
+  const railTabs = useMemo(() => orderRailTabs(providers), [providers]);
   const activeTab = useRateLimitPopoverStore((state) => state.activeTab);
   const setActiveTab = useRateLimitPopoverStore((state) => state.setActiveTab);
 
-  // Zero-state only when there is genuinely nothing to show: no host-RPC
-  // providers AND no eligible Traycer tab.
-  if (providers.length === 0 && !traycerSubscription.eligible) {
+  if (providers.length === 0) {
     return <RateLimitZeroState onClose={onClose} />;
   }
 
-  // A credential removed (or Traycer becoming ineligible) mid-session can drop
-  // the active tab from the rail; fall back to Overview rather than rendering a
-  // tab that no longer exists.
+  // A credential removed mid-session can drop the active tab from the rail;
+  // fall back to Overview rather than rendering a tab that no longer exists.
   const validTabs = new Set<RateLimitPopoverTab>([
     "overview",
-    ...railTabs.map((tab) =>
-      tab.kind === "traycer" ? "traycer" : tab.providerId,
-    ),
+    ...railTabs.map((tab) => tab.providerId),
   ]);
   const resolvedTab: RateLimitPopoverTab = validTabs.has(activeTab)
     ? activeTab
@@ -229,13 +161,6 @@ function RateLimitPopoverBody({
       <RateLimitRail
         railTabs={railTabs}
         providers={providers}
-        traycerRefreshTarget={{
-          enabled: traycerSubscription.eligible,
-          accountContext: traycerSubscription.storedAccountContext,
-          rateLimitBased: traycerSubscription.rateLimitBased,
-          isFetching: traycerSubscription.query.isFetching,
-          refetch: traycerSubscription.query.refetch,
-        }}
         activeTab={resolvedTab}
         onSelect={setActiveTab}
         onClose={onClose}
@@ -252,18 +177,16 @@ function RateLimitPopoverBody({
 }
 
 /**
- * The single-tab detail pane: the synthetic Traycer block, or a host-RPC
- * provider block. Split out so `RateLimitPopoverBody` picks Overview-vs-detail
- * with one ternary instead of a nested one.
+ * The single-tab detail pane: a host-RPC provider block. Split out so
+ * `RateLimitPopoverBody` picks Overview-vs-detail with one ternary instead of
+ * a nested one.
  */
 function RateLimitDetailPane({
   tab,
 }: {
   readonly tab: Exclude<RateLimitPopoverTab, "overview">;
 }): ReactNode {
-  return tab === "traycer" ? (
-    <TraycerRateLimitBlock variant="popover-detail" onReady={null} />
-  ) : (
+  return (
     <RateLimitProviderBlock
       providerId={tab}
       variant="popover-detail"
@@ -284,14 +207,12 @@ function RateLimitDetailPane({
 function RateLimitRail({
   railTabs,
   providers,
-  traycerRefreshTarget,
   activeTab,
   onSelect,
   onClose,
 }: {
   readonly railTabs: ReadonlyArray<RailTabDescriptor>;
   readonly providers: ReadonlyArray<ConfiguredRateLimitProvider>;
-  readonly traycerRefreshTarget: TraycerRefreshTarget;
   readonly activeTab: RateLimitPopoverTab;
   readonly onSelect: (tab: RateLimitPopoverTab) => void;
   readonly onClose: () => void;
@@ -316,36 +237,21 @@ function RateLimitRail({
           icon={<Gauge className="size-4" />}
         />
         <div aria-hidden className="my-0.5 h-px w-5 bg-border" />
-        {railTabs.map((tab) =>
-          tab.kind === "traycer" ? (
-            <RailTab
-              key="traycer"
-              label={providerDisplayName("traycer")}
-              selected={activeTab === "traycer"}
-              onSelect={() => onSelect("traycer")}
-              icon={
-                <HarnessIcon harnessId={providerIdToGuiHarnessId("traycer")} />
-              }
-            />
-          ) : (
-            <RailTab
-              key={tab.providerId}
-              label={providerDisplayName(tab.providerId)}
-              selected={activeTab === tab.providerId}
-              onSelect={() => onSelect(tab.providerId)}
-              icon={
-                <HarnessIcon
-                  harnessId={providerIdToGuiHarnessId(tab.providerId)}
-                />
-              }
-            />
-          ),
-        )}
+        {railTabs.map((tab) => (
+          <RailTab
+            key={tab.providerId}
+            label={providerDisplayName(tab.providerId)}
+            selected={activeTab === tab.providerId}
+            onSelect={() => onSelect(tab.providerId)}
+            icon={
+              <HarnessIcon
+                harnessId={providerIdToGuiHarnessId(tab.providerId)}
+              />
+            }
+          />
+        ))}
       </div>
-      <RateLimitRefreshAllButton
-        providers={providers}
-        traycerRefreshTarget={traycerRefreshTarget}
-      />
+      <RateLimitRefreshAllButton providers={providers} />
       <button
         type="button"
         aria-label="Provider settings"
@@ -393,10 +299,9 @@ function RailTab({
 /**
  * The Overview tab: every rail entry's *condensed* block
  * (`variant="popover-overview"`), in rail order, each separated by a divider.
- * For host-RPC providers that's their 5h/Weekly windows plus credit/balance
- * figures; for the Traycer entry it's the tier badge + credit/rate-limit
- * breakdown. Per-model breakdowns, spend controls, badges, plan labels, and the
- * Traycer account picker are single-provider-tab detail, not shown here. The
+ * Each entry shows its 5h/Weekly windows plus credit/balance figures.
+ * Per-model breakdowns, spend controls, badges, and plan labels are
+ * single-provider-tab detail, not shown here. The
  * "Refresh all" and settings controls live on the rail (shared across every
  * tab), so this pane is pure content - no header row, and dividers only
  * *between* consecutive blocks. Not capped at 3 (unlike the header glyph) -
@@ -448,18 +353,11 @@ function RateLimitOverview({
             {showDivider ? (
               <div aria-hidden className="h-px bg-border/70" />
             ) : null}
-            {tab.kind === "traycer" ? (
-              <TraycerRateLimitBlock
-                variant="popover-overview"
-                onReady={onReady}
-              />
-            ) : (
-              <RateLimitProviderBlock
-                providerId={tab.providerId}
-                variant="popover-overview"
-                onReady={onReady}
-              />
-            )}
+            <RateLimitProviderBlock
+              providerId={tab.providerId}
+              variant="popover-overview"
+              onReady={onReady}
+            />
           </div>
         );
       })}
@@ -483,51 +381,30 @@ function RateLimitOverviewLoading(): ReactNode {
   );
 }
 
-interface TraycerRefreshTarget {
-  readonly enabled: boolean;
-  readonly accountContext: AccountContext;
-  readonly rateLimitBased: boolean;
-  readonly isFetching: boolean;
-  readonly refetch: () => Promise<unknown>;
-}
-
 /**
  * The rail's icon-only "Refresh all" (Core Flows): ephemeralProcess providers
  * refresh one at a time through the shared serial queue (`force: true`), while
  * httpFetch providers refresh concurrently alongside via a direct query
- * invalidation - a plain GET has no subprocess cost to serialize. The synthetic
- * Traycer entry refreshes here too: it refetches the AuthService subscription
- * query, and rate-limit based plans additionally invalidate the unscoped
- * aperture `host.getRateLimitUsage` query that backs the live artifact bar.
+ * invalidation - a plain GET has no subprocess cost to serialize.
  * `refreshing` combines all lanes' real query state - the queue's draining flag
  * for ephemeralProcess (which stays true a beat longer than any single
  * provider's `isFetching`, covering the "still waiting behind an earlier
  * provider in the queue" gap), each configured httpFetch provider's own
  * `isFetching` (read via `useHostQueries` against the exact same query keys the
- * invalidation below targets), plus Traycer's auth/aperture fetch state - so
+ * invalidation below targets) - so
  * the icon spins for the whole round regardless of which lane(s) are actually
  * configured, not just when an ephemeralProcess provider happens to be in the
  * mix.
  */
 function RateLimitRefreshAllButton({
   providers,
-  traycerRefreshTarget,
 }: {
   readonly providers: ReadonlyArray<ConfiguredRateLimitProvider>;
-  readonly traycerRefreshTarget: TraycerRefreshTarget;
 }): ReactNode {
   const draining = useIsRateLimitQueueDraining();
   const queryClient = useQueryClient();
   const hostId = useReactiveActiveHostId();
   const client = useHostClient();
-  const traycerRateLimitUsageFetching =
-    useIsFetching({
-      queryKey: queryKeys.hostTraycerRateLimitUsage(
-        hostId,
-        traycerRefreshTarget.accountContext,
-      ),
-      exact: true,
-    }) > 0;
   const httpFetchProviders = providers.filter(
     (provider) => provider.lane === "httpFetch",
   );
@@ -560,18 +437,12 @@ function RateLimitRefreshAllButton({
     options: httpFetchOptions,
     mapResponse: mapResponseToProviderRateLimitEnvelope,
   });
-  const traycerRefreshing =
-    traycerRefreshTarget.enabled &&
-    (traycerRefreshTarget.isFetching ||
-      (traycerRefreshTarget.rateLimitBased && traycerRateLimitUsageFetching));
   const refreshing =
-    draining ||
-    httpFetchQueries.some((query) => query.isFetching) ||
-    traycerRefreshing;
+    draining || httpFetchQueries.some((query) => query.isFetching);
 
   // Fire-and-forget, not awaited: httpFetch providers refresh concurrently via a
   // direct invalidation, ephemeralProcess providers queue through the shared
-  // serial lane, and Traycer refetches its subscription/usage queries. Returns
+  // serial lane. Returns
   // an already-resolved promise so `RefreshIconButton` gets its
   // `() => Promise<void>` contract without gating the spinner on the fetches
   // themselves - `refreshing` (above) owns that.
@@ -596,18 +467,6 @@ function RateLimitRefreshAllButton({
           { force: true },
         );
       });
-    if (traycerRefreshTarget.enabled) {
-      void traycerRefreshTarget.refetch();
-      if (traycerRefreshTarget.rateLimitBased) {
-        void queryClient.invalidateQueries({
-          queryKey: queryKeys.hostTraycerRateLimitUsage(
-            hostId,
-            traycerRefreshTarget.accountContext,
-          ),
-          exact: true,
-        });
-      }
-    }
     return Promise.resolve();
   };
 
@@ -845,166 +704,6 @@ function RateLimitProviderBody({
       return (
         <div className={cn(state.degraded && "opacity-60")}>
           <ProviderRateLimitDetail data={state.data} variant={variant} />
-        </div>
-      );
-  }
-}
-
-/**
- * The synthetic "Traycer" block - the GUI-sourced analogue of
- * `RateLimitProviderBlock`. Its data is the signed-in user's subscription
- * (`useAuthUser`) for the globally-selected account (`useAccountContextStore`),
- * NOT a `host.getRateLimitUsage` provider pull. Header mirrors the provider
- * blocks (name + plan/tier chip + "Updated Xm ago" + refresh) - the chip
- * (`subscriptionPlanLabel`) reflects whichever account is currently selected
- * and is single-provider-tab only, same scoping
- * `RateLimitProviderBlock` applies to its own plan chip; the detail variant
- * adds the same Personal/Team picker the Settings card uses, so switching
- * accounts here updates the global selection (and therefore Overview, the
- * Settings card, and what a Traycer run bills). Both variants render through
- * the shared `TraycerSubscriptionView`. `onReady` mirrors
- * `RateLimitProviderBlock`'s own - fires once `state.kind` moves past `cold`,
- * `null` on the single-provider detail tab.
- */
-function TraycerRateLimitBlock({
-  variant,
-  onReady,
-}: {
-  readonly variant: PopoverBlockVariant;
-  readonly onReady: (() => void) | null;
-}): ReactNode {
-  const traycerSubscription = useTraycerSubscription();
-  const setAccountContext = useAccountContextStore((s) => s.setAccountContext);
-  const queryClient = useQueryClient();
-  const hostId = useReactiveActiveHostId();
-  const state = resolveTraycerSubscriptionState({
-    isPending: traycerSubscription.query.isPending,
-    isError: traycerSubscription.query.isError,
-    subscription: traycerSubscription.subscription,
-  });
-  useEffect(() => {
-    if (state.kind !== "cold" && onReady !== null) onReady();
-  }, [state.kind, onReady]);
-
-  const overview = variant === "popover-overview";
-  const rateLimitUsageFetching =
-    useIsFetching({
-      queryKey: queryKeys.hostTraycerRateLimitUsage(
-        hostId,
-        traycerSubscription.storedAccountContext,
-      ),
-      exact: true,
-    }) > 0;
-  const isRefreshing =
-    traycerSubscription.query.isFetching ||
-    (traycerSubscription.rateLimitBased && rateLimitUsageFetching);
-  // Chip next to the name, single-provider tab only - same scoping
-  // `resolveProviderPlanLabel` uses for the host-RPC providers' plan chip.
-  // Reflects whichever account (personal/team) is currently selected, since
-  // `subscription` is already resolved against that selection.
-  const planLabel =
-    !overview && traycerSubscription.subscription !== null
-      ? subscriptionPlanLabel(
-          traycerSubscription.subscription.subscriptionStatus,
-        )
-      : null;
-
-  // Refetch the subscription, and - only for rate-limit-based plans, whose
-  // aperture bar is live host data - invalidate that exact query so the mounted
-  // `RateLimitView` refetches it too. `exact: true` targets only the aperture
-  // `{ accountContext }` key, never the providers' `{ accountContext, providerId }`
-  // pulls (which a Traycer refresh can't have changed).
-  const refresh = async (): Promise<void> => {
-    await traycerSubscription.query.refetch();
-    if (traycerSubscription.rateLimitBased) {
-      void queryClient.invalidateQueries({
-        queryKey: queryKeys.hostTraycerRateLimitUsage(
-          hostId,
-          traycerSubscription.storedAccountContext,
-        ),
-        exact: true,
-      });
-    }
-  };
-
-  return (
-    <div className="flex flex-col gap-2">
-      <div className="flex items-center justify-between gap-2">
-        <div className="flex min-w-0 items-center gap-1.5">
-          {overview ? (
-            <HarnessIcon harnessId={providerIdToGuiHarnessId("traycer")} />
-          ) : null}
-          <span className="text-ui-sm font-medium text-foreground">
-            {providerDisplayName("traycer")}
-          </span>
-          {planLabel !== null ? (
-            <Badge variant="secondary" className="font-normal">
-              {planLabel}
-            </Badge>
-          ) : null}
-        </div>
-        <div className="flex items-center gap-1.5">
-          <UsageLimitUpdatedLabel
-            ready={state.kind === "ready"}
-            updatedAt={traycerSubscription.query.dataUpdatedAt}
-            refreshing={isRefreshing}
-            degraded={state.kind === "ready" && state.degraded}
-            // The Traycer aperture block's state (`resolveTraycerSubscriptionState`)
-            // has no transient-reason concept of its own - always the generic note.
-            degradedReason={null}
-          />
-          {/* Overview has its own "Refresh all" on the rail (item 2 feedback);
-              only the single-provider detail tab keeps this one. */}
-          {!overview ? (
-            <RefreshIconButton
-              onRefresh={refresh}
-              label={`Refresh ${providerDisplayName("traycer")}`}
-              refreshing={isRefreshing}
-            />
-          ) : null}
-        </div>
-      </div>
-      {/* Detail tab only: the account picker, matching the Settings card. Renders
-          nothing when the user has no teams. Overview just reflects the global
-          selection with no controls, like every other Overview block. */}
-      {!overview ? (
-        <TraycerAccountSelect
-          teams={traycerSubscription.teams}
-          value={accountContextValue(
-            traycerSubscription.resolvedAccountContext,
-          )}
-          onValueChange={(value) =>
-            setAccountContext(parseAccountContextValue(value))
-          }
-        />
-      ) : null}
-      <TraycerRateLimitBody state={state} />
-    </div>
-  );
-}
-
-function TraycerRateLimitBody({
-  state,
-}: {
-  readonly state: TraycerSubscriptionState;
-}): ReactNode {
-  switch (state.kind) {
-    case "cold":
-      return <RateLimitDetailSkeleton />;
-    case "error":
-      return (
-        <RateLimitErrorMessage message="Couldn't load your Traycer subscription right now." />
-      );
-    case "empty":
-      return (
-        <p className="text-ui-xs text-muted-foreground">
-          No subscription found for this account.
-        </p>
-      );
-    case "ready":
-      return (
-        <div className={cn(state.degraded && "opacity-60")}>
-          <TraycerSubscriptionView subscription={state.subscription} />
         </div>
       );
   }

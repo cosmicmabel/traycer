@@ -136,7 +136,7 @@ describe("ProviderRateLimitForProvider", () => {
 
   it("renders nothing for a provider without native usage limits", () => {
     const { container } = render(
-      <ProviderRateLimitForProvider providerId="traycer" />,
+      <ProviderRateLimitForProvider providerId="qwen" />,
     );
     expect(container.firstChild).toBe(null);
   });

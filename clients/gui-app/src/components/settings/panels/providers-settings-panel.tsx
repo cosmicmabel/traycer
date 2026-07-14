@@ -64,7 +64,6 @@ import {
 } from "@/lib/provider-ordering";
 import { ProviderAuthBadge, ProviderAuthLine } from "./provider-auth-display";
 import { EnvOverrideEditor } from "./env-override-editor";
-import { TraycerSubscriptionSection } from "./traycer-subscription-section";
 import { ProviderRateLimitForProvider } from "./provider-rate-limit-section";
 
 type ProviderId = ProviderCliState["providerId"];
@@ -105,7 +104,6 @@ const PROVIDER_DESCRIPTIONS: Record<ProviderId, string> = {
   opencode: "OpenCode CLI agent.",
   cursor:
     "Cursor agent - SDK-driven chats authenticated with your Cursor API key.",
-  traycer: "Traycer's managed harness uses the selected OpenCode CLI binary.",
   openrouter:
     "OpenRouter - OpenAI-compatible gateway authenticated with your OpenRouter API key.",
   grok: "Grok agent - xAI's coding CLI via your SuperGrok / X subscription.",
@@ -140,7 +138,6 @@ function terminalAgentArgsPlaceholder(providerId: ProviderId): string {
     case "opencode":
       return TERMINAL_AGENT_ARGS_PLACEHOLDER.opencode;
     case "cursor":
-    case "traycer":
     case "openrouter":
     case "grok":
     case "qwen":
@@ -170,8 +167,7 @@ function candidateConfigForProvider(
   state: ProviderCliState,
   providers: readonly ProviderCliState[],
 ): ProviderCandidateConfig {
-  const usesOpenCodeCandidates =
-    state.providerId === "traycer" || state.providerId === "openrouter";
+  const usesOpenCodeCandidates = state.providerId === "openrouter";
   if (!usesOpenCodeCandidates || state.candidates.length > 0) {
     return { selected: state.selected, candidates: state.candidates };
   }
@@ -436,18 +432,6 @@ function ProvidersRailLayout({
   );
 }
 
-// Gates the subscription card to the Traycer provider here (not via an inline
-// ternary in ProviderDetail) so the credits query never fires while viewing
-// another provider, and ProviderDetail's branch count stays put.
-function TraycerSubscriptionForProvider({
-  providerId,
-}: {
-  readonly providerId: ProviderId;
-}): ReactNode {
-  if (providerId !== "traycer") return null;
-  return <TraycerSubscriptionSection />;
-}
-
 function ProviderEnableSwitch(props: {
   readonly id: string;
   readonly providerId: ProviderCliState["providerId"];
@@ -576,7 +560,6 @@ function ProviderDetail({
         </div>
       </div>
 
-      <TraycerSubscriptionForProvider providerId={providerId} />
       <ProviderRateLimitForProvider providerId={providerId} />
 
       <div
@@ -751,7 +734,6 @@ function envNamePlaceholder(providerId: ProviderId): string {
     case "codex":
       return "OPENAI_API_KEY";
     case "opencode":
-    case "traycer":
       return "ANTHROPIC_API_KEY";
     case "openrouter":
       return "OPENROUTER_API_KEY";

@@ -21,8 +21,6 @@ beforeAll(() => {
     // Unique per run: epic persistence would otherwise replay prior test
     // docs, turning relayed updates into deltas a fresh doc can't resolve.
     environment: `test-epic-${process.pid}-${Date.now()}`,
-    authnBaseUrl: "http://127.0.0.1:9",
-    insecureNoAuth: true,
     openclawGatewayUrl: "ws://127.0.0.1:9",
     openclawGatewayToken: null,
   });

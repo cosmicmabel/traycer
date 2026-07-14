@@ -14,13 +14,7 @@ import { z } from "zod";
  * working regardless of what address the serve process thinks it has.
  */
 export const webRuntimeConfigSchema = z.object({
-  signInUrl: z.string().min(1),
   systemHostName: z.string(),
-  // Local-only deployments (the open host, or `--local` on the serve
-  // process): the shell seeds a synthetic local session and never talks to
-  // Traycer authn. `.catch(false)` keeps older serve processes (no field)
-  // parsing as cloud-auth pages.
-  localMode: z.boolean().catch(false),
   host: z
     .object({
       hostId: z.string().min(1),
@@ -65,9 +59,4 @@ export async function fetchRuntimeConfig(): Promise<WebRuntimeConfig | null> {
 export function hostWebsocketUrlFromLocation(location: Location): string {
   const scheme = location.protocol === "https:" ? "wss" : "ws";
   return `${scheme}://${location.host}/host/rpc`;
-}
-
-/** Same-origin base URL of the serve process's authn reverse proxy. */
-export function authnBaseUrlFromLocation(location: Location): string {
-  return `${location.origin}/authn`;
 }

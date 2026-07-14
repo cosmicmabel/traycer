@@ -10,12 +10,8 @@ import {
 } from "vitest";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { DEFAULT_ACCOUNT_CONTEXT } from "@traycer/protocol/common/schemas";
 import type { ProviderRateLimits } from "@traycer/protocol/host";
-import type {
-  AuthenticatedUser,
-  SubscriptionStatus,
-} from "@traycer/protocol/auth";
+import type { AuthenticatedUser } from "@traycer/protocol/auth";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Popover, PopoverTrigger } from "@/components/ui/popover";
 import { useAccountContextStore } from "@/stores/auth/account-context-store";
@@ -23,7 +19,6 @@ import type {
   AvailableProviderRateLimits,
   ProviderRateLimitEnvelope,
 } from "@/lib/rate-limits/rate-limit-envelope";
-import { queryKeys } from "@/lib/query-keys";
 
 type QueryResult = {
   data: ProviderRateLimitEnvelope | undefined;
@@ -138,20 +133,10 @@ vi.mock("@/lib/rate-limits/ephemeral-fetch-queue", () => ({
 vi.mock("@/stores/tabs/use-system-tab-modal", () => ({
   useSystemTabModalActions: () => ({ openSettings: mocks.openSettings }),
 }));
-// The Traycer tab reads the signed-in user's subscription (AuthService), not a
-// host RPC. Default is a signed-out/cold user -> no Traycer tab, so the
-// host-RPC-provider tests below behave exactly as before.
+// The auth-user query is unused by the popover now; keep a cold default so
+// nothing fires.
 vi.mock("@/hooks/auth/use-auth-user-query", () => ({
   useAuthUser: () => mocks.authUser,
-}));
-// The aperture usage query + its turn-refresh only mount inside the shared
-// RateLimitView (rate-limit-based Traycer plans). Stub them so no real host
-// query fires; the Traycer tests below use a credit-based plan anyway.
-vi.mock("@/hooks/host/use-host-rate-limit-usage-query", () => ({
-  useHostRateLimitUsageQuery: () => ({ data: undefined }),
-}));
-vi.mock("@/hooks/host/use-refresh-rate-limit-usage-on-traycer-turn", () => ({
-  useRefreshRateLimitUsageOnTraycerTurn: () => {},
 }));
 
 import { RateLimitPopover } from "@/components/layout/header/rate-limit-popover";
@@ -251,113 +236,6 @@ function codexReady(): AvailableProviderRateLimits {
     resetCredits: null,
     rateLimitReachedType: null,
   };
-}
-
-const EPOCH = new Date(0);
-
-function baseSubscription() {
-  return {
-    id: "sub",
-    userID: "u1",
-    orgID: null,
-    teamID: null,
-    customerId: "cus",
-    createdAt: EPOCH,
-    updatedAt: EPOCH,
-    subscriptionExpiry: null,
-    trialEndsAt: null,
-    hasPaymentMethod: true,
-    rechargeRateSeconds: 60,
-  };
-}
-
-function authUserFixture(overrides: {
-  status: SubscriptionStatus;
-  withTeam: boolean;
-}): AuthenticatedUser {
-  return {
-    user: {
-      id: "u1",
-      name: "Ada",
-      providerId: "p1",
-      providerHandle: "ada",
-      providerType: "GITHUB",
-      email: "ada@example.com",
-      avatarUrl: null,
-      activatedAt: EPOCH,
-      createdAt: EPOCH,
-      updatedAt: EPOCH,
-      lastSeenAt: EPOCH,
-      privacyMode: false,
-      isLearningEnabled: true,
-    },
-    userSubscription: {
-      ...baseSubscription(),
-      subscriptionStatus: overrides.status,
-      isInTrial: false,
-      totalPlanCredits: 100,
-      credit: {
-        id: "c1",
-        userId: "u1",
-        customerId: "cus",
-        bonusCredits: 0,
-        consumedFromPlan: 30,
-        consumedFromBonus: 0,
-        lastResetAt: EPOCH,
-      },
-    },
-    payAsYouGoUsage: { allowPayAsYouGo: false },
-    teamSubscriptions: overrides.withTeam
-      ? [
-          {
-            ...baseSubscription(),
-            teamID: "team-1",
-            subscriptionStatus: "ULTRA_1X_V3",
-            isInTrial: false,
-            totalPlanCredits: 500,
-            hasActiveBundle: false,
-            bundleSummary: {
-              bundleTotal: 0,
-              bundleConsumed: 0,
-              bundleRemaining: 0,
-            },
-            credit: {
-              id: "c2",
-              userId: "u1",
-              customerId: "cus",
-              orgId: "team-1",
-              bonusCredits: 0,
-              consumedFromPlan: 100,
-              consumedFromBonus: 0,
-              lastResetAt: EPOCH,
-            },
-            team: {
-              id: "team-1",
-              slug: "acme",
-              avatarUrl: null,
-              privacyMode: false,
-              createdAt: EPOCH,
-              updatedAt: EPOCH,
-            },
-          },
-        ]
-      : [],
-  };
-}
-
-function readyAuthUser(data: AuthenticatedUser): MockAuthUser {
-  return {
-    data,
-    isPending: false,
-    isError: false,
-    isFetching: false,
-    dataUpdatedAt: NOW - 60_000,
-    refetch: vi.fn(() => Promise.resolve({})),
-  };
-}
-
-function traycerUsageQueryKey() {
-  return queryKeys.hostTraycerRateLimitUsage("host-1", DEFAULT_ACCOUNT_CONTEXT);
 }
 
 let onClose: () => void;
@@ -912,55 +790,6 @@ describe("<RateLimitPopover /> Refresh all", () => {
       { force: true },
     );
   });
-
-  it("refetches Traycer when the synthetic Traycer entry is eligible", () => {
-    mocks.configured = [];
-    const authUser = readyAuthUser(
-      authUserFixture({ status: "PRO_V3", withTeam: false }),
-    );
-    mocks.authUser = authUser;
-    const { client } = renderPopover();
-    const invalidateSpy = vi.spyOn(client, "invalidateQueries");
-
-    fireEvent.click(screen.getByRole("button", { name: "Refresh all" }));
-
-    expect(authUser.refetch).toHaveBeenCalledTimes(1);
-    expect(invalidateSpy).not.toHaveBeenCalled();
-  });
-
-  it("invalidates the unscoped Traycer usage query for rate-limit-based Traycer plans", () => {
-    mocks.configured = [];
-    const authUser = readyAuthUser(
-      authUserFixture({ status: "PRO", withTeam: false }),
-    );
-    mocks.authUser = authUser;
-    const { client } = renderPopover();
-    const invalidateSpy = vi.spyOn(client, "invalidateQueries");
-
-    fireEvent.click(screen.getByRole("button", { name: "Refresh all" }));
-
-    expect(authUser.refetch).toHaveBeenCalledTimes(1);
-    expect(invalidateSpy).toHaveBeenCalledWith({
-      queryKey: traycerUsageQueryKey(),
-      exact: true,
-    });
-  });
-
-  it("shows Refreshing and disables Refresh all while Traycer is fetching", () => {
-    mocks.configured = [];
-    mocks.authUser = {
-      ...readyAuthUser(authUserFixture({ status: "PRO_V3", withTeam: false })),
-      isFetching: true,
-    };
-    renderPopover();
-
-    const label = screen.getByText("Refreshing");
-    expect(label).toBeTruthy();
-    expect(label.className).toContain("working-text-shimmer");
-    expect(screen.getByTestId("usage-limit-refreshing-dots")).toBeTruthy();
-    const refreshAll = screen.getByRole("button", { name: "Refresh all" });
-    expect(refreshAll.getAttribute("disabled")).not.toBeNull();
-  });
 });
 
 describe("<RateLimitPopover /> rail settings", () => {
@@ -1032,128 +861,5 @@ describe("<RateLimitPopover /> Overview block scoping", () => {
     renderPopover();
     fireEvent.click(screen.getByRole("tab", { name: "Codex" }));
     expect(screen.getByRole("button", { name: "Refresh Codex" })).toBeTruthy();
-  });
-});
-
-describe("<RateLimitPopover /> Traycer tab", () => {
-  it("adds a Traycer tab for a paid account, even with no host-RPC providers", () => {
-    mocks.configured = [];
-    mocks.authUser = readyAuthUser(
-      authUserFixture({ status: "PRO_V3", withTeam: false }),
-    );
-    renderPopover();
-    // Eligible Traycer alone keeps the rail (not the zero-provider CTA).
-    expect(
-      screen.queryByText("Connect Claude Code or Codex to see usage here."),
-    ).toBeNull();
-    const tabs = screen.getAllByRole("tab");
-    expect(tabs.map((tab) => tab.getAttribute("aria-label"))).toEqual([
-      "Overview",
-      "Traycer Inference",
-    ]);
-  });
-
-  it("omits the Traycer tab for a free, unbundled account", () => {
-    mocks.configured = [{ providerId: "codex", lane: "ephemeralProcess" }];
-    mocks.results = { codex: readyResult(codexReady()) };
-    mocks.authUser = readyAuthUser(
-      authUserFixture({ status: "FREE", withTeam: false }),
-    );
-    renderPopover();
-    const tabs = screen.getAllByRole("tab");
-    expect(tabs.map((tab) => tab.getAttribute("aria-label"))).toEqual([
-      "Overview",
-      "Codex",
-    ]);
-  });
-
-  it("orders the Traycer tab per PROVIDER_ID_ORDER (after Codex, before Kilo Code)", () => {
-    mocks.configured = [
-      { providerId: "kilocode", lane: "httpFetch" },
-      { providerId: "codex", lane: "ephemeralProcess" },
-    ];
-    mocks.results = {
-      codex: readyResult(codexReady()),
-      kilocode: readyResult({
-        provider: "kilocode",
-        available: true,
-        creditBalance: 5,
-        passState: null,
-      }),
-    };
-    mocks.authUser = readyAuthUser(
-      authUserFixture({ status: "PRO_V3", withTeam: false }),
-    );
-    renderPopover();
-    const tabs = screen.getAllByRole("tab");
-    expect(tabs.map((tab) => tab.getAttribute("aria-label"))).toEqual([
-      "Overview",
-      "Codex",
-      "Traycer Inference",
-      "Kilo Code",
-    ]);
-  });
-
-  it("shows the subscription detail with an account picker on the Traycer tab", () => {
-    mocks.configured = [];
-    mocks.authUser = readyAuthUser(
-      authUserFixture({ status: "PRO_V3", withTeam: true }),
-    );
-    renderPopover();
-    fireEvent.click(screen.getByRole("tab", { name: "Traycer Inference" }));
-    // Shared subscription view: plan credit breakdown (30 of 100).
-    expect(screen.getByText("$30.00 / $100.00")).toBeTruthy();
-    // Detail tab surfaces the same Personal/Team picker as the Settings card.
-    expect(screen.getByRole("combobox", { name: "Account" })).toBeTruthy();
-    // Plan/tier chip next to the name - the trailing "_V3" pricing-generation
-    // tag is stripped (matching Cloud UI's own Settings pages), so "PRO_V3"
-    // reads as "Pro", not "Pro V3".
-    expect(screen.getByText("Pro")).toBeTruthy();
-  });
-
-  it("renders a condensed Traycer block with no picker or plan chip on Overview", () => {
-    mocks.configured = [];
-    mocks.authUser = readyAuthUser(
-      authUserFixture({ status: "PRO_V3", withTeam: true }),
-    );
-    renderPopover();
-    // Overview reflects the selected account's numbers, but exposes no controls.
-    expect(screen.getByText("$30.00 / $100.00")).toBeTruthy();
-    expect(screen.queryByRole("combobox", { name: "Account" })).toBeNull();
-    // Overview is condensed, same as the host-RPC providers' plan chip.
-    expect(screen.queryByText("Pro")).toBeNull();
-  });
-
-  it("reflects the selected account's own plan in the chip, not the personal account's", () => {
-    mocks.configured = [];
-    mocks.authUser = readyAuthUser(
-      authUserFixture({ status: "PRO_V3", withTeam: true }),
-    );
-    // The fixture's team subscription is on "ULTRA_1X_V3" - selecting the
-    // team account should show that plan in the chip, not the personal one.
-    useAccountContextStore.setState({
-      accountContext: { type: "TEAM", teamId: "team-1" },
-    });
-    renderPopover();
-    fireEvent.click(screen.getByRole("tab", { name: "Traycer Inference" }));
-    // "ULTRA_1X_V3" reads as the bare "Ultra" tier name (matching
-    // `subscriptionPlanLabel`'s own tier-name mapping), not the personal
-    // account's "Pro".
-    expect(screen.getByText("Ultra")).toBeTruthy();
-    expect(screen.queryByText("Pro")).toBeNull();
-  });
-
-  it("refetches the subscription from the Traycer tab's refresh button", () => {
-    mocks.configured = [];
-    const authUser = readyAuthUser(
-      authUserFixture({ status: "PRO_V3", withTeam: false }),
-    );
-    mocks.authUser = authUser;
-    renderPopover();
-    fireEvent.click(screen.getByRole("tab", { name: "Traycer Inference" }));
-    fireEvent.click(
-      screen.getByRole("button", { name: "Refresh Traycer Inference" }),
-    );
-    expect(authUser.refetch).toHaveBeenCalled();
   });
 });

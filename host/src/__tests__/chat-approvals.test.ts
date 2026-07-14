@@ -89,8 +89,6 @@ beforeAll(() => {
   server = startOpenHostServer({
     port: 0,
     environment: `test-approvals-${process.pid}-${Date.now()}`,
-    authnBaseUrl: "http://127.0.0.1:9",
-    insecureNoAuth: true,
     openclawGatewayUrl: `ws://127.0.0.1:${gateway.port}`,
     openclawGatewayToken: null,
   });
@@ -177,7 +175,7 @@ describe("chat approvals backed by the OpenClaw gateway", () => {
             },
           ],
         },
-        sender: { type: "user", userId: "insecure-local-user" },
+        sender: { type: "user", userId: "local-user" },
         settings: {
           harnessId: "openclaw",
           model: "openclaw/default",

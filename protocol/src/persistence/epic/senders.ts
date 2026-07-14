@@ -131,19 +131,6 @@ export type CursorChatSessionAnchor = z.infer<
   typeof cursorChatSessionAnchorSchema
 >;
 
-export const traycerChatSessionAnchorSchema = z.object({
-  harnessId: z.literal("traycer"),
-  hostId: z.string(),
-  sessionId: z.string(),
-  sessionWorkspaceSnapshot: sessionWorkspaceSnapshotSchema,
-  opencodeUserMessageId: z.string(),
-  createdAt: z.number(),
-  coveredUntilMessageId: z.string().nullable().default(null),
-});
-export type TraycerChatSessionAnchor = z.infer<
-  typeof traycerChatSessionAnchorSchema
->;
-
 export const openRouterChatSessionAnchorSchema = z.object({
   harnessId: z.literal("openrouter"),
   hostId: z.string(),
@@ -280,7 +267,6 @@ export const chatSessionAnchorSchema = z.discriminatedUnion("harnessId", [
   codexChatSessionAnchorSchema,
   openCodeChatSessionAnchorSchema,
   cursorChatSessionAnchorSchema,
-  traycerChatSessionAnchorSchema,
   openRouterChatSessionAnchorSchema,
   grokChatSessionAnchorSchema,
   qwenChatSessionAnchorSchema,

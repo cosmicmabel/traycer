@@ -22,8 +22,6 @@ beforeAll(() => {
   server = startOpenHostServer({
     port: 0,
     environment: `test-epic-unary-${process.pid}`,
-    authnBaseUrl: "http://127.0.0.1:9",
-    insecureNoAuth: true,
     openclawGatewayUrl: "ws://127.0.0.1:9",
     openclawGatewayToken: null,
   });
@@ -121,7 +119,7 @@ function epicLight(id: string, title: string): Record<string, unknown> {
     status: "active",
     createdAt: now,
     updatedAt: now,
-    createdBy: "insecure-local-user",
+    createdBy: "local-user",
     version: "1",
   };
 }

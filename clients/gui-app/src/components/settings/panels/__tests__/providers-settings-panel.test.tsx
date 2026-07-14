@@ -139,21 +139,6 @@ vi.mock("@/hooks/auth/use-auth-user-query", () => ({
   }),
 }));
 
-// Pure side-effect hook in the Traycer subscription card; no render output, and
-// it needs a QueryClient this harness doesn't set up.
-vi.mock("@/hooks/auth/use-refresh-credits-on-traycer-turn", () => ({
-  useRefreshCreditsOnTraycerTurn: () => {},
-}));
-
-// Rate-limit usage query + its refresh hook (RateLimitView). Same reason:
-// no host client/QueryClient in this harness.
-vi.mock("@/hooks/host/use-host-rate-limit-usage-query", () => ({
-  useHostRateLimitUsageQuery: () => ({ data: undefined }),
-}));
-vi.mock("@/hooks/host/use-refresh-rate-limit-usage-on-traycer-turn", () => ({
-  useRefreshRateLimitUsageOnTraycerTurn: () => {},
-}));
-
 // Provider rate-limit query + its refresh hook (ProviderRateLimitForProvider,
 // mounted for every codex/claude-code provider row). Same reason: no host
 // client/QueryClient in this harness.
@@ -266,12 +251,6 @@ describe("<ProvidersSettingsPanel />", () => {
           envOverrides: [],
         }),
         providerState({
-          providerId: "traycer",
-          selected: { kind: "bundled" },
-          candidates: [],
-          envOverrides: [],
-        }),
-        providerState({
           providerId: "openrouter",
           selected: { kind: "bundled" },
           candidates: [],
@@ -287,29 +266,6 @@ describe("<ProvidersSettingsPanel />", () => {
 
   afterEach(() => {
     cleanup();
-  });
-
-  it("lists OpenCode CLI candidates for Traycer and mutates Traycer selection", () => {
-    render(
-      <TooltipProvider>
-        <ProvidersSettingsPanel />
-      </TooltipProvider>,
-    );
-
-    fireEvent.click(screen.getByRole("button", { name: /Traycer/i }));
-
-    expect(screen.getByText("/usr/local/bin/opencode")).toBeDefined();
-
-    fireEvent.click(
-      screen.getByRole("radio", {
-        name: "Select /usr/local/bin/opencode",
-      }),
-    );
-
-    expect(providerMocks.setSelectionMutate).toHaveBeenCalledWith({
-      providerId: "traycer",
-      selection: { kind: "path" },
-    });
   });
 
   it("hides the CLI-candidates picker for Amp - a selected path is never consulted", () => {
@@ -520,7 +476,7 @@ describe("<ProvidersSettingsPanel />", () => {
         },
         {
           ...providerState({
-            providerId: "traycer",
+            providerId: "openrouter",
             selected: { kind: "bundled" },
             candidates: [],
             envOverrides: [],
@@ -543,7 +499,7 @@ describe("<ProvidersSettingsPanel />", () => {
 
     expect(screen.queryByText(/Disabled by/)).toBeNull();
 
-    fireEvent.click(screen.getByRole("button", { name: /Traycer/i }));
+    fireEvent.click(screen.getByRole("button", { name: /OpenRouter/i }));
 
     expect(screen.queryByText(/Disabled by/)).toBeNull();
   });
@@ -580,12 +536,6 @@ describe("<ProvidersSettingsPanel />", () => {
           candidates: OPENCODE_CANDIDATES,
           envOverrides: [{ key: "OPENAI_API_KEY", value: null }],
         }),
-        providerState({
-          providerId: "traycer",
-          selected: { kind: "bundled" },
-          candidates: [],
-          envOverrides: [],
-        }),
       ],
     };
 
@@ -616,7 +566,7 @@ describe("<ProvidersSettingsPanel />", () => {
     providerMocks.listResult.data = {
       providers: [
         providerState({
-          providerId: "traycer",
+          providerId: "opencode",
           selected: { kind: "bundled" },
           candidates: [],
           envOverrides: [],

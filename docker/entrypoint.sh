@@ -1,33 +1,29 @@
 #!/usr/bin/env bash
-# Container entrypoint for the Traycer web app (see Dockerfile).
+# Container entrypoint for the CIC web app (see Dockerfile).
 #
-# 1. Provision the signed host release via the CLI. `--no-service-register`
-#    installs + verifies the bytes without touching a service manager
-#    (there is no systemd inside the container).
-# 2. Run `traycer host start` in the background: it is the same foreground
-#    supervisor a systemd unit would ExecStart, so no service manager is
-#    needed - the entrypoint forwards TERM/INT for a clean `docker stop`.
-# 3. Run the web server (static bundle + host WS proxy + authn proxy) in the
-#    foreground on 0.0.0.0 - the container port mapping is the exposure
-#    boundary.
+# 1. Run the host server (host/) in the background - it binds loopback inside
+#    the container and writes the pid.json the web server discovers it with.
+# 2. Run the web server (static bundle + host WS proxy) in the foreground on
+#    0.0.0.0 - the container port mapping is the exposure boundary.
+#
+# The OpenClaw Gateway is NOT part of this container; point the host at yours
+# with CIC_OPENCLAW_GATEWAY_URL (e.g. ws://host.docker.internal:18789).
 set -euo pipefail
 
 cd /workspace
 
-cli() {
-  bun clients/traycer-cli/src/index.ts "$@"
-}
-
-if [ -n "${TRAYCER_HOST_VERSION:-}" ]; then
-  cli host ensure --no-service-register --release "$TRAYCER_HOST_VERSION"
-else
-  cli host ensure --no-service-register
+host_args=()
+if [ -n "${CIC_OPENCLAW_GATEWAY_URL:-}" ]; then
+  host_args+=(--openclaw-gateway-url "$CIC_OPENCLAW_GATEWAY_URL")
+fi
+if [ -n "${CIC_OPENCLAW_GATEWAY_TOKEN:-}" ]; then
+  host_args+=(--openclaw-gateway-token "$CIC_OPENCLAW_GATEWAY_TOKEN")
 fi
 
-cli host start &
+bun host/src/index.ts --port 47100 "${host_args[@]}" &
 host_pid=$!
 
-bun clients/web/src/server/serve.ts --bind 0.0.0.0 --port "${TRAYCER_WEB_PORT:-8788}" &
+bun clients/web/src/server/serve.ts --bind 0.0.0.0 --port "${CIC_WEB_PORT:-8788}" &
 web_pid=$!
 
 forward_term() {

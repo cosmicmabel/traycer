@@ -13,7 +13,6 @@ const PROVIDER_ID_ORDER = [
   "codex",
   "claude-code",
   "opencode",
-  "traycer",
   "openrouter",
   "droid",
   "cursor",
@@ -43,7 +42,6 @@ const GUI_HARNESS_BY_PROVIDER_ID = {
   codex: "codex",
   "claude-code": "claude",
   opencode: "opencode",
-  traycer: "traycer",
   openrouter: "openrouter",
   droid: "droid",
   cursor: "cursor",
@@ -75,7 +73,6 @@ export function providerIdToGuiHarnessId(providerId: ProviderId): GuiHarnessId {
 }
 
 export function providerDisplayName(providerId: ProviderId): string {
-  if (providerId === "traycer") return "Traycer Inference";
   return PROVIDER_DISPLAY_NAMES[providerId];
 }
 

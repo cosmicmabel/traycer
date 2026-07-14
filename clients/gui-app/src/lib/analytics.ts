@@ -1,5 +1,3 @@
-import posthog from "posthog-js";
-
 type EventProperties = Record<string, unknown> | null;
 
 export enum AnalyticsEvent {
@@ -13,24 +11,14 @@ export enum AnalyticsEvent {
   HistoryNavigationUsed = "history_navigation_used",
 }
 
+/**
+ * No-op analytics. CIC is local-only software and ships NO telemetry: nothing
+ * is collected, nothing leaves the machine. The call-site API is kept so
+ * event intent stays documented in the code (and a self-hoster could wire a
+ * local sink here if they ever wanted one).
+ */
 export class Analytics {
   private static instance: Analytics | null = null;
-  private readonly enabled: boolean;
-  private readonly key: string | undefined;
-  private readonly apiHost: string = "https://us.i.posthog.com";
-
-  private constructor() {
-    this.key = import.meta.env.VITE_POSTHOG_KEY;
-    this.enabled = !!this.key && import.meta.env.MODE !== "test";
-
-    if (!this.enabled || this.key === undefined) return;
-
-    posthog.init(this.key, { api_host: this.apiHost });
-    posthog.register({
-      app: "gui-app",
-      app_version: import.meta.env.VITE_APP_VERSION ?? null,
-    });
-  }
 
   static getInstance(): Analytics {
     if (Analytics.instance === null) Analytics.instance = new Analytics();
@@ -38,17 +26,14 @@ export class Analytics {
   }
 
   identify(userId: string, properties: EventProperties): void {
-    if (!this.enabled) return;
-    posthog.identify(userId, properties ?? undefined);
+    void userId;
+    void properties;
   }
 
-  reset(): void {
-    if (!this.enabled) return;
-    posthog.reset();
-  }
+  reset(): void {}
 
   track(event: AnalyticsEvent, properties: EventProperties): void {
-    if (!this.enabled) return;
-    posthog.capture(event, properties ?? undefined);
+    void event;
+    void properties;
   }
 }

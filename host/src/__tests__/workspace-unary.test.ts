@@ -50,8 +50,6 @@ beforeAll(async () => {
   server = startOpenHostServer({
     port: 0,
     environment: `test-workspace-${process.pid}-${Date.now()}`,
-    authnBaseUrl: "http://127.0.0.1:9",
-    insecureNoAuth: true,
     openclawGatewayUrl: "ws://127.0.0.1:9",
     openclawGatewayToken: null,
   });
@@ -296,7 +294,7 @@ describe("workspace unary surface", () => {
         status: "active",
         createdAt: Date.now(),
         updatedAt: Date.now(),
-        createdBy: "insecure-local-user",
+        createdBy: "local-user",
         version: "1",
       },
       repoIdentifiers: [{ owner: "acme", repo: "widgets" }],

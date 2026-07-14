@@ -48,7 +48,6 @@ export const guiHarnessIdSchema = harnessIdSchema.extract([
   "claude",
   "codex",
   "opencode",
-  "traycer",
   "cursor",
   "grok",
   "qwen",
@@ -75,7 +74,6 @@ export const guiHarnessIdSchemaV10 = harnessIdSchema.extract([
   "claude",
   "codex",
   "opencode",
-  "traycer",
   "cursor",
 ]);
 export type GuiHarnessIdV10 = z.infer<typeof guiHarnessIdSchemaV10>;
@@ -92,7 +90,6 @@ export const guiHarnessIdSchemaV20 = harnessIdSchema.extract([
   "claude",
   "codex",
   "opencode",
-  "traycer",
   "cursor",
   "grok",
   "qwen",
@@ -118,7 +115,6 @@ export const guiHarnessIdSchemaV30 = harnessIdSchema.extract([
   "claude",
   "codex",
   "opencode",
-  "traycer",
   "cursor",
   "grok",
   "qwen",
@@ -181,7 +177,6 @@ export const AGENT_FACING_HARNESS_IDS = [
   "claude",
   "codex",
   "opencode",
-  "traycer",
   "cursor",
   "grok",
   "qwen",
@@ -500,7 +495,7 @@ export type ListAgentsResponse = z.infer<typeof listAgentsResponseSchema>;
 // callers. Do not add new harnesses here - use the existing v2 bridge.
 export const agentSummarySchemaV10 = agentSummarySchema.extend({
   harnessId: harnessIdSchema
-    .extract(["claude", "codex", "opencode", "traycer", "cursor"])
+    .extract(["claude", "codex", "opencode", "cursor"])
     .nullable(),
 });
 export const listAgentsResponseSchemaV10 = listAgentsResponseSchema.extend({

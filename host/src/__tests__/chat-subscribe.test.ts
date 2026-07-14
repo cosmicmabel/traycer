@@ -94,8 +94,6 @@ beforeAll(() => {
     // Unique per run: chat persistence is real now, so a reused slot would
     // replay prior test transcripts into this suite's snapshots.
     environment: `test-chat-${process.pid}-${Date.now()}`,
-    authnBaseUrl: "http://127.0.0.1:9",
-    insecureNoAuth: true,
     openclawGatewayUrl: `ws://127.0.0.1:${gateway.port}`,
     openclawGatewayToken: null,
   });
@@ -205,7 +203,7 @@ describe("chat.subscribe backed by the OpenClaw gateway", () => {
           },
         ],
       },
-      sender: { type: "user", userId: "insecure-local-user" },
+      sender: { type: "user", userId: "local-user" },
       settings: {
         harnessId: "openclaw",
         model: "openclaw/default",
@@ -349,7 +347,7 @@ describe("chat.subscribe backed by the OpenClaw gateway", () => {
           },
         ],
       },
-      sender: { type: "user", userId: "insecure-local-user" },
+      sender: { type: "user", userId: "local-user" },
       settings: {
         harnessId: "openclaw",
         model: "openclaw/default",

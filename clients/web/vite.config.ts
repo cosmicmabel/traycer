@@ -8,9 +8,7 @@ import { CONTENT_SECURITY_POLICY } from "./src/shell/content-security-policy";
 
 const webEnvPrefix = [
   "VITE_APP_",
-  "VITE_POSTHOG_KEY",
   "VITE_TRAYCER_OSS_REPO",
-  "VITE_TRAYCER_SIGN_IN_URL",
   "VITE_VIRTUOSO_MESSAGE_LIST_LICENSE_KEY",
 ];
 

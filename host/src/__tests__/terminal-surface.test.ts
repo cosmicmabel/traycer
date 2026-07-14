@@ -22,8 +22,6 @@ beforeAll(() => {
   server = startOpenHostServer({
     port: 0,
     environment: `test-terminal-${process.pid}-${Date.now()}`,
-    authnBaseUrl: "http://127.0.0.1:9",
-    insecureNoAuth: true,
     openclawGatewayUrl: "ws://127.0.0.1:9",
     openclawGatewayToken: null,
   });

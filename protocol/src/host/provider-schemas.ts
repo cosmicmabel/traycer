@@ -17,7 +17,6 @@ export const providerIdSchema = z.enum([
   "codex",
   "opencode",
   "cursor",
-  "traycer",
   "grok",
   "qwen",
   "kiro",
@@ -42,7 +41,6 @@ export const providerIdSchemaV10 = z.enum([
   "codex",
   "opencode",
   "cursor",
-  "traycer",
 ]);
 export type ProviderIdV10 = z.infer<typeof providerIdSchemaV10>;
 
@@ -58,7 +56,6 @@ export const providerIdSchemaV20 = z.enum([
   "codex",
   "opencode",
   "cursor",
-  "traycer",
   "grok",
   "qwen",
   "kiro",
@@ -82,7 +79,6 @@ export const providerIdSchemaV30 = z.enum([
   "codex",
   "opencode",
   "cursor",
-  "traycer",
   "grok",
   "qwen",
   "kiro",
@@ -101,7 +97,6 @@ export const PROVIDER_DISPLAY_NAMES: Record<ProviderId, string> = {
   codex: "Codex",
   opencode: "OpenCode",
   cursor: "Cursor",
-  traycer: "Traycer",
   grok: "Grok",
   qwen: "Qwen Code",
   kiro: "Kiro",
