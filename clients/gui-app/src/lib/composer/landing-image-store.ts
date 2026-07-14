@@ -47,7 +47,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
  * outside render. Reads the desktop `windowId` imperatively off the global
  * runner-host bridge (`runnerHost.windows.windowId`, the same value
  * electron-main keys `desktop-windows.json` by — see `readDesktopWindowId` in
- * `traycer-app.tsx`). A browser / no-desktop runtime has no such global and
+ * `cic-app.tsx`). A browser / no-desktop runtime has no such global and
  * collapses to `"default"`.
  */
 export function landingImagePartition(): string {

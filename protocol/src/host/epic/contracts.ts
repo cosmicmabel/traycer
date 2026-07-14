@@ -1,4 +1,4 @@
-import { defineRpcContract } from "@traycer/protocol/framework/index";
+import { defineRpcContract } from "@cic/protocol/framework/index";
 import {
   batchDeleteRequestSchema,
   batchDeleteResponseSchema,
@@ -65,8 +65,8 @@ import {
   updateArtifactStatusResponseSchema,
   updateEpicRequestSchema,
   updateEpicResponseSchema,
-} from "@traycer/protocol/host/epic/unary-schemas";
-import { epicSubscribeV10 } from "@traycer/protocol/host/epic/subscribe";
+} from "@cic/protocol/host/epic/unary-schemas";
+import { epicSubscribeV10 } from "@cic/protocol/host/epic/subscribe";
 
 // `epic.listTasks@1.0` - host-side entry point for the CloudData
 // task-list query. Schemas are imported from `./unary-schemas` and are

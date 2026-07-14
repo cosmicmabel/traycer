@@ -1,22 +1,22 @@
 import { randomUUID } from "node:crypto";
 import type { z } from "zod";
-import { agentInboxReadV10 } from "@traycer/protocol/host/agent/inbox";
+import { agentInboxReadV10 } from "@cic/protocol/host/agent/inbox";
 import {
   snapshotsClearLocalSnapshotsV10,
   snapshotsGetLocalStorageSizeV10,
   snapshotsReadSnapshotDiffV10,
-} from "@traycer/protocol/host/registry";
+} from "@cic/protocol/host/registry";
 import {
   speechEnsureModelV10,
   speechGetModelStatusV10,
-} from "@traycer/protocol/host/speech/contracts";
-import { hostStatusV10 } from "@traycer/protocol/host/status/contracts";
-import { hostGetRuntimeCapabilitiesV10 } from "@traycer/protocol/host/runtime-capabilities/contracts";
+} from "@cic/protocol/host/speech/contracts";
+import { hostStatusV10 } from "@cic/protocol/host/status/contracts";
+import { hostGetRuntimeCapabilitiesV10 } from "@cic/protocol/host/runtime-capabilities/contracts";
 import {
   agentGuiListHarnessesV40,
   agentGuiListModelsV10,
   agentGuiListCommandsV10,
-} from "@traycer/protocol/host/agent/gui/contracts";
+} from "@cic/protocol/host/agent/gui/contracts";
 import {
   agentGetTranscriptV10,
   agentListHarnessModelsV20,
@@ -26,24 +26,24 @@ import {
   agentSelectionGuideGlobalResetV10,
   agentSelectionGuideGlobalSetV10,
   agentSelectionGuideV10,
-} from "@traycer/protocol/host/agent/contracts";
+} from "@cic/protocol/host/agent/contracts";
 import {
   agentTuiGenerateTitleV10,
   agentTuiListHarnessesV10,
   agentTuiRecordActivityV10,
   agentTuiTurnEndedV10,
-} from "@traycer/protocol/host/agent/tui/contracts";
-import { agentGuiGetPlanV10 } from "@traycer/protocol/host/agent/gui/contracts";
-import { commentsListThreadsV10 } from "@traycer/protocol/host/comments/contracts";
-import { editorOpenPathsV10 } from "@traycer/protocol/host/editor/contracts";
-import { EDITORS } from "@traycer/protocol/host/editor/unary-schemas";
-import { hostGetRateLimitUsageV20 } from "@traycer/protocol/host/rate-limit/contracts";
+} from "@cic/protocol/host/agent/tui/contracts";
+import { agentGuiGetPlanV10 } from "@cic/protocol/host/agent/gui/contracts";
+import { commentsListThreadsV10 } from "@cic/protocol/host/comments/contracts";
+import { editorOpenPathsV10 } from "@cic/protocol/host/editor/contracts";
+import { EDITORS } from "@cic/protocol/host/editor/unary-schemas";
+import { hostGetRateLimitUsageV20 } from "@cic/protocol/host/rate-limit/contracts";
 import {
   terminalCreateV10,
   terminalKillV10,
   terminalListV10,
   terminalRenameV10,
-} from "@traycer/protocol/host/terminal/contracts";
+} from "@cic/protocol/host/terminal/contracts";
 import {
   providersAddCustomPathV20,
   providersAwaitLoginV20,
@@ -72,7 +72,7 @@ import {
   worktreeRetrySetupV10,
   worktreeSetEntryModeV10,
   worktreeSetRepoScriptsV10,
-} from "@traycer/protocol/host/registry";
+} from "@cic/protocol/host/registry";
 import {
   epicBatchDeleteV10,
   epicCreateArtifactV10,
@@ -108,13 +108,13 @@ import {
   epicSetCommentThreadResolvedV10,
   epicUpdateArtifactStatusV10,
   epicUpdateTitleV10,
-} from "@traycer/protocol/host/epic/contracts";
+} from "@cic/protocol/host/epic/contracts";
 import {
   gitGetCapabilitiesV10,
   gitGetFileDiffV10,
   gitGetFileDiffsV10,
   gitListChangedFilesV11,
-} from "@traycer/protocol/host/git-contracts";
+} from "@cic/protocol/host/git-contracts";
 import {
   workspaceListDirectoryV10,
   workspaceListFileTreeV10,
@@ -127,15 +127,15 @@ import {
   workspacePrepareFoldersV10,
   workspaceReadFileV10,
   workspaceResolvePathsByRepoIdentifiersV10,
-} from "@traycer/protocol/host/workspace/contracts";
-import type { EpicLightWithPermission } from "@traycer/protocol/host/epic/unary-schemas";
+} from "@cic/protocol/host/workspace/contracts";
+import type { EpicLightWithPermission } from "@cic/protocol/host/epic/unary-schemas";
 import {
   PROVIDER_DISPLAY_NAMES,
   providerIdSchema,
   type ProviderCliState,
   type ProviderId,
-} from "@traycer/protocol/host/provider-schemas";
-import type { GuiHarnessOption } from "@traycer/protocol/host/agent/gui/unary-schemas";
+} from "@cic/protocol/host/provider-schemas";
+import type { GuiHarnessOption } from "@cic/protocol/host/agent/gui/unary-schemas";
 import type { SelectionGuideStore } from "./agent/selection-guide-store";
 import type { ChatSessionStore } from "./chat/chat-session";
 import { OPEN_HOST_VERSION } from "./config";
@@ -194,7 +194,7 @@ import {
  *
  * The open host implements the surface the GUI needs to boot plus the
  * OpenClaw catalog; every other method in `hostRpcRegistry` is answered with
- * a structured `RPC_ERROR` ("not implemented in @traycer/open-host") rather
+ * a structured `RPC_ERROR` ("not implemented in @cic/open-host") rather
  * than a handshake failure, because the connection manifest must advertise
  * every method (a missing method fails compatibility for the whole
  * connection, framework/compatibility-checker.ts).
@@ -1212,7 +1212,7 @@ export function buildUnaryHandlers(
   handlers.set(
     hostGetRateLimitUsageV20.method,
     contractHandler(hostGetRateLimitUsageV20, async () => ({
-      // The open host proxies no Traycer-cloud inference, so there is no
+      // The open host proxies no CIC-cloud inference, so there is no
       // aperture quota behind this method; zeros read as "no budget tracked".
       totalTokens: 0,
       remainingTokens: 0,

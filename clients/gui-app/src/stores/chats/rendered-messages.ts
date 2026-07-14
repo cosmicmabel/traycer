@@ -6,7 +6,7 @@ import type {
   Message,
   UserMessage,
   UserMessageSender,
-} from "@traycer/protocol/persistence/epic/schemas";
+} from "@cic/protocol/persistence/epic/schemas";
 import type {
   ChatActiveTurn,
   ChatApprovalState,
@@ -14,14 +14,14 @@ import type {
   ChatPendingInterviewState,
   ChatQueuedItem,
   ChatRunStatus,
-} from "@traycer/protocol/host/agent/gui/subscribe";
-import { chatQueuedItemSchema } from "@traycer/protocol/host/agent/gui/subscribe";
+} from "@cic/protocol/host/agent/gui/subscribe";
+import { chatQueuedItemSchema } from "@cic/protocol/host/agent/gui/subscribe";
 import {
   isNoOpCheckpointEntry,
   turnCheckpointManifestSchema,
   type TurnCheckpointManifest,
-} from "@traycer/protocol/persistence/epic/checkpoint-manifests";
-import { AUTH_ERROR_CODE } from "@traycer/protocol/host/agent/gui/agent-runtime";
+} from "@cic/protocol/persistence/epic/checkpoint-manifests";
+import { AUTH_ERROR_CODE } from "@cic/protocol/host/agent/gui/agent-runtime";
 import {
   buildAttachmentsFromJSONContent,
   extractPlainTextFromComposerJSONContent,
@@ -50,8 +50,8 @@ import {
   mergeSnapshotSourceBlockIds,
   singleSnapshotSourceBlockId,
 } from "@/lib/chat/snapshot-source-block-ids";
-import type { ContentBlock } from "@traycer/protocol/persistence/epic/schemas";
-import type { WorktreeBindingOwnerKind } from "@traycer/protocol/host/worktree-schemas";
+import type { ContentBlock } from "@cic/protocol/persistence/epic/schemas";
+import type { WorktreeBindingOwnerKind } from "@cic/protocol/host/worktree-schemas";
 import {
   buildSetupCardRows,
   type SetupCardRow,
@@ -1907,7 +1907,7 @@ function renderSteeredUserMessage(input: {
  * Surface inter-agent provenance for a `role: "user"` row whose sender
  * is another agent (via `agent.sendMessage`). The receiver GUI uses
  * this to style the row distinctly from a human-authored message and
- * to render the "from agent / reply with `traycer agent send`" footer.
+ * to render the "from agent / reply with `cic agent send`" footer.
  * Returns `null` for human senders.
  */
 function agentSenderInfoFromSender(

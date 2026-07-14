@@ -1,4 +1,4 @@
-import type { WorktreeBindingSelectorRow } from "@traycer/protocol/host";
+import type { WorktreeBindingSelectorRow } from "@cic/protocol/host";
 
 /**
  * Whether a worktree binding row is browsable by non-git surfaces (file tree,

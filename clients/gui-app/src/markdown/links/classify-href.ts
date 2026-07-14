@@ -2,7 +2,7 @@
  * Surface-agnostic classification of a rendered markdown anchor's `href`.
  *
  * This only understands URL *scheme* plus a trailing editor-style
- * `:line[:col]` location. All Traycer-domain knowledge (workspace resolution,
+ * `:line[:col]` location. All CIC-domain knowledge (workspace resolution,
  * artifact paths, navigation) lives in the host surface's link policy, so this
  * stays reusable across every markdown surface.
  */

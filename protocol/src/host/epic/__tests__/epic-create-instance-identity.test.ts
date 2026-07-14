@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { hostRpcRegistry } from "@traycer/protocol/host/registry";
+import { hostRpcRegistry } from "@cic/protocol/host/registry";
 import {
   createEpicRequestSchema,
   createEpicResponseSchema,
-} from "@traycer/protocol/host/epic/unary-schemas";
+} from "@cic/protocol/host/epic/unary-schemas";
 
 /**
  * Hard invariant: the `epic.create` host RPC contract must wire the
@@ -14,7 +14,7 @@ import {
  *
  * The cloud-side (`cloudDataRpcRegistry`) reuse of these same instances is
  * guaranteed by construction - the cloud registry imports them directly from
- * `@traycer/protocol/host/epic/unary-schemas` - and is covered on the
+ * `@cic/protocol/host/epic/unary-schemas` - and is covered on the
  * consumer side, so protocol's own tests stay within the protocol package.
  */
 describe("epic.create instance identity", () => {

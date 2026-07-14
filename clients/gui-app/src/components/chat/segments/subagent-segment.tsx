@@ -33,7 +33,7 @@ import {
 import type {
   WorkflowActivityEntry,
   WorkflowMeta,
-} from "@traycer/protocol/persistence/epic/content-blocks";
+} from "@cic/protocol/persistence/epic/content-blocks";
 import {
   adjacentDedupedProgressItems,
   cleanSubagentNotificationText,

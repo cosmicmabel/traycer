@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useChatMeasuredBooleanToggle } from "@/components/chat/chat-measured-item-change-context";
 import { cn } from "@/lib/utils";
 import { AgentSpinningDots } from "@/components/ui/agent-spinning-dots";
-import { TraycerMarkdown } from "@/markdown";
+import { CicMarkdown } from "@/markdown";
 
 interface CompactionSegmentProps {
   status: "streaming" | "completed" | "errored";
@@ -116,7 +116,7 @@ export function CompactionSegment(props: CompactionSegmentProps) {
             "rounded-md border border-border/60 bg-muted/30 p-3",
           )}
         >
-          <TraycerMarkdown
+          <CicMarkdown
             className={null}
             proseSize="compact"
             components={null}
@@ -126,7 +126,7 @@ export function CompactionSegment(props: CompactionSegmentProps) {
             isStreaming={false}
           >
             {summary}
-          </TraycerMarkdown>
+          </CicMarkdown>
         </div>
       ) : null}
       {error !== null && error.length > 0 ? (

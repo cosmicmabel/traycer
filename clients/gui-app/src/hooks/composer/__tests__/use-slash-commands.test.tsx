@@ -1,6 +1,6 @@
 import { renderHook } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { ListGuiAgentCommandsResponse } from "@traycer/protocol/host/index";
+import type { ListGuiAgentCommandsResponse } from "@cic/protocol/host/index";
 import { useSlashCommands } from "../use-slash-commands";
 
 const mockState = vi.hoisted(() => ({

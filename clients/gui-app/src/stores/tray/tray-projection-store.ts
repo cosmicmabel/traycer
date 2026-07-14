@@ -2,7 +2,7 @@ import { create } from "zustand";
 import type {
   TrayEpic,
   TrayIndicatorState,
-} from "@traycer-clients/shared/platform/runner-host";
+} from "@cic/shared/platform/runner-host";
 
 export interface OpenEpicRequest {
   readonly epicId: string;

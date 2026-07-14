@@ -9,7 +9,7 @@ import {
 } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import * as Y from "yjs";
-import { MockRunnerHost } from "@traycer-clients/shared/host-client/mock/mock-runner-host";
+import { MockRunnerHost } from "@cic/shared/host-client/mock/mock-runner-host";
 import { NotificationsBell } from "@/components/notifications/notifications-bell";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { RunnerHostProvider } from "@/providers/runner-host-provider";
@@ -19,16 +19,16 @@ import {
   openNotificationsStream,
   useNotificationsStore,
 } from "@/stores/notifications/notifications-store";
-import type { NotificationsStreamCallbacks } from "@traycer-clients/shared/host-transport/notifications-stream-client";
+import type { NotificationsStreamCallbacks } from "@cic/shared/host-transport/notifications-stream-client";
 import {
   type NotificationEntry,
   NOTIFICATION_EVENT_TYPES,
-} from "@traycer/protocol/notifications/notification-entry";
+} from "@cic/protocol/notifications/notification-entry";
 import {
   createNotificationRoomEntryMap,
   NOTIFICATIONS_ARRAY_KEY,
   type NotificationRoomEntryMap,
-} from "@traycer/protocol/notifications/notification-room";
+} from "@cic/protocol/notifications/notification-room";
 
 function buildSnapshot(entries: ReadonlyArray<NotificationEntry>): Uint8Array {
   const donor = new Y.Doc();
@@ -146,7 +146,7 @@ function createRunnerHost(): MockRunnerHost {
     hosts: [],
     workspaceFolderPickerPaths: undefined,
     hasLocalHost: undefined,
-    traycerCli: undefined,
+    cicCli: undefined,
   });
 }
 
@@ -185,7 +185,7 @@ describe("NotificationsBell - OS toast bridge", () => {
     });
 
     expect(runnerHost.notificationsSent.length).toBe(1);
-    expect(runnerHost.notificationsSent[0].title).toBe("Traycer");
+    expect(runnerHost.notificationsSent[0].title).toBe("CIC");
   });
 
   it("keeps bell click open and close behavior unchanged", async () => {

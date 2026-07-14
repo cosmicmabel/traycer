@@ -31,8 +31,8 @@ import {
   type NotificationEntry,
   type NotificationEvent,
   NOTIFICATION_EVENT_TYPES,
-} from "@traycer/protocol/notifications/notification-entry";
-import { formatNotification } from "@traycer/protocol/notifications/notification-formatter";
+} from "@cic/protocol/notifications/notification-entry";
+import { formatNotification } from "@cic/protocol/notifications/notification-formatter";
 
 interface NotificationsPopoverProps {
   readonly onNavigate: () => void;

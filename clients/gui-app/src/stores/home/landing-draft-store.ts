@@ -6,9 +6,9 @@ import {
   type StateStorage,
 } from "zustand/middleware";
 import { v4 as uuidv4 } from "uuid";
-import type { ChatRunSettings } from "@traycer/protocol/host/agent/gui/subscribe";
-import type { JsonContent } from "@traycer/protocol/common/registry";
-import { chatRunSettingsSchema } from "@traycer/protocol/persistence/epic/schemas";
+import type { ChatRunSettings } from "@cic/protocol/host/agent/gui/subscribe";
+import type { JsonContent } from "@cic/protocol/common/registry";
+import { chatRunSettingsSchema } from "@cic/protocol/persistence/epic/schemas";
 import type { DraftSelection } from "@/stores/composer/composer-draft-store";
 import { useWorkspaceFoldersStore } from "@/stores/workspace/workspace-folders-store";
 import type { WorkspaceFolderInfo } from "@/stores/workspace/workspace-folders-store";

@@ -3,7 +3,7 @@ import {
   epicSubscribeClientFrameSchema,
   epicSubscribeServerFrameSchema,
   epicSubscribeV10,
-} from "@traycer/protocol/host/epic/subscribe";
+} from "@cic/protocol/host/epic/subscribe";
 
 /**
  * `epic.subscribe@1.0` frame fixtures.

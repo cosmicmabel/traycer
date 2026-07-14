@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { basePersistOptions, persistKey, STORE_KEYS } from "@/lib/persist";
-import type { TaskRepoIdentifier } from "@traycer/protocol/host/epic/unary-schemas";
+import type { TaskRepoIdentifier } from "@cic/protocol/host/epic/unary-schemas";
 
 export interface WorkspaceFolderInfo {
   readonly path: string;

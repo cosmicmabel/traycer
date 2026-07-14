@@ -10,8 +10,8 @@ describe("WorktreePickerTrigger change-count badge", () => {
   it("renders the count plus a collapsible ' changed' suffix and announces 'N changed'", () => {
     render(
       <WorktreePickerTrigger
-        worktreeLabel="traycer"
-        secondaryLabel="/Users/anurag/work/traycer"
+        worktreeLabel="cic"
+        secondaryLabel="/Users/anurag/work/cic"
         changeCount={3}
         trailingStatus={null}
         testId="trigger"
@@ -31,8 +31,8 @@ describe("WorktreePickerTrigger change-count badge", () => {
   it("renders no badge when changeCount is null", () => {
     render(
       <WorktreePickerTrigger
-        worktreeLabel="traycer"
-        secondaryLabel="/Users/anurag/work/traycer"
+        worktreeLabel="cic"
+        secondaryLabel="/Users/anurag/work/cic"
         changeCount={null}
         trailingStatus={null}
         testId="trigger"

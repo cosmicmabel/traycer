@@ -1,4 +1,4 @@
-import type { Message } from "@traycer/protocol/persistence/epic/schemas";
+import type { Message } from "@cic/protocol/persistence/epic/schemas";
 import type {
   AcceptedChatAction,
   FailedSendRestorationState,

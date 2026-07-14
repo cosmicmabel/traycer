@@ -2,9 +2,9 @@ import { describe, expect, it } from "vitest";
 import {
   validateVersionedRecordRegistry,
   validateVersionedRpcRegistry,
-} from "@traycer/protocol/framework/index";
-import { hostRpcRegistry } from "@traycer/protocol/host/index";
-import { persistenceRecordRegistry } from "@traycer/protocol/persistence/registry";
+} from "@cic/protocol/framework/index";
+import { hostRpcRegistry } from "@cic/protocol/host/index";
+import { persistenceRecordRegistry } from "@cic/protocol/persistence/registry";
 
 /**
  * Smoke test that every seeded protocol registry survives the structural

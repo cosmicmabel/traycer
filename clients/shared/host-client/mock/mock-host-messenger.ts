@@ -1,4 +1,4 @@
-import type { VersionedRpcRegistry } from "@traycer/protocol/framework/index";
+import type { VersionedRpcRegistry } from "@cic/protocol/framework/index";
 import {
   HostRpcError,
   type IHostMessenger,

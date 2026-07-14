@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { queryOptions, useQuery } from "@tanstack/react-query";
-import type { HostRpcError } from "@traycer-clients/shared/host-transport/host-messenger";
-import type { GitListChangedFilesResponseV11 } from "@traycer/protocol/host";
+import type { HostRpcError } from "@cic/shared/host-transport/host-messenger";
+import type { GitListChangedFilesResponseV11 } from "@cic/protocol/host";
 import { useHostClientFor } from "@/hooks/host/use-host-client-for";
 import { useHostDirectoryEntry } from "@/hooks/host/use-host-directory-entry";
 import { useReactiveHostReadiness } from "@/hooks/host/use-reactive-host-readiness";

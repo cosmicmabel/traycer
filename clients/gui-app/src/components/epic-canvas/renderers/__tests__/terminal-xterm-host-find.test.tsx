@@ -1288,7 +1288,7 @@ describe("<TerminalXtermHost /> terminal find", () => {
   it("copies ephemeral file URL drops into a stable path before pasting", async () => {
     const onUserInput = vi.fn();
     const stablePath =
-      "/tmp/traycer-dropped-files/20260603-uuid-Screenshot-2026-06-03-at-1.17.17-AM.png";
+      "/tmp/cic-dropped-files/20260603-uuid-Screenshot-2026-06-03-at-1.17.17-AM.png";
     runnerHostMocks.copyDroppedFilePaths.mockResolvedValue([stablePath]);
 
     render(

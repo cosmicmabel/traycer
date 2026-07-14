@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { WorktreeDeleteStreamCallbacks } from "@traycer-clients/shared/host-transport/worktree-delete-stream-client";
-import { WsStreamClient } from "@traycer-clients/shared/host-transport/ws-stream-client";
-import { hostStreamRpcRegistry } from "@traycer/protocol/host/registry";
-import type { HostStreamRpcRegistry } from "@traycer/protocol/host/registry";
+import type { WorktreeDeleteStreamCallbacks } from "@cic/shared/host-transport/worktree-delete-stream-client";
+import { WsStreamClient } from "@cic/shared/host-transport/ws-stream-client";
+import { hostStreamRpcRegistry } from "@cic/protocol/host/registry";
+import type { HostStreamRpcRegistry } from "@cic/protocol/host/registry";
 import type { DurableStreamTransport } from "@/lib/host/durable-stream-transport";
 import { runWorktreeCleanup } from "@/lib/epics/run-worktree-cleanup";
 
@@ -15,23 +15,20 @@ const streamMock = vi.hoisted(() => ({
   closeCount: 0,
 }));
 
-vi.mock(
-  "@traycer-clients/shared/host-transport/worktree-delete-stream-client",
-  () => ({
-    WorktreeDeleteStreamClient: class {
-      constructor(options: {
-        readonly worktreePath: string;
-        readonly callbacks: WorktreeDeleteStreamCallbacks;
-      }) {
-        streamMock.paths.push(options.worktreePath);
-        streamMock.callbacksByPath.set(options.worktreePath, options.callbacks);
-      }
-      close(): void {
-        streamMock.closeCount += 1;
-      }
-    },
-  }),
-);
+vi.mock("@cic/shared/host-transport/worktree-delete-stream-client", () => ({
+  WorktreeDeleteStreamClient: class {
+    constructor(options: {
+      readonly worktreePath: string;
+      readonly callbacks: WorktreeDeleteStreamCallbacks;
+    }) {
+      streamMock.paths.push(options.worktreePath);
+      streamMock.callbacksByPath.set(options.worktreePath, options.callbacks);
+    }
+    close(): void {
+      streamMock.closeCount += 1;
+    }
+  },
+}));
 
 function callbacksFor(path: string): WorktreeDeleteStreamCallbacks {
   const callbacks = streamMock.callbacksByPath.get(path);

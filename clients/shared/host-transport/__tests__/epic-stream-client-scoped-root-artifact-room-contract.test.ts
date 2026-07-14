@@ -13,12 +13,12 @@
  *   - Inbound `permissionChanged` carries the parent-Epic permission only.
  */
 import { describe, expect, it } from "vitest";
-import { hostStreamRpcRegistry } from "@traycer/protocol/host/registry";
+import { hostStreamRpcRegistry } from "@cic/protocol/host/registry";
 import {
   createRequestContext,
   identityFromAuthenticatedUser,
   type RequestContext,
-} from "@traycer/protocol/auth/request-context";
+} from "@cic/protocol/auth/request-context";
 import { mockLocalHostEntry } from "../../host-client/mock/mock-host-directory";
 import { createAuthenticatedUserFixture } from "../../test-fixtures/authenticated-user";
 import type {

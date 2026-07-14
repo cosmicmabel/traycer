@@ -3,7 +3,7 @@ import { useState } from "react";
 import type {
   ProviderNoticeDetail,
   ProviderNoticeTone,
-} from "@traycer/protocol/persistence/epic/content-blocks";
+} from "@cic/protocol/persistence/epic/content-blocks";
 import { useChatMeasuredBooleanToggle } from "@/components/chat/chat-measured-item-change-context";
 import { LivePulse } from "@/components/ui/live-pulse";
 import { cn } from "@/lib/utils";

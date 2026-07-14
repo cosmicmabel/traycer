@@ -1,7 +1,7 @@
 import { keepPreviousData } from "@tanstack/react-query";
-import type { HostClient } from "@traycer-clients/shared/host-client/host-client";
-import type { HostRpcError } from "@traycer-clients/shared/host-transport/host-messenger";
-import type { WorkspaceMentionSuggestion } from "@traycer/protocol/host/index";
+import type { HostClient } from "@cic/shared/host-client/host-client";
+import type { HostRpcError } from "@cic/shared/host-transport/host-messenger";
+import type { WorkspaceMentionSuggestion } from "@cic/protocol/host/index";
 import type { HostRpcRegistry } from "@/lib/host";
 import { useHostQueries } from "@/hooks/host/use-host-queries";
 import type {

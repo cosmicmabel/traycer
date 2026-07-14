@@ -1,5 +1,5 @@
 import { useQueryClient } from "@tanstack/react-query";
-import type { HostRpcRegistry } from "@traycer/protocol/host/index";
+import type { HostRpcRegistry } from "@cic/protocol/host/index";
 import { useHostMutation } from "@/hooks/host/use-host-query";
 import { useHostClient } from "@/lib/host/runtime";
 import { toastFromHostError } from "@/lib/host-error-toast";

@@ -4,12 +4,12 @@ import { act, cleanup, render, waitFor } from "@testing-library/react";
 import {
   NOTIFICATION_EVENT_TYPES,
   type NotificationEntry,
-} from "@traycer/protocol/notifications/notification-entry";
+} from "@cic/protocol/notifications/notification-entry";
 import {
   NOTIFICATIONS_ARRAY_KEY,
   createNotificationRoomEntryMap,
   type NotificationRoomEntryMap,
-} from "@traycer/protocol/notifications/notification-room";
+} from "@cic/protocol/notifications/notification-room";
 
 const hostState = vi.hoisted(() => ({ id: "host-a" }));
 

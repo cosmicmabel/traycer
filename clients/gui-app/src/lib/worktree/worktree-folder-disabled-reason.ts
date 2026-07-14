@@ -1,4 +1,4 @@
-import type { WorktreeBindingSelectorRow } from "@traycer/protocol/host";
+import type { WorktreeBindingSelectorRow } from "@cic/protocol/host";
 
 export function formatWorktreeFolderDisabledReason(
   row: WorktreeBindingSelectorRow,

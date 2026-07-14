@@ -3,12 +3,12 @@ import { z } from "zod";
 import {
   defineRpcContract,
   defineVersionedRpcRegistry,
-} from "@traycer/protocol/framework/index";
+} from "@cic/protocol/framework/index";
 import {
   createRequestContext,
   identityFromAuthenticatedUser,
   type RequestContext,
-} from "@traycer/protocol/auth/request-context";
+} from "@cic/protocol/auth/request-context";
 import {
   HostClient,
   type HostClientChangeEvent,
@@ -33,7 +33,7 @@ import type {
 import type {
   ClientFrame,
   HostFrame,
-} from "@traycer/protocol/framework/ws-protocol";
+} from "@cic/protocol/framework/ws-protocol";
 import { createAuthenticatedUserFixture } from "../../test-fixtures/authenticated-user";
 
 const pingV10 = defineRpcContract({

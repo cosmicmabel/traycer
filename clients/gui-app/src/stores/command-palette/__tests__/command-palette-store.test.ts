@@ -117,7 +117,7 @@ describe("useCommandPaletteStore", () => {
 
   it("does not persist session-only open state", () => {
     useCommandPaletteStore.getState().setOpen(true);
-    const raw = window.localStorage.getItem("traycer-gui-app:command-palette");
+    const raw = window.localStorage.getItem("cic-gui-app:command-palette");
     if (raw === null) throw new Error("expected persisted palette state");
     const persisted = JSON.parse(raw) as {
       readonly state: Record<string, unknown>;

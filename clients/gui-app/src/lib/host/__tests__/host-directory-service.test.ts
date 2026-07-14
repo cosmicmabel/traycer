@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { MockRunnerHost } from "@traycer-clients/shared/host-client/mock/mock-runner-host";
-import { mockRemoteHostEntry } from "@traycer-clients/shared/host-client/mock/mock-host-directory";
-import type { LocalHostSnapshot } from "@traycer-clients/shared/platform/runner-host";
-import type { HostDirectoryEntry } from "@traycer-clients/shared/host-client/host-directory";
+import { MockRunnerHost } from "@cic/shared/host-client/mock/mock-runner-host";
+import { mockRemoteHostEntry } from "@cic/shared/host-client/mock/mock-host-directory";
+import type { LocalHostSnapshot } from "@cic/shared/platform/runner-host";
+import type { HostDirectoryEntry } from "@cic/shared/host-client/host-directory";
 import { HostDirectoryService } from "@/lib/host/host-directory-service";
 
 const localSnapshot: LocalHostSnapshot = {
@@ -22,13 +22,13 @@ const localSnapshotNewEndpoint: LocalHostSnapshot = {
 
 function makeHost(localHost: LocalHostSnapshot | null): MockRunnerHost {
   return new MockRunnerHost({
-    signInUrl: "https://auth.traycer.invalid/sign-in",
+    signInUrl: "https://auth.cic.invalid/sign-in",
     authnBaseUrl: "http://localhost:5005",
     localHost,
     hosts: [],
     workspaceFolderPickerPaths: undefined,
     hasLocalHost: undefined,
-    traycerCli: undefined,
+    cicCli: undefined,
   });
 }
 
@@ -125,7 +125,7 @@ describe("HostDirectoryService", () => {
       hostId: "mock-remote-2",
       label: "Second Remote",
       kind: "remote",
-      websocketUrl: "wss://mock-remote-2.traycer.invalid/rpc",
+      websocketUrl: "wss://mock-remote-2.cic.invalid/rpc",
       version: "0.0.0-mock",
       status: "available",
     };

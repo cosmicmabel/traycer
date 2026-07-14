@@ -1,7 +1,7 @@
 import type {
   ChatQueuedItem,
   ChatQueueState,
-} from "@traycer/protocol/host/agent/gui/subscribe";
+} from "@cic/protocol/host/agent/gui/subscribe";
 
 const OPTIMISTIC_QUEUED_ITEM_ID_PREFIX = "optimistic-send:";
 

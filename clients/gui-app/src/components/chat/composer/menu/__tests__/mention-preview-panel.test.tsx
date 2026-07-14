@@ -298,7 +298,7 @@ describe("MentionPreviewPanel", () => {
         leafIsFile: true,
       },
       footer: {
-        text: "/Users/anurag/traycer-staging/trayer/clients/gui-app/src/components/home/toolbar/composer-toolbar.tsx",
+        text: "/Users/anurag/cic-staging/trayer/clients/gui-app/src/components/home/toolbar/composer-toolbar.tsx",
         mono: true,
       },
     };
@@ -318,7 +318,7 @@ describe("MentionPreviewPanel", () => {
     expect(screen.getByText("toolbar")).toBeTruthy();
     expect(screen.getByText("composer-toolbar.tsx")).toBeTruthy();
     const footerEl = screen.getByText(
-      "/Users/anurag/traycer-staging/trayer/clients/gui-app/src/components/home/toolbar/composer-toolbar.tsx",
+      "/Users/anurag/cic-staging/trayer/clients/gui-app/src/components/home/toolbar/composer-toolbar.tsx",
     );
     expect(footerEl.className).toContain("font-mono");
   });
@@ -410,7 +410,7 @@ describe("MentionPreviewPanel", () => {
     const preview: MentionPreview = {
       kind: "path",
       tree: {
-        rootLabel: "/home/u/.traycer/worktrees",
+        rootLabel: "/home/u/.cic/worktrees",
         midDirs: ["o", "r"],
         leaf: "feature-worktree",
         leafIsFile: false,
@@ -426,7 +426,7 @@ describe("MentionPreviewPanel", () => {
     );
     await flush();
 
-    expect(screen.getByText("/home/u/.traycer/worktrees")).toBeTruthy();
+    expect(screen.getByText("/home/u/.cic/worktrees")).toBeTruthy();
     expect(screen.getByText("feature-worktree")).toBeTruthy();
     const footerEl = screen.getByText("feature");
     expect(footerEl.className).not.toContain("font-mono");
@@ -437,7 +437,7 @@ describe("MentionPreviewPanel", () => {
     const preview: MentionPreview = {
       kind: "path",
       tree: {
-        rootLabel: "/home/u/.traycer/worktrees",
+        rootLabel: "/home/u/.cic/worktrees",
         midDirs: ["o", "r"],
         leaf: "feature",
         leafIsFile: false,
@@ -454,6 +454,6 @@ describe("MentionPreviewPanel", () => {
     await flush();
 
     const panel = document.querySelector('[data-slot="mention-preview-panel"]');
-    expect(panel?.textContent).toBe("/home/u/.traycer/worktreesorfeature");
+    expect(panel?.textContent).toBe("/home/u/.cic/worktreesorfeature");
   });
 });

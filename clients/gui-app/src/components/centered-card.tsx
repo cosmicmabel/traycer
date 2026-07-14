@@ -12,7 +12,7 @@ export interface CenteredCardProps {
 /**
  * Full-viewport centered message card used by the app's pre-ready surfaces
  * (auth-session restore, "no host connected", host runtime init). Shared so the
- * `TraycerApp` shell and the routed `HostReadyGate` render an identical card.
+ * `CicApp` shell and the routed `HostReadyGate` render an identical card.
  */
 export function CenteredCard(props: CenteredCardProps): ReactNode {
   const containerProps =

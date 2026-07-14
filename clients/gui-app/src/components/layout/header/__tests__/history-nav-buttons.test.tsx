@@ -18,7 +18,7 @@ import { HistoryNavButtons } from "@/components/layout/header/history-nav-button
 const WINDOW_ID = "history-nav-buttons-test-window";
 
 function storageKey(windowId: string): string {
-  return `traycer-gui-app:last-route:${windowId}`;
+  return `cic-gui-app:last-route:${windowId}`;
 }
 
 function makeRouter(history: RouterHistory): AppRouter {

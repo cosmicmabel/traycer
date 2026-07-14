@@ -1,12 +1,12 @@
 /**
  * Settings > Providers rate-limit card for Codex / Claude Code: mirrors
- * `TraycerSubscriptionForProvider`'s gate shape in
+ * `CicSubscriptionForProvider`'s gate shape in
  * `providers-settings-panel.tsx` (a tiny provider-id switch mounted inside
  * `ProviderDetail`), but for the two rate-limit-capable CLI providers
- * instead of `traycer`.
+ * instead of `cic`.
  */
 import type { ReactNode } from "react";
-import type { ProviderId } from "@traycer/protocol/host/provider-schemas";
+import type { ProviderId } from "@cic/protocol/host/provider-schemas";
 import { RefreshIconButton } from "@/components/refresh-icon-button";
 import { ProviderRateLimitBody } from "@/components/settings/panels/provider-rate-limit-views";
 import { useHostProviderRateLimitsQuery } from "@/hooks/host/use-host-provider-rate-limits-query";
@@ -18,7 +18,7 @@ import {
   type RateLimitProviderId,
 } from "@/lib/rate-limit-providers";
 
-// Gates the card the same way `TraycerSubscriptionForProvider` gates the
+// Gates the card the same way `CicSubscriptionForProvider` gates the
 // subscription card: the rate-limit query never fires while viewing another
 // provider, and `ProviderDetail` stays a flat mount list.
 export function ProviderRateLimitForProvider({

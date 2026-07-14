@@ -6,8 +6,8 @@ import type {
   ChatFileEditApprovalState,
   ChatQueuedItem,
   ChatRunSettings,
-} from "@traycer/protocol/host/agent/gui/subscribe";
-import type { InterviewAnswer } from "@traycer/protocol/persistence/epic/schemas";
+} from "@cic/protocol/host/agent/gui/subscribe";
+import type { InterviewAnswer } from "@cic/protocol/persistence/epic/schemas";
 import {
   ChatComposer,
   type ChatComposerSubmitInput,

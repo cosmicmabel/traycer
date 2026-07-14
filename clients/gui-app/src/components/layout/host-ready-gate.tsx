@@ -17,11 +17,11 @@ import { useAuthStore } from "@/stores/auth/auth-store";
  *
  * This lives INSIDE `RouterProvider`, so host-independent chrome - the
  * `MenuCommandListener` and the About/Logs/Report `DesktopDialogHost` - keeps
- * working while the gate shows the "Setting up Traycer Host…" surface. It
+ * working while the gate shows the "Setting up CIC Host…" surface. It
  * replaces the old placement that wrapped the whole `RouterProvider` and
  * unmounted that chrome (and every menu/dialog handler) during setup.
  *
- * Behaviour mirrors the prior `TraycerAppRouter` gate stack:
+ * Behaviour mirrors the prior `CicAppRouter` gate stack:
  *   - a signed-in user whose request context has not been minted yet sees the
  *     "Restoring authenticated session…" card;
  *   - otherwise the `LocalHostGate` / `MobileHostGate` stack decides between the

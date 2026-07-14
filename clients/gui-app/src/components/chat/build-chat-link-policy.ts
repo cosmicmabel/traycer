@@ -1,7 +1,7 @@
 import type { QueryClient } from "@tanstack/react-query";
 import type { UseNavigateResult } from "@tanstack/react-router";
-import type { HostClient } from "@traycer-clients/shared/host-client/host-client";
-import type { HostRpcRegistry } from "@traycer/protocol/host/index";
+import type { HostClient } from "@cic/shared/host-client/host-client";
+import type { HostRpcRegistry } from "@cic/protocol/host/index";
 import {
   workspaceFileRefFromAbsoluteFilePath,
   workspaceFileRefFromLinkPath,
@@ -89,7 +89,7 @@ export type ChatLinkHandler = (
  *   target epic when it points elsewhere. A `null` resolve (deleted / not yet
  *   minted / unresolved chain) or a transport rejection degrades through
  *   `openChatWorkspaceFilePreview` with out-of-root synthesis DISABLED, so an
- *   artifact `index.md` (which normally lives under `~/.traycer`, outside the
+ *   artifact `index.md` (which normally lives under `~/.cic`, outside the
  *   chat's roots) stays a safe no-op rather than opening a raw / error tile
  *   (D5 / CL-1).
  * - **Plain file links** resolve against the chat's working directories and

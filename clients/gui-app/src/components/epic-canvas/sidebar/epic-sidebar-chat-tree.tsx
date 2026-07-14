@@ -25,7 +25,7 @@ import {
 import { useOpenEpicHandle } from "@/providers/use-open-epic-handle";
 import { cn } from "@/lib/utils";
 import { OwnerResourceChip } from "@/components/resources/resource-usage-chip";
-import type { ResourceOwnerKindWire } from "@traycer/protocol/host/resources/subscribe";
+import type { ResourceOwnerKindWire } from "@cic/protocol/host/resources/subscribe";
 import { ChatProgressIcon } from "@/components/chat/chat-progress-icon";
 import { HarnessIcon } from "@/components/home/pickers/harness-icon";
 import { AgentSpinningDots } from "@/components/ui/agent-spinning-dots";

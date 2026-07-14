@@ -1,6 +1,6 @@
 import "../../../../__tests__/test-browser-apis";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { ChatRunSettings } from "@traycer/protocol/host/agent/gui/subscribe";
+import type { ChatRunSettings } from "@cic/protocol/host/agent/gui/subscribe";
 import {
   COMPOSER_HARNESS_MEMORY_CAP,
   useComposerHarnessMemoryStore,

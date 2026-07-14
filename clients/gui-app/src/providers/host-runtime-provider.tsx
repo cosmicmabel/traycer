@@ -12,19 +12,19 @@ import { v4 as uuidv4 } from "uuid";
 import type {
   HostClient,
   IHostQueryInvalidator,
-} from "@traycer-clients/shared/host-client/host-client";
-import { HostRuntime } from "@traycer-clients/shared/host-client/host-runtime";
-import type { IHostMessenger } from "@traycer-clients/shared/host-transport/host-messenger";
-import { WsRpcClient } from "@traycer-clients/shared/host-transport/ws-rpc-client";
-import { createWhatwgWebSocketFactory } from "@traycer-clients/shared/host-transport/whatwg-ws-factory";
-import { createAuthAwareMessenger } from "@traycer-clients/shared/host-transport/auth-aware-messenger";
+} from "@cic/shared/host-client/host-client";
+import { HostRuntime } from "@cic/shared/host-client/host-runtime";
+import type { IHostMessenger } from "@cic/shared/host-transport/host-messenger";
+import { WsRpcClient } from "@cic/shared/host-transport/ws-rpc-client";
+import { createWhatwgWebSocketFactory } from "@cic/shared/host-transport/whatwg-ws-factory";
+import { createAuthAwareMessenger } from "@cic/shared/host-transport/auth-aware-messenger";
 import {
   createRetryingMessenger,
   DEFAULT_TRANSPORT_RETRY_POLICY,
-} from "@traycer-clients/shared/host-transport/retrying-messenger";
-import { DEFAULT_DIAL_TIMEOUT_MS } from "@traycer-clients/shared/host-transport/transport-config";
-import type { RemoteHostFetcher } from "@traycer-clients/shared/host-client/remote-fetcher";
-import type { VersionedRpcRegistry } from "@traycer/protocol/framework/index";
+} from "@cic/shared/host-transport/retrying-messenger";
+import { DEFAULT_DIAL_TIMEOUT_MS } from "@cic/shared/host-transport/transport-config";
+import type { RemoteHostFetcher } from "@cic/shared/host-client/remote-fetcher";
+import type { VersionedRpcRegistry } from "@cic/protocol/framework/index";
 import { AuthService } from "@/lib/auth/auth-service";
 import { HostDirectoryService } from "@/lib/host/host-directory-service";
 import { createHostQueryInvalidator } from "@/lib/host/query-invalidator";
@@ -41,14 +41,12 @@ export interface HostRuntimeBinding<Registry extends VersionedRpcRegistry> {
 export type MessengerFactory<Registry extends VersionedRpcRegistry> = (args: {
   readonly registry: Registry;
   readonly endpoint: () =>
-    | import("@traycer-clients/shared/host-client/host-directory").HostDirectoryEntry
-    | null;
+    import("@cic/shared/host-client/host-directory").HostDirectoryEntry | null;
   // Mirrors the transport's actual seam: a bearer source for the WS open frame,
   // not a full RequestContext. An override that wires a real WsRpcClient passes
   // this straight through.
   readonly bearer: () =>
-    | import("@traycer-clients/shared/auth/bearer-source").OpenFrameBearerSource
-    | null;
+    import("@cic/shared/auth/bearer-source").OpenFrameBearerSource | null;
 }) => IHostMessenger<Registry>;
 
 interface HostRuntimeProviderProps<Registry extends VersionedRpcRegistry> {
@@ -196,7 +194,7 @@ export function createHostRuntime<
               frameTimeoutMs: DEFAULT_WS_FRAME_TIMEOUT_MS,
             });
       // Closes the unary-RPC auth-recovery loop: a mid-call 401 from
-      // the Traycer cloud backend is surfaced by the host as
+      // the CIC cloud backend is surfaced by the host as
       // `HostRpcError { code: "UNAUTHORIZED" }`, and this wrapper drives
       // `AuthService.revalidateCurrentContext()` so the GUI either rotates
       // the existing context's credential lease in place (refresh

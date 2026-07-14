@@ -1,5 +1,5 @@
 import type { Slice } from "@tiptap/pm/model";
-import type { JsonContent } from "@traycer/protocol/common/registry";
+import type { JsonContent } from "@cic/protocol/common/registry";
 
 import {
   mentionPlainTextFromAttrs,
@@ -14,11 +14,11 @@ import {
   sliceToDocJson,
 } from "@/lib/editor/prosemirror-json";
 
-const CLIPBOARD_SCHEMA = "traycer.composer-content";
+const CLIPBOARD_SCHEMA = "cic.composer-content";
 const CLIPBOARD_VERSION = 1;
-const COMPOSER_CONTENT_HTML_ATTR = "data-traycer-composer-content";
+const COMPOSER_CONTENT_HTML_ATTR = "data-cic-composer-content";
 
-const COMPOSER_CLIPBOARD_MIME = "application/x-traycer-composer+json";
+const COMPOSER_CLIPBOARD_MIME = "application/x-cic-composer+json";
 const WEB_COMPOSER_CLIPBOARD_MIME = `web ${COMPOSER_CLIPBOARD_MIME}`;
 
 interface ComposerClipboardCopyArgs {

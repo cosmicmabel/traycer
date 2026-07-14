@@ -3,12 +3,12 @@ import "../../../../__tests__/test-browser-apis";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { ReactNode } from "react";
-import type { JsonContent } from "@traycer/protocol/common/registry";
+import type { JsonContent } from "@cic/protocol/common/registry";
 import type {
   BackgroundItem,
   ChatQueuedItem,
   ChatRunSettings,
-} from "@traycer/protocol/host/agent/gui/subscribe";
+} from "@cic/protocol/host/agent/gui/subscribe";
 import { ChatLowerDock } from "@/components/chat/chat-lower-dock";
 import type { AccumulatedFileChange } from "@/lib/chat/accumulated-file-changes-from-messages";
 import type { ChatRestoreContextValue } from "@/components/chat/chat-restore-context-core";

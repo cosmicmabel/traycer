@@ -3,7 +3,7 @@ import type {
   WorktreeBindingEntry,
   WorktreeFolderIntent,
   WorktreeIntent,
-} from "@traycer/protocol/host/worktree-schemas";
+} from "@cic/protocol/host/worktree-schemas";
 
 /**
  * Projects a live binding entry into the folder-intent shape the unified picker

@@ -1,7 +1,7 @@
 import type {
   InterviewAnswer,
   InterviewQuestion,
-} from "@traycer/protocol/persistence/epic/schemas";
+} from "@cic/protocol/persistence/epic/schemas";
 import { ChevronRight, MessageSquareText } from "lucide-react";
 import { useState } from "react";
 import {

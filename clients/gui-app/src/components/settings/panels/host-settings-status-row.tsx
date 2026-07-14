@@ -6,7 +6,7 @@ import {
   statusLabel,
 } from "@/components/settings/panels/host-settings-panel-model";
 import { cn } from "@/lib/utils";
-import type { ServiceStatusSnapshot } from "@traycer-clients/shared/platform/runner-host";
+import type { ServiceStatusSnapshot } from "@cic/shared/platform/runner-host";
 
 interface StatusRowProps {
   readonly status: ServiceStatusSnapshot | undefined;

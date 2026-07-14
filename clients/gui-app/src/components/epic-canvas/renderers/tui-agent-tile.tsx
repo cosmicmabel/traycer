@@ -9,8 +9,8 @@ import {
 } from "react";
 import { ChevronDown, GitFork, Users } from "lucide-react";
 import { toast } from "sonner";
-import type { HostClient } from "@traycer-clients/shared/host-client/host-client";
-import type { HostRpcRegistry } from "@traycer/protocol/host/index";
+import type { HostClient } from "@cic/shared/host-client/host-client";
+import type { HostRpcRegistry } from "@cic/protocol/host/index";
 import {
   useActivePaneEffect,
   usePaneVisible,

@@ -9,7 +9,7 @@ import {
   parseRecord,
   toRecordJsonSchemas,
   validateVersionedRecordRegistry,
-} from "@traycer/protocol/framework/index";
+} from "@cic/protocol/framework/index";
 
 /**
  * Coverage for the generalized record framework: enum and union schemas

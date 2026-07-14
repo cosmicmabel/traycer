@@ -2,8 +2,8 @@ import {
   notificationsSubscribeServerFrameSchema,
   type NotificationsSubscribeClientFrame,
   type NotificationsSubscribeServerFrame,
-} from "@traycer/protocol/host/notifications/subscribe";
-import type { HostStreamRpcRegistry } from "@traycer/protocol/host/registry";
+} from "@cic/protocol/host/notifications/subscribe";
+import type { HostStreamRpcRegistry } from "@cic/protocol/host/registry";
 import type {
   IStreamSession,
   StreamCloseReason,

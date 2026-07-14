@@ -1,16 +1,16 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { cleanup, renderHook } from "@testing-library/react";
-import { HostClient } from "@traycer-clients/shared/host-client/host-client";
-import { MockHostMessenger } from "@traycer-clients/shared/host-client/mock/mock-host-messenger";
-import { mockLocalHostEntry } from "@traycer-clients/shared/host-client/mock/mock-host-directory";
-import { createRequestContextFixture } from "@traycer-clients/shared/test-fixtures/request-context";
-import { WsStreamClient } from "@traycer-clients/shared/host-transport/ws-stream-client";
-import type { StreamAuthRevalidator } from "@traycer-clients/shared/auth/bearer-revalidator";
-import type { HostDirectoryEntry } from "@traycer-clients/shared/host-client/host-directory";
+import { HostClient } from "@cic/shared/host-client/host-client";
+import { MockHostMessenger } from "@cic/shared/host-client/mock/mock-host-messenger";
+import { mockLocalHostEntry } from "@cic/shared/host-client/mock/mock-host-directory";
+import { createRequestContextFixture } from "@cic/shared/test-fixtures/request-context";
+import { WsStreamClient } from "@cic/shared/host-transport/ws-stream-client";
+import type { StreamAuthRevalidator } from "@cic/shared/auth/bearer-revalidator";
+import type { HostDirectoryEntry } from "@cic/shared/host-client/host-directory";
 import {
   hostRpcRegistry,
   type HostRpcRegistry,
-} from "@traycer/protocol/host/index";
+} from "@cic/protocol/host/index";
 
 // One global client shared between the mocked `useHostClient` and the tests.
 const globalClientRef = vi.hoisted(() => ({

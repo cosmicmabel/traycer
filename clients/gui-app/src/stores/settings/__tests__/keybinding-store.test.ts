@@ -52,7 +52,7 @@ describe("useKeybindingStore", () => {
 
   it("persists bindings to the versioned localStorage key", () => {
     useKeybindingStore.getState().setBinding("epic.new", "mod+alt+t");
-    const raw = window.localStorage.getItem("traycer-gui-app:keybindings");
+    const raw = window.localStorage.getItem("cic-gui-app:keybindings");
     expect(raw).not.toBeNull();
     if (raw === null) return;
     const parsed = JSON.parse(raw) as {
@@ -63,7 +63,7 @@ describe("useKeybindingStore", () => {
 
   it("rehydrates persisted rebinds via default hydration", async () => {
     window.localStorage.setItem(
-      "traycer-gui-app:keybindings",
+      "cic-gui-app:keybindings",
       JSON.stringify({
         state: {
           bindings: {
@@ -84,7 +84,7 @@ describe("useKeybindingStore", () => {
 
   it("ignores invalid persisted binding keys and values during hydration", async () => {
     window.localStorage.setItem(
-      "traycer-gui-app:keybindings",
+      "cic-gui-app:keybindings",
       JSON.stringify({
         state: {
           bindings: {
@@ -111,7 +111,7 @@ describe("useKeybindingStore", () => {
 
   it("migrates the legacy split default pair to right on mod+d and down on mod+shift+d", async () => {
     window.localStorage.setItem(
-      "traycer-gui-app:keybindings",
+      "cic-gui-app:keybindings",
       JSON.stringify({
         state: {
           bindings: {
@@ -136,7 +136,7 @@ describe("useKeybindingStore", () => {
 
   it("preserves customized split bindings during hydration", async () => {
     window.localStorage.setItem(
-      "traycer-gui-app:keybindings",
+      "cic-gui-app:keybindings",
       JSON.stringify({
         state: {
           bindings: {

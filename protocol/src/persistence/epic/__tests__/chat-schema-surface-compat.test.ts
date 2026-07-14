@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { z } from "zod";
-import { chatSchema } from "@traycer/protocol/persistence/epic/chat";
+import { chatSchema } from "@cic/protocol/persistence/epic/chat";
 import { chatSchemaSurfaceBaseline } from "./__fixtures__/chat-schema-surface";
 
 /**

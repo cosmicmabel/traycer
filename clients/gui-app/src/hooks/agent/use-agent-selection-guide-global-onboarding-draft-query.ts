@@ -1,6 +1,6 @@
 import type { UseQueryResult } from "@tanstack/react-query";
-import type { AgentSelectionGuideGlobalOnboardingDraftGetResponse } from "@traycer/protocol/host/agent/shared";
-import type { HostRpcError } from "@traycer-clients/shared/host-transport/host-messenger";
+import type { AgentSelectionGuideGlobalOnboardingDraftGetResponse } from "@cic/protocol/host/agent/shared";
+import type { HostRpcError } from "@cic/shared/host-transport/host-messenger";
 import { useHostClient } from "@/lib/host";
 import { useHostQuery } from "@/hooks/host/use-host-query";
 

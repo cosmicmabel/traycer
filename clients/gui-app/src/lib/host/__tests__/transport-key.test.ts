@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { HostDirectoryEntry } from "@traycer-clients/shared/host-client/host-directory";
+import type { HostDirectoryEntry } from "@cic/shared/host-client/host-directory";
 import {
   hostTransportKey,
   dialableHostEndpoint,

@@ -4,7 +4,7 @@
  * broad invalidation by host scope, per ADR-0006.
  */
 
-import type { GitStage } from "@traycer/protocol/host";
+import type { GitStage } from "@cic/protocol/host";
 import { hostQueryKeys } from "./host-query-keys";
 
 export const gitQueryKeys = {

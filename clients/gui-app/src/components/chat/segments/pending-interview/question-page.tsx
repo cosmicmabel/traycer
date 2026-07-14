@@ -5,7 +5,7 @@ import * as m from "motion/react-m";
 import type {
   InterviewQuestion,
   InterviewQuestionOption,
-} from "@traycer/protocol/persistence/epic/schemas";
+} from "@cic/protocol/persistence/epic/schemas";
 import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
 import { cn } from "@/lib/utils";
 import type { DraftAnswer } from "./interview-draft";

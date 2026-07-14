@@ -13,7 +13,7 @@ vi.mock("react-markdown", () => ({
   },
 }));
 
-import { TraycerMarkdown } from "@/markdown/traycer-markdown";
+import { CicMarkdown } from "@/markdown/cic-markdown";
 
 afterEach(() => {
   markdownRenders.length = 0;
@@ -21,7 +21,7 @@ afterEach(() => {
 
 function StreamHarness({ content }: { content: string }) {
   return (
-    <TraycerMarkdown
+    <CicMarkdown
       className={null}
       proseSize="normal"
       components={null}
@@ -31,7 +31,7 @@ function StreamHarness({ content }: { content: string }) {
       isStreaming
     >
       {content}
-    </TraycerMarkdown>
+    </CicMarkdown>
   );
 }
 

@@ -2,7 +2,7 @@ import {
   defineDowngradePath,
   defineRpcContract,
   defineUpgradePath,
-} from "@traycer/protocol/framework/index";
+} from "@cic/protocol/framework/index";
 import {
   createAgentRequestSchema,
   createAgentResponseSchema,
@@ -33,7 +33,7 @@ import {
   sendAgentMessageResponseSchema,
   stopAgentRequestSchema,
   stopAgentResponseSchema,
-} from "@traycer/protocol/host/agent/shared";
+} from "@cic/protocol/host/agent/shared";
 
 // ─── Agent-to-agent unary surface ─────────────────────────────────────────
 //
@@ -128,7 +128,7 @@ export const agentListHarnessModelsDowngradeV2ToV1 = defineDowngradePath<
         error: {
           code: "DOWNGRADE_UNSUPPORTED",
           message:
-            "agent.listHarnessModels without epic and sender agent context requires a newer Traycer host.",
+            "agent.listHarnessModels without epic and sender agent context requires a newer CIC host.",
         },
       };
     }

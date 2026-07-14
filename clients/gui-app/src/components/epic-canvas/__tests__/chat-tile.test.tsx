@@ -79,11 +79,11 @@ vi.mock("@/hooks/host/use-reactive-active-host-id", () => ({
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import * as Y from "yjs";
-import type { JsonContent } from "@traycer/protocol/common/registry";
+import type { JsonContent } from "@cic/protocol/common/registry";
 import { ChatTile } from "@/components/epic-canvas/renderers/chat-tile";
 import { TabHostProvider } from "@/components/epic-canvas/tab-host-provider";
 import { RunnerHostProvider } from "@/providers/runner-host-provider";
-import { MockRunnerHost } from "@traycer-clients/shared/host-client/mock/mock-runner-host";
+import { MockRunnerHost } from "@cic/shared/host-client/mock/mock-runner-host";
 import { useComposerDraftStore } from "@/stores/composer/composer-draft-store";
 import { useComposerRunSettingsStore } from "@/stores/composer/composer-run-settings-store";
 import { useComposerHarnessMemoryStore } from "@/stores/composer/composer-harness-memory-store";
@@ -96,9 +96,9 @@ import {
 import { useAuthStore } from "@/stores/auth/auth-store";
 import { TestEpicSessionWrapper } from "./test-epic-session";
 import { createEpicSessionTestHarness } from "./test-epic-session-harness";
-import type { ChatStreamCallbacks } from "@traycer-clients/shared/host-transport/chat-stream-client";
-import type { ChatStreamClient } from "@traycer-clients/shared/host-transport/chat-stream-client";
-import type { Message } from "@traycer/protocol/persistence/epic/schemas";
+import type { ChatStreamCallbacks } from "@cic/shared/host-transport/chat-stream-client";
+import type { ChatStreamClient } from "@cic/shared/host-transport/chat-stream-client";
+import type { Message } from "@cic/protocol/persistence/epic/schemas";
 import type {
   ChatActiveTurn,
   ChatApprovalState,
@@ -107,8 +107,8 @@ import type {
   ChatRunSettings,
   ChatRunStatus,
   ChatSubscribeClientFrame,
-} from "@traycer/protocol/host/agent/gui/subscribe";
-import type { WorktreeBinding } from "@traycer/protocol/host/worktree-schemas";
+} from "@cic/protocol/host/agent/gui/subscribe";
+import type { WorktreeBinding } from "@cic/protocol/host/worktree-schemas";
 import {
   getFocusedComposerControls,
   resetFocusedComposerControlsForTests,
@@ -409,11 +409,11 @@ function nextStepsAssistantMessage(): Message {
         type: "text",
         blockId: "next-steps-block",
         text: [
-          "<TRAYCER_NEXT_STEPS>",
+          "<CIC_NEXT_STEPS>",
           "Implementation is complete.",
           "",
           "- [] /implementation-validation all",
-          "</TRAYCER_NEXT_STEPS>",
+          "</CIC_NEXT_STEPS>",
         ].join("\n"),
         status: "completed",
         timestamp: 2,
@@ -531,7 +531,7 @@ function renderChatTile() {
                 hosts: [],
                 workspaceFolderPickerPaths: undefined,
                 hasLocalHost: undefined,
-                traycerCli: undefined,
+                cicCli: undefined,
               })
             }
           >

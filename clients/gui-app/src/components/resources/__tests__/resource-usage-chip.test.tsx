@@ -5,11 +5,11 @@ import type {
   OwnerResourceSnapshotWire,
   ResourceProcessSnapshotWire,
   ResourceOwnerKindWire,
-} from "@traycer/protocol/host/resources/subscribe";
+} from "@cic/protocol/host/resources/subscribe";
 import type {
   ResourcesProjectionPayload,
   ResourcesStreamCallbacks,
-} from "@traycer-clients/shared/host-transport/resources-stream-client";
+} from "@cic/shared/host-transport/resources-stream-client";
 import {
   EpicResourceChip,
   OwnerResourceChip,

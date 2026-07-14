@@ -12,7 +12,7 @@ import {
   ArrowUpNarrowWide,
   ListFilter,
 } from "lucide-react";
-import type { EpicArtifactKind } from "@traycer/protocol/common/registry";
+import type { EpicArtifactKind } from "@cic/protocol/common/registry";
 import { EPIC_NODE_LABELS } from "@/lib/artifacts/node-display";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";

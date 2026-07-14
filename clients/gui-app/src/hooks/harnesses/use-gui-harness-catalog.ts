@@ -1,7 +1,7 @@
 import { useQueryClient, type UseQueryResult } from "@tanstack/react-query";
 import { useCallback, useMemo } from "react";
-import type { HostClient } from "@traycer-clients/shared/host-client/host-client";
-import { HostRpcError } from "@traycer-clients/shared/host-transport/host-messenger";
+import type { HostClient } from "@cic/shared/host-client/host-client";
+import { HostRpcError } from "@cic/shared/host-transport/host-messenger";
 import { hostQueryKeys } from "@/lib/query-keys";
 import { useHostClient } from "@/lib/host";
 import type {
@@ -10,7 +10,7 @@ import type {
   ListGuiAgentCommandsResponse,
   ListGuiAgentModelsResponse,
   ListGuiHarnessesResponse,
-} from "@traycer/protocol/host/index";
+} from "@cic/protocol/host/index";
 import type { HostRpcRegistry } from "@/lib/host";
 import { useHostBinding } from "@/lib/host/runtime";
 import {

@@ -47,7 +47,7 @@ import {
 import type {
   ChatActiveTurn,
   ChatQueuedItem,
-} from "@traycer/protocol/host/agent/gui/subscribe";
+} from "@cic/protocol/host/agent/gui/subscribe";
 import { QueuedMessageContentPreview } from "@/components/chat/queued-message-content-preview";
 import { isReceivedAgentResponse } from "@/components/chat/chat-queue-utils";
 import {

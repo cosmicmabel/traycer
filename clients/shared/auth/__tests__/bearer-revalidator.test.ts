@@ -369,7 +369,7 @@ describe("createBearerRevalidator", () => {
     refreshMock.mockResolvedValue({ kind: "rejected" });
     const lease = new MutableBearerLease("stale", "u1");
     // The shared store holds a DIFFERENT account's token (a sibling
-    // `traycer login`); it must not be adopted into this u1 session.
+    // `cic login`); it must not be adopted into this u1 session.
     const store: BearerStore = {
       read: async () => ({
         token: "foreign",

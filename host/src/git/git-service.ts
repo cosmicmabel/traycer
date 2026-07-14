@@ -8,7 +8,7 @@ import type {
   GitGetFileDiffResponse,
   GitStage,
   RepoState,
-} from "@traycer/protocol/host/git-schemas";
+} from "@cic/protocol/host/git-schemas";
 import { runGit } from "./git-exec";
 
 /**

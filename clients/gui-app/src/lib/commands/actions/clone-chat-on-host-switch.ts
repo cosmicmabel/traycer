@@ -1,4 +1,4 @@
-import type { IHostDirectoryService } from "@traycer-clients/shared/host-client/host-runtime";
+import type { IHostDirectoryService } from "@cic/shared/host-client/host-runtime";
 import {
   openCreatedChatWhenProjected,
   openCreatedChatWhenProjectedWithNavigation,

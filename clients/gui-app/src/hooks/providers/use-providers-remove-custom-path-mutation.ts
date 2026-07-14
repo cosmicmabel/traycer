@@ -3,7 +3,7 @@ import type {
   HostRpcError,
   RequestOfMethod,
   ResponseOfMethod,
-} from "@traycer-clients/shared/host-transport/host-messenger";
+} from "@cic/shared/host-transport/host-messenger";
 import type { HostRpcRegistry } from "@/lib/host";
 import { useHostScopedMutation } from "@/hooks/host/use-host-scoped-mutation";
 import { PROVIDER_INVALIDATIONS } from "@/hooks/providers/invalidations";

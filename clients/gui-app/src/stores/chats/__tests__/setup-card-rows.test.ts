@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import type { ChatEvent } from "@traycer/protocol/persistence/epic/schemas";
+import type { ChatEvent } from "@cic/protocol/persistence/epic/schemas";
 import {
   buildSetupCardRows,
   type SetupCardBinding,

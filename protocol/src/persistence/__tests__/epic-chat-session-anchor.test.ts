@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { chatSessionAnchorSchema } from "@traycer/protocol/persistence/epic/schemas";
+import { chatSessionAnchorSchema } from "@cic/protocol/persistence/epic/schemas";
 
 describe("chatSessionAnchorSchema", () => {
   it("accepts OpenCode session anchors with hostId", () => {

@@ -1,4 +1,4 @@
-import type { ChatQueuedItem } from "@traycer/protocol/host/agent/gui/subscribe";
+import type { ChatQueuedItem } from "@cic/protocol/host/agent/gui/subscribe";
 
 export type ReceivedAgentQueueItem = ChatQueuedItem & {
   readonly sender: Extract<ChatQueuedItem["sender"], { type: "agent" }>;

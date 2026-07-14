@@ -8,7 +8,7 @@ import type { RecurrenceState } from "@/components/settings/panels/host-doctor-r
 import type {
   HostDoctorIssue,
   FreePortAndRestartInput,
-} from "@traycer-clients/shared/platform/runner-host";
+} from "@cic/shared/platform/runner-host";
 
 interface HostDoctorReportContentProps {
   readonly issues: readonly HostDoctorIssue[];

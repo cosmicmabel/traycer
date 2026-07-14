@@ -1,10 +1,10 @@
 import { describe, expect, it, vi } from "vitest";
-import type { JsonContent } from "@traycer/protocol/common/registry";
+import type { JsonContent } from "@cic/protocol/common/registry";
 import type {
   ChatActiveTurn,
   ChatQueueState,
   ChatRunSettings,
-} from "@traycer/protocol/host/agent/gui/subscribe";
+} from "@cic/protocol/host/agent/gui/subscribe";
 import type { ChatMessage } from "@/stores/composer/chat-store";
 import {
   chatMessageEditingForInlineEdit,

@@ -1,5 +1,5 @@
-import type { BearerSourceProvider } from "@traycer-clients/shared/auth/bearer-source";
-import type { HostEndpointProvider } from "@traycer-clients/shared/host-transport/ws-rpc-client";
+import type { BearerSourceProvider } from "@cic/shared/auth/bearer-source";
+import type { HostEndpointProvider } from "@cic/shared/host-transport/ws-rpc-client";
 import { buildHostStreamClient } from "@/hooks/host/use-host-stream-client-for";
 import type { DurableStreamTransport } from "@/lib/host/durable-stream-transport";
 import { appLogger } from "@/lib/logger";

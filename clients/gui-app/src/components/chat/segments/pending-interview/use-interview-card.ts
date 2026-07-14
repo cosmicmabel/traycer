@@ -2,7 +2,7 @@ import { useEffect, useEffectEvent, useRef, useState } from "react";
 import type {
   InterviewAnswer,
   InterviewQuestion,
-} from "@traycer/protocol/persistence/epic/schemas";
+} from "@cic/protocol/persistence/epic/schemas";
 import { registerComposerFocus } from "@/lib/composer/composer-focus-registry";
 import {
   draftHasContent,

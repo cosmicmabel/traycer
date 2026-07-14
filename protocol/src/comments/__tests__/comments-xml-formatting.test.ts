@@ -1,7 +1,7 @@
 import type {
   CommentsListThreadsResponse,
   CommentsSetThreadStatusResponse,
-} from "@traycer/protocol/host/comments";
+} from "@cic/protocol/host/comments";
 import { describe, expect, it } from "vitest";
 import {
   formatCommentsListThreadsXml,
@@ -21,7 +21,7 @@ function textContent(text: string) {
 }
 
 describe("comments XML formatting", () => {
-  it("formats structured list responses as escaped traycer comments XML", () => {
+  it("formats structured list responses as escaped cic comments XML", () => {
     const response: CommentsListThreadsResponse = {
       artifacts: [
         {
@@ -92,7 +92,7 @@ describe("comments XML formatting", () => {
       },
     });
 
-    expect(xml).toBe(`<traycer_comments>
+    expect(xml).toBe(`<cic_comments>
 
 <artifact path="/tmp/spec-a/index.md" kind="spec" title="Spec &amp; A">
 
@@ -112,7 +112,7 @@ fixed
 
 </artifact>
 
-</traycer_comments>
+</cic_comments>
 `);
     expect(xml).not.toContain("generated");
     expect(xml).not.toContain("do not edit");
@@ -173,14 +173,14 @@ fixed
           status: "all",
         },
       }),
-    ).toBe(`<traycer_comments>
+    ).toBe(`<cic_comments>
 
 <artifact path="/tmp/spec-a/index.md" kind="spec" title="Spec A">
 <warning>artifact comments are not available</warning>
 
 </artifact>
 
-</traycer_comments>
+</cic_comments>
 `);
   });
 

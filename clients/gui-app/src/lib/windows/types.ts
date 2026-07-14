@@ -1,7 +1,7 @@
 import type {
   HostOperationStatus,
   HostRegistryUpdateState,
-} from "@traycer-clients/shared/platform/runner-host";
+} from "@cic/shared/platform/runner-host";
 
 export type DesktopJsonPrimitive = string | number | boolean | null;
 export type DesktopJsonValue =

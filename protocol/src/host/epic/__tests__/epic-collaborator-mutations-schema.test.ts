@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { hostRpcRegistry } from "@traycer/protocol/host/registry";
+import { hostRpcRegistry } from "@cic/protocol/host/registry";
 import {
   grantEpicAccessRequestSchema,
   grantEpicAccessResponseSchema,
@@ -8,7 +8,7 @@ import {
   revokeEpicCollaboratorRequestSchema,
   revokeEpicCollaboratorResponseSchema,
   listEpicCollaboratorsResponseSchema,
-} from "@traycer/protocol/host/epic/unary-schemas";
+} from "@cic/protocol/host/epic/unary-schemas";
 
 /**
  * Verifies that the three collaborator mutation contracts in hostRpcRegistry

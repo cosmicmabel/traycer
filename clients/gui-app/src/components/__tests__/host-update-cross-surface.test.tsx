@@ -20,8 +20,8 @@ import type {
   HostRegistryUpdateState,
   IHostManagement,
   IRunnerHost,
-} from "@traycer-clients/shared/platform/runner-host";
-import { MockRunnerHost } from "@traycer-clients/shared/host-client/mock/mock-runner-host";
+} from "@cic/shared/platform/runner-host";
+import { MockRunnerHost } from "@cic/shared/host-client/mock/mock-runner-host";
 
 // Ticket: host-update-race-conditions. Reported bug: triggering an update
 // from the landing-page banner left the Settings → Host "Update" button
@@ -59,7 +59,7 @@ function makeManagement(overrides: {
   const installedRecord: HostInstalledRecord = {
     version: "1.4.2",
     installedAt: "2026-05-10T00:00:00Z",
-    executablePath: "/tmp/traycer/1.4.2/host",
+    executablePath: "/tmp/cic/1.4.2/host",
     source: { kind: "registry", value: "1.4.2" },
     archiveSha256: "abc",
     signatureKeyId: "key",
@@ -73,7 +73,7 @@ function makeManagement(overrides: {
     updateHost: vi.fn(overrides.updateHost),
     uninstallHost: vi.fn(notImplemented("uninstallHost")),
     restartHost: vi.fn(() => Promise.resolve()),
-    uninstallTraycer: vi.fn(notImplemented("uninstallTraycer")),
+    uninstallCic: vi.fn(notImplemented("uninstallCic")),
     getRemovalState: vi.fn(() => Promise.resolve({ removedByUser: false })),
     clearRemoval: vi.fn(() => Promise.resolve()),
     getHostLogs: vi.fn(() => Promise.resolve({ path: null, tail: "" })),
@@ -120,7 +120,7 @@ function makeHost(management: IHostManagement): IRunnerHost {
     hosts: [],
     workspaceFolderPickerPaths: undefined,
     hasLocalHost: undefined,
-    traycerCli: undefined,
+    cicCli: undefined,
   });
   const proto = Object.getPrototypeOf(host) as object;
   return Object.assign(Object.create(proto) as IRunnerHost, host, {
@@ -215,7 +215,7 @@ describe("host update - shared state across the banner and Settings → Host", (
     resolveUpdate({
       version: "1.5.0",
       installedAt: "2026-05-15T00:00:00Z",
-      executablePath: "/tmp/traycerd",
+      executablePath: "/tmp/cicd",
       source: { kind: "registry", value: "1.5.0" },
       archiveSha256: "deadbeef",
       signatureKeyId: "stub",

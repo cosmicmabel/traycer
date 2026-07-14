@@ -13,7 +13,7 @@ import type {
   ChatsSlice,
 } from "@/stores/epics/open-epic/types";
 import type { EpicMentionEntry } from "@/lib/composer/types";
-import type { EpicMentionArtifactSuggestion } from "@traycer/protocol/host/epic/unary-schemas";
+import type { EpicMentionArtifactSuggestion } from "@cic/protocol/host/epic/unary-schemas";
 
 function chat(
   id: string,

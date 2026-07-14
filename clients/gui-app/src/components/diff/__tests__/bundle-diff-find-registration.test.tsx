@@ -229,8 +229,8 @@ function tileSnapshot(): TileFindStateSnapshot {
 // mounted, mirroring the retained-after-unmount model. The canonical 4-line
 // hunk parses the addition line to unified/split index "2,1". ---
 
-const ACTIVE_ATTR = "data-traycer-diff-find-active";
-const MATCH_ATTR = "data-traycer-diff-find-match";
+const ACTIVE_ATTR = "data-cic-diff-find-active";
+const MATCH_ATTR = "data-cic-diff-find-match";
 const ADDITION_LINE = "2,1";
 const NO_COLLAPSED: ReadonlySet<string> = new Set<string>();
 

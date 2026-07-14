@@ -1,4 +1,4 @@
-import type { GitSubscribeStatusEvent } from "@traycer/protocol/host/git-schemas";
+import type { GitSubscribeStatusEvent } from "@cic/protocol/host/git-schemas";
 import { AlertCircle } from "lucide-react";
 
 export interface SubscriptionErrorStateProps {

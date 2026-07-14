@@ -5,7 +5,7 @@ import { PaletteQueryProvider } from "@/lib/commands/palette-query-context";
 import type {
   GitChangedFile,
   WorktreeBindingSelectorRow,
-} from "@traycer/protocol/host";
+} from "@cic/protocol/host";
 import type { CommandContext, CommandItem } from "@/lib/commands/types";
 import type { KeybindingRouter } from "@/lib/keybindings/dispatch";
 import type { OpenTileIntoTargetGroupArgs } from "@/lib/commands/actions/open-into-target";

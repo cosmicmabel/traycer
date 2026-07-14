@@ -3,7 +3,7 @@ import { createJSONStorage, persist } from "zustand/middleware";
 import {
   type WorktreeFolderIntent,
   type WorktreeIntent,
-} from "@traycer/protocol/host/worktree-schemas";
+} from "@cic/protocol/host/worktree-schemas";
 import { cappedByUpdatedAt } from "@/lib/bounded-record";
 import { basePersistOptions, worktreeIntentMemoryKey } from "@/lib/persist";
 

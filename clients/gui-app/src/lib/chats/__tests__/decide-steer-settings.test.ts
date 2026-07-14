@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import type {
   ChatActiveTurn,
   ChatRunSettings,
-} from "@traycer/protocol/host/agent/gui/subscribe";
+} from "@cic/protocol/host/agent/gui/subscribe";
 import { decideSteerSettings } from "@/lib/chats/decide-steer-settings";
 
 const SETTINGS: ChatRunSettings = {

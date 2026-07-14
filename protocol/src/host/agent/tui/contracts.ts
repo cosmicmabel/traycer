@@ -1,7 +1,7 @@
 import {
   defineRpcContract,
   defineUpgradePath,
-} from "@traycer/protocol/framework/index";
+} from "@cic/protocol/framework/index";
 import {
   generateTuiAgentTitleRequestSchema,
   generateTuiAgentTitleResponseSchema,
@@ -14,7 +14,7 @@ import {
   recordTuiAgentActivityResponseSchema,
   tuiAgentTurnEndedRequestSchema,
   tuiAgentTurnEndedResponseSchema,
-} from "@traycer/protocol/host/agent/tui/unary-schemas";
+} from "@cic/protocol/host/agent/tui/unary-schemas";
 
 // ─── TUI-surface catalog + launch (`agent.tui.*`) ─────────────────────────
 

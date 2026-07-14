@@ -1,4 +1,4 @@
-import type { SubAgentBlock } from "@traycer/protocol/persistence/epic/schemas";
+import type { SubAgentBlock } from "@cic/protocol/persistence/epic/schemas";
 
 export function isRenderableSubAgentBlock(block: SubAgentBlock): boolean {
   // Render a sub-agent only once it has a task or some progress. A real

@@ -1,9 +1,9 @@
-import { defineRpcContract } from "@traycer/protocol/framework/index";
+import { defineRpcContract } from "@cic/protocol/framework/index";
 import {
   migratePhaseToEpicRequestSchema,
   migratePhaseToEpicResponseSchema,
-} from "@traycer/protocol/host/migration/unary-schemas";
-import { migrationRunV10 } from "@traycer/protocol/host/migration/run";
+} from "@cic/protocol/host/migration/unary-schemas";
+import { migrationRunV10 } from "@cic/protocol/host/migration/run";
 
 export const phaseMigrateToEpicV10 = defineRpcContract({
   method: "phase.migrateToEpic",

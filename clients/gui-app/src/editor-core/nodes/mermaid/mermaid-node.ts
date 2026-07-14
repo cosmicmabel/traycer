@@ -77,7 +77,7 @@ export const MermaidNode = Node.create({
           return { "data-code": codeEl.textContent };
         },
       },
-      { tag: "traycer-mermaid" },
+      { tag: "cic-mermaid" },
     ];
   },
 

@@ -1,6 +1,6 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { BackgroundItem } from "@traycer/protocol/host/agent/gui/subscribe";
+import type { BackgroundItem } from "@cic/protocol/host/agent/gui/subscribe";
 import { BackgroundItemsPanel } from "@/components/chat/chat-background-items-panel";
 
 describe("<BackgroundItemsPanel />", () => {

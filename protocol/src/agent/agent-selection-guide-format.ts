@@ -1,13 +1,13 @@
 import type {
   AgentSelectionGuideResponse,
   AgentSelectionGuideResponseSource,
-} from "@traycer/protocol/host";
+} from "@cic/protocol/host";
 
 const TITLE = "# Agent Selection Guide";
 
 // Cosmetic label appended to a workspace header so the reader knows the file
 // inside the workspace root, without the host sending a redundant path.
-const WORKSPACE_GUIDE_LABEL = ".traycer/agent-selection-guide.md";
+const WORKSPACE_GUIDE_LABEL = ".cic/agent-selection-guide.md";
 
 // Leads with the operative rule (apply every layer) so an agent never reads the
 // section ordering as first-wins; the conflict and fallback rules follow.

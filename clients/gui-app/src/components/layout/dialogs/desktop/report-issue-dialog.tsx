@@ -16,7 +16,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { AgentSpinningDots } from "@/components/ui/agent-spinning-dots";
 import { cn } from "@/lib/utils";
-import { buildGitHubIssueUrl } from "@traycer-clients/shared/support/issue-reporter";
+import { buildGitHubIssueUrl } from "@cic/shared/support/issue-reporter";
 import { runnerMutationKeys } from "@/lib/query-keys";
 import type { DesktopSupportSnapshot } from "@/lib/windows/types";
 import { useRunnerHost } from "@/providers/use-runner-host";

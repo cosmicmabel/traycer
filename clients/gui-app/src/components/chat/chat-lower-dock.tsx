@@ -2,7 +2,7 @@ import type {
   BackgroundItem,
   ChatActiveTurn,
   ChatQueuedItem,
-} from "@traycer/protocol/host/agent/gui/subscribe";
+} from "@cic/protocol/host/agent/gui/subscribe";
 import { PinnedStackSections } from "@/components/chat/chat-pinned-stack";
 import { hasChatPinnedStackContent } from "@/components/chat/chat-pinned-stack-utils";
 import { ActiveAgentsPanel } from "@/components/chat/chat-active-agents-panel";

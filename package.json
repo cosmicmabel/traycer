@@ -1,5 +1,5 @@
 {
-  "name": "traycer",
+  "name": "cic",
   "version": "0.0.0",
   "scripts": {
     "compile": "nx run-many --target=compile --all --tui=false",

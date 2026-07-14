@@ -3,25 +3,25 @@ import type {
   DeviceFlowResult,
   DeviceFlowSession,
   StoredAuthTokens,
-} from "@traycer-clients/shared/platform/runner-host";
-import type { Disposable } from "@traycer-clients/shared/platform/uri-callback";
-import type { AuthenticatedUser } from "@traycer/protocol/auth";
+} from "@cic/shared/platform/runner-host";
+import type { Disposable } from "@cic/shared/platform/uri-callback";
+import type { AuthenticatedUser } from "@cic/protocol/auth";
 import type {
   AuthIdentityValidationResult,
   AuthIdentityValidResult,
-} from "@traycer-clients/shared/auth/auth-validation";
+} from "@cic/shared/auth/auth-validation";
 import {
   DefaultRequestContextProvider,
   type RequestContextProvider,
-} from "@traycer-clients/shared/auth/request-context-provider";
-import { rotateAndPersistBearer } from "@traycer-clients/shared/auth/bearer-revalidator";
+} from "@cic/shared/auth/request-context-provider";
+import { rotateAndPersistBearer } from "@cic/shared/auth/bearer-revalidator";
 import {
   createProactiveRefreshScheduler,
   DEFAULT_REFRESH_LEAD_MS,
   DEFAULT_REFRESH_MIN_DELAY_MS,
   type ProactiveRefreshScheduler,
-} from "@traycer-clients/shared/auth/token-refresh-scheduler";
-import { usernameFromAuthenticatedUser } from "@traycer/protocol/auth/request-context";
+} from "@cic/shared/auth/token-refresh-scheduler";
+import { usernameFromAuthenticatedUser } from "@cic/protocol/auth/request-context";
 import {
   useAuthStore,
   type AuthContextMetadata,
@@ -751,7 +751,7 @@ export class AuthService {
     // `network-error`: a transient outage that did NOT sign the user out. Throw
     // so TanStack Query surfaces a retryable error on the panel (refresh button)
     // instead of a misleading "no subscription" empty state.
-    throw new Error("Couldn't reach Traycer to load your subscription.");
+    throw new Error("Couldn't reach CIC to load your subscription.");
   }
 
   private async revalidateCurrentContextOnce(): Promise<ValidationOutcome | null> {
@@ -1203,7 +1203,7 @@ export class AuthService {
     refreshToken: string,
     isStale: () => boolean,
   ): Promise<void> {
-    const cli = this.runnerHost.traycerCli;
+    const cli = this.runnerHost.cicCli;
     if (cli === null) {
       return;
     }
@@ -1247,7 +1247,7 @@ export class AuthService {
    * short retry avoids leaving the host bound to the prior owner unnecessarily.
    */
   private async ensureLocalDeprovisioning(): Promise<void> {
-    const cli = this.runnerHost.traycerCli;
+    const cli = this.runnerHost.cicCli;
     if (cli === null) {
       return;
     }
@@ -1426,7 +1426,7 @@ export class AuthService {
 
   /**
    * Browser-return signal handler. The shell delivers a payload-free nudge when
-   * the user comes back from the device-approval tab (the `traycer://` deep
+   * the user comes back from the device-approval tab (the `cic://` deep
    * link). It carries no token or code: it only pokes the in-flight device poll
    * to fire immediately so approval is picked up without waiting out the poll
    * interval. With no live attempt (a cold-start replay, or one already

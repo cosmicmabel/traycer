@@ -2,9 +2,9 @@ import { describe, expect, it, vi } from "vitest";
 import type {
   TerminalSubscribeClientFrame,
   TerminalSubscribeServerFrame,
-} from "@traycer/protocol/host/terminal/subscribe";
-import type { TerminalSessionInfo } from "@traycer/protocol/host/terminal/unary-schemas";
-import type { TerminalStreamCallbacks } from "@traycer-clients/shared/host-transport/terminal-stream-client";
+} from "@cic/protocol/host/terminal/subscribe";
+import type { TerminalSessionInfo } from "@cic/protocol/host/terminal/unary-schemas";
+import type { TerminalStreamCallbacks } from "@cic/shared/host-transport/terminal-stream-client";
 import {
   createTerminalSessionStore,
   type TerminalWrite,

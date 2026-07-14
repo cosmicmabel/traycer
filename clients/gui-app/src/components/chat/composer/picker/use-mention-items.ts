@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from "react";
 import { useStore } from "zustand";
 import { useShallow } from "zustand/react/shallow";
-import type { HostClient } from "@traycer-clients/shared/host-client/host-client";
+import type { HostClient } from "@cic/shared/host-client/host-client";
 
 import { useEpicMentionEntries } from "@/hooks/composer/use-epic-mention-entries";
 import { useWorkspaceEntries } from "@/hooks/composer/use-workspace-entries";
@@ -15,12 +15,12 @@ import type {
   ChatProjection,
   ChatsSlice,
 } from "@/stores/epics/open-epic/types";
-import { isSubsequence } from "@traycer/protocol/utils/text/fuzzy";
-import type { EpicMentionArtifactSuggestion } from "@traycer/protocol/host/epic/unary-schemas";
+import { isSubsequence } from "@cic/protocol/utils/text/fuzzy";
+import type { EpicMentionArtifactSuggestion } from "@cic/protocol/host/epic/unary-schemas";
 import {
   epicArtifactMentionId,
   epicArtifactMentionToken,
-} from "@traycer/protocol/host/epic/unary-schemas";
+} from "@cic/protocol/host/epic/unary-schemas";
 import {
   mentionProviderRegistry,
   ROOT_MENTION_STEP,

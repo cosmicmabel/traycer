@@ -1,6 +1,6 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
 import type { ReactNode } from "react";
-import type { ChatRunSettings } from "@traycer/protocol/host/agent/gui/subscribe";
+import type { ChatRunSettings } from "@cic/protocol/host/agent/gui/subscribe";
 
 const harnessesData: {
   value:

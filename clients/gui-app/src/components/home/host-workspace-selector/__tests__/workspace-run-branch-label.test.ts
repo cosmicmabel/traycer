@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { WorktreeFolderIntent } from "@traycer/protocol/host/worktree-schemas";
+import type { WorktreeFolderIntent } from "@cic/protocol/host/worktree-schemas";
 import {
   locationSelectionChanges,
   workspaceRunBranchLabel,
@@ -21,7 +21,7 @@ function newWorktree(
     scripts: null,
     branch: {
       type: "new",
-      name: "traycer/swift-otter",
+      name: "cic/swift-otter",
       source,
       carryUncommittedChanges,
     },

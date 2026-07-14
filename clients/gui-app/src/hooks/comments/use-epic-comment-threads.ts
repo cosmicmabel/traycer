@@ -1,10 +1,10 @@
 import type { UseQueryResult } from "@tanstack/react-query";
-import { type EpicArtifactKind } from "@traycer/protocol/common/registry";
+import { type EpicArtifactKind } from "@cic/protocol/common/registry";
 import type {
   ListCommentThreadsRequest,
   ListCommentThreadsResponse,
-} from "@traycer/protocol/host/epic/unary-schemas";
-import type { HostRpcError } from "@traycer-clients/shared/host-transport/host-messenger";
+} from "@cic/protocol/host/epic/unary-schemas";
+import type { HostRpcError } from "@cic/shared/host-transport/host-messenger";
 import { useHostClient } from "@/lib/host";
 import { useHostQuery } from "@/hooks/host/use-host-query";
 

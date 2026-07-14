@@ -21,8 +21,8 @@ import type {
   HostRegistryUpdateState,
   IHostManagement,
   IRunnerHost,
-} from "@traycer-clients/shared/platform/runner-host";
-import { MockRunnerHost } from "@traycer-clients/shared/host-client/mock/mock-runner-host";
+} from "@cic/shared/platform/runner-host";
+import { MockRunnerHost } from "@cic/shared/host-client/mock/mock-runner-host";
 import type { DesktopHostRegistryUpdatesBridge } from "@/lib/windows/types";
 
 vi.mock("sonner", () => ({
@@ -47,7 +47,7 @@ function makeManagement(overrides: Overrides): IHostManagement {
     updateHost: vi.fn(overrides.updateHost ?? notImplemented("updateHost")),
     uninstallHost: vi.fn(notImplemented("uninstallHost")),
     restartHost: vi.fn(() => Promise.resolve()),
-    uninstallTraycer: vi.fn(notImplemented("uninstallTraycer")),
+    uninstallCic: vi.fn(notImplemented("uninstallCic")),
     getRemovalState: vi.fn(() => Promise.resolve({ removedByUser: false })),
     clearRemoval: vi.fn(() => Promise.resolve()),
     getHostLogs: vi.fn(() => Promise.resolve({ path: null, tail: "" })),
@@ -99,7 +99,7 @@ function makeHost(management: IHostManagement | null): IRunnerHost {
     hosts: [],
     workspaceFolderPickerPaths: undefined,
     hasLocalHost: undefined,
-    traycerCli: undefined,
+    cicCli: undefined,
   });
   // Preserve MockRunnerHost's prototype methods (signIn, signOut, …) while
   // overriding the readonly fields the test needs to vary. Spreading a class
@@ -167,13 +167,13 @@ function createRegistryUpdatesBridge(): {
 
 function findHostUpdateBanner(): Promise<HTMLElement> {
   return screen.findByRole("status", {
-    name: /Traycer host update available: 1\.4\.2/i,
+    name: /CIC host update available: 1\.4\.2/i,
   });
 }
 
 function queryHostUpdateBanner(): HTMLElement | null {
   return screen.queryByRole("status", {
-    name: /Traycer host update available/i,
+    name: /CIC host update available/i,
   });
 }
 
@@ -245,7 +245,7 @@ describe("HostUpdateBanner (Flow 6)", () => {
       Promise.resolve<HostInstallResult>({
         version: "1.4.2",
         installedAt: "2026-05-15T00:00:00Z",
-        executablePath: "/tmp/traycerd",
+        executablePath: "/tmp/cicd",
         source: { kind: "registry", value: "1.4.2" },
         archiveSha256: "deadbeef",
         signatureKeyId: "stub",
@@ -424,7 +424,7 @@ describe("HostUpdateBanner (Flow 6)", () => {
       Promise.resolve<HostInstallResult>({
         version: "1.4.2",
         installedAt: "2026-05-15T00:00:00Z",
-        executablePath: "/tmp/traycerd",
+        executablePath: "/tmp/cicd",
         source: { kind: "registry", value: "1.4.2" },
         archiveSha256: "deadbeef",
         signatureKeyId: "stub",

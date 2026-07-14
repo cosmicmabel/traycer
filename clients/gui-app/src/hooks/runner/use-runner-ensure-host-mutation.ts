@@ -6,7 +6,7 @@ import {
 import type {
   HostEnsureResult,
   HostProgressEvent,
-} from "@traycer-clients/shared/platform/runner-host";
+} from "@cic/shared/platform/runner-host";
 import { useRunnerHost } from "@/providers/use-runner-host";
 import { runnerMutationKeys, runnerQueryKeys } from "@/lib/query-keys";
 
@@ -31,7 +31,7 @@ export function useRunnerEnsureHost(): UseMutationResult<
 > {
   const runnerHost = useRunnerHost();
   const queryClient = useQueryClient();
-  const { hostManagement, traycerCli } = runnerHost;
+  const { hostManagement, cicCli } = runnerHost;
   return useMutation<HostEnsureResult, Error, EnsureHostVariables>({
     mutationKey: runnerMutationKeys.hostEnsure(),
     mutationFn: ({ onProgress, force }) => {
@@ -43,9 +43,9 @@ export function useRunnerEnsureHost(): UseMutationResult<
       return hostManagement.ensureHost({ onProgress, force });
     },
     onSuccess: () => {
-      if (traycerCli !== null) {
+      if (cicCli !== null) {
         void queryClient.invalidateQueries({
-          queryKey: runnerQueryKeys.traycerHostStatus(traycerCli),
+          queryKey: runnerQueryKeys.cicHostStatus(cicCli),
         });
       }
       if (hostManagement !== null) {

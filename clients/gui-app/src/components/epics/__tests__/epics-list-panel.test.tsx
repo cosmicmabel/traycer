@@ -846,12 +846,12 @@ describe("<EpicsListPanel />", () => {
   });
 
   it("opens the filter popover and live-applies selections to typed route search", async () => {
-    testState.availableRepos = ["traycer/gui-app"];
+    testState.availableRepos = ["cic/gui-app"];
     testState.availableWorkspaces = [
       { hostId: "host-test", workspacePath: "/Users/me/gui-app" },
     ];
     testState.facets = {
-      repos: [{ label: "traycer/gui-app", count: 2 }],
+      repos: [{ label: "cic/gui-app", count: 2 }],
       workspaces: [
         {
           workspace: {
@@ -878,13 +878,11 @@ describe("<EpicsListPanel />", () => {
       });
     });
 
-    fireEvent.click(
-      screen.getByRole("checkbox", { name: /traycer\/gui-app/i }),
-    );
+    fireEvent.click(screen.getByRole("checkbox", { name: /cic\/gui-app/i }));
     await waitFor(() => {
       expect(useHistorySearchStore.getState().search).toMatchObject({
         ownershipScopes: ["shared"],
-        repos: ["traycer/gui-app"],
+        repos: ["cic/gui-app"],
       });
     });
 
@@ -894,7 +892,7 @@ describe("<EpicsListPanel />", () => {
     await waitFor(() => {
       expect(useHistorySearchStore.getState().search).toMatchObject({
         ownershipScopes: ["shared"],
-        repos: ["traycer/gui-app"],
+        repos: ["cic/gui-app"],
         workspaces: [
           { hostId: "host-test", workspacePath: "/Users/me/gui-app" },
         ],
@@ -903,7 +901,7 @@ describe("<EpicsListPanel />", () => {
   });
 
   it("disambiguates same-path workspace filters by host identity", async () => {
-    const workspacePath = "/Users/me/traycer";
+    const workspacePath = "/Users/me/cic";
     testState.availableWorkspaces = [
       { hostId: "host-a", workspacePath },
       { hostId: "host-b", workspacePath },

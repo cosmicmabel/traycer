@@ -8,12 +8,12 @@ import {
   waitFor,
 } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { MockHostMessenger } from "@traycer-clients/shared/host-client/mock/mock-host-messenger";
+import { MockHostMessenger } from "@cic/shared/host-client/mock/mock-host-messenger";
 import {
   MockRunnerHost,
-  MockTraycerCli,
-} from "@traycer-clients/shared/host-client/mock/mock-runner-host";
-import type { IHostMessenger } from "@traycer-clients/shared/host-transport/host-messenger";
+  MockCicCli,
+} from "@cic/shared/host-client/mock/mock-runner-host";
+import type { IHostMessenger } from "@cic/shared/host-transport/host-messenger";
 import { useEffect } from "react";
 
 vi.mock("sonner", () => ({
@@ -38,25 +38,25 @@ import { useAuthStore } from "@/stores/auth/auth-store";
 
 function buildHost(): MockRunnerHost {
   return new MockRunnerHost({
-    signInUrl: "https://auth.traycer.invalid/sign-in",
+    signInUrl: "https://auth.cic.invalid/sign-in",
     authnBaseUrl: "http://localhost:5005",
     localHost: null,
     hosts: [],
     workspaceFolderPickerPaths: undefined,
     hasLocalHost: undefined,
-    traycerCli: undefined,
+    cicCli: undefined,
   });
 }
 
-function buildHostWithCli(cli: MockTraycerCli): MockRunnerHost {
+function buildHostWithCli(cli: MockCicCli): MockRunnerHost {
   return new MockRunnerHost({
-    signInUrl: "https://auth.traycer.invalid/sign-in",
+    signInUrl: "https://auth.cic.invalid/sign-in",
     authnBaseUrl: "http://localhost:5005",
     localHost: null,
     hosts: [],
     workspaceFolderPickerPaths: undefined,
     hasLocalHost: undefined,
-    traycerCli: cli,
+    cicCli: cli,
   });
 }
 
@@ -227,9 +227,9 @@ function mountDeviceCodeProgress(host: MockRunnerHost): () => void {
             isHero
             progress={{
               userCode: "ABCDE-FGHIJ",
-              verificationUri: "https://app.traycer.ai/device",
+              verificationUri: "https://device.example.invalid/device",
               verificationUriComplete:
-                "https://app.traycer.ai/device?user_code=ABCDE-FGHIJ",
+                "https://device.example.invalid/device?user_code=ABCDE-FGHIJ",
               expiresAtMs: 0,
             }}
           />
@@ -334,7 +334,7 @@ describe("<SignInButton />", () => {
       expect(result.host.deviceFlow.startCalls).toBe(startCallsBeforeRetry + 1);
       expect(
         result.host.openedExternalLinks.some((url) =>
-          url.startsWith("https://app.traycer.ai/device"),
+          url.startsWith("https://device.example.invalid/device"),
         ),
       ).toBe(true);
     });
@@ -365,7 +365,7 @@ describe("<SignInButton />", () => {
   });
 
   it("clears local CLI credentials when a stored session is rejected", async () => {
-    const cli = new MockTraycerCli();
+    const cli = new MockCicCli();
     await cli.cliLogin("stale-cli-token", "stale-cli-refresh");
     const host = buildHostWithCli(cli);
     await host.tokenStore.set({
@@ -449,9 +449,9 @@ describe("<SignInButton />", () => {
     fireEvent.click(screen.getByRole("button", { name: "Use code instead" }));
     const code = await screen.findByText("ABCDE-FGHIJ");
     expect(code.textContent).toBe("ABCDE-FGHIJ");
-    expect(screen.getByText("https://app.traycer.ai/device").textContent).toBe(
-      "https://app.traycer.ai/device",
-    );
+    expect(
+      screen.getByText("https://device.example.invalid/device").textContent,
+    ).toBe("https://device.example.invalid/device");
     const writeText = vi.fn(() => Promise.resolve());
     const previousClipboard = Object.getOwnPropertyDescriptor(
       navigator,
@@ -469,7 +469,9 @@ describe("<SignInButton />", () => {
       );
       await waitFor(() => {
         expect(writeText).toHaveBeenCalledWith("ABCDE-FGHIJ");
-        expect(writeText).toHaveBeenCalledWith("https://app.traycer.ai/device");
+        expect(writeText).toHaveBeenCalledWith(
+          "https://device.example.invalid/device",
+        );
       });
       expect(screen.getAllByText("Copied")).toHaveLength(2);
       // There is no device-code fallback link anymore.

@@ -1,13 +1,13 @@
 import remend from "remend";
-import { repairTraycerNextStepsMarkdown } from "./traycer-next-steps";
+import { repairCicNextStepsMarkdown } from "./cic-next-steps";
 
 export function repairMarkdown(content: string): string {
   return remend(content, {
     handlers: [
       {
-        name: "traycer-next-steps",
+        name: "cic-next-steps",
         priority: 10,
-        handle: repairTraycerNextStepsMarkdown,
+        handle: repairCicNextStepsMarkdown,
       },
       {
         name: "code-fence",

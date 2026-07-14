@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import type {
   WorktreeBinding,
   WorktreeIntent,
-} from "@traycer/protocol/host/worktree-schemas";
+} from "@cic/protocol/host/worktree-schemas";
 import { useWorkspaceFoldersStore } from "@/stores/workspace/workspace-folders-store";
 import { useLandingDraftStore } from "@/stores/home/landing-draft-store";
 import {

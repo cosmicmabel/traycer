@@ -18,10 +18,10 @@
     "types": ["node", "bun"],
     "baseUrl": ".",
     "paths": {
-      "@traycer-clients/shared/*": ["../shared/*"],
-      "@traycer-clients/gui-app": ["../gui-app/index"],
-      "@traycer/protocol/utils/*": ["../../protocol/utils/*"],
-      "@traycer/protocol/*": ["../../protocol/src/*"],
+      "@cic/shared/*": ["../shared/*"],
+      "@cic/gui-app": ["../gui-app/index"],
+      "@cic/protocol/utils/*": ["../../protocol/utils/*"],
+      "@cic/protocol/*": ["../../protocol/src/*"],
       "@/*": ["../gui-app/src/*"]
     }
   },

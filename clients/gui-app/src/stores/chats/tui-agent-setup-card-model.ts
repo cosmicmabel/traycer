@@ -2,7 +2,7 @@ import type {
   WorktreeBinding,
   WorktreeBindingEntry,
   WorktreeSetupState,
-} from "@traycer/protocol/host/worktree-schemas";
+} from "@cic/protocol/host/worktree-schemas";
 import { workspaceFolderName } from "@/lib/worktree/workspace-folder-name";
 import type {
   SetupCardViewModel,

@@ -2,7 +2,7 @@ import type {
   ISecureStorage,
   ITokenStore,
   StoredAuthTokens,
-} from "@traycer-clients/shared/platform/runner-host";
+} from "@cic/shared/platform/runner-host";
 
 /**
  * Browser-storage credential persistence for the web shell.
@@ -14,8 +14,8 @@ import type {
  * read this origin's localStorage already has the page. Desktop backs the
  * same contracts with the OS keychain.
  */
-const TOKEN_STORE_KEY = "traycer.web.tokens";
-const SECURE_STORAGE_PREFIX = "traycer.web.secure:";
+const TOKEN_STORE_KEY = "cic.web.tokens";
+const SECURE_STORAGE_PREFIX = "cic.web.secure:";
 
 export class BrowserTokenStore implements ITokenStore {
   async get(): Promise<StoredAuthTokens | null> {

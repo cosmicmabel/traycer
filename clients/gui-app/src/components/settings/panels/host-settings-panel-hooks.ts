@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import type {
   IRunnerHost,
   LocalHostSnapshot,
-} from "@traycer-clients/shared/platform/runner-host";
+} from "@cic/shared/platform/runner-host";
 
 const NOW_TICK_INTERVAL_MS = 60_000;
 

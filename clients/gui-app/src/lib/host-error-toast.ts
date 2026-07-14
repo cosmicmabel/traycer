@@ -1,5 +1,5 @@
 import { toast } from "sonner";
-import type { HostRpcError } from "@traycer-clients/shared/host-transport/host-messenger";
+import type { HostRpcError } from "@cic/shared/host-transport/host-messenger";
 
 /**
  * Maps a HostRpcError to the appropriate toast copy mandated by the

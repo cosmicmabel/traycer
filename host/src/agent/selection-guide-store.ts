@@ -1,6 +1,6 @@
 import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
-import type { AgentSelectionGuideResponse } from "@traycer/protocol/host/agent/shared";
+import type { AgentSelectionGuideResponse } from "@cic/protocol/host/agent/shared";
 import { hostHomeDir } from "../pid-file";
 
 /**

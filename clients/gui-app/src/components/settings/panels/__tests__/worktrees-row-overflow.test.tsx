@@ -7,7 +7,7 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import type { ReactNode } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import type { WorktreeHostEntryV11 } from "@traycer/protocol/host/index";
+import type { WorktreeHostEntryV11 } from "@cic/protocol/host/index";
 import { WorktreesList } from "@/components/settings/panels/worktrees-settings-panel";
 import { installWorktreeVirtualizerOffsetHeight } from "./worktrees-virtualizer-test-utils";
 

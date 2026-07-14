@@ -7,7 +7,7 @@ import {
   type ReactNode,
 } from "react";
 import { useStore } from "zustand";
-import { TUI_HARNESS_ID_TO_PROVIDER_ID } from "@traycer/protocol/host/provider-schemas";
+import { TUI_HARNESS_ID_TO_PROVIDER_ID } from "@cic/protocol/host/provider-schemas";
 import {
   EPIC_NODE_ICONS,
   DEFAULT_EPIC_NODE_NAMES,

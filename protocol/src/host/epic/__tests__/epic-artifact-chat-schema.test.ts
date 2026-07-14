@@ -4,7 +4,7 @@ import {
   createChatRequestSchema,
   updateArtifactStatusRequestSchema,
   userInviteGrantSchema,
-} from "@traycer/protocol/host/epic/unary-schemas";
+} from "@cic/protocol/host/epic/unary-schemas";
 
 describe("createArtifactRequestSchema", () => {
   it("accepts the locked minimal shape", () => {

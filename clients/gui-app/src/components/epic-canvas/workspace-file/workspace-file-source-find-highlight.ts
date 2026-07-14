@@ -16,8 +16,8 @@
  * walk of the container's text nodes yields a faithful offset map.
  */
 
-const FIND_HIGHLIGHT_NAME_PREFIX = "traycer-source-find-match";
-const FIND_HIGHLIGHT_ACTIVE_NAME_PREFIX = "traycer-source-find-match-active";
+const FIND_HIGHLIGHT_NAME_PREFIX = "cic-source-find-match";
+const FIND_HIGHLIGHT_ACTIVE_NAME_PREFIX = "cic-source-find-match-active";
 
 let nextHighlightId = 1;
 
@@ -68,7 +68,7 @@ function createHighlightStyleElement(
   const matchName = `${FIND_HIGHLIGHT_NAME_PREFIX}-${id}`;
   const activeName = `${FIND_HIGHLIGHT_ACTIVE_NAME_PREFIX}-${id}`;
   const style = doc.createElement("style");
-  style.dataset.traycerSourceFindHighlight = matchName;
+  style.dataset.cicSourceFindHighlight = matchName;
   style.textContent = [
     `::highlight(${matchName}) {`,
     "background-color: color-mix(in srgb, var(--primary) 35%, transparent);",

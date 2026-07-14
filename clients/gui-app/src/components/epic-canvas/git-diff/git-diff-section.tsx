@@ -1,5 +1,5 @@
 import { useCallback, useMemo, type ReactNode } from "react";
-import type { GitChangedFile } from "@traycer/protocol/host";
+import type { GitChangedFile } from "@cic/protocol/host";
 import type { GitDiffBundleGroup } from "@/stores/epics/canvas/types";
 import { gitBundleGroupLabel } from "@/lib/git/git-diff-tile";
 import { sumGitFileStats } from "@/lib/git/file-stats";

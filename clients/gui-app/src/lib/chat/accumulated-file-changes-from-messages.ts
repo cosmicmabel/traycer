@@ -1,5 +1,5 @@
-import type { ChatAccumulatedFileChange } from "@traycer/protocol/host/agent/gui/subscribe";
-import type { CheckpointFileOperation } from "@traycer/protocol/persistence/epic/checkpoint-manifests";
+import type { ChatAccumulatedFileChange } from "@cic/protocol/host/agent/gui/subscribe";
+import type { CheckpointFileOperation } from "@cic/protocol/persistence/epic/checkpoint-manifests";
 import type {
   ChatMessage,
   FileChangeSegment,

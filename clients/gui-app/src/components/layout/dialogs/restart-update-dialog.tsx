@@ -57,11 +57,11 @@ export function RestartUpdateDialog(props: RestartUpdateDialogProps) {
           </div>
           <div className="min-w-0 flex-1 space-y-1.5">
             <DialogTitle className="text-ui font-semibold leading-snug">
-              Restart to update Traycer?
+              Restart to update CIC?
             </DialogTitle>
             <DialogDescription className="text-ui-sm leading-relaxed text-muted-foreground">
-              Traycer will restart to install {versionLabel}. Save your work
-              before continuing - any running agents will be interrupted.
+              CIC will restart to install {versionLabel}. Save your work before
+              continuing - any running agents will be interrupted.
             </DialogDescription>
           </div>
         </div>

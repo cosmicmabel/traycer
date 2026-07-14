@@ -3,7 +3,7 @@ import {
   recordTuiAgentActivityRequestSchema,
   recordTuiAgentActivityRequestSchemaV11,
   type RecordTuiAgentActivityRequestV11,
-} from "@traycer/protocol/host/agent/tui/unary-schemas";
+} from "@cic/protocol/host/agent/tui/unary-schemas";
 
 /**
  * Same-major minor projection: when a newer client (canonical @1.1) talks to a

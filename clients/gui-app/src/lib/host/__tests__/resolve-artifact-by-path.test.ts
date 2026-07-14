@@ -1,12 +1,11 @@
 import { QueryClient } from "@tanstack/react-query";
 import { describe, expect, it, vi, type Mock } from "vitest";
 import { fetchResolveArtifactByPath } from "@/lib/host/resolve-artifact-by-path";
-import type { ResolveArtifactByPathResponse } from "@traycer/protocol/host/epic/unary-schemas";
+import type { ResolveArtifactByPathResponse } from "@cic/protocol/host/epic/unary-schemas";
 
 const HOST_ID = "host-1";
 const EPIC_ID = "epic-1";
-const FILE_PATH =
-  "/Users/me/.traycer/epics/epic-1/artifacts/some-spec/index.md";
+const FILE_PATH = "/Users/me/.cic/epics/epic-1/artifacts/some-spec/index.md";
 
 type ResolveRequest = (
   method: string,

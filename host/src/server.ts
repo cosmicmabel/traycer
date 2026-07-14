@@ -1,8 +1,8 @@
 import {
   hostRpcRegistry,
   hostStreamRpcRegistry,
-} from "@traycer/protocol/host/registry";
-import { buildStreamManifest } from "@traycer/protocol/framework/stream-compat";
+} from "@cic/protocol/host/registry";
+import { buildStreamManifest } from "@cic/protocol/framework/stream-compat";
 import { BearerVerifier } from "./auth";
 import { ChatSessionStore } from "./chat/chat-session";
 import { EpicStore } from "./epic/epic-store";

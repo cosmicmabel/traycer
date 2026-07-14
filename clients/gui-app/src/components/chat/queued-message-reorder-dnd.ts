@@ -19,7 +19,7 @@ import {
 } from "@dnd-kit/core";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS, type Transform } from "@dnd-kit/utilities";
-import type { ChatQueuedItem } from "@traycer/protocol/host/agent/gui/subscribe";
+import type { ChatQueuedItem } from "@cic/protocol/host/agent/gui/subscribe";
 
 const QUEUED_MESSAGE_DND_TYPE = "queued-message";
 

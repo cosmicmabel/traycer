@@ -9,7 +9,7 @@ import { useRunnerHost } from "@/providers/use-runner-host";
  * -> every renderer window) into the shared TanStack Query cache entry that
  * the landing-page banner and Settings → Host both read. Mirrors
  * `HostRegistryUpdateListener`'s pattern exactly. Mounted once at the app
- * root (see `traycer-app.tsx`) so both surfaces - and a second open window -
+ * root (see `cic-app.tsx`) so both surfaces - and a second open window -
  * observe the same status regardless of which one started the operation.
  */
 export function HostOperationStatusListener(): null {

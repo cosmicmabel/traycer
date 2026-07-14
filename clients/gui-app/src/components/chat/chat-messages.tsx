@@ -48,7 +48,7 @@ import type {
   ChatMessage as ChatMessageModel,
   MessageSegment,
 } from "@/stores/composer/chat-store";
-import type { BackgroundItem } from "@traycer/protocol/host/agent/gui/subscribe";
+import type { BackgroundItem } from "@cic/protocol/host/agent/gui/subscribe";
 import {
   VirtuosoMessageList,
   VirtuosoMessageListLicense,
@@ -178,7 +178,7 @@ interface TouchClientYList {
 }
 
 /**
- * One transcript row. During a panel-resize drag (`traycer-panel-resizing` on
+ * One transcript row. During a panel-resize drag (`cic-panel-resizing` on
  * `<html>`) every row flips to `content-visibility: hidden`: each pointermove
  * reflows all visible panes, and live rows would re-wrap and re-rasterize
  * every transcript at every intermediate width - a multi-hundred-MB transient

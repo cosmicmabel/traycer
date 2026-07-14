@@ -1,6 +1,6 @@
 import type { ClipboardEventHandler, DragEventHandler, Ref } from "react";
-import type { JsonContent } from "@traycer/protocol/common/registry";
-import type { GuiHarnessId } from "@traycer/protocol/host/index";
+import type { JsonContent } from "@cic/protocol/common/registry";
+import type { GuiHarnessId } from "@cic/protocol/host/index";
 
 import { useIsComposerNarrow } from "@/components/home/composer/composer-narrow-hooks";
 

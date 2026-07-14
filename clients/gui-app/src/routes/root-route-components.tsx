@@ -34,7 +34,7 @@ export function RootComponent() {
     <>
       {/* Host-independent chrome: these are the ONLY surfaces pulled outside
           HostReadyGate so they keep working while the page is gated on host
-          readiness (the "Setting up Traycer Host…" screen). The menu command
+          readiness (the "Setting up CIC Host…" screen). The menu command
           listener routes native menu items; the dialog host renders
           About/Logs/Report (which read the desktop support bridge, not host
           RPC). Both only depend on the runner host + auth + local stores, all

@@ -1,8 +1,8 @@
 import { useCallback, useMemo, useState } from "react";
 import {
-  parseTraycerNextStepsMarkdown,
-  type TraycerNextStepsPart,
-} from "@/markdown/traycer-next-steps";
+  parseCicNextStepsMarkdown,
+  type CicNextStepsPart,
+} from "@/markdown/cic-next-steps";
 import { withMemberAdded } from "@/lib/immutable-set";
 import { AgentReferenceMarkdown } from "./agent-reference-markdown";
 import {
@@ -23,7 +23,7 @@ function nextStepOptionLockKey(blockId: string, optionId: string): string {
 
 export function TextSegment(props: TextSegmentProps) {
   const parts = useMemo(
-    () => parseTraycerNextStepsMarkdown(props.markdown, props.isStreaming),
+    () => parseCicNextStepsMarkdown(props.markdown, props.isStreaming),
     [props.isStreaming, props.markdown],
   );
   const [lockedOptionKeys, setLockedOptionKeys] = useState<ReadonlySet<string>>(
@@ -55,7 +55,7 @@ export function TextSegment(props: TextSegmentProps) {
 }
 
 interface TextSegmentPartProps {
-  readonly part: TraycerNextStepsPart;
+  readonly part: CicNextStepsPart;
   readonly lockedOptionKeys: ReadonlySet<string>;
   readonly isStreaming: boolean;
   readonly nextStepActions: NextStepActionHandler | null;

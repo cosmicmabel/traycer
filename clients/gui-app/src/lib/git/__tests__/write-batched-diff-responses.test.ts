@@ -4,7 +4,7 @@ import { writeBatchedDiffResponses } from "../write-batched-diff-responses";
 import {
   DEFAULT_GIT_FILE_DIFF_BYTE_BUDGET,
   type GitGetFileDiffResponse,
-} from "@traycer/protocol/host";
+} from "@cic/protocol/host";
 import { gitQueryKeys } from "@/lib/query-keys/git-query-keys";
 
 describe("writeBatchedDiffResponses", () => {

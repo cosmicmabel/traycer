@@ -6,7 +6,7 @@ import {
   commentThreadWireSchema,
   LatestEpicArtifactKindSchema,
   type CommentThreadWire,
-} from "@traycer/protocol/host/epic/unary-schemas";
+} from "@cic/protocol/host/epic/unary-schemas";
 import { hostHomeDir } from "../pid-file";
 
 /**

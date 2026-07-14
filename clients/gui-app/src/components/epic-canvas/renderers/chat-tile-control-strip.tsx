@@ -1,7 +1,7 @@
 import { ChevronDown, ChevronUp, Pause, Pencil, Play, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import type { JsonContent } from "@traycer/protocol/common/registry";
-import type { ChatQueuedItem } from "@traycer/protocol/host/agent/gui/subscribe";
+import type { JsonContent } from "@cic/protocol/common/registry";
+import type { ChatQueuedItem } from "@cic/protocol/host/agent/gui/subscribe";
 import { useQueuePauseState } from "@/components/chat/queued-message-utils";
 import { extractPlainTextFromComposerJSONContent } from "@/lib/composer/tiptap-json-content";
 import type { ChatSessionState } from "@/stores/chats/chat-session-store";

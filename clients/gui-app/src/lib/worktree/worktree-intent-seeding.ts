@@ -2,7 +2,7 @@ import type {
   WorktreeBranch,
   WorktreeFolderIntent,
   WorktreeWorkspaceSummary,
-} from "@traycer/protocol/host/worktree-schemas";
+} from "@cic/protocol/host/worktree-schemas";
 
 type RepoIdentifier = WorktreeFolderIntent["repoIdentifier"];
 

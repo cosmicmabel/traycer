@@ -141,9 +141,9 @@ const MARKDOWN_NODE: WorkspaceFileRef = {
 };
 
 const highlightEntries = new Map<string, MockCssHighlight>();
-const SOURCE_FIND_HIGHLIGHT_NAME_PREFIX = "traycer-source-find-match-";
+const SOURCE_FIND_HIGHLIGHT_NAME_PREFIX = "cic-source-find-match-";
 const SOURCE_FIND_ACTIVE_HIGHLIGHT_NAME_PREFIX =
-  "traycer-source-find-match-active-";
+  "cic-source-find-match-active-";
 
 let originalCssDescriptor: PropertyDescriptor | undefined;
 let originalWindowCssDescriptor: PropertyDescriptor | undefined;
@@ -336,7 +336,7 @@ describe("<WorkspaceFileTile /> tile find", () => {
       activeUnitId: "markdown-preview",
       exactHighlight: "painted",
     });
-    expect(highlightEntries.get("traycer-find-match-active")).toBeDefined();
+    expect(highlightEntries.get("cic-find-match-active")).toBeDefined();
 
     act(() => {
       useTileFindStore.getState().close(MARKDOWN_NODE.instanceId);

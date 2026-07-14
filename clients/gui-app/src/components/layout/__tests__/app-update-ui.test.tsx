@@ -9,8 +9,8 @@ import {
   waitFor,
 } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { IRunnerHost } from "@traycer-clients/shared/platform/runner-host";
-import { MockRunnerHost } from "@traycer-clients/shared/host-client/mock/mock-runner-host";
+import type { IRunnerHost } from "@cic/shared/platform/runner-host";
+import { MockRunnerHost } from "@cic/shared/host-client/mock/mock-runner-host";
 import { AppUpdateToastController } from "@/components/layout/bridges/app-update-toast-controller";
 import { AppUpdateHeaderButton } from "@/components/layout/header/app-update-button";
 import { RestartUpdateDialog } from "@/components/layout/dialogs/restart-update-dialog";
@@ -79,14 +79,14 @@ const IDLE_SNAPSHOT: DesktopAppUpdateSnapshot = {
 };
 
 const READY_GUIDANCE: DesktopAppUpdateGuidance = {
-  summary: "Traycer downloaded v1.2.3, but this install needs one manual step.",
+  summary: "CIC downloaded v1.2.3, but this install needs one manual step.",
   steps: [
     "Open a terminal.",
     "Run the command below to install the update.",
-    "Restart Traycer once it completes.",
+    "Restart CIC once it completes.",
   ],
-  command: 'sudo dpkg -i "/home/user/.cache/updater/pending/traycer.deb"',
-  releaseUrl: "https://github.com/traycerai/traycer/releases",
+  command: 'sudo dpkg -i "/home/user/.cache/updater/pending/cic.deb"',
+  releaseUrl: "https://github.com/cosmicmabel/traycer/releases",
 };
 
 class FakeAppUpdatesBridge implements DesktopAppUpdatesBridge {
@@ -186,7 +186,7 @@ function errorSnapshot(sequence: number): DesktopAppUpdateSnapshot {
   return {
     ...manualSnapshot(sequence, "error"),
     errorMessage:
-      "Traycer couldn't reach the update service right now. Please try again in a little while.",
+      "CIC couldn't reach the update service right now. Please try again in a little while.",
   };
 }
 
@@ -198,7 +198,7 @@ function makeHost(appUpdates: DesktopAppUpdatesBridge): IRunnerHost {
     hosts: [],
     workspaceFolderPickerPaths: undefined,
     hasLocalHost: undefined,
-    traycerCli: undefined,
+    cicCli: undefined,
   });
   const proto = Object.getPrototypeOf(host) as object;
   return Object.assign(Object.create(proto) as IRunnerHost, host, {
@@ -272,12 +272,12 @@ describe("desktop app update UI", () => {
     const bridge = new FakeAppUpdatesBridge({
       ...availableSnapshot(1),
       installBlockedReason:
-        "Move Traycer to your Applications folder to install updates.",
+        "Move CIC to your Applications folder to install updates.",
     });
     renderWithHost(<AppUpdateHeaderButton />, bridge);
 
     const button = await screen.findByRole("button", {
-      name: /Move Traycer to your Applications folder/i,
+      name: /Move CIC to your Applications folder/i,
     });
     expect(button.hasAttribute("disabled")).toBe(true);
 
@@ -289,12 +289,12 @@ describe("desktop app update UI", () => {
     const bridge = new FakeAppUpdatesBridge({
       ...readySnapshot(1),
       installBlockedReason:
-        "Move Traycer to your Applications folder to install updates.",
+        "Move CIC to your Applications folder to install updates.",
     });
     renderWithHost(<AppUpdateHeaderButton />, bridge);
 
     const button = await screen.findByRole("button", {
-      name: /Move Traycer to your Applications folder/i,
+      name: /Move CIC to your Applications folder/i,
     });
     expect(button.hasAttribute("disabled")).toBe(true);
 
@@ -477,8 +477,8 @@ describe("desktop app update UI", () => {
     });
     await waitFor(() => {
       expect(toastMock.info).toHaveBeenCalledWith(
-        "Checking for Traycer updates...",
-        { id: "traycer-app-update", description: null, duration: 4000 },
+        "Checking for CIC updates...",
+        { id: "cic-app-update", description: null, duration: 4000 },
       );
     });
 
@@ -487,8 +487,8 @@ describe("desktop app update UI", () => {
     });
     await waitFor(() => {
       expect(toastMock.success).toHaveBeenCalledWith(
-        "Traycer is up to date",
-        expect.objectContaining({ id: "traycer-app-update" }),
+        "CIC is up to date",
+        expect.objectContaining({ id: "cic-app-update" }),
       );
     });
   });
@@ -506,7 +506,7 @@ describe("desktop app update UI", () => {
     await waitFor(() => {
       expect(toastMock).toHaveBeenCalledWith(
         expect.anything(),
-        expect.objectContaining({ id: "traycer-app-update" }),
+        expect.objectContaining({ id: "cic-app-update" }),
       );
     });
 
@@ -529,7 +529,7 @@ describe("desktop app update UI", () => {
     expect(bridge.downloadUpdate).toHaveBeenCalledTimes(1);
     expect(downloadButton.hasAttribute("disabled")).toBe(true);
     fireEvent.click(laterButton);
-    expect(toastMock.dismiss).toHaveBeenCalledWith("traycer-app-update");
+    expect(toastMock.dismiss).toHaveBeenCalledWith("cic-app-update");
   });
 
   it("explains why a blocked update can't be installed instead of offering Download", async () => {
@@ -543,16 +543,16 @@ describe("desktop app update UI", () => {
       bridge.emit({
         ...availableSnapshot(1),
         installBlockedReason:
-          "Move Traycer to your Applications folder to install updates.",
+          "Move CIC to your Applications folder to install updates.",
       });
     });
     await waitFor(() => {
       expect(toastMock).toHaveBeenCalledWith(
         "Update available",
         expect.objectContaining({
-          id: "traycer-app-update",
+          id: "cic-app-update",
           description:
-            "Move Traycer to your Applications folder to install updates.",
+            "Move CIC to your Applications folder to install updates.",
         }),
       );
     });
@@ -576,7 +576,7 @@ describe("desktop app update UI", () => {
       expect(toastMock.loading).toHaveBeenCalledWith(
         "Downloading update…",
         expect.objectContaining({
-          id: "traycer-app-update",
+          id: "cic-app-update",
           description: "50% complete",
         }),
       );
@@ -597,7 +597,7 @@ describe("desktop app update UI", () => {
       expect(toastMock.loading).toHaveBeenCalledWith(
         "Downloading update…",
         expect.objectContaining({
-          id: "traycer-app-update",
+          id: "cic-app-update",
           description: "0% complete",
         }),
       );
@@ -610,7 +610,7 @@ describe("desktop app update UI", () => {
       expect(toastMock).toHaveBeenCalledWith(
         expect.anything(),
         expect.objectContaining({
-          id: "traycer-app-update",
+          id: "cic-app-update",
           description: null,
         }),
       );
@@ -630,7 +630,7 @@ describe("desktop app update UI", () => {
     await waitFor(() => {
       expect(toastMock).toHaveBeenCalledWith(
         expect.anything(),
-        expect.objectContaining({ id: "traycer-app-update" }),
+        expect.objectContaining({ id: "cic-app-update" }),
       );
     });
 
@@ -642,7 +642,7 @@ describe("desktop app update UI", () => {
     expect(options.cancel).toBeUndefined();
     render(<>{message}</>);
     screen.getByText("Update ready to install");
-    screen.getByText("Restart Traycer to finish updating.");
+    screen.getByText("Restart CIC to finish updating.");
 
     const restart = screen.getByRole("button", { name: "Restart" });
     expect(useDesktopDialogStore.getState().activeDialog).toBeNull();
@@ -665,7 +665,7 @@ describe("desktop app update UI", () => {
     await waitFor(() => {
       expect(toastMock).toHaveBeenCalledWith(
         expect.anything(),
-        expect.objectContaining({ id: "traycer-app-update" }),
+        expect.objectContaining({ id: "cic-app-update" }),
       );
     });
 
@@ -699,9 +699,9 @@ describe("desktop app update UI", () => {
 
     await waitFor(() => {
       expect(toastMock.error).toHaveBeenCalledWith(
-        "Couldn't update Traycer",
+        "Couldn't update CIC",
         expect.objectContaining({
-          id: "traycer-app-update",
+          id: "cic-app-update",
         }),
       );
     });
@@ -714,7 +714,7 @@ describe("desktop app update UI", () => {
     expect(options.cancel).toBeUndefined();
     render(<>{options.description}</>);
     screen.getByText(
-      "Traycer couldn't reach the update service right now. Please try again in a little while.",
+      "CIC couldn't reach the update service right now. Please try again in a little while.",
     );
     const reportButton = screen.getByRole("button", {
       name: "Report an issue",
@@ -736,8 +736,8 @@ describe("desktop app update UI", () => {
     });
     await waitFor(() => {
       expect(toastMock.error).toHaveBeenCalledWith(
-        "Couldn't update Traycer",
-        expect.objectContaining({ id: "traycer-app-update" }),
+        "Couldn't update CIC",
+        expect.objectContaining({ id: "cic-app-update" }),
       );
     });
 

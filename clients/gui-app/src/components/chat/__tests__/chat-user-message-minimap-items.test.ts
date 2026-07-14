@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { buildChatUserMessageMinimapItems } from "../chat-user-message-minimap-items";
 import type { ChatMessage as ChatMessageModel } from "@/stores/composer/chat-store";
-import type { JsonContent } from "@traycer/protocol/common/registry";
+import type { JsonContent } from "@cic/protocol/common/registry";
 
 function makeMessage(
   overrides: Partial<ChatMessageModel> & Pick<ChatMessageModel, "id" | "role">,

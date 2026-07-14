@@ -72,7 +72,7 @@ export class OpenClawGatewayConnection {
       minProtocol: 3,
       maxProtocol: 4,
       client: {
-        id: "traycer-open-host",
+        id: "cic-open-host",
         version: "0.0.0-open",
         platform: process.platform,
         mode: "operator",
@@ -133,7 +133,7 @@ export class OpenClawGatewayConnection {
         event.event.startsWith("agent") ||
         event.event.startsWith("session") ||
         // Exec/tool approval prompts (e.g. `exec.approval.requested`) ride
-        // the same session; the chat layer maps them onto Traycer approvals.
+        // the same session; the chat layer maps them onto CIC approvals.
         event.event.startsWith("exec") ||
         event.event.includes("approval")
       ) {

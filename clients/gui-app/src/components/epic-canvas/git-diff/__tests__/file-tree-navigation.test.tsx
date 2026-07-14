@@ -1,7 +1,7 @@
 import type { MouseEvent, ReactNode } from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
-import type { GitChangedFileV11 } from "@traycer/protocol/host";
+import type { GitChangedFileV11 } from "@cic/protocol/host";
 import { useEpicCanvasStore } from "@/stores/epics/canvas/store";
 import type { NestedFocusTarget } from "@/lib/epic-nested-focus-route";
 import { FileTree as GitDiffFileTree } from "../file-tree";

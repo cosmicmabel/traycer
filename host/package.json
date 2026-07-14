@@ -1,6 +1,6 @@
 {
-  "name": "@traycer/open-host",
-  "description": "Open-source Traycer host: a WebSocket RPC server implementing the client⇄host wire contract from @traycer/protocol. Minimal-but-real replacement for the closed-source host binary; unimplemented surfaces return structured RPC errors.",
+  "name": "@cic/open-host",
+  "description": "Open-source CIC host: a WebSocket RPC server implementing the client⇄host wire contract from @cic/protocol. Minimal-but-real replacement for the closed-source host binary; unimplemented surfaces return structured RPC errors.",
   "version": "0.0.0",
   "type": "module",
   "private": true,

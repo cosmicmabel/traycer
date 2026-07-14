@@ -1,15 +1,15 @@
 import { useMemo, useCallback, useEffect, useState } from "react";
 import { queryOptions, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { QueryClient } from "@tanstack/react-query";
-import type { WsStreamClient } from "@traycer-clients/shared/host-transport/ws-stream-client";
-import type { HostStreamRpcRegistry } from "@traycer/protocol/host/registry";
+import type { WsStreamClient } from "@cic/shared/host-transport/ws-stream-client";
+import type { HostStreamRpcRegistry } from "@cic/protocol/host/registry";
 import {
   gitSubscribeStatusEventSchema,
   type GitListChangedFilesResponse,
   type GitSubscribeStatusEvent,
   type RepoMode,
   type RepoState,
-} from "@traycer/protocol/host/git-schemas";
+} from "@cic/protocol/host/git-schemas";
 import { gitQueryKeys } from "@/lib/query-keys/git-query-keys";
 import { writeGitListChangedFilesResponse } from "@/lib/git/write-list-changed-files-response";
 import { useWsStreamClient } from "@/lib/host/stream-runtime-context";

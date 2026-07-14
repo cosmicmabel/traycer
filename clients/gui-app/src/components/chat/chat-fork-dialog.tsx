@@ -8,7 +8,7 @@ import {
 } from "react";
 import { useStore } from "zustand";
 import { v4 as uuidv4 } from "uuid";
-import type { ChatRunSettings } from "@traycer/protocol/host/agent/gui/subscribe";
+import type { ChatRunSettings } from "@cic/protocol/host/agent/gui/subscribe";
 import { AgentSpinningDots } from "@/components/ui/agent-spinning-dots";
 import { Button } from "@/components/ui/button";
 import {

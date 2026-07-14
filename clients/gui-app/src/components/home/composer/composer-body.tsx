@@ -1,6 +1,6 @@
 import { useStore } from "zustand";
 import type { ReactNode, RefObject } from "react";
-import type { JsonContent } from "@traycer/protocol/common/registry";
+import type { JsonContent } from "@cic/protocol/common/registry";
 
 import {
   ComposerPromptEditor,
@@ -20,7 +20,7 @@ import { ComposerToolbar } from "@/components/home/toolbar/composer-toolbar";
 import type { ComposerToolbarStore } from "@/stores/composer/composer-toolbar-store";
 import { cn } from "@/lib/utils";
 
-const COMPOSER_PLACEHOLDER = "Ask Traycer anything. @ mention for context";
+const COMPOSER_PLACEHOLDER = "Ask CIC anything. @ mention for context";
 
 export interface ComposerBodyProps {
   readonly pickerStore: ComposerPickerStore;

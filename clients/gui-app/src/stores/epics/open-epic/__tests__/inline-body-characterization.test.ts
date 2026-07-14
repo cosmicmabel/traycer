@@ -25,8 +25,8 @@ import {
   type EpicStreamClientFactory,
   type OpenEpicStoreHandle,
 } from "@/stores/epics/open-epic/store";
-import type { EpicStreamCallbacks } from "@traycer-clients/shared/host-transport/epic-stream-client";
-import type { SnapshotMetaEpic } from "@traycer/protocol/host/epic/snapshot-meta";
+import type { EpicStreamCallbacks } from "@cic/shared/host-transport/epic-stream-client";
+import type { SnapshotMetaEpic } from "@cic/protocol/host/epic/snapshot-meta";
 
 function encodeBase64(bytes: Uint8Array): string {
   return btoa(String.fromCharCode(...bytes));

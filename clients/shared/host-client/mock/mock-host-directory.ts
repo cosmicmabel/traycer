@@ -18,7 +18,7 @@ export const mockRemoteHostEntry: HostDirectoryEntry = {
   hostId: "mock-remote",
   label: "Mock Remote Host",
   kind: "remote",
-  websocketUrl: "wss://mock-remote.traycer.invalid/rpc",
+  websocketUrl: "wss://mock-remote.cic.invalid/rpc",
   version: "0.0.0-mock",
   status: "available",
 };

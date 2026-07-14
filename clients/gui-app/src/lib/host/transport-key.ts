@@ -1,5 +1,5 @@
-import type { HostDirectoryEntry } from "@traycer-clients/shared/host-client/host-directory";
-import type { HostTransportEndpoint } from "@traycer-clients/shared/host-transport/ws-rpc-client";
+import type { HostDirectoryEntry } from "@cic/shared/host-client/host-directory";
+import type { HostTransportEndpoint } from "@cic/shared/host-transport/ws-rpc-client";
 
 // NUL byte: a separator that cannot appear inside any host field value, so
 // distinct field tuples can never collide into the same key. Matches the

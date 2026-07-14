@@ -1,4 +1,4 @@
-import type { PermissionRole } from "@traycer/protocol/host/epic/unary-schemas";
+import type { PermissionRole } from "@cic/protocol/host/epic/unary-schemas";
 
 /**
  * Whether a permission role may mutate the epic (create / edit / delete).

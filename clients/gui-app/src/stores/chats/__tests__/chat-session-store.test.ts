@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
-import type { JsonContent } from "@traycer/protocol/common/registry";
+import type { JsonContent } from "@cic/protocol/common/registry";
 import type {
   ChatEvent,
   ClaudePendingWake,
   Message,
-} from "@traycer/protocol/persistence/epic/schemas";
+} from "@cic/protocol/persistence/epic/schemas";
 import type {
   BackgroundItem,
   ChatFileEditApprovalState,
@@ -12,9 +12,9 @@ import type {
   ChatQueueState,
   ChatRunSettings,
   ChatSubscribeClientFrame,
-} from "@traycer/protocol/host/agent/gui/subscribe";
-import type { WorktreeBinding } from "@traycer/protocol/host/worktree-schemas";
-import type { ChatStreamCallbacks } from "@traycer-clients/shared/host-transport/chat-stream-client";
+} from "@cic/protocol/host/agent/gui/subscribe";
+import type { WorktreeBinding } from "@cic/protocol/host/worktree-schemas";
+import type { ChatStreamCallbacks } from "@cic/shared/host-transport/chat-stream-client";
 import {
   ACCEPTED_CHAT_ACTION_RETENTION_MS,
   MAX_ACCEPTED_CHAT_ACTION_RECORDS,
@@ -34,7 +34,7 @@ import {
 } from "@/stores/worktree/worktree-intent-staging-store";
 import { useWorktreeIntentMemoryStore } from "@/stores/worktree/worktree-intent-memory-store";
 import { isOptimisticQueuedItem } from "@/stores/chats/optimistic-queue";
-import type { WorktreeIntent } from "@traycer/protocol/host/worktree-schemas";
+import type { WorktreeIntent } from "@cic/protocol/host/worktree-schemas";
 
 const EPIC_ID = "epic-1";
 const CHAT_ID = "chat-1";

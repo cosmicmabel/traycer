@@ -2,7 +2,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import type {
   CreateCommentThreadRequest,
   ListCommentThreadsResponse,
-} from "@traycer/protocol/host/epic/unary-schemas";
+} from "@cic/protocol/host/epic/unary-schemas";
 import { useHostMutation } from "@/hooks/host/use-host-query";
 import { useHostClient } from "@/lib/host/runtime";
 import { toastFromHostError } from "@/lib/host-error-toast";

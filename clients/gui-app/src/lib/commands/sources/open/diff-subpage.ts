@@ -14,7 +14,7 @@ import { getBasename } from "@/lib/path/cross-platform-path";
 import type {
   GitChangedFile,
   WorktreeBindingSelectorRow,
-} from "@traycer/protocol/host";
+} from "@cic/protocol/host";
 import { useGitListChangedFilesSubscription } from "@/hooks/git/use-git-list-changed-files-subscription";
 import { useWorktreeListBindingsForEpic } from "@/hooks/worktree/use-worktree-list-bindings-for-epic-query";
 import { isGitSelectable } from "@/lib/worktree/worktree-git-selectable";

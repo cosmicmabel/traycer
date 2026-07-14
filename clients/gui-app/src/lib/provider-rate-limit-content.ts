@@ -1,7 +1,7 @@
 import type {
   ProviderRateLimits,
   RateLimitUnavailableReason,
-} from "@traycer/protocol/host";
+} from "@cic/protocol/host";
 import type { ProviderRateLimitQueryState } from "@/components/settings/panels/provider-rate-limit-views";
 import {
   envelopeDegradedReason,
@@ -186,7 +186,7 @@ export function resolvePopoverProviderRateLimitState(
  * in one of the bespoke display-name maps elsewhere (a forward-compat
  * fallback for values a backend adds before those maps update) - used for
  * provider enum tokens (`provider-rate-limit-views.tsx`, which are already
- * lowercase) and, directly from `rate-limit-popover.tsx`, Traycer's own
+ * lowercase) and, directly from `rate-limit-popover.tsx`, CIC's own
  * `SubscriptionStatus` (e.g. `"ULTRA_1X_V3"`, upper-case), so the rest of
  * each word is explicitly lower-cased rather than left as-is. Homed here (a
  * non-component module) rather than a component file so callers can share it

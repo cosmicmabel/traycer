@@ -1,11 +1,11 @@
 import { QueryClient } from "@tanstack/react-query";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { DEFAULT_ACCOUNT_CONTEXT } from "@traycer/protocol/common/schemas";
-import type { ProviderId } from "@traycer/protocol/host/provider-schemas";
+import { DEFAULT_ACCOUNT_CONTEXT } from "@cic/protocol/common/schemas";
+import type { ProviderId } from "@cic/protocol/host/provider-schemas";
 import type {
   ProviderRateLimits,
   RateLimitUnavailableReason,
-} from "@traycer/protocol/host";
+} from "@cic/protocol/host";
 import { queryKeys } from "@/lib/query-keys";
 import { createAppQueryClient } from "@/lib/query-client";
 import type { HostRpcRegistry } from "@/lib/host";

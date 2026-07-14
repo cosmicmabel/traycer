@@ -1,11 +1,10 @@
 import { z } from "zod";
 import { appLogger, describeLogError } from "@/lib/logger";
 
-const DELETED_EPIC_NOTIFICATION_CHANNEL =
-  "traycer-gui-app:deleted-epic-events:v1";
+const DELETED_EPIC_NOTIFICATION_CHANNEL = "cic-gui-app:deleted-epic-events:v1";
 
 export const DELETED_EPIC_NOTIFICATION_STORAGE_KEY =
-  "traycer-gui-app:deleted-epic-events:last";
+  "cic-gui-app:deleted-epic-events:last";
 
 const SEEN_NOTIFICATION_TTL_MS = 5 * 60 * 1000;
 

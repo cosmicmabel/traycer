@@ -1,6 +1,6 @@
 import type { Attachment } from "@/lib/composer/types";
 import type { ChatMessage as ChatMessageModel } from "@/stores/composer/chat-store";
-import type { JsonContent } from "@traycer/protocol/common/registry";
+import type { JsonContent } from "@cic/protocol/common/registry";
 
 // Contract between the chat scroll region (producer) and the minimap overlay
 // (consumer): the expanded overlay caps its size to the marked region so it

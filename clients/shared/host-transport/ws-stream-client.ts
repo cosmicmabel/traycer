@@ -2,22 +2,22 @@ import type {
   SchemaVersion,
   StreamMethodVersionRegistry,
   VersionedStreamRpcRegistry,
-} from "@traycer/protocol/framework/versioned-stream-rpc";
+} from "@cic/protocol/framework/versioned-stream-rpc";
 import {
   buildStreamManifest,
   checkStreamMethodCompatibility,
-} from "@traycer/protocol/framework/stream-compat";
+} from "@cic/protocol/framework/stream-compat";
 import {
   extractBearerForOpenFrame,
   MissingBearerTokenForOpenFrameError,
   type HostEndpointProvider,
 } from "./ws-rpc-client";
-import type { BearerSourceProvider } from "@traycer-clients/shared/auth/bearer-source";
+import type { BearerSourceProvider } from "@cic/shared/auth/bearer-source";
 import type {
   RevalidateOutcome,
   StreamAuthRevalidator,
-} from "@traycer-clients/shared/auth/bearer-revalidator";
-import type { FatalErrorDetails } from "@traycer/protocol/framework/ws-protocol";
+} from "@cic/shared/auth/bearer-revalidator";
+import type { FatalErrorDetails } from "@cic/protocol/framework/ws-protocol";
 import {
   hostStreamOpenAckFrameSchema,
   hostStreamFatalErrorFrameSchema,
@@ -27,7 +27,7 @@ import {
   type ClientStreamSubscribeFrame,
   type ClientStreamFatalErrorFrame,
   type ClientStreamCredentialUpdateFrame,
-} from "@traycer/protocol/framework/stream-ws-protocol";
+} from "@cic/protocol/framework/stream-ws-protocol";
 import type {
   IStreamSession,
   ServerFrameHandler,

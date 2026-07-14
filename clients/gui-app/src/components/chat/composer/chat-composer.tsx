@@ -7,11 +7,11 @@ import {
   type ReactNode,
 } from "react";
 import { useStore } from "zustand";
-import type { JsonContent } from "@traycer/protocol/common/registry";
+import type { JsonContent } from "@cic/protocol/common/registry";
 import type {
   ChatActiveTurn,
   ChatRunSettings,
-} from "@traycer/protocol/host/agent/gui/subscribe";
+} from "@cic/protocol/host/agent/gui/subscribe";
 
 import { useComposerPaste } from "@/hooks/composer/use-composer-paste";
 import { useComposerDictation } from "@/hooks/composer/use-composer-dictation";

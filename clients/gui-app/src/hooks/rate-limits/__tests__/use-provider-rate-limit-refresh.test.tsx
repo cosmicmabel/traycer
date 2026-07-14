@@ -13,7 +13,7 @@
  */
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { cleanup, renderHook } from "@testing-library/react";
-import { DEFAULT_ACCOUNT_CONTEXT } from "@traycer/protocol/common/schemas";
+import { DEFAULT_ACCOUNT_CONTEXT } from "@cic/protocol/common/schemas";
 
 const mocks = vi.hoisted(() => ({
   draining: false,

@@ -2,7 +2,7 @@ import type {
   WorktreeEntryScripts,
   WorktreeIntent,
   WorktreeFolderIntent,
-} from "@traycer/protocol/host/worktree-schemas";
+} from "@cic/protocol/host/worktree-schemas";
 
 /**
  * Updates the setup/teardown `scripts` override on the staged `worktree` entry

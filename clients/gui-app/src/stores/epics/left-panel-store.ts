@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { basePersistOptions, persistKey, STORE_KEYS } from "@/lib/persist";
-import type { EpicArtifactKind } from "@traycer/protocol/common/registry";
+import type { EpicArtifactKind } from "@cic/protocol/common/registry";
 import {
   DEFAULT_SORT_MODE,
   isDefaultSort,

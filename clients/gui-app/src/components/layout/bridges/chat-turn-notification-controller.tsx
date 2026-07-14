@@ -61,7 +61,7 @@ function buildTurnCompletionNotification(completion: ChatTurnCompletion): {
   // unresolvable epic (`null`) falls back to the app name.
   const resolvedTitle = resolveEpicTitle(completion.epicId);
   const epicTitle =
-    resolvedTitle === null ? "Traycer" : displayTitle(resolvedTitle, "epic");
+    resolvedTitle === null ? "CIC" : displayTitle(resolvedTitle, "epic");
   const trimmed =
     completion.chatTitle === null ? "" : completion.chatTitle.trim();
   const chatLabel = trimmed.length === 0 ? "New chat" : trimmed;

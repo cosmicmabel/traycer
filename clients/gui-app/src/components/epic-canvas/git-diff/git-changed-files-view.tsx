@@ -8,7 +8,7 @@ import {
   type ReactNode,
 } from "react";
 import { Search, X } from "lucide-react";
-import type { GitChangedFile } from "@traycer/protocol/host";
+import type { GitChangedFile } from "@cic/protocol/host";
 import {
   InputGroup,
   InputGroupAddon,

@@ -1,8 +1,8 @@
-import type { GuiHarnessId } from "@traycer/protocol/host/index";
+import type { GuiHarnessId } from "@cic/protocol/host/index";
 import {
   PROVIDER_DISPLAY_NAMES,
   type ProviderId,
-} from "@traycer/protocol/host/provider-schemas";
+} from "@cic/protocol/host/provider-schemas";
 
 export interface OrderedProvider {
   readonly providerId: ProviderId;

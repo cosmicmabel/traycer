@@ -7,7 +7,7 @@ import {
   X,
 } from "lucide-react";
 import { useMemo, useState } from "react";
-import type { WorktreeBindingOwnerKind } from "@traycer/protocol/host/worktree-schemas";
+import type { WorktreeBindingOwnerKind } from "@cic/protocol/host/worktree-schemas";
 import { AgentSpinningDots } from "@/components/ui/agent-spinning-dots";
 import { Button } from "@/components/ui/button";
 import {

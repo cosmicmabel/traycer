@@ -15,7 +15,7 @@ import type {
   IHostManagement,
   IHostTray,
   IRunnerHost,
-} from "@traycer-clients/shared/platform/runner-host";
+} from "@cic/shared/platform/runner-host";
 import { HostTrayCommandListener } from "@/components/layout/bridges/host-tray-command-listener";
 import { RunnerHostProvider } from "@/providers/runner-host-provider";
 
@@ -63,7 +63,7 @@ function makeManagement(): IHostManagement {
   const installResult: HostInstallResult = {
     version: "1.5.0",
     installedAt: "2026-05-15T00:00:00Z",
-    executablePath: "/tmp/fake/traycerd",
+    executablePath: "/tmp/fake/cicd",
     source: { kind: "registry", value: "1.5.0" },
     archiveSha256: "",
     signatureKeyId: "",
@@ -86,7 +86,7 @@ function makeManagement(): IHostManagement {
       }),
     ),
     restartHost: vi.fn(() => Promise.resolve()),
-    uninstallTraycer: vi.fn(() =>
+    uninstallCic: vi.fn(() =>
       Promise.resolve({
         removedHost: true,
         deregisteredService: true,
@@ -200,7 +200,7 @@ function makeHost(tray: IHostTray, management: IHostManagement): IRunnerHost {
     onSystemResumed: () => ({ dispose: () => undefined }),
     requestHostRespawn: () => Promise.resolve(),
     service: null,
-    traycerCli: null,
+    cicCli: null,
     migration: null,
     hostManagement: management,
     hostTray: tray,

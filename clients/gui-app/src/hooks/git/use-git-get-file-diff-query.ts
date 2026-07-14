@@ -3,12 +3,12 @@ import {
   useQuery,
   type UseQueryResult,
 } from "@tanstack/react-query";
-import type { HostRpcError } from "@traycer-clients/shared/host-transport/host-messenger";
+import type { HostRpcError } from "@cic/shared/host-transport/host-messenger";
 import type {
   GitGetFileDiffRequest,
   GitGetFileDiffResponse,
   GitStage,
-} from "@traycer/protocol/host";
+} from "@cic/protocol/host";
 import { useHostClient } from "@/lib/host";
 import { gitQueryKeys } from "@/lib/query-keys/git-query-keys";
 import { useReactiveHostReadiness } from "@/hooks/host/use-reactive-host-readiness";

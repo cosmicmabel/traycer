@@ -7,8 +7,8 @@ import { z } from "zod";
 import {
   defineRpcContract,
   defineUpgradePath,
-} from "@traycer/protocol/framework/index";
-import { defineStreamRpcContract } from "@traycer/protocol/framework/versioned-stream-rpc";
+} from "@cic/protocol/framework/index";
+import { defineStreamRpcContract } from "@cic/protocol/framework/versioned-stream-rpc";
 import {
   gitListChangedFilesRequestSchema,
   gitListChangedFilesRequestSchemaV11,

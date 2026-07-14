@@ -3,7 +3,7 @@ import {
   useQuery,
   type UseQueryResult,
 } from "@tanstack/react-query";
-import type { AuthenticatedUser } from "@traycer/protocol/auth";
+import type { AuthenticatedUser } from "@cic/protocol/auth";
 import type { AuthService } from "@/lib/auth/auth-service";
 import { useAuthService } from "@/lib/host";
 import { useAuthStore } from "@/stores/auth/auth-store";

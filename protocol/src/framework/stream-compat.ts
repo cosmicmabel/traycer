@@ -1,12 +1,12 @@
 import type {
   SchemaVersion,
   VersionedStreamRpcRegistry,
-} from "@traycer/protocol/framework/versioned-stream-rpc";
+} from "@cic/protocol/framework/versioned-stream-rpc";
 import {
   type ConnectionManifest,
   type IncompatibleMethodDetails,
   type FatalErrorDetails,
-} from "@traycer/protocol/framework/ws-protocol";
+} from "@cic/protocol/framework/ws-protocol";
 import {
   buildIncompatibleReason,
   canonicalForMethodVersionLine,
@@ -16,7 +16,7 @@ import {
   noBridgeDetail,
   readManifestVersion,
   type CompatibilityRole,
-} from "@traycer/protocol/framework/compat-helpers";
+} from "@cic/protocol/framework/compat-helpers";
 
 /**
  * Canonical manifest for the combined stream registry. Same shape the
@@ -37,7 +37,7 @@ export function buildStreamManifest(
  * Mirror compatibility check for a `/stream` connection.
  *
  * Structurally parallel to the unary `check` in
- * `@traycer/protocol/host/compatibility-checker`, but without cross-major
+ * `@cic/protocol/host/compatibility-checker`, but without cross-major
  * downgrade bridges - in v1, stream clients reconnect on a mismatched
  * major rather than bridging. The result shape matches the unary
  * `FatalErrorDetails` so the client can emit the existing

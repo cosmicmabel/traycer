@@ -1,4 +1,4 @@
-import type { WorktreeBindingSelectorRow } from "@traycer/protocol/host";
+import type { WorktreeBindingSelectorRow } from "@cic/protocol/host";
 import { getBasename } from "@/lib/path/cross-platform-path";
 
 export function formatGitWorktreeLabel(row: {

@@ -5,12 +5,12 @@ import type {
   MessageSegment,
   SegmentTodoItem,
 } from "@/stores/composer/chat-store";
-import { deriveToolInputDetail } from "@traycer/protocol/host/agent/gui/tool-input-detail";
-import { deriveToolInputSummary } from "@traycer/protocol/host/agent/gui/tool-input-summary";
+import { deriveToolInputDetail } from "@cic/protocol/host/agent/gui/tool-input-detail";
+import { deriveToolInputSummary } from "@cic/protocol/host/agent/gui/tool-input-summary";
 import {
   isTaskTodoToolName,
   parseTaskTodoToolPayloads,
-} from "@traycer/protocol/host/agent/gui/task-todo-tools";
+} from "@cic/protocol/host/agent/gui/task-todo-tools";
 
 // Mirror the host accumulator: raw input is not persisted, so a tool segment
 // carries precomputed display fields - including the parsed task-todo items the

@@ -1,16 +1,16 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { z } from "zod";
-import { hostStreamRpcRegistry } from "@traycer/protocol/host/registry";
-import { buildStreamManifest } from "@traycer/protocol/framework/stream-compat";
+import { hostStreamRpcRegistry } from "@cic/protocol/host/registry";
+import { buildStreamManifest } from "@cic/protocol/framework/stream-compat";
 import {
   defineStreamRpcContract,
   defineVersionedStreamRpcRegistry,
-} from "@traycer/protocol/framework/versioned-stream-rpc";
+} from "@cic/protocol/framework/versioned-stream-rpc";
 import {
   createRequestContext,
   identityFromAuthenticatedUser,
   type RequestContext,
-} from "@traycer/protocol/auth/request-context";
+} from "@cic/protocol/auth/request-context";
 import { mockLocalHostEntry } from "../../host-client/mock/mock-host-directory";
 import { createAuthenticatedUserFixture } from "../../test-fixtures/authenticated-user";
 import type { HostDirectoryEntry } from "../../host-client/host-directory";

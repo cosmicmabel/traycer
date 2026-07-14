@@ -174,25 +174,25 @@
    * every preset gets correct contrast without per-preset overrides.
    */
   :root {
-    --traycer-code-bg: var(--color-muted);
-    --traycer-code-fg: var(--color-foreground);
-    --traycer-code-border: var(--color-border);
-    --traycer-code-header-bg: var(--color-card);
-    --traycer-code-muted-fg: var(--color-muted-foreground);
-    --traycer-code-hover-bg: var(--color-accent);
-    --traycer-code-font: var(--font-mono);
+    --cic-code-bg: var(--color-muted);
+    --cic-code-fg: var(--color-foreground);
+    --cic-code-border: var(--color-border);
+    --cic-code-header-bg: var(--color-card);
+    --cic-code-muted-fg: var(--color-muted-foreground);
+    --cic-code-hover-bg: var(--color-accent);
+    --cic-code-font: var(--font-mono);
   }
 
   /*
    * Shared `.md-prose` selector. Layered ON TOP of Tailwind Typography's
    * `prose` class - binds the plugin's `--tw-prose-*` color tokens to our
-   * shadcn theme tokens so every preset (dracula, traycer-green,
+   * shadcn theme tokens so every preset (dracula, cic-green,
    * catppuccin, etc.) gets correctly themed markdown without per-preset
    * overrides. Apply with a typography size:
    * `class="prose prose-base md-prose max-w-none"` for narrative text or
    * `class="prose prose-sm md-prose max-w-none"` for compact surfaces.
    *
-   * Consumed by the chat (`TraycerMarkdown` from `@/markdown`) and the
+   * Consumed by the chat (`CicMarkdown` from `@/markdown`) and the
    * artifact editor (`tc-editor-prose` adds TipTap-specific extras on top).
    */
   .md-prose {
@@ -240,8 +240,8 @@
    * conflicting backgrounds. Foreground colour stays (token highlights
    * use `style="color: ..."` on inner spans, not the pre).
    */
-  .traycer-md-shiki > pre,
-  .traycer-md-shiki pre.shiki {
+  .cic-md-shiki > pre,
+  .cic-md-shiki pre.shiki {
     background: transparent !important;
     margin: 0 !important;
     padding: 0 !important;
@@ -270,7 +270,7 @@
 
 /*
  * Inline `<code>` (anything not nested inside a `<pre>`). Themed pill styling
- * derived from `currentColor` so every preset (dracula, traycer-green,
+ * derived from `currentColor` so every preset (dracula, cic-green,
  * etc.) gets a correct contrast ratio without per-preset tweaks.
  * `code-block.tsx#InlineCode` defers to this rule rather than shipping its own
  * inline styles.
@@ -314,13 +314,12 @@
 }
 
 :root {
-  --traycer-font-ui:
+  --cic-font-ui:
     "Figtree Variable", "Figtree", ui-sans-serif, system-ui, -apple-system,
     BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --traycer-font-heading: var(--traycer-font-ui);
-  --traycer-font-pixel:
-    "Geist Pixel Square", "Geist Mono", var(--traycer-font-heading);
-  --traycer-font-mono:
+  --cic-font-heading: var(--cic-font-ui);
+  --cic-font-pixel: "Geist Pixel Square", "Geist Mono", var(--cic-font-heading);
+  --cic-font-mono:
     "SFMono-Regular", "SF Mono", "Cascadia Code", "Roboto Mono", ui-monospace,
     monospace;
 
@@ -481,11 +480,11 @@
 }
 
 /*
- * Traycer Green brand preset.
- * Palette - Primary: Onyx #0F0F0F, White #FFFFFF, Traycer Blue #0059FF, Traycer Light #7FBDCC.
- * Secondary: Dark Green #1A2421, Dark Grey #666666, Green White #EAEAEA, Traycer Sky #00CDFF, Traycer Green #257174.
+ * Cic Green brand preset.
+ * Palette - Primary: Onyx #0F0F0F, White #FFFFFF, Cic Blue #0059FF, Cic Light #7FBDCC.
+ * Secondary: Dark Green #1A2421, Dark Grey #666666, Green White #EAEAEA, Cic Sky #00CDFF, Cic Green #257174.
  */
-[data-theme="traycer-green"] {
+[data-theme="cic-green"] {
   --brand-onyx: #0f0f0f;
   --brand-white: #ffffff;
   --brand-blue: #0059ff;
@@ -518,7 +517,7 @@
   --success: oklch(0.58 0.13 142);
   --brand-gradient: linear-gradient(180deg, #1a2421 0%, #257174 100%);
 }
-.dark[data-theme="traycer-green"] {
+.dark[data-theme="cic-green"] {
   --background: #121715;
   --foreground: #ffffff;
   --canvas: #0f0f0f;
@@ -920,10 +919,10 @@
 }
 
 @theme inline {
-  --font-sans: var(--traycer-font-ui);
-  --font-heading: var(--traycer-font-heading);
-  --font-pixel: var(--traycer-font-pixel);
-  --font-mono: var(--traycer-font-mono);
+  --font-sans: var(--cic-font-ui);
+  --font-heading: var(--cic-font-heading);
+  --font-pixel: var(--cic-font-pixel);
+  --font-mono: var(--cic-font-mono);
   --ease-spring: cubic-bezier(0.32, 0.72, 0, 1);
 
   --text-micro: 0.625rem;
@@ -1230,9 +1229,9 @@
     font-size: var(--text-code-sm);
     padding: 0.75rem 1rem;
     border-radius: var(--radius-lg);
-    background: var(--traycer-code-bg, var(--muted));
-    color: var(--traycer-code-fg, var(--foreground));
-    border: 1px solid var(--traycer-code-border, var(--border));
+    background: var(--cic-code-bg, var(--muted));
+    color: var(--cic-code-fg, var(--foreground));
+    border: 1px solid var(--cic-code-border, var(--border));
     margin: 0.5rem 0;
     white-space: pre;
     overflow-x: auto;
@@ -1263,11 +1262,11 @@
  * `window.getSelection()` - contenteditable editors don't see a
  * selection change and don't grab focus away from the find input.
  */
-::highlight(traycer-find-match) {
+::highlight(cic-find-match) {
   background-color: color-mix(in srgb, var(--primary) 35%, transparent);
   color: inherit;
 }
-::highlight(traycer-find-match-active) {
+::highlight(cic-find-match-active) {
   background-color: color-mix(in srgb, var(--primary) 75%, transparent);
   color: var(--primary-foreground);
 }

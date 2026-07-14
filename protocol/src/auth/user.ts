@@ -1,6 +1,6 @@
 /**
  * Auth / session enum + non-record helper types owned by
- * `@traycer/protocol`.
+ * `@cic/protocol`.
  *
  * Types backed by a registered Zod schema (`User`, `Organization`,
  * `Team`, `Subscription`, `Credit`, `BundleSummary`, `PayAsYouGoUsage`,
@@ -16,8 +16,8 @@
  * - String-literal enums (`ProviderType`, `SeatAllocation`,
  *   `SubscriptionStatus`, `UserSource`) embedded inside the records.
  * - Non-record extension shapes (`AuthenticatedUserBase`,
- *   `OrganizationCredit`, `TraycerOrganizationSubscription`,
- *   `TraycerUserSubscription`, `TraycerTeamSubscription`) - Zod schemas
+ *   `OrganizationCredit`, `CicOrganizationSubscription`,
+ *   `CicUserSubscription`, `CicTeamSubscription`) - Zod schemas
  *   exist for these in `_internal/schemas.ts` but they are not
  *   independent records, so the inferred TypeScript shape lives here
  *   alongside the enums it composes against.
@@ -77,7 +77,7 @@ export interface OrganizationCredit extends Credit {
   orgId: string;
 }
 
-export interface TraycerOrganizationSubscription extends Subscription {
+export interface CicOrganizationSubscription extends Subscription {
   organization?: Organization;
   isInTrial: boolean;
   bundleSummary?: BundleSummary;
@@ -87,7 +87,7 @@ export interface TraycerOrganizationSubscription extends Subscription {
   hasActiveBundle?: boolean;
 }
 
-export interface TraycerUserSubscription extends Subscription {
+export interface CicUserSubscription extends Subscription {
   isInTrial: boolean;
   bundleSummary?: BundleSummary;
   credit?: Credit;
@@ -96,7 +96,7 @@ export interface TraycerUserSubscription extends Subscription {
   hasActiveBundle?: boolean;
 }
 
-export interface TraycerTeamSubscription extends Subscription {
+export interface CicTeamSubscription extends Subscription {
   team: Team;
   isInTrial: boolean;
   bundleSummary: BundleSummary;
@@ -108,6 +108,6 @@ export interface TraycerTeamSubscription extends Subscription {
 
 export interface AuthenticatedUserBase {
   user: User;
-  userSubscription: TraycerUserSubscription;
+  userSubscription: CicUserSubscription;
   payAsYouGoUsage: PayAsYouGoUsage;
 }

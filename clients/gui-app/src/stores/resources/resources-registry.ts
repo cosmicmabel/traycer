@@ -1,6 +1,6 @@
 import { useCallback, useSyncExternalStore } from "react";
 import { create, useStore } from "zustand";
-import type { ResourceOwnerKindWire } from "@traycer/protocol/host/resources/subscribe";
+import type { ResourceOwnerKindWire } from "@cic/protocol/host/resources/subscribe";
 import {
   deriveTaskResourceSummary,
   resourceOwnerKey,

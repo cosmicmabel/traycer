@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ActiveHostWorkspaceControls } from "../host-workspace-selector";
-import type { WorktreeWorkspaceSummary } from "@traycer/protocol/host/worktree-schemas";
+import type { WorktreeWorkspaceSummary } from "@cic/protocol/host/worktree-schemas";
 import type { ResolvedFolder } from "@/lib/workspace/resolved-folder";
 import { TooltipProvider } from "@/components/ui/tooltip";
 

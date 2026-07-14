@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 
 export const AGENT_SELECTION_GUIDE_TITLE = "Agent selection guide";
 export const AGENT_SELECTION_GUIDE_DESCRIPTION =
-  "Instructions for how Traycer agents choose child-agent harnesses, models, and reasoning effort.";
+  "Instructions for how CIC agents choose child-agent harnesses, models, and reasoning effort.";
 
 type AgentSelectionGuideEditorSurfaceProps = {
   readonly titleId: string;
@@ -63,7 +63,7 @@ export function AgentSelectionGuideEditorSurface(
         <p className="min-w-[min(100%,18rem)] flex-1 text-ui-xs text-muted-foreground">
           For workspace-specific instructions, add a{" "}
           <code className="rounded bg-muted px-1 py-0.5 font-mono text-[0.95em]">
-            .traycer/agent-selection-guide.md
+            .cic/agent-selection-guide.md
           </code>{" "}
           file in a workspace. It layers on top of these global instructions.
         </p>

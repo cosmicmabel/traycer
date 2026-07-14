@@ -3,7 +3,7 @@ import type {
   EpicLight,
   ListTasksResponse,
   TaskLight,
-} from "@traycer/protocol/host/epic/unary-schemas";
+} from "@cic/protocol/host/epic/unary-schemas";
 import {
   fetchExistingEpicIdsFromPages,
   missingEpicIds,

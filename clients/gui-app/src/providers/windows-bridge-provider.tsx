@@ -6,7 +6,7 @@ import {
 } from "react";
 import { WindowsBridgeContext } from "@/providers/windows-bridge-context";
 import type { WindowsBridgeContextValue } from "@/providers/windows-bridge-context";
-import type { IRunnerHost } from "@traycer-clients/shared/platform/runner-host";
+import type { IRunnerHost } from "@cic/shared/platform/runner-host";
 import { appLogger } from "@/lib/logger";
 import {
   applyEpicCanvasDesktopProjection,
@@ -157,7 +157,7 @@ function installDesktopWindowsBridge(
   // prior projection `update` is still in flight when this fires, the new patch
   // is chained behind it and may not send before teardown; and main is not
   // guaranteed to finish processing an in-flight send before the renderer dies.
-  // The deliberate quit path (Cmd+Q / "Quit Traycer") does not rely on this - it
+  // The deliberate quit path (Cmd+Q / "Quit CIC") does not rely on this - it
   // uses the awaited fresh-snapshot flush - so this remains a fallback only.
   const flushProjection = (): void => {
     void projectionBridge.flush();

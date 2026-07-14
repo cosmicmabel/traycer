@@ -1,4 +1,4 @@
-import type { WorktreeBinding } from "@traycer/protocol/host/worktree-schemas";
+import type { WorktreeBinding } from "@cic/protocol/host/worktree-schemas";
 import type { ResolvedFolder } from "@/lib/workspace/resolved-folder";
 
 /**

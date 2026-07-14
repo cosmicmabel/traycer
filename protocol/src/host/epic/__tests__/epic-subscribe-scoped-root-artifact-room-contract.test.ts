@@ -16,7 +16,7 @@ import { describe, expect, it } from "vitest";
 import {
   epicSubscribeClientFrameSchema,
   epicSubscribeServerFrameSchema,
-} from "@traycer/protocol/host/epic/subscribe";
+} from "@cic/protocol/host/epic/subscribe";
 
 describe("epic.subscribe@1.0 scoped root/artifact-room contract (B6)", () => {
   it("server snapshot frame has no artifact-room scope discriminator", () => {

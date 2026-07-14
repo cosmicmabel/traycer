@@ -1,4 +1,4 @@
-import type { WorktreeBindingSelectorRow } from "@traycer/protocol/host";
+import type { WorktreeBindingSelectorRow } from "@cic/protocol/host";
 import type { GitSubmoduleSummary } from "@/lib/git/git-repo-tree";
 import { getBasename } from "@/lib/path/cross-platform-path";
 import { formatWorktreeFolderDisabledReason } from "@/lib/worktree/worktree-folder-disabled-reason";

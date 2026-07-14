@@ -10,7 +10,7 @@ import {
 import type {
   WorktreeFolderIntent,
   WorktreeWorkspaceSummary,
-} from "@traycer/protocol/host/worktree-schemas";
+} from "@cic/protocol/host/worktree-schemas";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
 // Drive the form's model from a fixed listBranches payload, no live host.
@@ -70,7 +70,7 @@ function renderFormWithSummary(
         isPrimary
         summary={summary}
         currentIntent={currentIntent}
-        defaultNewBranchName="traycer/swift-otter"
+        defaultNewBranchName="cic/swift-otter"
         onEmit={onEmit}
         onCommitted={() => undefined}
       />
@@ -102,7 +102,7 @@ describe("NewWorktreeForm — new-branch name", () => {
     renderForm((intent) => emitted.push(intent), null);
     // Working tree is the default source → name prefilled with the generated
     // default, placeholder reads "required", Select enabled.
-    expect(screen.getByDisplayValue("traycer/swift-otter")).toBeTruthy();
+    expect(screen.getByDisplayValue("cic/swift-otter")).toBeTruthy();
     expect(
       screen
         .getByTestId("new-worktree-branch-name")
@@ -118,7 +118,7 @@ describe("NewWorktreeForm — new-branch name", () => {
         isPrimary: true,
         branch: {
           type: "new",
-          name: "traycer/swift-otter",
+          name: "cic/swift-otter",
           source: "development",
           carryUncommittedChanges: false,
         },
@@ -151,7 +151,7 @@ describe("NewWorktreeForm — new-branch name", () => {
     renderForm((intent) => emitted.push(intent), null);
     // A dirty tree exposes "Working tree · development" above the clean fork.
     await selectSource("Working tree · development");
-    expect(screen.getByDisplayValue("traycer/swift-otter")).toBeTruthy();
+    expect(screen.getByDisplayValue("cic/swift-otter")).toBeTruthy();
     fireEvent.click(screen.getByTestId("new-worktree-select"));
     expect(emitted).toEqual([
       {
@@ -162,7 +162,7 @@ describe("NewWorktreeForm — new-branch name", () => {
         isPrimary: true,
         branch: {
           type: "new",
-          name: "traycer/swift-otter",
+          name: "cic/swift-otter",
           source: "development",
           carryUncommittedChanges: true,
         },
@@ -188,7 +188,7 @@ describe("NewWorktreeForm — new-branch name", () => {
         isPrimary: true,
         branch: {
           type: "new",
-          name: "traycer/swift-otter",
+          name: "cic/swift-otter",
           source: "development",
           carryUncommittedChanges: false,
         },
@@ -209,7 +209,7 @@ describe("NewWorktreeForm — new-branch name", () => {
     await selectSource("origin/release-9");
     const name = screen.getByTestId("new-worktree-branch-name");
     expect((name as HTMLInputElement).value).toBe("release-9");
-    expect(screen.queryByDisplayValue("traycer/swift-otter")).toBeNull();
+    expect(screen.queryByDisplayValue("cic/swift-otter")).toBeNull();
 
     fireEvent.click(screen.getByTestId("new-worktree-select"));
     expect(emitted).toEqual([
@@ -282,7 +282,7 @@ describe("NewWorktreeForm — new-branch name", () => {
     renderForm((intent) => emitted.push(intent), null);
     await selectSource("chore/cleanup");
     const name = screen.getByTestId("new-worktree-branch-name");
-    expect((name as HTMLInputElement).value).toBe("traycer/swift-otter");
+    expect((name as HTMLInputElement).value).toBe("cic/swift-otter");
     expect(name.getAttribute("placeholder")).toBe("New branch name (required)");
     const select = screen.getByTestId("new-worktree-select");
     expect(select.hasAttribute("disabled")).toBe(false);
@@ -296,7 +296,7 @@ describe("NewWorktreeForm — new-branch name", () => {
         isPrimary: true,
         branch: {
           type: "new",
-          name: "traycer/swift-otter",
+          name: "cic/swift-otter",
           source: "chore/cleanup",
           carryUncommittedChanges: false,
         },
@@ -390,7 +390,7 @@ describe("NewWorktreeForm — new-branch name", () => {
         isPrimary: true,
         branch: {
           type: "new",
-          name: "traycer/swift-otter",
+          name: "cic/swift-otter",
           source: "existing_branch_1",
           carryUncommittedChanges: false,
         },
@@ -423,7 +423,7 @@ describe("NewWorktreeForm — new-branch name", () => {
         isPrimary: true,
         branch: {
           type: "new",
-          name: "traycer/swift-otter",
+          name: "cic/swift-otter",
           source: "chore/cleanup",
           carryUncommittedChanges: false,
         },
@@ -471,7 +471,7 @@ describe("NewWorktreeForm — new-branch name", () => {
       },
     });
     expect(screen.getByDisplayValue("feat/keep-me")).toBeTruthy();
-    expect(screen.queryByDisplayValue("traycer/swift-otter")).toBeNull();
+    expect(screen.queryByDisplayValue("cic/swift-otter")).toBeNull();
   });
 
   it("disables Select when the form matches the staged worktree, re-enables on edit", () => {
@@ -512,7 +512,7 @@ describe("NewWorktreeForm — close on commit", () => {
           isPrimary
           summary={SUMMARY}
           currentIntent={null}
-          defaultNewBranchName="traycer/swift-otter"
+          defaultNewBranchName="cic/swift-otter"
           onEmit={() => undefined}
           onCommitted={onCommitted}
         />

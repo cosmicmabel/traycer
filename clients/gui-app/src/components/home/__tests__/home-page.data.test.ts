@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { TaskLight } from "@traycer/protocol/host/epic/unary-schemas";
+import type { TaskLight } from "@cic/protocol/host/epic/unary-schemas";
 import {
   buildHistoryItemsFromTasks,
   collectHistoryRepos,
@@ -95,13 +95,13 @@ describe("home-page history helpers", () => {
           repos: [
             {
               task: null,
-              repoIdentifier: { owner: "traycerai", repo: "gui-app" },
+              repoIdentifier: { owner: "cicai", repo: "gui-app" },
               createdAt: 0,
               createdBy: "user-1",
             },
             {
               task: null,
-              repoIdentifier: { owner: "traycerai", repo: "host" },
+              repoIdentifier: { owner: "cicai", repo: "host" },
               createdAt: 0,
               createdBy: "user-1",
             },
@@ -129,7 +129,7 @@ describe("home-page history helpers", () => {
           repos: [
             {
               task: null,
-              repoIdentifier: { owner: "traycerai", repo: "gui-app" },
+              repoIdentifier: { owner: "cicai", repo: "gui-app" },
               createdAt: 0,
               createdBy: "user-1",
             },
@@ -155,7 +155,7 @@ describe("home-page history helpers", () => {
       // empty-title fallback from it.
       initialUserPrompt: "Ship it",
       updatedBucket: "today",
-      linkedRepos: ["traycerai/gui-app", "traycerai/host"],
+      linkedRepos: ["cicai/gui-app", "cicai/host"],
       ownership: "mine",
       permissionRole: "owner",
     });
@@ -167,7 +167,7 @@ describe("home-page history helpers", () => {
       // Phases have no user prompt.
       initialUserPrompt: "",
       updatedBucket: "today",
-      linkedRepos: ["traycerai/gui-app"],
+      linkedRepos: ["cicai/gui-app"],
     });
   });
 });

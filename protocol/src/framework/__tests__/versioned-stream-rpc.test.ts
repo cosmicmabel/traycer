@@ -5,19 +5,19 @@ import {
   defineVersionedStreamRpcRegistry,
   validateVersionedStreamRpcRegistry,
   type UncheckedVersionedStreamRpcRegistry,
-} from "@traycer/protocol/framework/versioned-stream-rpc";
+} from "@cic/protocol/framework/versioned-stream-rpc";
 import {
   buildStreamManifest,
   checkStreamCompatibility,
   checkStreamMethodCompatibility,
-} from "@traycer/protocol/framework/stream-compat";
-import { hostStreamRpcRegistry } from "@traycer/protocol/host/registry";
+} from "@cic/protocol/framework/stream-compat";
+import { hostStreamRpcRegistry } from "@cic/protocol/host/registry";
 
 /**
  * Structural and schema-compatibility tests for the versioned streaming-RPC
  * framework plus a smoke test that `defineVersionedStreamRpcRegistry`
  * accepts the real combined registry shipped from
- * `@traycer/protocol/host/registry`.
+ * `@cic/protocol/host/registry`.
  */
 
 describe("validateVersionedStreamRpcRegistry", () => {

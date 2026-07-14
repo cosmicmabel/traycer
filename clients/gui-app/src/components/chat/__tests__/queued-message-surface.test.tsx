@@ -10,11 +10,11 @@ import {
 } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { ReactNode } from "react";
-import type { JsonContent } from "@traycer/protocol/common/registry";
+import type { JsonContent } from "@cic/protocol/common/registry";
 import type {
   ChatQueuedItem,
   ChatRunSettings,
-} from "@traycer/protocol/host/agent/gui/subscribe";
+} from "@cic/protocol/host/agent/gui/subscribe";
 import { buildQueuedMessageOrderKey } from "@/components/chat/queued-message-reorder-dnd";
 import { QueuedMessagePanel } from "@/components/chat/queued-message-surface";
 import { TooltipProvider } from "@/components/ui/tooltip";

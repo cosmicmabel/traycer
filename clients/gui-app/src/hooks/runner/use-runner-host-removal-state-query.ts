@@ -6,7 +6,7 @@ import {
 import type {
   HostRemovalState,
   IHostManagement,
-} from "@traycer-clients/shared/platform/runner-host";
+} from "@cic/shared/platform/runner-host";
 import { useRunnerHost } from "@/providers/use-runner-host";
 import { runnerQueryKeys } from "@/lib/query-keys";
 
@@ -42,7 +42,7 @@ function hostRemovalStateQueryOptions(
  * `IHostManagement.getRemovalState()`, independent of `ensureHost`'s one-shot
  * auto-provision. Consumed by `useHostProvisioning` in `local-host-gate.tsx`
  * so a removal that happens after the initial connect (Settings -> Danger
- * Zone -> Remove Traycer) is picked up without requiring a reload.
+ * Zone -> Remove CIC) is picked up without requiring a reload.
  */
 export function useRunnerHostRemovalStateQuery(
   opts: UseRunnerHostRemovalStateQueryOptions,

@@ -1,19 +1,19 @@
 import { create, type StoreApi, type UseBoundStore } from "zustand";
 import { v4 as uuidv4 } from "uuid";
-import type { TerminalSubscribeClientFrame } from "@traycer/protocol/host/terminal/subscribe";
+import type { TerminalSubscribeClientFrame } from "@cic/protocol/host/terminal/subscribe";
 import type {
   TerminalSessionExitReason,
   TerminalSessionInfo,
   TerminalSessionKind,
-} from "@traycer/protocol/host/terminal/unary-schemas";
+} from "@cic/protocol/host/terminal/unary-schemas";
 import type {
   TerminalStreamCallbacks,
   TerminalStreamClient,
-} from "@traycer-clients/shared/host-transport/terminal-stream-client";
+} from "@cic/shared/host-transport/terminal-stream-client";
 import type {
   StreamCloseReason,
   StreamConnectionStatus,
-} from "@traycer-clients/shared/host-transport/i-stream-session";
+} from "@cic/shared/host-transport/i-stream-session";
 import { markTerminalLoad } from "@/lib/perf/terminal-load-perf";
 
 type TerminalStreamClientHandle = Pick<

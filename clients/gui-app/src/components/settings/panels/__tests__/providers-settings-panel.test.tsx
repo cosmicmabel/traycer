@@ -4,7 +4,7 @@ import type {
   ProviderCliCandidate,
   ProviderCliState,
   ProviderSelection,
-} from "@traycer/protocol/host/provider-schemas";
+} from "@cic/protocol/host/provider-schemas";
 import {
   cleanup,
   fireEvent,
@@ -127,7 +127,7 @@ vi.mock("@/providers/use-runner-host", () => ({
   }),
 }));
 
-// The Traycer provider mounts the subscription card; stub its credits query so
+// The CIC provider mounts the subscription card; stub its credits query so
 // the real AuthService (which needs a host-runtime provider) isn't invoked.
 vi.mock("@/hooks/auth/use-auth-user-query", () => ({
   useAuthUser: () => ({
@@ -548,7 +548,7 @@ describe("<ProvidersSettingsPanel />", () => {
     expect(screen.getByText("Environment variables")).toBeDefined();
     expect(screen.getByDisplayValue("OPENAI_API_KEY")).toBeDefined();
     expect(
-      screen.getByText(/Applied when Traycer spawns the OpenCode/),
+      screen.getByText(/Applied when CIC spawns the OpenCode/),
     ).toBeDefined();
   });
 

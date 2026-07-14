@@ -1,6 +1,6 @@
 import { CornerUpLeft, File } from "lucide-react";
 import type { ReactElement } from "react";
-import { isSubsequence } from "@traycer/protocol/utils/text/fuzzy";
+import { isSubsequence } from "@cic/protocol/utils/text/fuzzy";
 import { EPIC_NODE_LABELS } from "@/lib/artifacts/node-display";
 import type {
   EpicChatMentionEntry,
@@ -10,9 +10,9 @@ import type {
   WorkspaceEntry,
 } from "@/lib/composer/types";
 import { basenameOfPath } from "@/lib/path";
-import type { EpicArtifactKind } from "@traycer/protocol/common/registry";
-import type { HostRpcRegistry } from "@traycer/protocol/host/index";
-import type { RequestOfMethod } from "@traycer-clients/shared/host-transport/host-messenger";
+import type { EpicArtifactKind } from "@cic/protocol/common/registry";
+import type { HostRpcRegistry } from "@cic/protocol/host/index";
+import type { RequestOfMethod } from "@cic/shared/host-transport/host-messenger";
 import { mentionAttachmentFromSuggestion } from "./attachments";
 import {
   artifactIcon,

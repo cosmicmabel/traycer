@@ -6,10 +6,10 @@ import { join } from "node:path";
 import {
   hostRpcRegistry,
   hostStreamRpcRegistry,
-} from "@traycer/protocol/host/registry";
-import { buildStreamManifest } from "@traycer/protocol/framework/stream-compat";
-import { hostFrameSchema } from "@traycer/protocol/framework/ws-protocol";
-import { gitSubscribeStatusEventSchema } from "@traycer/protocol/host/git-schemas";
+} from "@cic/protocol/host/registry";
+import { buildStreamManifest } from "@cic/protocol/framework/stream-compat";
+import { hostFrameSchema } from "@cic/protocol/framework/ws-protocol";
+import { gitSubscribeStatusEventSchema } from "@cic/protocol/host/git-schemas";
 import { startOpenHostServer, type RunningOpenHost } from "../server";
 import { RegistryRuntime } from "../registry-runtime";
 

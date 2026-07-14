@@ -10,16 +10,16 @@ import {
   type ChatQueueState,
   type ChatRunSettings,
   type ChatSubscribeServerFrame,
-} from "@traycer/protocol/host/agent/gui/subscribe";
+} from "@cic/protocol/host/agent/gui/subscribe";
 import {
   chatSchema,
   type Chat,
   type ChatEvent,
   type Message,
   type UserMessage,
-} from "@traycer/protocol/persistence/epic/schemas";
+} from "@cic/protocol/persistence/epic/schemas";
 import { hostHomeDir } from "../pid-file";
-import type { RuntimeEvent } from "@traycer/protocol/host/agent/gui/agent-runtime";
+import type { RuntimeEvent } from "@cic/protocol/host/agent/gui/agent-runtime";
 import {
   OpenClawGatewayConnection,
   type OpenClawGatewayOptions,
@@ -97,7 +97,7 @@ export class ChatSessionStore {
 
   /**
    * Debounced chat-record flush to
-   * `~/.traycer/host[/env]/open-host-chats/<epic>__<chat>.json` so
+   * `~/.cic/host[/env]/open-host-chats/<epic>__<chat>.json` so
    * transcripts survive host restarts. Best-effort: the in-memory record
    * stays authoritative.
    */
@@ -475,7 +475,7 @@ export class ChatSubscription {
       clientActionId: readClientActionId(parsed),
       action: data.kind,
       status: "rejected",
-      reason: `chat action not supported by @traycer/open-host yet: ${data.kind}`,
+      reason: `chat action not supported by @cic/open-host yet: ${data.kind}`,
       code: "RPC_ERROR",
       backgroundStopTaskIds: [],
     });
@@ -604,7 +604,7 @@ export class ChatSubscription {
       this.appendChatEvent("turn.started", null, turnId, userMessageId, null);
 
       const detach = await connection.sendChat({
-        sessionKey: `traycer-${this.chatId}`,
+        sessionKey: `cic-${this.chatId}`,
         message: prompt,
         onAgentEvent: (event) => {
           const approvalRequest = extractApprovalRequest(event);

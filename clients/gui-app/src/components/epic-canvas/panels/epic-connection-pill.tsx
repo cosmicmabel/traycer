@@ -1,4 +1,4 @@
-import type { StreamConnectionStatus } from "@traycer-clients/shared/host-transport/i-stream-session";
+import type { StreamConnectionStatus } from "@cic/shared/host-transport/i-stream-session";
 import { AgentSpinningDots } from "@/components/ui/agent-spinning-dots";
 import { LivePulse } from "@/components/ui/live-pulse";
 import { useEpicConnectionStatus } from "@/lib/epic-selectors";

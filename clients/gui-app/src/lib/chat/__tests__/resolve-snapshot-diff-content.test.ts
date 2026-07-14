@@ -3,8 +3,8 @@ import type {
   AgentSender,
   ContentBlock,
   Message,
-} from "@traycer/protocol/persistence/epic/schemas";
-import type { ChatAccumulatedFileChange } from "@traycer/protocol/host/agent/gui/subscribe";
+} from "@cic/protocol/persistence/epic/schemas";
+import type { ChatAccumulatedFileChange } from "@cic/protocol/host/agent/gui/subscribe";
 import {
   resolveHashBackedEndpoints,
   resolveSnapshotDiffContent,

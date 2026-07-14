@@ -1,7 +1,7 @@
 import { createElement, type ReactNode } from "react";
 import { describe, expect, it, vi } from "vitest";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import type { ListTasksResponse } from "@traycer/protocol/host/epic/unary-schemas";
+import type { ListTasksResponse } from "@cic/protocol/host/epic/unary-schemas";
 import {
   LIST_CLOUD_TASKS_REQUEST,
   cloudEpicTasksQueryKey,

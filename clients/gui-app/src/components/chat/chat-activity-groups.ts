@@ -1,11 +1,11 @@
 import type {
   InterviewAnswer,
   InterviewQuestion,
-} from "@traycer/protocol/persistence/epic/schemas";
+} from "@cic/protocol/persistence/epic/schemas";
 import {
   isKnownInterviewDisplayToolName,
   toolUseIdFromInterviewBlockId,
-} from "@traycer/protocol/host/agent/gui/interview-tools";
+} from "@cic/protocol/host/agent/gui/interview-tools";
 import { filePathFromInputDetail } from "@/lib/segment-summary";
 import { formatSingleLine } from "@/lib/utils";
 import type {

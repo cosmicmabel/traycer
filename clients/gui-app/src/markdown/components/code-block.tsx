@@ -116,7 +116,7 @@ function FencedCodeBlock({
 
       <div className="overflow-x-auto px-3.5 py-3 font-mono text-code">
         {highlightedNodes !== null ? (
-          <div className="traycer-md-shiki">{highlightedNodes}</div>
+          <div className="cic-md-shiki">{highlightedNodes}</div>
         ) : (
           <pre className="m-0 bg-transparent p-0">
             <code className="font-mono text-code text-foreground">{code}</code>

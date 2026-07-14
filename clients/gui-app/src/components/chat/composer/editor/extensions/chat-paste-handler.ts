@@ -6,7 +6,7 @@ import {
   Slice,
   type Schema,
 } from "@tiptap/pm/model";
-import type { JsonContent } from "@traycer/protocol/common/registry";
+import type { JsonContent } from "@cic/protocol/common/registry";
 
 import { readComposerContentFromClipboardData } from "@/lib/composer/composer-clipboard";
 import { normalizeComposerContent } from "@/lib/composer/composer-content-normalizer";

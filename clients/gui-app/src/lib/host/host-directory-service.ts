@@ -1,14 +1,14 @@
-import type { HostDirectoryEntry } from "@traycer-clients/shared/host-client/host-directory";
-import type { IHostDirectoryService } from "@traycer-clients/shared/host-client/host-runtime";
+import type { HostDirectoryEntry } from "@cic/shared/host-client/host-directory";
+import type { IHostDirectoryService } from "@cic/shared/host-client/host-runtime";
 import {
   fetchRemoteHosts,
   type RemoteHostFetcher,
-} from "@traycer-clients/shared/host-client/remote-fetcher";
+} from "@cic/shared/host-client/remote-fetcher";
 import type {
   IRunnerHost,
   LocalHostSnapshot,
-} from "@traycer-clients/shared/platform/runner-host";
-import type { Disposable } from "@traycer-clients/shared/platform/uri-callback";
+} from "@cic/shared/platform/runner-host";
+import type { Disposable } from "@cic/shared/platform/uri-callback";
 import { appLogger } from "@/lib/logger";
 
 export interface HostDirectoryServiceOptions {

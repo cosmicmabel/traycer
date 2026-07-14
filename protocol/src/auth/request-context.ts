@@ -30,7 +30,7 @@
  *   - `abort()` releases credentials AND signals the abort signal so
  *     downstream cleanup can fail closed for old-user work.
  */
-import type { AuthenticatedUser } from "@traycer/protocol/auth";
+import type { AuthenticatedUser } from "@cic/protocol/auth";
 
 /**
  * Where a context was minted. Used by diagnostics and (eventually) by

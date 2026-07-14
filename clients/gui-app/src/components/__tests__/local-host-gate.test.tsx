@@ -21,15 +21,15 @@ import type {
   HostEnsureResult,
   IHostManagement,
   LocalHostSnapshot,
-} from "@traycer-clients/shared/platform/runner-host";
-import type { Disposable } from "@traycer-clients/shared/platform/uri-callback";
-import { MockRunnerHost } from "@traycer-clients/shared/host-client/mock/mock-runner-host";
-import { MockHostMessenger } from "@traycer-clients/shared/host-client/mock/mock-host-messenger";
+} from "@cic/shared/platform/runner-host";
+import type { Disposable } from "@cic/shared/platform/uri-callback";
+import { MockRunnerHost } from "@cic/shared/host-client/mock/mock-runner-host";
+import { MockHostMessenger } from "@cic/shared/host-client/mock/mock-host-messenger";
 import {
   HostRpcError,
   type ResponseOfMethod,
-} from "@traycer-clients/shared/host-transport/host-messenger";
-import type { HostDirectoryEntry } from "@traycer-clients/shared/host-client/host-directory";
+} from "@cic/shared/host-transport/host-messenger";
+import type { HostDirectoryEntry } from "@cic/shared/host-client/host-directory";
 import {
   GATE_BYPASS_PATH_PREFIX,
   LOCAL_HOST_SLOW_START_THRESHOLD_MS,
@@ -50,7 +50,7 @@ import { useHostQuery } from "@/hooks/host/use-host-query";
 import {
   CURRENT_EPIC_VERSION,
   CURRENT_PHASE_VERSION,
-} from "@traycer-clients/shared/epic/epic-version";
+} from "@cic/shared/epic/epic-version";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import {
   createPersistentMemoryHistory,
@@ -108,13 +108,13 @@ let restoreFetch: () => void = () => undefined;
 
 function makeHost(snapshot: LocalHostSnapshot | null): MockRunnerHost {
   return new MockRunnerHost({
-    signInUrl: "https://auth.traycer.invalid/sign-in",
+    signInUrl: "https://auth.cic.invalid/sign-in",
     authnBaseUrl: "http://localhost:5005",
     localHost: snapshot,
     hosts: [],
     workspaceFolderPickerPaths: undefined,
     hasLocalHost: undefined,
-    traycerCli: undefined,
+    cicCli: undefined,
   });
 }
 
@@ -128,7 +128,7 @@ function makeHostManagement(
     updateHost: notImplemented("updateHost"),
     uninstallHost: notImplemented("uninstallHost"),
     restartHost: notImplemented("restartHost"),
-    uninstallTraycer: notImplemented("uninstallTraycer"),
+    uninstallCic: notImplemented("uninstallCic"),
     getRemovalState: () => Promise.resolve({ removedByUser: false }),
     clearRemoval: () => Promise.resolve(),
     getHostLogs: notImplemented("getHostLogs"),
@@ -165,13 +165,13 @@ class DeferredInitialSnapshotHost extends MockRunnerHost {
 
   constructor(snapshot: LocalHostSnapshot | null, management: IHostManagement) {
     super({
-      signInUrl: "https://auth.traycer.invalid/sign-in",
+      signInUrl: "https://auth.cic.invalid/sign-in",
       authnBaseUrl: "http://localhost:5005",
       localHost: snapshot,
       hosts: [],
       workspaceFolderPickerPaths: undefined,
       hasLocalHost: undefined,
-      traycerCli: undefined,
+      cicCli: undefined,
       hostManagement: management,
     });
     this.deferredSnapshot = snapshot;
@@ -250,7 +250,7 @@ function mountGate(
           bypass={false}
           selectedEntry={selectedEntry}
           loading={
-            <div data-testid="gate-loading">Starting local Traycer Host…</div>
+            <div data-testid="gate-loading">Starting local CIC Host…</div>
           }
           provisioningLoading={null}
           unavailable={<div data-testid="gate-unavailable">unavailable</div>}
@@ -288,9 +288,7 @@ function mountGateWithRuntime(
                 bypass={false}
                 selectedEntry={selectedEntry}
                 loading={
-                  <div data-testid="gate-loading">
-                    Starting local Traycer Host…
-                  </div>
+                  <div data-testid="gate-loading">Starting local CIC Host…</div>
                 }
                 provisioningLoading={null}
                 unavailable={
@@ -336,7 +334,7 @@ function mountGateWithRealUnavailable(
           bypass={false}
           selectedEntry={selectedEntry}
           loading={
-            <div data-testid="gate-loading">Starting local Traycer Host…</div>
+            <div data-testid="gate-loading">Starting local CIC Host…</div>
           }
           provisioningLoading={null}
           unavailable={
@@ -472,7 +470,7 @@ describe("LocalHostGate", () => {
 
     expect(screen.queryByTestId("gate-loading")).not.toBeNull();
     expect(screen.queryByTestId("gate-loading")?.textContent).toContain(
-      "Starting local Traycer Host…",
+      "Starting local CIC Host…",
     );
     expect(screen.queryByTestId("local-host-retry")).toBeNull();
     expect(screen.queryByTestId("local-host-unavailable")).toBeNull();
@@ -751,13 +749,13 @@ describe("LocalHostGate", () => {
     );
     mountGateWithRuntime(
       new MockRunnerHost({
-        signInUrl: "https://auth.traycer.invalid/sign-in",
+        signInUrl: "https://auth.cic.invalid/sign-in",
         authnBaseUrl: "http://localhost:5005",
         localHost: validSnapshot,
         hosts: [],
         workspaceFolderPickerPaths: undefined,
         hasLocalHost: undefined,
-        traycerCli: undefined,
+        cicCli: undefined,
         hostManagement: makeHostManagement(ensureHost),
       }),
       localEntry,
@@ -807,13 +805,13 @@ describe("LocalHostGate", () => {
       });
     });
     const host = new MockRunnerHost({
-      signInUrl: "https://auth.traycer.invalid/sign-in",
+      signInUrl: "https://auth.cic.invalid/sign-in",
       authnBaseUrl: "http://localhost:5005",
       localHost: null,
       hosts: [],
       workspaceFolderPickerPaths: undefined,
       hasLocalHost: undefined,
-      traycerCli: undefined,
+      cicCli: undefined,
       hostManagement: makeHostManagement(ensureHost),
     });
     hostRef.current = host;
@@ -1036,13 +1034,13 @@ describe("LocalHostGate", () => {
       [],
     );
     const host = new MockRunnerHost({
-      signInUrl: "https://auth.traycer.invalid/sign-in?shell=mobile",
+      signInUrl: "https://auth.cic.invalid/sign-in?shell=mobile",
       authnBaseUrl: "http://localhost:5005",
       localHost: null,
       hosts: [],
       hasLocalHost: false,
       workspaceFolderPickerPaths: undefined,
-      traycerCli: undefined,
+      cicCli: undefined,
     });
     mountGate(host, null);
 
@@ -1231,7 +1229,7 @@ describe("LocalHostGate + system tab modal guard integration", () => {
 
     const windowId = "real-gate-promote-back";
     window.localStorage.setItem(
-      `traycer-gui-app:last-route:${windowId}`,
+      `cic-gui-app:last-route:${windowId}`,
       JSON.stringify({ entries: ["/epics/e/t0", "/epics/e/t1"], index: 1 }),
     );
 

@@ -1,7 +1,7 @@
 import "../../../../../../__tests__/test-browser-apis";
 import { afterEach, describe, expect, it } from "vitest";
 import { cleanup, render } from "@testing-library/react";
-import type { JsonContent } from "@traycer/protocol/common/registry";
+import type { JsonContent } from "@cic/protocol/common/registry";
 
 import { buildSubmittedChatJSONContent } from "@/lib/composer/tiptap-json-content";
 import { ComposerContentRenderer } from "../composer-content-renderer";

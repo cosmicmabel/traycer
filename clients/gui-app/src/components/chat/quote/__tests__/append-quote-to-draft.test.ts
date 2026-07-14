@@ -1,6 +1,6 @@
 import "../../../../../__tests__/test-browser-apis";
 import { afterEach, describe, expect, it } from "vitest";
-import type { JsonContent } from "@traycer/protocol/common/registry";
+import type { JsonContent } from "@cic/protocol/common/registry";
 
 import {
   readComposerDraftSnapshot,

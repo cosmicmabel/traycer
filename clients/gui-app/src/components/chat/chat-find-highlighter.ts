@@ -51,8 +51,8 @@ export class ChatFindHighlighter {
   constructor(tileInstanceId: string) {
     const suffix = stableCssIdentSuffix(tileInstanceId);
     this.names = {
-      match: `traycer-chat-find-match-${suffix}`,
-      active: `traycer-chat-find-active-${suffix}`,
+      match: `cic-chat-find-match-${suffix}`,
+      active: `cic-chat-find-active-${suffix}`,
     };
   }
 
@@ -116,7 +116,7 @@ export class ChatFindHighlighter {
   private ensureStyleElement(): void {
     if (this.styleElement !== null) return;
     const style = document.createElement("style");
-    style.dataset.traycerChatFindHighlight = this.names.match;
+    style.dataset.cicChatFindHighlight = this.names.match;
     style.textContent = [
       `::highlight(${this.names.match}) {`,
       "background-color: color-mix(in srgb, var(--primary) 35%, transparent);",

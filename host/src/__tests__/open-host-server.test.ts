@@ -4,12 +4,12 @@ import { afterAll, beforeAll, describe, expect, it } from "bun:test";
 import {
   hostRpcRegistry,
   hostStreamRpcRegistry,
-} from "@traycer/protocol/host/registry";
-import { buildStreamManifest } from "@traycer/protocol/framework/stream-compat";
+} from "@cic/protocol/host/registry";
+import { buildStreamManifest } from "@cic/protocol/framework/stream-compat";
 import {
   hostFrameSchema,
   type ConnectionManifest,
-} from "@traycer/protocol/framework/ws-protocol";
+} from "@cic/protocol/framework/ws-protocol";
 import { startOpenHostServer, type RunningOpenHost } from "../server";
 import { RegistryRuntime } from "../registry-runtime";
 

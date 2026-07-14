@@ -11,10 +11,10 @@ import {
   screen,
   waitFor,
 } from "@testing-library/react";
-import { MockRunnerHost } from "@traycer-clients/shared/host-client/mock/mock-runner-host";
-import type { HostDirectoryEntry } from "@traycer-clients/shared/host-client/host-directory";
-import type { RemoteHostFetcher } from "@traycer-clients/shared/host-client/remote-fetcher";
-import { TraycerApp, hostRpcRegistry } from "../index";
+import { MockRunnerHost } from "@cic/shared/host-client/mock/mock-runner-host";
+import type { HostDirectoryEntry } from "@cic/shared/host-client/host-directory";
+import type { RemoteHostFetcher } from "@cic/shared/host-client/remote-fetcher";
+import { CicApp, hostRpcRegistry } from "../index";
 import { useAuthStore } from "@/stores/auth/auth-store";
 import { useAppDialogStore } from "@/stores/dialogs/app-dialog-store";
 import { useOnboardingStore } from "@/stores/onboarding/onboarding-store";
@@ -37,13 +37,13 @@ function mockMatchMedia(): void {
 
 function buildMobileHost(): MockRunnerHost {
   return new MockRunnerHost({
-    signInUrl: "https://auth.traycer.invalid/sign-in?shell=mobile",
+    signInUrl: "https://auth.cic.invalid/sign-in?shell=mobile",
     authnBaseUrl: "http://localhost:5005",
     localHost: null,
     hosts: [],
     hasLocalHost: false,
     workspaceFolderPickerPaths: undefined,
-    traycerCli: undefined,
+    cicCli: undefined,
   });
 }
 
@@ -51,7 +51,7 @@ function fetcherFor(entries: readonly HostDirectoryEntry[]): RemoteHostFetcher {
   return () => Promise.resolve(entries);
 }
 
-describe("<TraycerApp /> mobile cardinality behavior", () => {
+describe("<CicApp /> mobile cardinality behavior", () => {
   let restoreFetch: () => void = () => undefined;
 
   beforeEach(() => {
@@ -79,7 +79,7 @@ describe("<TraycerApp /> mobile cardinality behavior", () => {
   it("renders the explicit no-host guidance and never binds when the directory has zero entries", async () => {
     const host = buildMobileHost();
     render(
-      <TraycerApp
+      <CicApp
         runnerHost={host}
         registry={hostRpcRegistry}
         remoteFetcher={fetcherFor([])}

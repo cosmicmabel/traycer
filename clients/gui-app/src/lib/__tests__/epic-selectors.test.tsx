@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { act, cleanup, renderHook } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
-import type { TuiHarnessId } from "@traycer/protocol/persistence/epic/schemas";
+import type { TuiHarnessId } from "@cic/protocol/persistence/epic/schemas";
 import { EpicSessionContext } from "@/lib/registries/epic-session-registry";
 import { useMaybeEpicTuiAgentHarnessId } from "@/lib/epic-selectors";
 import {

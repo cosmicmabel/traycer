@@ -33,13 +33,13 @@
  * sign-in: refresh mutates retained bearer material in place, while
  * sign-in/sign-out swap the live context value.
  */
-import type { AuthenticatedUser } from "@traycer/protocol/auth";
+import type { AuthenticatedUser } from "@cic/protocol/auth";
 import {
   createRequestContext,
   identityFromAuthenticatedUser,
   type RequestContext,
   type RequestContextOrigin,
-} from "@traycer/protocol/auth/request-context";
+} from "@cic/protocol/auth/request-context";
 
 /**
  * Disposer returned from `onChange(...)`. Calling it removes the listener

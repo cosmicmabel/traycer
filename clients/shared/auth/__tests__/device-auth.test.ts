@@ -104,9 +104,9 @@ describe("startDeviceAuthorization", () => {
         {
           device_code: "dev-code",
           user_code: "ABCDE-FGHIJ",
-          verification_uri: "https://traycer.test/device",
+          verification_uri: "https://cic.test/device",
           verification_uri_complete:
-            "https://traycer.test/device?user_code=ABCDE-FGHIJ",
+            "https://cic.test/device?user_code=ABCDE-FGHIJ",
           expires_in: 600,
           interval: 5,
         },
@@ -127,9 +127,8 @@ describe("startDeviceAuthorization", () => {
       kind: "started",
       deviceCode: "dev-code",
       userCode: "ABCDE-FGHIJ",
-      verificationUri: "https://traycer.test/device",
-      verificationUriComplete:
-        "https://traycer.test/device?user_code=ABCDE-FGHIJ",
+      verificationUri: "https://cic.test/device",
+      verificationUriComplete: "https://cic.test/device?user_code=ABCDE-FGHIJ",
       expiresInSeconds: 600,
       intervalSeconds: 5,
     });

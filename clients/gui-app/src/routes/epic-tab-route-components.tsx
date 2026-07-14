@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams, useSearch } from "@tanstack/react-router";
-import type { TaskLight } from "@traycer/protocol/host/epic/unary-schemas";
+import type { TaskLight } from "@cic/protocol/host/epic/unary-schemas";
 import { EpicShell } from "@/components/epic-canvas/epic-shell";
 import { EpicRouteSessionBody } from "@/components/epic-canvas/epic-route-session-body";
 import { AgentSpinningDots } from "@/components/ui/agent-spinning-dots";

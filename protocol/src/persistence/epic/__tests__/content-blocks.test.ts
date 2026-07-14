@@ -15,8 +15,8 @@ import {
   type SubAgentBlock,
   type TextBlock,
   type ToolCallBlock,
-} from "@traycer/protocol/persistence/epic/content-blocks";
-import { hostStreamRpcRegistry } from "@traycer/protocol/host/index";
+} from "@cic/protocol/persistence/epic/content-blocks";
+import { hostStreamRpcRegistry } from "@cic/protocol/host/index";
 
 describe("fileChangeBlockSchema backward-compat", () => {
   it("parses a pre-compaction file_change block (no hashes/counts) via defaults", () => {

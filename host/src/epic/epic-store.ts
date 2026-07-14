@@ -6,7 +6,7 @@ import {
   epicSubscribeOpenRequestSchema,
   epicSubscribeClientFrameSchema,
   type EpicSubscribeServerFrame,
-} from "@traycer/protocol/host/epic/subscribe";
+} from "@cic/protocol/host/epic/subscribe";
 import { hostHomeDir } from "../pid-file";
 
 /**
@@ -22,7 +22,7 @@ import { hostHomeDir } from "../pid-file";
  * no presence of its own yet).
  *
  * Persistence: each root/room doc is flushed (debounced) to
- * `~/.traycer/host[/env]/open-host-epics/` as a Y update blob and reloaded
+ * `~/.cic/host[/env]/open-host-epics/` as a Y update blob and reloaded
  * lazily, so epics survive host restarts. There is no cloud room behind
  * this host; `cloudSyncStatus` reports `connected` because the local doc IS
  * the authoritative copy - there is no upstream it could be behind.

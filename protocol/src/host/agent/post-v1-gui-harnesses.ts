@@ -1,7 +1,7 @@
 import {
   guiHarnessIdSchema,
   guiHarnessIdSchemaV10,
-} from "@traycer/protocol/host/agent/shared";
+} from "@cic/protocol/host/agent/shared";
 
 const GUI_HARNESS_IDS_V10 = new Set<string>(guiHarnessIdSchemaV10.options);
 const POST_V1_GUI_HARNESS_IDS = new Set<string>(

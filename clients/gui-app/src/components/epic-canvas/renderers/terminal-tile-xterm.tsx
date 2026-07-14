@@ -79,7 +79,7 @@ const ignoreSearchResults = (): void => {};
 // `fontFamily`, so CSS variables (which don't resolve in that measurement
 // pass) are not usable here. Instead the effective terminal font is built
 // directly from settings-store values against the same default mono stack
-// `theme-provider.tsx` uses for `--traycer-font-mono` - `letterSpacing` /
+// `theme-provider.tsx` uses for `--cic-font-mono` - `letterSpacing` /
 // `lineHeight` are pinned on the constructed Terminal so paint and
 // measurement agree.
 function resolveEffectiveFontFamily(
@@ -1091,7 +1091,7 @@ function useVisibleTerminalRepair(input: {
   const { termRef, controlsRef, canvasRef, theme } = input;
   // Repaint when this pane becomes visible again. A tab switch never unmounts
   // the tile (the pane is hidden via `visibility:hidden` / `display:none` and
-  // kept mounted so xterm scrollback survives), so the Traycer Host reattach pulse
+  // kept mounted so xterm scrollback survives), so the CIC Host reattach pulse
   // never runs here - this hook is the ONLY recovery for the live screen.
   //
   // While hidden the container measures 0x0 (or a collapsed sub-`MIN_FIT_*`

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { chatActiveTurnSchema } from "@traycer/protocol/host/agent/gui/subscribe";
+import { chatActiveTurnSchema } from "@cic/protocol/host/agent/gui/subscribe";
 import {
   advanceTurnNotify,
   seedTurnNotifyState,

@@ -1,6 +1,6 @@
-# @traycer/protocol
+# @cic/protocol
 
-The single shared contract between Traycer clients (desktop · cli · gui-app) and
+The single shared contract between CIC clients (desktop · cli · gui-app) and
 the host. Every consumer lives in this monorepo today and resolves the contract
 straight from TypeScript source.
 
@@ -23,7 +23,7 @@ The top-level `exports`/`types` MUST stay pointed at `./src/*.ts`. `dist/` is no
 built in CI (`bun install --frozen-lockfile` + pre-commit run no build), so a
 `dist`-pointing top-level `exports` map makes every in-repo Node/vitest/tsc
 consumer fail (`ERR_MODULE_NOT_FOUND` / `TS2307`, e.g. `packages/common`
-importing `@traycer/protocol/...`). This has regressed CI twice — do not do it.
+importing `@cic/protocol/...`). This has regressed CI twice — do not do it.
 
 The publish-time flip is already wired and automatic: **`publishConfig.exports`
 (and `publishConfig.types`) point at the compiled `./dist/...` outputs.** npm

@@ -2,14 +2,14 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { act, cleanup, renderHook, waitFor } from "@testing-library/react";
 import { StrictMode, useEffect, type ReactNode } from "react";
-import { HostClient } from "@traycer-clients/shared/host-client/host-client";
-import { mockLocalHostEntry } from "@traycer-clients/shared/host-client/mock/mock-host-directory";
-import { MockHostMessenger } from "@traycer-clients/shared/host-client/mock/mock-host-messenger";
-import { createRequestContextFixture } from "@traycer-clients/shared/test-fixtures/request-context";
+import { HostClient } from "@cic/shared/host-client/host-client";
+import { mockLocalHostEntry } from "@cic/shared/host-client/mock/mock-host-directory";
+import { MockHostMessenger } from "@cic/shared/host-client/mock/mock-host-messenger";
+import { createRequestContextFixture } from "@cic/shared/test-fixtures/request-context";
 import type {
   WorktreeHostEntryV11,
   WorktreeListAllForHostResponseV11,
-} from "@traycer/protocol/host/worktree-schemas";
+} from "@cic/protocol/host/worktree-schemas";
 import { hostRpcRegistry, type HostRpcRegistry } from "@/lib/host";
 import { createHostQueryInvalidator } from "@/lib/host/query-invalidator";
 import { hostQueryKeys } from "@/lib/query-keys";

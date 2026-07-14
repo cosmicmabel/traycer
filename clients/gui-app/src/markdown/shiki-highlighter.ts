@@ -107,7 +107,7 @@ const DEFAULT_SHIKI: ShikiPresetThemes = {
 
 const SHIKI_BY_PRESET: Record<ThemePreset, ShikiPresetThemes> = {
   neutral: DEFAULT_SHIKI,
-  "traycer-green": DEFAULT_SHIKI,
+  "cic-green": DEFAULT_SHIKI,
   amoled: DEFAULT_SHIKI,
   dracula: { light: "dracula-soft", dark: "dracula" },
   catppuccin: { light: "catppuccin-latte", dark: "catppuccin-mocha" },

@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import type { ChatQueuedItem } from "@traycer/protocol/host/agent/gui/subscribe";
+import type { ChatQueuedItem } from "@cic/protocol/host/agent/gui/subscribe";
 
 export function queueItemSteerLocked(item: ChatQueuedItem): boolean {
   return item.status === "steer_requested" || item.status === "steering";

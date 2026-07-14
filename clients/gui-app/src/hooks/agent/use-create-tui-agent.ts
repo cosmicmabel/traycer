@@ -3,16 +3,16 @@ import { v4 as uuidv4 } from "uuid";
 import type {
   RequestOfMethod,
   ResponseOfMethod,
-} from "@traycer-clients/shared/host-transport/host-messenger";
-import type { HostClient } from "@traycer-clients/shared/host-client/host-client";
+} from "@cic/shared/host-transport/host-messenger";
+import type { HostClient } from "@cic/shared/host-client/host-client";
 import type {
   AgentMode,
   TuiHarnessId,
-} from "@traycer/protocol/persistence/epic/schemas";
+} from "@cic/protocol/persistence/epic/schemas";
 import type {
   WorktreeBindingWorkspaceMode,
   WorktreeIntent,
-} from "@traycer/protocol/host/worktree-schemas";
+} from "@cic/protocol/host/worktree-schemas";
 import { useEpicCreateTuiAgentForClient } from "@/hooks/epic/use-epic-tui-agent-mutations";
 import { useAgentStartTerminalSession } from "@/hooks/agent/use-prepare-tui-launch-mutation";
 import { useWorktreeCreateForClient } from "@/hooks/worktree/use-worktree-create-mutation";

@@ -32,7 +32,7 @@ export interface MermaidCodeEditorProps {
 /**
  * CodeMirror-backed editor for the Mermaid source. Kept deliberately small -
  * no gutter, no line numbers, no folding. The focus here is a keymap that
- * mirrors the reference Traycer views behaviour:
+ * mirrors the reference CIC views behaviour:
  *
  *   - `Mod-Enter` commits and closes the panel.
  *   - `Escape`    closes without requiring an additional save step (the

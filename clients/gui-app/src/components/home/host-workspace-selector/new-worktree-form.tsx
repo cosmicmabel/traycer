@@ -10,8 +10,8 @@ import { Search } from "lucide-react";
 import type {
   WorktreeFolderIntent,
   WorktreeWorkspaceSummary,
-} from "@traycer/protocol/host/worktree-schemas";
-import type { HostClient } from "@traycer-clients/shared/host-client/host-client";
+} from "@cic/protocol/host/worktree-schemas";
+import type { HostClient } from "@cic/shared/host-client/host-client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { AgentSpinningDots } from "@/components/ui/agent-spinning-dots";

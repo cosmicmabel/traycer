@@ -1,11 +1,11 @@
 /**
- * Canonical AuthenticatedUser test fixture for traycer-agents tests.
+ * Canonical AuthenticatedUser test fixture for cic-agents tests.
  *
  * Every field required by the real authn service contract is present so that
  * future model changes cause compile-time failures rather than silent
  * runtime mismatches.
  */
-import type { AuthenticatedUser } from "@traycer/protocol/auth";
+import type { AuthenticatedUser } from "@cic/protocol/auth";
 
 /**
  * Returns a deeply-populated AuthenticatedUser fixture.

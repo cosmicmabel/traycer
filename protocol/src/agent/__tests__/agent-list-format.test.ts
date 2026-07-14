@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { AgentSummary, ListAgentsResponse } from "@traycer/protocol/host";
+import type { AgentSummary, ListAgentsResponse } from "@cic/protocol/host";
 import { formatAgentListResponse, formatAgentSelf } from "../agent-list-format";
 
 function agent(

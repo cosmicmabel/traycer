@@ -4,7 +4,7 @@ import {
   deletedEpicArtifactSchema,
   epicArtifactSchema,
   tuiAgentSchema,
-} from "@traycer/protocol/persistence/epic/schemas";
+} from "@cic/protocol/persistence/epic/schemas";
 
 /**
  * Private Zod value for the V200 epic record.

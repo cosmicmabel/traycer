@@ -12,7 +12,7 @@ import {
   toastFromHostError,
   toastFromHostErrorWithDetail,
 } from "@/lib/host-error-toast";
-import { HostRpcError } from "@traycer-clients/shared/host-transport/host-messenger";
+import { HostRpcError } from "@cic/shared/host-transport/host-messenger";
 
 function makeError(code: HostRpcError["code"], message: string): HostRpcError {
   return new HostRpcError({

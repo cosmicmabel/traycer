@@ -1,5 +1,5 @@
 import type { HarnessOption } from "@/components/home/data/landing-options";
-import type { GuiHarnessId } from "@traycer/protocol/host/index";
+import type { GuiHarnessId } from "@cic/protocol/host/index";
 import { sortGuiHarnessesByProviderOrder } from "@/lib/provider-ordering";
 
 /**

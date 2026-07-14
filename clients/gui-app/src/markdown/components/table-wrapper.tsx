@@ -11,7 +11,7 @@ const TABLE_WRAP_STYLE: CSSProperties = {
   margin: "0.75rem 0",
   overflowX: "auto",
   borderRadius: "0.375rem",
-  border: "1px solid var(--traycer-code-border, rgba(127,127,127,0.3))",
+  border: "1px solid var(--cic-code-border, rgba(127,127,127,0.3))",
 };
 
 const TABLE_STYLE: CSSProperties = {
@@ -21,30 +21,30 @@ const TABLE_STYLE: CSSProperties = {
 };
 
 const TABLE_HEAD_STYLE: CSSProperties = {
-  background: "var(--traycer-code-header-bg, rgba(127,127,127,0.1))",
+  background: "var(--cic-code-header-bg, rgba(127,127,127,0.1))",
 };
 
 const TABLE_HEADER_BASE_STYLE: CSSProperties = {
   position: "sticky",
   top: 0,
   zIndex: 10,
-  borderBottom: "1px solid var(--traycer-code-border, rgba(127,127,127,0.3))",
-  borderRight: "1px solid var(--traycer-code-border, rgba(127,127,127,0.3))",
-  background: "var(--traycer-code-header-bg, rgba(127,127,127,0.1))",
+  borderBottom: "1px solid var(--cic-code-border, rgba(127,127,127,0.3))",
+  borderRight: "1px solid var(--cic-code-border, rgba(127,127,127,0.3))",
+  background: "var(--cic-code-header-bg, rgba(127,127,127,0.1))",
   padding: "0.5rem 0.75rem",
   fontSize: "0.75rem",
   fontWeight: 600,
 };
 
 const TABLE_CELL_BASE_STYLE: CSSProperties = {
-  borderTop: "1px solid var(--traycer-code-border, rgba(127,127,127,0.3))",
-  borderRight: "1px solid var(--traycer-code-border, rgba(127,127,127,0.3))",
+  borderTop: "1px solid var(--cic-code-border, rgba(127,127,127,0.3))",
+  borderRight: "1px solid var(--cic-code-border, rgba(127,127,127,0.3))",
   padding: "0.5rem 0.75rem",
 };
 
 export function TableWrapper({ children }: TableProps) {
   return (
-    <div className="traycer-md-table-wrap" style={TABLE_WRAP_STYLE}>
+    <div className="cic-md-table-wrap" style={TABLE_WRAP_STYLE}>
       <table style={TABLE_STYLE}>{children}</table>
     </div>
   );
@@ -87,7 +87,7 @@ export function TableHeader({
   return (
     <th
       {...restProps}
-      className={cn("traycer-md-th", className)}
+      className={cn("cic-md-th", className)}
       style={{
         ...TABLE_HEADER_BASE_STYLE,
         textAlign: resolveHeaderAlign(align),
@@ -110,7 +110,7 @@ export function TableCell({
   return (
     <td
       {...restProps}
-      className={cn("traycer-md-td", className)}
+      className={cn("cic-md-td", className)}
       style={{
         ...TABLE_CELL_BASE_STYLE,
         textAlign: resolveCellAlign(align),
@@ -128,5 +128,5 @@ export function TableRow({
   node?: unknown;
   [key: string]: unknown;
 }) {
-  return <tr className="traycer-md-tr">{children}</tr>;
+  return <tr className="cic-md-tr">{children}</tr>;
 }

@@ -5,8 +5,8 @@ import type {
   TaskLight,
   TaskRepoIdentifier,
   TaskWorkspaceIdentifier,
-} from "@traycer/protocol/host/epic/unary-schemas";
-import { formatRepoIdentifier } from "@traycer/protocol/host/epic/unary-schemas";
+} from "@cic/protocol/host/epic/unary-schemas";
+import { formatRepoIdentifier } from "@cic/protocol/host/epic/unary-schemas";
 import { isCloudEpicTasksQueryKey } from "@/lib/query-keys";
 
 export interface CloudEpicTasksCacheScope {

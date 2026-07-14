@@ -3,16 +3,13 @@ import { homedir } from "node:os";
 import { join } from "node:path";
 
 /**
- * Reader for the local Traycer host's pid metadata.
+ * Reader for the local CIC host's pid metadata.
  *
- * Mirror of the CLI's on-disk contract (clients/traycer-cli/src/host/
- * pid-metadata.ts + store/paths.ts `hostHomeDir`): the host writes
- * `~/.traycer/host/pid.json` for production and `~/.traycer/host/<env>/
- * pid.json` for other environments. Duplicated here because the CLI package
- * is not imported cross-workspace by convention; keep the shapes in lockstep
- * with the CLI files above. (The CLI's multi-run `dev-runs/<slot>` layout is
- * intentionally not handled - `make dev-desktop` slots are a desktop-dev
- * concern, not a serve target.)
+ * Mirror of the host's on-disk discovery contract (host/src/pid-file.ts):
+ * the host writes `~/.cic/host/pid.json` for production and
+ * `~/.cic/host/<env>/pid.json` for other environments. Duplicated here
+ * because server code is not imported cross-workspace by convention; keep
+ * the shapes in lockstep with host/src/pid-file.ts.
  */
 export interface HostPidMetadata {
   readonly pid: number;
@@ -23,7 +20,7 @@ export interface HostPidMetadata {
 }
 
 export function hostPidMetadataPath(environment: string): string {
-  const hostHome = join(homedir(), ".traycer", "host");
+  const hostHome = join(homedir(), ".cic", "host");
   const environmentHome =
     environment === "production" ? hostHome : join(hostHome, environment);
   return join(environmentHome, "pid.json");

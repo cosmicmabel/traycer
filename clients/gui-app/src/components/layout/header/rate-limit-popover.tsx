@@ -7,7 +7,7 @@ import {
 } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Gauge, Settings } from "lucide-react";
-import { DEFAULT_ACCOUNT_CONTEXT } from "@traycer/protocol/common/schemas";
+import { DEFAULT_ACCOUNT_CONTEXT } from "@cic/protocol/common/schemas";
 import { Badge } from "@/components/ui/badge";
 import { MutedAgentSpinner } from "@/components/ui/agent-spinning-dots";
 import { PopoverContent } from "@/components/ui/popover";
@@ -27,7 +27,7 @@ import {
   type ProviderRateLimitEnvelope,
 } from "@/lib/rate-limits/rate-limit-envelope";
 import { useReactiveActiveHostId } from "@/hooks/host/use-reactive-active-host-id";
-import type { RateLimitUnavailableReason } from "@traycer/protocol/host";
+import type { RateLimitUnavailableReason } from "@cic/protocol/host";
 import {
   useVisibleRateLimitProviders,
   type ConfiguredRateLimitProvider,
@@ -51,7 +51,7 @@ import { queryKeys } from "@/lib/query-keys";
 import { type RateLimitProviderId } from "@/lib/rate-limit-providers";
 import { useRelativeTimestamp } from "@/lib/relative-time";
 import { useSystemTabModalActions } from "@/stores/tabs/use-system-tab-modal";
-import type { ProviderId } from "@traycer/protocol/host/provider-schemas";
+import type { ProviderId } from "@cic/protocol/host/provider-schemas";
 import {
   useRateLimitPopoverStore,
   type RateLimitPopoverTab,

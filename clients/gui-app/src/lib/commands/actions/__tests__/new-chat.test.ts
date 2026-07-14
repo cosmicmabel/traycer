@@ -20,7 +20,7 @@ import {
 } from "@/lib/commands/actions";
 import type { NavigateNestedFocus } from "@/lib/epic-nested-focus-navigation";
 import type { NestedFocusTarget } from "@/lib/epic-nested-focus-route";
-import type { WorktreeIntent } from "@traycer/protocol/host/worktree-schemas";
+import type { WorktreeIntent } from "@cic/protocol/host/worktree-schemas";
 import { paneTabRefs } from "@/stores/epics/canvas/actions";
 import { collectPanes, findPaneById } from "@/stores/epics/canvas/tile-tree";
 import { useEpicCanvasStore } from "@/stores/epics/canvas/store";
@@ -85,7 +85,7 @@ const SEEDED_WORKTREE_INTENT: WorktreeIntent = {
     {
       kind: "local",
       workspacePath: "/repo-seeded",
-      repoIdentifier: { owner: "traycerai", repo: "seeded" },
+      repoIdentifier: { owner: "cicai", repo: "seeded" },
       isPrimary: true,
     },
   ],

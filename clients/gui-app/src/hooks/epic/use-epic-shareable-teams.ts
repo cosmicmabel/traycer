@@ -1,4 +1,4 @@
-import type { AuthenticatedUser } from "@traycer/protocol/auth";
+import type { AuthenticatedUser } from "@cic/protocol/auth";
 import { useAuthStore, type EpicShareableTeam } from "@/stores/auth/auth-store";
 
 export type { EpicShareableTeam };

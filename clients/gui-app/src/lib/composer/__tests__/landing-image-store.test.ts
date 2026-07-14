@@ -18,7 +18,7 @@ import {
 // In-memory stand-in for idb-keyval. The store argument is ignored — the module
 // only ever keys by string hash, and each test drains the map via the module's
 // own API between cases. `createStore` is a real spy so the DB-name shape
-// (`traycer-gui-app:<partition>:landing-images`) can be asserted.
+// (`cic-gui-app:<partition>:landing-images`) can be asserted.
 vi.mock("idb-keyval", () => {
   const data = new Map<string, unknown>();
   const dummyStore = () => Promise.reject(new Error("unused"));
@@ -151,7 +151,7 @@ describe("landing-image-store", () => {
     expect(landingImagePartition()).toBe("win-123");
     imageStore();
     expect(createStore).toHaveBeenLastCalledWith(
-      "traycer-gui-app:win-123:landing-images",
+      "cic-gui-app:win-123:landing-images",
       "bytes",
     );
 
@@ -161,7 +161,7 @@ describe("landing-image-store", () => {
     expect(landingImagePartition()).toBe("default");
     imageStore();
     expect(createStore).toHaveBeenLastCalledWith(
-      "traycer-gui-app:default:landing-images",
+      "cic-gui-app:default:landing-images",
       "bytes",
     );
   });

@@ -4,7 +4,7 @@ import { useTabHostId } from "@/components/epic-canvas/hooks/use-tab-host-id";
 import { useEpicCanvasStore } from "@/stores/epics/canvas/store";
 import { useSetupTerminalRegistrationStore } from "@/stores/chats/setup-terminal-registration-store";
 import type { ChatSessionStoreHandle } from "@/stores/chats/chat-session-store";
-import type { WorktreeBindingEntry } from "@traycer/protocol/host";
+import type { WorktreeBindingEntry } from "@cic/protocol/host";
 
 /**
  * Registers each worktree SETUP terminal as a real (background) canvas tab the

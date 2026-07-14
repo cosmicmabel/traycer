@@ -4,7 +4,7 @@ import * as Y from "yjs";
 import {
   notificationsSubscribeClientFrameSchema,
   type NotificationsSubscribeServerFrame,
-} from "@traycer/protocol/host/notifications/subscribe";
+} from "@cic/protocol/host/notifications/subscribe";
 import { hostHomeDir } from "../pid-file";
 
 /**
@@ -12,7 +12,7 @@ import { hostHomeDir } from "../pid-file";
  * relayed CRDT-style exactly like the epic docs (client `applyUpdate` pushes
  * apply + fan out to every other subscriber; host-side writes would ride the
  * same `update` event). The doc is flushed (debounced) to
- * `~/.traycer/host[/env]/open-host-notifications/<userId>.yupdate` so unread
+ * `~/.cic/host[/env]/open-host-notifications/<userId>.yupdate` so unread
  * state survives restarts. The open host never mints notifications of its
  * own yet - the doc starts empty and clients own its contents.
  */

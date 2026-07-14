@@ -2,7 +2,7 @@ import { createContext, use } from "react";
 
 /**
  * Whether the surrounding markdown surface is still streaming. Provided by
- * `TraycerMarkdown` from its `isStreaming` prop and read by `CodeBlock` to
+ * `CicMarkdown` from its `isStreaming` prop and read by `CodeBlock` to
  * pick the streaming highlight path (trailing-edge throttle, settle-gated
  * cache writes) over the settled one (synchronous + MRU-cached).
  *

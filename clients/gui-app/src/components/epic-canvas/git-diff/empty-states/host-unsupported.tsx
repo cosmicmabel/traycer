@@ -16,7 +16,7 @@ export function HostUnsupported(props: { readonly reason: string }) {
           </div>
         </div>
         <Button variant="outline" size="sm" className="w-fit" asChild>
-          <a href="#update-host">Update Traycer Host</a>
+          <a href="#update-host">Update CIC Host</a>
         </Button>
       </div>
     </div>

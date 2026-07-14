@@ -1,6 +1,6 @@
 import { useEffect, useRef, type RefObject } from "react";
 import { useRouterState } from "@tanstack/react-router";
-import type { PermissionRole } from "@traycer/protocol/host/epic/unary-schemas";
+import type { PermissionRole } from "@cic/protocol/host/epic/unary-schemas";
 import { epicRoleToast } from "@/lib/toast/channels";
 import { useEpicPermissionRole } from "@/lib/epic-selectors";
 import { readActiveEpicIdFromPath } from "@/lib/routes";

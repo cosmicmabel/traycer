@@ -21,11 +21,11 @@
  * exact chat-doc bloat this refactor removes.
  */
 
-import type { ToolInputDetail } from "@traycer/protocol/persistence/epic/content-blocks";
+import type { ToolInputDetail } from "@cic/protocol/persistence/epic/content-blocks";
 
 // The persisted `inputDetail` shape lives with the block schema (persistence
 // layer); re-exported here so callers have a single "tool input display" import.
-export type { ToolInputDetail } from "@traycer/protocol/persistence/epic/content-blocks";
+export type { ToolInputDetail } from "@cic/protocol/persistence/epic/content-blocks";
 
 // Input keys that carry a whole file body / patch inline (`Edit`/`Write`/
 // `MultiEdit`/`NotebookEdit`/`apply_patch`). The GUI suppresses these tool calls

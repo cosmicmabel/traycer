@@ -53,8 +53,7 @@ export function useComposerDictation(
       dictationError,
       dictationPermissionDenied
         ? {
-            description:
-              "Enable microphone access for Traycer, then try again.",
+            description: "Enable microphone access for CIC, then try again.",
             action: {
               label: "Open Settings",
               onClick: () => {

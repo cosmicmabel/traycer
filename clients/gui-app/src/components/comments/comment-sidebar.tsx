@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 import { MessageSquarePlus } from "lucide-react";
-import { type EpicArtifactKind } from "@traycer/protocol/common/registry";
+import { type EpicArtifactKind } from "@cic/protocol/common/registry";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";

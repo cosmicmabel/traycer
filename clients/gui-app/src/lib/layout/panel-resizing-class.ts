@@ -1,7 +1,7 @@
 /**
  * Global "a panel resize drag is in progress" signal, expressed as the
- * `traycer-panel-resizing` class on `<html>`. Expensive surfaces opt into
- * freezing during a drag via `[.traycer-panel-resizing_&]:...` descendant
+ * `cic-panel-resizing` class on `<html>`. Expensive surfaces opt into
+ * freezing during a drag via `[.cic-panel-resizing_&]:...` descendant
  * selectors so per-frame reflows stay cheap: overlay chrome (chat minimap,
  * scroll-to-bottom chip) hides via opacity, and transcript rows
  * (`ChatMessageRow`) flip to `content-visibility: hidden` so intermediate
@@ -10,7 +10,7 @@
  * `SplitResizeHandle` and the hoisted sidebar's width handle - so consumers
  * never care which surface drove the drag.
  */
-const PANEL_RESIZING_CLASS_NAME = "traycer-panel-resizing";
+const PANEL_RESIZING_CLASS_NAME = "cic-panel-resizing";
 
 let stopPanelResizeInteraction: (() => void) | null = null;
 

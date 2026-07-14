@@ -5,7 +5,7 @@ import {
   epicMentionEpicsRequestSchema,
   epicMentionEpicsResponseSchema,
   epicMentionSpecsResponseSchema,
-} from "@traycer/protocol/host/index";
+} from "@cic/protocol/host/index";
 
 describe("epic mention host schemas", () => {
   it("accepts separate epic and artifact mention shapes", () => {

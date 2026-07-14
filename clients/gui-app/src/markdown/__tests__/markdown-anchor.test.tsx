@@ -1,8 +1,8 @@
-import { MockRunnerHost } from "@traycer-clients/shared/host-client/mock/mock-runner-host";
+import { MockRunnerHost } from "@cic/shared/host-client/mock/mock-runner-host";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { RunnerHostContext } from "@/providers/runner-host-context";
-import { TraycerMarkdown } from "@/markdown";
+import { CicMarkdown } from "@/markdown";
 import { classifyHref } from "@/markdown/links/classify-href";
 import { markdownUrlTransform } from "@/markdown/links/markdown-url-transform";
 import { MarkdownLinkContext } from "@/markdown/links/markdown-link-context";
@@ -17,14 +17,14 @@ function createRunnerHost(): MockRunnerHost {
     hosts: [],
     workspaceFolderPickerPaths: undefined,
     hasLocalHost: undefined,
-    traycerCli: undefined,
+    cicCli: undefined,
   });
 }
 
 function renderMarkdown(markdown: string, host: MockRunnerHost) {
   return render(
     <RunnerHostContext.Provider value={host}>
-      <TraycerMarkdown
+      <CicMarkdown
         className={null}
         proseSize="normal"
         components={null}
@@ -34,7 +34,7 @@ function renderMarkdown(markdown: string, host: MockRunnerHost) {
         isStreaming={false}
       >
         {markdown}
-      </TraycerMarkdown>
+      </CicMarkdown>
     </RunnerHostContext.Provider>,
   );
 }
@@ -75,7 +75,7 @@ describe("MarkdownAnchor", () => {
     render(
       <RunnerHostContext.Provider value={host}>
         <MarkdownLinkContext.Provider value={{ openFileLink }}>
-          <TraycerMarkdown
+          <CicMarkdown
             className={null}
             proseSize="normal"
             components={null}
@@ -85,7 +85,7 @@ describe("MarkdownAnchor", () => {
             isStreaming={false}
           >
             {"[App](src/app.ts)"}
-          </TraycerMarkdown>
+          </CicMarkdown>
         </MarkdownLinkContext.Provider>
       </RunnerHostContext.Provider>,
     );
@@ -107,7 +107,7 @@ describe("MarkdownAnchor", () => {
     render(
       <RunnerHostContext.Provider value={host}>
         <MarkdownLinkContext.Provider value={{ openFileLink }}>
-          <TraycerMarkdown
+          <CicMarkdown
             className={null}
             proseSize="normal"
             components={null}
@@ -117,7 +117,7 @@ describe("MarkdownAnchor", () => {
             isStreaming={false}
           >
             {"[App](file:///Users/me/My%20Project/src/app.ts)"}
-          </TraycerMarkdown>
+          </CicMarkdown>
         </MarkdownLinkContext.Provider>
       </RunnerHostContext.Provider>,
     );
@@ -138,7 +138,7 @@ describe("MarkdownAnchor", () => {
     render(
       <RunnerHostContext.Provider value={host}>
         <MarkdownLinkContext.Provider value={{ openFileLink }}>
-          <TraycerMarkdown
+          <CicMarkdown
             className={null}
             proseSize="normal"
             components={null}
@@ -148,7 +148,7 @@ describe("MarkdownAnchor", () => {
             isStreaming={false}
           >
             {"[App](/a/b.ts:1177)"}
-          </TraycerMarkdown>
+          </CicMarkdown>
         </MarkdownLinkContext.Provider>
       </RunnerHostContext.Provider>,
     );
@@ -174,7 +174,7 @@ describe("MarkdownAnchor", () => {
     render(
       <RunnerHostContext.Provider value={host}>
         <MarkdownLinkContext.Provider value={{ openFileLink }}>
-          <TraycerMarkdown
+          <CicMarkdown
             className={null}
             proseSize="normal"
             components={null}
@@ -184,7 +184,7 @@ describe("MarkdownAnchor", () => {
             isStreaming={false}
           >
             {"[App](C:/Users/x/app.ts:1177)"}
-          </TraycerMarkdown>
+          </CicMarkdown>
         </MarkdownLinkContext.Provider>
       </RunnerHostContext.Provider>,
     );

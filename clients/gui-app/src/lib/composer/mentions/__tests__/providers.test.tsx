@@ -287,13 +287,13 @@ describe("mention provider registry", () => {
         workspaceEntries: [
           {
             kind: "worktree",
-            id: "worktree:/repo:/home/u/.traycer/worktrees/o/r/feature",
+            id: "worktree:/repo:/home/u/.cic/worktrees/o/r/feature",
             label: "feature",
-            worktreePath: "/home/u/.traycer/worktrees/o/r/feature",
+            worktreePath: "/home/u/.cic/worktrees/o/r/feature",
             workspacePath: "/repo",
             branch: "feature",
             isMain: false,
-            description: "/home/u/.traycer/worktrees/o/r/feature",
+            description: "/home/u/.cic/worktrees/o/r/feature",
           },
         ],
       }),
@@ -301,8 +301,8 @@ describe("mention provider registry", () => {
     expect(labels(rows)).toEqual(["Back", "feature"]);
     expect(completeEntry(rows[1])).toMatchObject({
       contextType: "worktree",
-      path: "/home/u/.traycer/worktrees/o/r/feature",
-      worktreePath: "/home/u/.traycer/worktrees/o/r/feature",
+      path: "/home/u/.cic/worktrees/o/r/feature",
+      worktreePath: "/home/u/.cic/worktrees/o/r/feature",
       branch: "feature",
       isMain: false,
     });
@@ -439,13 +439,13 @@ describe("mention preview payloads", () => {
         workspaceEntries: [
           {
             kind: "worktree",
-            id: "worktree:/repo:/home/u/.traycer/worktrees/o/r/feature",
+            id: "worktree:/repo:/home/u/.cic/worktrees/o/r/feature",
             label: "feature",
-            worktreePath: "/home/u/.traycer/worktrees/o/r/feature",
+            worktreePath: "/home/u/.cic/worktrees/o/r/feature",
             workspacePath: "/repo",
             branch: "feature",
             isMain: false,
-            description: "/home/u/.traycer/worktrees/o/r/feature",
+            description: "/home/u/.cic/worktrees/o/r/feature",
           },
         ],
       }),
@@ -453,7 +453,7 @@ describe("mention preview payloads", () => {
     expect(entries[1].preview).toEqual({
       kind: "path",
       tree: {
-        rootLabel: "/home/u/.traycer/worktrees",
+        rootLabel: "/home/u/.cic/worktrees",
         midDirs: ["o", "r"],
         leaf: "feature",
         leafIsFile: false,
@@ -475,13 +475,13 @@ describe("mention preview payloads", () => {
         workspaceEntries: [
           {
             kind: "worktree",
-            id: "worktree:/repo:/home/u/.traycer/worktrees/o/r/detached",
+            id: "worktree:/repo:/home/u/.cic/worktrees/o/r/detached",
             label: "detached",
-            worktreePath: "/home/u/.traycer/worktrees/o/r/detached",
+            worktreePath: "/home/u/.cic/worktrees/o/r/detached",
             workspacePath: "/repo",
             branch: null,
             isMain: false,
-            description: "/home/u/.traycer/worktrees/o/r/detached",
+            description: "/home/u/.cic/worktrees/o/r/detached",
           },
         ],
       }),

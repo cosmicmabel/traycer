@@ -3,11 +3,11 @@ import { join } from "node:path";
 import {
   worktreeDeleteByPathOpenRequestSchema,
   type WorktreeDeleteByPathServerFrame,
-} from "@traycer/protocol/host/worktree-delete-stream";
+} from "@cic/protocol/host/worktree-delete-stream";
 import {
   workspaceScriptsSchema,
   type OsScript,
-} from "@traycer/protocol/host/worktree-schemas";
+} from "@cic/protocol/host/worktree-schemas";
 import { removeWorktreeDir, resolveOsScript } from "./worktree-mutations";
 
 /**
@@ -104,7 +104,7 @@ export class WorktreeDeleteSubscription {
     if (teardown === null) {
       try {
         const raw = await Bun.file(
-          join(this.worktreePath, ".traycer", "environment.json"),
+          join(this.worktreePath, ".cic", "environment.json"),
         ).text();
         const parsed = workspaceScriptsSchema.safeParse(JSON.parse(raw));
         teardown = parsed.success ? parsed.data.teardown : null;

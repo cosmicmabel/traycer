@@ -9,7 +9,7 @@ import { useSettingsStore } from "@/stores/settings/settings-store";
 import { useWorkspaceFoldersStore } from "@/stores/workspace/workspace-folders-store";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { act, cleanup, renderHook, waitFor } from "@testing-library/react";
-import type { JsonContent } from "@traycer/protocol/common/registry";
+import type { JsonContent } from "@cic/protocol/common/registry";
 import type { ReactNode } from "react";
 import { toast } from "sonner";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -75,7 +75,7 @@ vi.mock("@/lib/composer/landing-image-store", () => ({
 }));
 
 const SUBMITTED_PROMPT = "Plan the host chat bootstrap";
-const WORKSPACE_PATH = "/tmp/traycer";
+const WORKSPACE_PATH = "/tmp/cic";
 const DRAFT_WORKSPACE_PATH = "/tmp/draft-workspace";
 const GLOBAL_WORKSPACE_PATH = "/tmp/global-workspace";
 const UNKNOWN_WORKSPACE_PATH = "/tmp/unknown-workspace";
@@ -226,8 +226,8 @@ describe("useLandingComposerActions", () => {
       folderInfoByPath: {
         [WORKSPACE_PATH]: {
           path: WORKSPACE_PATH,
-          name: "traycer",
-          repoIdentifier: { owner: "traycerai", repo: "traycer" },
+          name: "cic",
+          repoIdentifier: { owner: "cicai", repo: "cic" },
         },
       },
     });
@@ -264,8 +264,8 @@ describe("useLandingComposerActions", () => {
       folderInfoByPath: {
         [WORKSPACE_PATH]: {
           path: WORKSPACE_PATH,
-          name: "traycer",
-          repoIdentifier: { owner: "traycerai", repo: "traycer" },
+          name: "cic",
+          repoIdentifier: { owner: "cicai", repo: "cic" },
         },
       },
     });
@@ -297,7 +297,7 @@ describe("useLandingComposerActions", () => {
     // the stored title.
     expect(createEpicCall?.[1]).toMatchObject({
       epic: { title: "", initialUserPrompt: SUBMITTED_PROMPT },
-      repoIdentifiers: [{ owner: "traycerai", repo: "traycer" }],
+      repoIdentifiers: [{ owner: "cicai", repo: "cic" }],
       workspaces: [{ workspacePath: WORKSPACE_PATH }],
     });
 
@@ -523,8 +523,8 @@ describe("useLandingComposerActions", () => {
       folderInfoByPath: {
         [WORKSPACE_PATH]: {
           path: WORKSPACE_PATH,
-          name: "traycer",
-          repoIdentifier: { owner: "traycerai", repo: "traycer" },
+          name: "cic",
+          repoIdentifier: { owner: "cicai", repo: "cic" },
         },
       },
     });
@@ -578,8 +578,8 @@ describe("useLandingComposerActions", () => {
       folderInfoByPath: {
         [WORKSPACE_PATH]: {
           path: WORKSPACE_PATH,
-          name: "traycer",
-          repoIdentifier: { owner: "traycerai", repo: "traycer" },
+          name: "cic",
+          repoIdentifier: { owner: "cicai", repo: "cic" },
         },
       },
     });
@@ -632,7 +632,7 @@ describe("useLandingComposerActions", () => {
         [DRAFT_WORKSPACE_PATH]: {
           path: DRAFT_WORKSPACE_PATH,
           name: "draft-workspace",
-          repoIdentifier: { owner: "traycerai", repo: "draft-workspace" },
+          repoIdentifier: { owner: "cicai", repo: "draft-workspace" },
         },
       },
     });
@@ -643,7 +643,7 @@ describe("useLandingComposerActions", () => {
         [GLOBAL_WORKSPACE_PATH]: {
           path: GLOBAL_WORKSPACE_PATH,
           name: "global-workspace",
-          repoIdentifier: { owner: "traycerai", repo: "global-workspace" },
+          repoIdentifier: { owner: "cicai", repo: "global-workspace" },
         },
       },
     });
@@ -671,7 +671,7 @@ describe("useLandingComposerActions", () => {
       (c) => c[0] === "epic.create",
     );
     expect(createEpicCall?.[1]).toMatchObject({
-      repoIdentifiers: [{ owner: "traycerai", repo: "draft-workspace" }],
+      repoIdentifiers: [{ owner: "cicai", repo: "draft-workspace" }],
       workspaces: [{ workspacePath: DRAFT_WORKSPACE_PATH }],
     });
     expect(JSON.stringify(createEpicCall?.[1])).not.toContain(
@@ -804,8 +804,8 @@ function setSingleWorkspace(): void {
     folderInfoByPath: {
       [WORKSPACE_PATH]: {
         path: WORKSPACE_PATH,
-        name: "traycer",
-        repoIdentifier: { owner: "traycerai", repo: "traycer" },
+        name: "cic",
+        repoIdentifier: { owner: "cicai", repo: "cic" },
       },
     },
   });

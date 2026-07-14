@@ -6,7 +6,7 @@
  * suggestions.
  */
 import { z } from "zod";
-import { taskRepoIdentifierSchema } from "@traycer/protocol/host/epic/unary-schemas";
+import { taskRepoIdentifierSchema } from "@cic/protocol/host/epic/unary-schemas";
 
 export const workspaceMentionGitTypeSchema = z.enum([
   "against_uncommitted_changes",

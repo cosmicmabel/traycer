@@ -4,13 +4,13 @@ import {
   type UseMutationResult,
 } from "@tanstack/react-query";
 import { toast } from "sonner";
-import type { HostClient } from "@traycer-clients/shared/host-client/host-client";
-import type { HostRpcError } from "@traycer-clients/shared/host-transport/host-messenger";
-import { HostRpcError as HostRpcErrorCtor } from "@traycer-clients/shared/host-transport/host-messenger";
+import type { HostClient } from "@cic/shared/host-client/host-client";
+import type { HostRpcError } from "@cic/shared/host-transport/host-messenger";
+import { HostRpcError as HostRpcErrorCtor } from "@cic/shared/host-transport/host-messenger";
 import type {
   RequestOfMethod,
   ResponseOfMethod,
-} from "@traycer-clients/shared/host-transport/host-messenger";
+} from "@cic/shared/host-transport/host-messenger";
 import type { HostRpcRegistry } from "@/lib/host";
 import { hostQueryKeys, terminalMutationKeys } from "@/lib/query-keys";
 

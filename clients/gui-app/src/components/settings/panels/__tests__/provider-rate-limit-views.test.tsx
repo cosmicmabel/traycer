@@ -1,7 +1,7 @@
 import "../../../../../__tests__/test-browser-apis";
 import { afterEach, describe, expect, it } from "vitest";
 import { cleanup, render, screen } from "@testing-library/react";
-import type { ProviderRateLimits } from "@traycer/protocol/host";
+import type { ProviderRateLimits } from "@cic/protocol/host";
 import {
   ClaudeRateLimitView,
   CodexRateLimitView,

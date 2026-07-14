@@ -116,7 +116,7 @@ async function serveStatic(
     return new Response(index);
   }
   return new Response(
-    "clients/web/dist is missing - run `bunx nx run @traycer-clients/web:build` first",
+    "clients/web/dist is missing - run `bunx nx run @cic/web:build` first",
     { status: 503 },
   );
 }
@@ -220,7 +220,7 @@ function startServer(options: ServeOptions): void {
   });
 
   console.log(
-    `traycer-web serving ${options.distDir} on http://${options.bind}:${server.port} (host environment: ${options.environment})`,
+    `cic-web serving ${options.distDir} on http://${options.bind}:${server.port} (host environment: ${options.environment})`,
   );
   if (options.bind !== "127.0.0.1" && options.bind !== "localhost") {
     console.warn(
@@ -229,7 +229,7 @@ function startServer(options: ServeOptions): void {
   }
   if (!existsSync(join(options.distDir, "index.html"))) {
     console.warn(
-      `WARNING: ${options.distDir}/index.html not found - build the bundle with \`bunx nx run @traycer-clients/web:build\`.`,
+      `WARNING: ${options.distDir}/index.html not found - build the bundle with \`bunx nx run @cic/web:build\`.`,
     );
   }
 }

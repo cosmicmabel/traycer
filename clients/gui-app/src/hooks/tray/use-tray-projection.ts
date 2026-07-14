@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import type {
   TrayEpic,
   TrayIndicatorState,
-} from "@traycer-clients/shared/platform/runner-host";
+} from "@cic/shared/platform/runner-host";
 import { appLogger } from "@/lib/logger";
 import { useRunnerHost } from "@/providers/use-runner-host";
 

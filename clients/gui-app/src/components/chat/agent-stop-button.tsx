@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { Square } from "lucide-react";
-import type { HostClient } from "@traycer-clients/shared/host-client/host-client";
-import type { HostDirectoryEntry } from "@traycer-clients/shared/host-client/host-directory";
+import type { HostClient } from "@cic/shared/host-client/host-client";
+import type { HostDirectoryEntry } from "@cic/shared/host-client/host-directory";
 import { Button } from "@/components/ui/button";
 import { AgentSpinningDots } from "@/components/ui/agent-spinning-dots";
 import { useHostClient, type HostRpcRegistry } from "@/lib/host";

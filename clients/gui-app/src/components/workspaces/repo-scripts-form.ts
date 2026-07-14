@@ -1,4 +1,4 @@
-import type { OsScript } from "@traycer/protocol/host/index";
+import type { OsScript } from "@cic/protocol/host/index";
 
 /**
  * Pure helpers + types for the per-OS setup/teardown script form, shared by

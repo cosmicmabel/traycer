@@ -27,7 +27,7 @@ import {
   type DiffViewerPreferences,
   type DiffViewerPreferencesPatch,
 } from "@/lib/diff/diff-viewer-preferences";
-import { type EditorId } from "@traycer/protocol/host";
+import { type EditorId } from "@cic/protocol/host";
 
 export type ThemeMode = "system" | "light" | "dark";
 export type EpicNodeIconColorMode = "byType" | "none";

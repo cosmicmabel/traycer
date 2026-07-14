@@ -12,7 +12,7 @@ FROM oven/bun:1.3.12 AS build
 WORKDIR /workspace
 COPY . .
 RUN bun install --frozen-lockfile
-RUN bunx nx run @traycer-clients/web:build --tui=false
+RUN bunx nx run @cic/web:build --tui=false
 
 FROM oven/bun:1.3.12
 WORKDIR /workspace

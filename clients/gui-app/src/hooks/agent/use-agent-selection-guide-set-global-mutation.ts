@@ -4,8 +4,8 @@ import type {
   AgentSelectionGuideGlobalOnboardingDraftGetResponse,
   AgentSelectionGuideGlobalSetRequest,
   AgentSelectionGuideGlobalSetResponse,
-} from "@traycer/protocol/host/agent/shared";
-import type { HostRpcError } from "@traycer-clients/shared/host-transport/host-messenger";
+} from "@cic/protocol/host/agent/shared";
+import type { HostRpcError } from "@cic/shared/host-transport/host-messenger";
 import { useHostClient, type HostRpcRegistry } from "@/lib/host";
 import { useHostMutation } from "@/hooks/host/use-host-query";
 import { agentMutationKeys, hostQueryKeys } from "@/lib/query-keys";

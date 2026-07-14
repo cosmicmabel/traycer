@@ -14,7 +14,7 @@ import type {
   SubmoduleChangeset,
   SubmodulePointer,
   WorktreeBindingSelectorRow,
-} from "@traycer/protocol/host";
+} from "@cic/protocol/host";
 import type { HostRpcRegistry } from "@/lib/host";
 import { gitQueryKeys } from "@/lib/query-keys/git-query-keys";
 import { hostQueryKeys } from "@/lib/query-keys/host-query-keys";
@@ -182,7 +182,7 @@ function row(
     worktreePath: null,
     mode: "local",
     isGitRepo: true,
-    repoIdentifier: { owner: "acme", repo: "traycer-internal" },
+    repoIdentifier: { owner: "acme", repo: "cic-internal" },
     branch: "development",
     isPrimary: true,
     isImported: false,
@@ -224,8 +224,8 @@ function stagedFile(
 
 function changeset(overrides: Partial<SubmoduleChangeset>): SubmoduleChangeset {
   return {
-    repoRoot: "/repo/traycer",
-    parentPath: "traycer",
+    repoRoot: "/repo/cic",
+    parentPath: "cic",
     branch: "main",
     repoState: { kind: "clean" },
     files: [],
@@ -344,7 +344,7 @@ describe("<GitDiffPanelBodyLive /> workspace switcher integration", () => {
     testState.snapshots.set(
       "/repo",
       response({
-        files: [file("traycer", normalPointer)],
+        files: [file("cic", normalPointer)],
         submodules: [
           changeset({
             files: Array.from({ length: 133 }, (_value, index) =>
@@ -370,10 +370,7 @@ describe("<GitDiffPanelBodyLive /> workspace switcher integration", () => {
     testState.snapshots.set(
       "/repo",
       response({
-        files: [
-          stagedFile("traycer", normalPointer),
-          file("traycer", normalPointer),
-        ],
+        files: [stagedFile("cic", normalPointer), file("cic", normalPointer)],
         submodules: [changeset({ files: [] })],
       }),
     );
@@ -424,21 +421,19 @@ describe("<GitDiffPanelBodyLive /> workspace switcher integration", () => {
 
     fireEvent.change(
       screen.getByRole("textbox", { name: "Search workspaces" }),
-      { target: { value: "/repo/traycer" } },
+      { target: { value: "/repo/cic" } },
     );
 
     expect(
-      screen.getByTestId("git-diff-repo-switcher-root-traycer-internal"),
+      screen.getByTestId("git-diff-repo-switcher-root-cic-internal"),
     ).toBeDefined();
     expect(
-      screen.queryByTestId("git-diff-repo-switcher-submodule-traycer"),
+      screen.queryByTestId("git-diff-repo-switcher-submodule-cic"),
     ).toBeNull();
     expect(
       useGitPanelStore.getState().stateByEpicId[EPIC_ID].selectedRepo,
     ).toEqual(rootSelected);
-    expect(
-      screen.getByTestId("git-module-group-submodule-traycer"),
-    ).toBeDefined();
+    expect(screen.getByTestId("git-module-group-submodule-cic")).toBeDefined();
     expect(
       screen
         .getByTestId("mock-open-in-editor")
@@ -457,12 +452,12 @@ describe("<GitDiffPanelBodyLive /> workspace switcher integration", () => {
     renderPanel({
       hostId: "host-1",
       rootRunningDir: "/repo",
-      repoRoot: "/repo/traycer",
+      repoRoot: "/repo/cic",
     });
 
     expect(
       screen.getByTestId("git-diff-repo-switcher-trigger").textContent,
-    ).toContain("traycer-internal");
+    ).toContain("cic-internal");
     expect(
       screen
         .getByTestId("mock-open-in-editor")
@@ -481,22 +476,20 @@ describe("<GitDiffPanelBodyLive /> workspace switcher integration", () => {
     testState.snapshots.set(
       "/repo",
       response({
-        files: [file("traycer", normalPointer)],
+        files: [file("cic", normalPointer)],
         submodules: [changeset({ files: [] })],
       }),
     );
 
     renderPanel(rootSelected);
 
-    expect(
-      screen.getByTestId("git-module-group-submodule-traycer"),
-    ).toBeDefined();
+    expect(screen.getByTestId("git-module-group-submodule-cic")).toBeDefined();
     await expectModuleHeaderTooltip(
-      screen.getByTestId("git-module-header-traycer"),
+      screen.getByTestId("git-module-header-cic"),
       "pinned commit out of date",
     );
     expect(screen.queryByText("pinned commit out of date")).toBeNull();
-    expect(screen.getByTestId("git-module-no-changes-traycer")).toBeDefined();
+    expect(screen.getByTestId("git-module-no-changes-cic")).toBeDefined();
     expect(
       screen
         .getByTestId("git-diff-repo-switcher-trigger")
@@ -520,9 +513,7 @@ describe("<GitDiffPanelBodyLive /> workspace switcher integration", () => {
     expect(screen.getByTestId("git-diff-empty-refresh")).toBeDefined();
     expect(screen.queryByTestId("git-module-no-changes-root")).toBeNull();
     expect(screen.queryByTestId("git-clean-modules-affordance")).toBeNull();
-    expect(
-      screen.queryByTestId("git-module-group-submodule-traycer"),
-    ).toBeNull();
+    expect(screen.queryByTestId("git-module-group-submodule-cic")).toBeNull();
     expect(screen.queryByLabelText("1 changed submodule")).toBeNull();
   });
 
@@ -530,16 +521,14 @@ describe("<GitDiffPanelBodyLive /> workspace switcher integration", () => {
     testState.snapshots.set(
       "/repo",
       response({
-        files: [file("traycer", normalPointer)],
+        files: [file("cic", normalPointer)],
         submodules: [],
       }),
     );
 
     renderPanel(rootSelected);
 
-    expect(
-      screen.getByTestId("git-module-group-submodule-traycer"),
-    ).toBeDefined();
+    expect(screen.getByTestId("git-module-group-submodule-cic")).toBeDefined();
     expect(screen.getByTestId("git-submodule-unavailable")).toBeDefined();
     expect(screen.queryByText("Submodule reference:")).toBeNull();
   });
@@ -548,7 +537,7 @@ describe("<GitDiffPanelBodyLive /> workspace switcher integration", () => {
     testState.snapshots.set(
       "/repo",
       response({
-        files: [file("traycer", normalPointer)],
+        files: [file("cic", normalPointer)],
         submodules: [
           changeset({
             availability: { state: "unavailable", reason: "git-error" },
@@ -560,12 +549,10 @@ describe("<GitDiffPanelBodyLive /> workspace switcher integration", () => {
     renderPanel({
       hostId: "host-1",
       rootRunningDir: "/repo",
-      repoRoot: "/repo/traycer",
+      repoRoot: "/repo/cic",
     });
 
-    expect(
-      screen.getByTestId("git-module-group-submodule-traycer"),
-    ).toBeDefined();
+    expect(screen.getByTestId("git-module-group-submodule-cic")).toBeDefined();
     expect(screen.getByTestId("git-submodule-unavailable")).toBeDefined();
     expect(
       screen
@@ -588,20 +575,18 @@ describe("<GitDiffPanelBodyLive /> workspace switcher integration", () => {
     testState.snapshots.set(
       "/repo",
       response({
-        files: [file("traycer", normalPointer)],
+        files: [file("cic", normalPointer)],
         submodules: [changeset({ files: [file("src/submodule.ts", null)] })],
       }),
     );
     renderPanel(rootSelected);
 
-    fireEvent.click(screen.getByTestId("git-module-header-traycer"));
+    fireEvent.click(screen.getByTestId("git-module-header-cic"));
 
     expect(
       useGitPanelStore.getState().stateByEpicId[EPIC_ID].selectedRepo,
     ).toEqual(rootSelected);
-    expect(
-      screen.getByTestId("git-module-group-submodule-traycer"),
-    ).toBeDefined();
+    expect(screen.getByTestId("git-module-group-submodule-cic")).toBeDefined();
   });
 
   it("falls back to the best available root when the selected root disappears", async () => {

@@ -20,7 +20,7 @@ import {
   Trash2,
   X,
 } from "lucide-react";
-import { HostRpcError } from "@traycer-clients/shared/host-transport/host-messenger";
+import { HostRpcError } from "@cic/shared/host-transport/host-messenger";
 import {
   ContextMenu,
   ContextMenuContent,
@@ -1428,7 +1428,7 @@ function errorHeadline(error: Error): string {
       return "You don't have permission to view these epics.";
     }
   }
-  return "Couldn't reach Traycer Cloud";
+  return "Couldn't reach CIC Cloud";
 }
 
 function formatError(error: Error): string {

@@ -1,4 +1,4 @@
-import type { AuthenticatedUser } from "@traycer/protocol/auth";
+import type { AuthenticatedUser } from "@cic/protocol/auth";
 
 /**
  * Full-identity validation result. The `valid` variant carries the parsed

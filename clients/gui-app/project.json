@@ -1,5 +1,5 @@
 {
-  "name": "traycer-clients-gui-app",
+  "name": "cic-clients-gui-app",
   "namedInputs": {
     "default": ["{projectRoot}/**/*"]
   },

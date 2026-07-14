@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { DEFAULT_ACCOUNT_CONTEXT } from "@traycer/protocol/common/schemas";
+import { DEFAULT_ACCOUNT_CONTEXT } from "@cic/protocol/common/schemas";
 import { useHostClient } from "@/lib/host";
 import { useReactiveActiveHostId } from "@/hooks/host/use-reactive-active-host-id";
 import { useConfiguredRateLimitProviders } from "@/hooks/rate-limits/use-configured-rate-limit-providers";
@@ -43,7 +43,7 @@ export { EPHEMERAL_RATE_LIMIT_POLL_INTERVAL_MS };
  * the same visibility signal TanStack's `focusManager` uses for the httpFetch
  * lane's `refetchIntervalInBackground: false`. It deliberately does NOT key off
  * window focus (`blur` / `document.hasFocus()`): the core scenario this feature
- * exists for is glancing at the icon while Traycer sits visible-but-unfocused on
+ * exists for is glancing at the icon while CIC sits visible-but-unfocused on
  * a second monitor, and pausing on mere focus-loss would break exactly that.
  *
  * `httpFetch` providers are intentionally absent here - they poll via their

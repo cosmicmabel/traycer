@@ -6,8 +6,8 @@ import type {
   RpcErrorCode,
   RpcErrorDetails,
   VersionedRpcRegistry,
-} from "@traycer/protocol/framework/index";
-import type { FatalErrorDetails } from "@traycer/protocol/framework/ws-protocol";
+} from "@cic/protocol/framework/index";
+import type { FatalErrorDetails } from "@cic/protocol/framework/ws-protocol";
 
 /**
  * App-facing host messenger abstraction.

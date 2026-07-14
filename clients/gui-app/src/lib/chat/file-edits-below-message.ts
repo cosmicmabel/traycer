@@ -1,12 +1,12 @@
 import {
   isNoOpCheckpointEntry,
   turnCheckpointManifestSchema,
-} from "@traycer/protocol/persistence/epic/checkpoint-manifests";
+} from "@cic/protocol/persistence/epic/checkpoint-manifests";
 import type {
   ChatEvent,
   Message,
   UserMessage,
-} from "@traycer/protocol/persistence/epic/schemas";
+} from "@cic/protocol/persistence/epic/schemas";
 
 /**
  * True when the turn triggered by `fromMessageId` - or any turn after it -

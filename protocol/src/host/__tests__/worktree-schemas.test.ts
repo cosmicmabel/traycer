@@ -10,8 +10,8 @@ import { describe, it, expect } from "vitest";
 import {
   upgradeRequestToVersion,
   upgradeResponseToVersion,
-} from "@traycer/protocol/framework/index";
-import { hostRpcRegistry } from "@traycer/protocol/host/index";
+} from "@cic/protocol/framework/index";
+import { hostRpcRegistry } from "@cic/protocol/host/index";
 import {
   worktreeBindingEntrySchema,
   worktreeBranchStatusSchema,
@@ -22,7 +22,7 @@ import {
   worktreeListAllForHostResponseSchemaV11,
   worktreeListBindingsForEpicResponseSchemaV11,
   worktreeSubmoduleMergeFactSchema,
-} from "@traycer/protocol/host/worktree-schemas";
+} from "@cic/protocol/host/worktree-schemas";
 
 const V10 = { major: 1, minor: 0 } as const;
 const V11 = { major: 1, minor: 1 } as const;
@@ -32,7 +32,7 @@ const listAllForHostRegistry = hostRpcRegistry["worktree.listAllForHost"];
 // A v1.0 entry - every field the shipped listing already carries, none of the
 // v1.1 staleness signals.
 const v10Entry = {
-  worktreePath: "/Users/dev/.traycer/worktrees/acme__web/feature-x",
+  worktreePath: "/Users/dev/.cic/worktrees/acme__web/feature-x",
   repoLabel: "acme/web",
   repoIdentifier: { owner: "acme", repo: "web" },
   branch: "feature-x",
@@ -217,11 +217,11 @@ describe("worktreeListAllForHostRequestSchemaV11", () => {
   it("accepts a per-viewport activityPaths selection (lazy-enrichment mode)", () => {
     const parsed = worktreeListAllForHostRequestSchemaV11.parse({
       includeActivity: false,
-      activityPaths: ["/Users/dev/.traycer/worktrees/acme__web/feature-x"],
+      activityPaths: ["/Users/dev/.cic/worktrees/acme__web/feature-x"],
     });
     expect(parsed).toEqual({
       includeActivity: false,
-      activityPaths: ["/Users/dev/.traycer/worktrees/acme__web/feature-x"],
+      activityPaths: ["/Users/dev/.cic/worktrees/acme__web/feature-x"],
     });
   });
 });
@@ -284,7 +284,7 @@ const bindingEntryBase = {
   workspacePath: "/Users/dev/acme/web",
   mode: "worktree" as const,
   repoIdentifier: { owner: "acme", repo: "web" },
-  worktreePath: "/Users/dev/.traycer/worktrees/acme__web/feature-x",
+  worktreePath: "/Users/dev/.cic/worktrees/acme__web/feature-x",
   branch: "feature-x",
   isPrimary: true,
   isImported: false,
@@ -344,9 +344,9 @@ describe("worktreeListBindingsForEpicResponseSchemaV11 (folderlessCwd)", () => {
   it("accepts a non-empty folderlessCwd", () => {
     const parsed = worktreeListBindingsForEpicResponseSchemaV11.parse({
       rows: [],
-      folderlessCwd: "/Users/dev/.traycer/epics/epic-1",
+      folderlessCwd: "/Users/dev/.cic/epics/epic-1",
     });
-    expect(parsed.folderlessCwd).toBe("/Users/dev/.traycer/epics/epic-1");
+    expect(parsed.folderlessCwd).toBe("/Users/dev/.cic/epics/epic-1");
   });
 
   it("accepts a null folderlessCwd (bridged up from a v1.0 host)", () => {

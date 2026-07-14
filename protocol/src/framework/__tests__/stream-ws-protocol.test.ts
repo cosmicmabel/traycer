@@ -4,7 +4,7 @@ import {
   hostStreamOpenAckFrameSchema,
   clientStreamCredentialUpdateFrameSchema,
   STREAM_CAPABILITY_CREDENTIAL_UPDATE,
-} from "@traycer/protocol/framework/stream-ws-protocol";
+} from "@cic/protocol/framework/stream-ws-protocol";
 
 /**
  * Cross-version compatibility contract for the `/stream` control frames.

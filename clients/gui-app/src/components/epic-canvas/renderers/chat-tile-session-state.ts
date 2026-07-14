@@ -1,11 +1,11 @@
 import { toast } from "sonner";
-import type { JsonContent } from "@traycer/protocol/common/registry";
+import type { JsonContent } from "@cic/protocol/common/registry";
 import type {
   ChatRunSettings,
   ChatRunStatus,
-} from "@traycer/protocol/host/agent/gui/subscribe";
-import type { RestoreResultEntry } from "@traycer/protocol/persistence/epic/checkpoint-manifests";
-import type { UserMessageSender } from "@traycer/protocol/persistence/epic/schemas";
+} from "@cic/protocol/host/agent/gui/subscribe";
+import type { RestoreResultEntry } from "@cic/protocol/persistence/epic/checkpoint-manifests";
+import type { UserMessageSender } from "@cic/protocol/persistence/epic/schemas";
 import type { AuthProfile } from "@/stores/auth/auth-store";
 import type { ChatMessageEditing } from "@/components/chat/chat-message";
 import type { ChatMessage as ChatMessageModel } from "@/stores/composer/chat-store";

@@ -1,12 +1,12 @@
-# @traycer/open-host
+# @cic/open-host
 
-An **open-source Traycer host**: a WebSocket RPC server implementing the
-client⇄host wire contract from `@traycer/protocol`, as a self-hostable
-replacement for the closed-source host binary. It speaks the exact protocol
-the shipped clients speak — frames are parsed and emitted through the
-canonical schemas in `protocol/src/framework/ws-protocol.ts` /
-`stream-ws-protocol.ts`, and compatibility uses the same oracle
-(`checkCompatibility`) both sides share.
+**The CIC host server**: a WebSocket RPC server implementing the
+client⇄host wire contract from `@cic/protocol` — chats, epics, PTY
+terminals, git/worktrees — with agent turns driven through a local OpenClaw
+Gateway. Frames are parsed and emitted through the canonical schemas in
+`protocol/src/framework/ws-protocol.ts` / `stream-ws-protocol.ts`, and
+compatibility uses the same oracle (`checkCompatibility`) both sides
+share.
 
 Operating instructions (install → configure → verify, written for agents
 and humans) live in [`docs/AGENT_SETUP.md`](../docs/AGENT_SETUP.md); this
@@ -15,33 +15,27 @@ file documents the implemented wire surface and its design decisions.
 ## Run it
 
 ```bash
-bun host/src/index.ts                          # local-only (default): no Traycer account
-bun host/src/index.ts --require-auth           # opt-in: verify bearers against authn.traycer.ai
+bun host/src/index.ts                          # local-only: no accounts, no external services
 bun host/src/index.ts --environment dev --port 48765 \
   --openclaw-gateway-url ws://127.0.0.1:18789
 ```
 
-The default is **local-only**: any bearer is accepted and every connection
-maps to the single local user (`insecure-local-user`), so no Traycer login
-exists anywhere in the stack. That is safe because the host binds
-`127.0.0.1` only; pass `--require-auth` if you front it for multiple real
-users and want bearers verified against authn.
-
-It binds `127.0.0.1` only (part of the pid.json contract), writes
-`~/.traycer/host[/env]/pid.json` so every client (desktop, CLI, the
-`clients/web` serve process) discovers it exactly like the closed host, and
-removes the pid file on SIGTERM/SIGINT.
+CIC is **local-only**: any bearer is accepted and every connection maps to
+the single local user (`local-user`), so no login exists anywhere in the
+stack. That is safe because the host binds `127.0.0.1` only (part of the
+pid.json contract) — exposure is governed entirely by whatever fronts it
+(the web server's `--bind`). It writes `~/.cic/host[/env]/pid.json` so the
+`clients/web` serve process discovers it, and removes the pid file on
+SIGTERM/SIGINT.
 
 ## What is implemented
 
 - **Transport, byte-compatible with the shipped clients**
-  - `/rpc`: one RPC per socket — `open {token, manifest}` → bearer
-    verification (local-user by default; authn `GET /api/v3/user`, cached,
-    under `--require-auth`) + host-side compatibility
+  - `/rpc`: one RPC per socket — `open {token, manifest}` → local-user
+    identity + host-side compatibility
     check → `openAck {manifest}` → `request` → `response`; 30s post-open idle
     timeout mirroring the client's frame timeout; `fatalError` frames with
-    `UNAUTHORIZED` (+ `retryable: true` for transient authn outages) and
-    `INCOMPATIBLE` details.
+    `UNAUTHORIZED` and `INCOMPATIBLE` details.
   - `/stream`: `open` → `openAck {manifest, capabilities}` handshake with the
     stream compatibility oracle, `ping`→`pong` heartbeat.
   - `GET /activity`: the unauthenticated loopback probe
@@ -79,7 +73,7 @@ removes the pid file on SIGTERM/SIGINT.
   `cloudSyncStatus` + room snapshots on subscribe, client
   `applyUpdate`/`awareness` (root and room scope) applied and relayed to
   every other subscriber over the documented envelope+binary frame pairing,
-  with debounced persistence to `~/.traycer/host[/env]/open-host-epics/` so
+  with debounced persistence to `~/.cic/host[/env]/open-host-epics/` so
   epics survive restarts. `cloudSyncStatus` reports `connected` because the
   local doc IS the authoritative copy — there is no cloud room behind this
   host.
@@ -95,7 +89,7 @@ removes the pid file on SIGTERM/SIGINT.
 - **Epic/chat mutations + durability**: `epic.updateTitle` (task-index
   delta), `epic.renameChat` (user-pinned titles, re-seeded into the Y.Doc),
   `epic.deleteChat` (live state + blob + Y map entry), and chat transcripts
-  persisted per record to `~/.traycer/host[/env]/open-host-chats/`
+  persisted per record to `~/.cic/host[/env]/open-host-chats/`
   (chatSchema-validated on lazy load) so they survive restarts.
 - **Tool-call mapping**: gateway tool events (`session.tool`, agent tool
   phases) map onto `tool_call.started/completed/errored` runtime events and
@@ -144,7 +138,7 @@ removes the pid file on SIGTERM/SIGINT.
 
 - **Small single-shape methods**: `agent.list` (single-agent roster —
   `agents: []`, caller can't message peers), `host.getRateLimitUsage`
-  (zeros + `providerRateLimits: null`; no Traycer-cloud aperture behind
+  (zeros + `providerRateLimits: null`; no CIC-cloud aperture behind
   this host), `epic.mentionEpics` (live suggestions from the task index,
   `epic:<id>` ids matching the GUI's local builder for de-dupe),
   `epic.mentionSpecs/Tickets/Stories/Reviews` + `comments.listThreads`
@@ -186,7 +180,7 @@ removes the pid file on SIGTERM/SIGINT.
     `worktree.createPaths` (ownerless), `worktree.import`,
     `worktree.setEntryMode`, `workspaceBinding.removeEntry`,
     `worktree.retrySetup`, `worktree.setRepoScripts`
-    (`.traycer/environment.json` writes), `worktree.delete`, and the
+    (`.cic/environment.json` writes), `worktree.delete`, and the
     `worktree.deleteByPath@1.0` stream (started → streamed teardown output
     → remove → complete). Bindings persist to
     `open-host-worktree-bindings.json` per owner (epicId/ownerKind/ownerId).

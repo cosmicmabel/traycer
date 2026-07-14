@@ -61,7 +61,7 @@ describe("<AutonomousResumeSegment />", () => {
             summary: "Command finished",
             blockId: "tool-1",
             outputFile: {
-              workspacePath: "/tmp/traycer-output",
+              workspacePath: "/tmp/cic-output",
               filePath: "task.output",
             },
           },
@@ -88,7 +88,7 @@ describe("<AutonomousResumeSegment />", () => {
       {
         method: "workspace.readFile",
         params: {
-          workspacePath: "/tmp/traycer-output",
+          workspacePath: "/tmp/cic-output",
           filePath: "task.output",
           maxBytes: 500_000,
         },
@@ -138,7 +138,7 @@ describe("<AutonomousResumeSegment />", () => {
         triggers={[
           {
             kind: "monitor",
-            title: "All updates in ~/.traycer/host/dev/host.log",
+            title: "All updates in ~/.cic/host/dev/host.log",
             status: "stopped",
             summary: "Monitor stopped",
             blockId: "tool-2",
@@ -155,7 +155,7 @@ describe("<AutonomousResumeSegment />", () => {
       screen.queryByRole("button", { name: /Monitor stopped/ }),
     ).toBeNull();
     expect(
-      screen.getByText("All updates in ~/.traycer/host/dev/host.log"),
+      screen.getByText("All updates in ~/.cic/host/dev/host.log"),
     ).toBeTruthy();
     expect(screen.queryByText("Output")).toBeNull();
     expect(screen.queryByText("Output file unavailable.")).toBeNull();

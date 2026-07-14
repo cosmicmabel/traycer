@@ -8,7 +8,7 @@ import {
   TerminalSquare,
   Workflow,
 } from "lucide-react";
-import type { BackgroundItem } from "@traycer/protocol/host/agent/gui/subscribe";
+import type { BackgroundItem } from "@cic/protocol/host/agent/gui/subscribe";
 import {
   Collapsible,
   CollapsibleContent,

@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { ConfirmDestructiveDialog } from "@/components/ui/confirm-destructive-dialog";
 import { Switch } from "@/components/ui/switch";
 import { useRunnerHost } from "@/providers/use-runner-host";
-import { useRunnerUninstallTraycer } from "@/hooks/runner/use-runner-uninstall-traycer-mutation";
+import { useRunnerUninstallCic } from "@/hooks/runner/use-runner-uninstall-cic-mutation";
 import { requestAppQuit } from "@/lib/desktop-app-lifecycle";
 import { useHostQuery, useHostMutation } from "@/hooks/host/use-host-query";
 import { useHostClient, type HostRpcRegistry } from "@/lib/host";
@@ -109,7 +109,7 @@ export function GeneralSettingsPanel() {
     <SettingsPanelShell title="General">
       <SettingsRow
         label="Notify on chat turn completion"
-        description="Show a system notification when an agent finishes responding and Traycer isn't focused."
+        description="Show a system notification when an agent finishes responding and CIC isn't focused."
         control={
           <Switch
             checked={notifyOnChatTurnComplete}
@@ -233,7 +233,7 @@ export function GeneralSettingsPanel() {
 function DangerZoneSection() {
   const { hostManagement } = useRunnerHost();
   const [confirmOpen, setConfirmOpen] = useState(false);
-  const uninstall = useRunnerUninstallTraycer();
+  const uninstall = useRunnerUninstallCic();
 
   return (
     <>
@@ -244,7 +244,7 @@ function DangerZoneSection() {
         <SettingsFileEditSnapshotsSection />
         <SettingsLocalAppStateSection />
         {hostManagement === null ? null : (
-          <RemoveTraycerDangerRow
+          <RemoveCicDangerRow
             isPending={uninstall.isPending}
             isSuccess={uninstall.isSuccess}
             onRemove={() => {
@@ -257,10 +257,10 @@ function DangerZoneSection() {
         <ConfirmDestructiveDialog
           open={confirmOpen}
           onOpenChange={setConfirmOpen}
-          title="Remove Traycer from this device?"
-          description="This stops and removes Traycer's background host and services and won't reinstall them automatically. Your chats, history, and credentials stay on this device - you can reinstall anytime from Settings."
+          title="Remove CIC from this device?"
+          description="This stops and removes CIC's background host and services and won't reinstall them automatically. Your chats, history, and credentials stay on this device - you can reinstall anytime from Settings."
           cascadeSummary={null}
-          actionLabel="Remove Traycer"
+          actionLabel="Remove CIC"
           isPending={uninstall.isPending}
           onConfirm={() => {
             uninstall.mutate(undefined, {
@@ -275,7 +275,7 @@ function DangerZoneSection() {
   );
 }
 
-function RemoveTraycerDangerRow(props: {
+function RemoveCicDangerRow(props: {
   readonly isPending: boolean;
   readonly isSuccess: boolean;
   readonly onRemove: () => void;
@@ -285,8 +285,8 @@ function RemoveTraycerDangerRow(props: {
   if (isSuccess) {
     return (
       <SettingsRow
-        label="Traycer removed"
-        description="Background components were removed. Your chats, history, and credentials are preserved on this device. To finish, quit Traycer and drag it from Applications to the Trash."
+        label="CIC removed"
+        description="Background components were removed. Your chats, history, and credentials are preserved on this device. To finish, quit CIC and drag it from Applications to the Trash."
         control={
           <Button
             type="button"
@@ -297,7 +297,7 @@ function RemoveTraycerDangerRow(props: {
               requestAppQuit();
             }}
           >
-            Quit Traycer
+            Quit CIC
           </Button>
         }
       />
@@ -306,7 +306,7 @@ function RemoveTraycerDangerRow(props: {
 
   return (
     <SettingsRow
-      label="Remove Traycer"
+      label="Remove CIC"
       description="Stops the background host and services and removes the installed components from this device. Your chats and history are preserved, and the host won't reinstall itself."
       control={
         <Button
@@ -314,17 +314,17 @@ function RemoveTraycerDangerRow(props: {
           variant="destructive"
           size="sm"
           disabled={isPending}
-          data-testid="settings-remove-traycer"
+          data-testid="settings-remove-cic"
           onClick={onRemove}
         >
           {isPending ? (
             <AgentSpinningDots
               className={undefined}
-              testId="settings-remove-traycer-spinner"
+              testId="settings-remove-cic-spinner"
               variant={undefined}
             />
           ) : null}
-          Remove Traycer
+          Remove CIC
         </Button>
       }
     />

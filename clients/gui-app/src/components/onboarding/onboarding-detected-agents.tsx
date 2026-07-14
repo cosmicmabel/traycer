@@ -1,7 +1,7 @@
 import {
   type ProviderCliState,
   type ProviderId,
-} from "@traycer/protocol/host/provider-schemas";
+} from "@cic/protocol/host/provider-schemas";
 import type { ReactNode } from "react";
 import { ProviderList } from "@/components/providers/provider-list";
 import type { ProviderListRow } from "@/components/providers/provider-list";

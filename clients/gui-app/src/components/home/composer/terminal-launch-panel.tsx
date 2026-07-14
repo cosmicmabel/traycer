@@ -11,7 +11,7 @@ import { useSurfaceActivity } from "@/components/home/composer/surface-activity-
 import { useProvidersList } from "@/hooks/providers/use-providers-list-query";
 import type { TerminalAgentLaunch } from "@/components/home/hooks/use-landing-composer-actions";
 import type { ComposerToolbarStore } from "@/stores/composer/composer-toolbar-store";
-import { TUI_HARNESS_ID_TO_PROVIDER_ID } from "@traycer/protocol/host/provider-schemas";
+import { TUI_HARNESS_ID_TO_PROVIDER_ID } from "@cic/protocol/host/provider-schemas";
 import { isTuiHarnessId } from "@/components/home/data/landing-options";
 
 interface TerminalLaunchPanelProps {
@@ -99,7 +99,7 @@ function TerminalLaunchPanelImpl(props: TerminalLaunchPanelProps) {
   const argsTouched = needsReseed ? false : argsState.touched;
 
   // The harness/model picker lists every GUI harness, including ones that can't
-  // back a terminal agent (the GUI-only `traycer`, or a schema-TUI harness whose
+  // back a terminal agent (the GUI-only `cic`, or a schema-TUI harness whose
   // adapter advertises only `gui`). Block Start (rather than silently no-op)
   // unless the shared selection is runtime-TUI-capable.
   const launchHint =

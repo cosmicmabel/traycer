@@ -9,7 +9,7 @@ import {
   hostResponseFrameSchema,
   hostFatalErrorFrameSchema,
   fatalErrorDetailsSchema,
-} from "@traycer/protocol/framework/ws-protocol";
+} from "@cic/protocol/framework/ws-protocol";
 
 /**
  * Canonical-schema coverage for every WS frame kind.
@@ -18,7 +18,7 @@ import {
  * client sends `open` → `request` (plus an optional `fatalError`), and the
  * host replies with `openAck` → `response` (plus an optional `fatalError`
  * at any point). These tests assert that the Zod schemas exported from
- * `@traycer/protocol/framework/ws-protocol` accept a minimal representative of
+ * `@cic/protocol/framework/ws-protocol` accept a minimal representative of
  * each frame shape, so the authoritative wire contract is exercised from one
  * place regardless of which consumer (host-side dispatcher, client-side
  * transport) is parsing.

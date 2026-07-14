@@ -9,14 +9,14 @@
  * host WS transport - the shared-core context surface must remain
  * platform-neutral, and tests for that surface must reflect that.
  */
-import type { AuthenticatedUser } from "@traycer/protocol/auth";
+import type { AuthenticatedUser } from "@cic/protocol/auth";
 import {
   createRequestContext,
   identityFromAuthenticatedUser,
   type AuthenticatedIdentity,
   type RequestContext,
   type RequestContextOrigin,
-} from "@traycer/protocol/auth/request-context";
+} from "@cic/protocol/auth/request-context";
 import { createAuthenticatedUserFixture } from "./authenticated-user";
 
 export interface RequestContextFixtureOverrides {

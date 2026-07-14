@@ -2,7 +2,7 @@ import "../../../__tests__/test-browser-apis";
 import { useEffect } from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, cleanup, render, screen, waitFor } from "@testing-library/react";
-import type { IRunnerHost } from "@traycer-clients/shared/platform/runner-host";
+import type { IRunnerHost } from "@cic/shared/platform/runner-host";
 import { RunnerHostProvider } from "@/providers/runner-host-provider";
 import { WindowsBridgeProvider } from "@/providers/windows-bridge-provider";
 import {
@@ -28,7 +28,7 @@ import {
   setLandingDraftDesktopProjectionBridge,
   useLandingDraftStore,
 } from "@/stores/home/landing-draft-store";
-import type { JsonContent } from "@traycer/protocol/common/registry";
+import type { JsonContent } from "@cic/protocol/common/registry";
 import type {
   DesktopAuthSessionSnapshot,
   DesktopJsonValue,
@@ -199,7 +199,7 @@ function createBaseRunnerHost(): IRunnerHost {
     onSystemResumed: () => ({ dispose: () => undefined }),
     requestHostRespawn: () => Promise.resolve(),
     service: null,
-    traycerCli: null,
+    cicCli: null,
     migration: null,
     hostManagement: null,
     hostTray: null,
@@ -314,7 +314,7 @@ describe("<WindowsBridgeProvider />", () => {
   it("does not replay legacy localStorage migration from renderer bootstrap", async () => {
     const fake = createDesktopWindowsBridge();
     window.localStorage.setItem(
-      "traycer-gui-app:epic-canvas:anon",
+      "cic-gui-app:epic-canvas:anon",
       JSON.stringify({
         state: {
           openEpicTabs: [{ id: "epic-a", name: "Alpha" }],
@@ -323,7 +323,7 @@ describe("<WindowsBridgeProvider />", () => {
       }),
     );
     window.localStorage.setItem(
-      "traycer-gui-app:draft",
+      "cic-gui-app:draft",
       JSON.stringify({
         state: {
           draft: { id: "draft-a", prompt: "Continue the plan" },
@@ -344,9 +344,9 @@ describe("<WindowsBridgeProvider />", () => {
     );
     expect(fake.perWindowUpdates).toEqual([]);
     expect(
-      window.localStorage.getItem("traycer-gui-app:epic-canvas:anon"),
+      window.localStorage.getItem("cic-gui-app:epic-canvas:anon"),
     ).not.toBeNull();
-    expect(window.localStorage.getItem("traycer-gui-app:draft")).not.toBeNull();
+    expect(window.localStorage.getItem("cic-gui-app:draft")).not.toBeNull();
   });
 
   it("keeps desktop hydration pending until the per-window snapshot is applied", async () => {

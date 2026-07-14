@@ -1,6 +1,6 @@
 import { Fragment, type ReactNode } from "react";
 import { ImageIcon } from "lucide-react";
-import type { JsonContent } from "@traycer/protocol/common/registry";
+import type { JsonContent } from "@cic/protocol/common/registry";
 
 import { SlashCommandChip } from "@/components/chat/composer/nodes/slash-command-chip";
 import { ComposerMentionDecorator } from "@/components/chat/composer/nodes/composer-mention-decorator";

@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 import type {
   AgentMessageSend,
   BackgroundTaskOutput,
-} from "@traycer/protocol/persistence/epic/content-blocks";
+} from "@cic/protocol/persistence/epic/content-blocks";
 import type { SegmentEndState } from "@/stores/composer/chat-store";
 import { deriveA2ASendCollapsibleKey } from "@/components/chat/chat-collapsible-key";
 import { chatFindA2ASendBodyUnitId } from "@/components/chat/chat-find";
@@ -16,7 +16,7 @@ import { useEpicArtifact, useOpenEpicId } from "@/lib/epic-selectors";
 import {
   resolveToolInputDetail,
   type ToolInputDetail,
-} from "@traycer/protocol/host/agent/gui/tool-input-detail";
+} from "@cic/protocol/host/agent/gui/tool-input-detail";
 import type {
   ArtifactProjection,
   ChatProjection,

@@ -1,5 +1,5 @@
 import { useMemo, type ReactNode } from "react";
-import type { GitChangedFile } from "@traycer/protocol/host";
+import type { GitChangedFile } from "@cic/protocol/host";
 import { buildGitPanelFileSections } from "@/lib/git/panel-file-rendering";
 import type { HighlightRanges } from "@/lib/git/path-highlight";
 import { TooltipProvider } from "@/components/ui/tooltip";

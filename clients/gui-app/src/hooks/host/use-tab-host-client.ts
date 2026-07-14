@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import type { HostClient } from "@traycer-clients/shared/host-client/host-client";
-import type { HostRpcRegistry } from "@traycer/protocol/host/index";
+import type { HostClient } from "@cic/shared/host-client/host-client";
+import type { HostRpcRegistry } from "@cic/protocol/host/index";
 import { useTabHostId } from "@/components/epic-canvas/hooks/use-tab-host-id";
 import { useHostClientFor } from "@/hooks/host/use-host-client-for";
 import { useHostDirectoryList } from "@/hooks/host/use-host-directory-list-query";

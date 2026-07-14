@@ -2,7 +2,7 @@ import {
   LOG_LEVELS,
   isLogLevel,
   type LogLevel,
-} from "@traycer/protocol/config/log-level";
+} from "@cic/protocol/config/log-level";
 import { SettingsRow } from "@/components/settings/settings-row";
 import {
   Select,

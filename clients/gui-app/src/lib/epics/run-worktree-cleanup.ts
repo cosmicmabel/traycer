@@ -1,4 +1,4 @@
-import { WorktreeDeleteStreamClient } from "@traycer-clients/shared/host-transport/worktree-delete-stream-client";
+import { WorktreeDeleteStreamClient } from "@cic/shared/host-transport/worktree-delete-stream-client";
 import type { DurableStreamTransport } from "@/lib/host/durable-stream-transport";
 import { openOwnedDurableStreamClient } from "@/lib/host/owned-durable-stream-client";
 import { appLogger } from "@/lib/logger";

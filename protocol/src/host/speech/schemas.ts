@@ -4,7 +4,7 @@
  * Dictation runs entirely on-device inside the host (Sherpa ONNX): the
  * renderer streams PCM16 mono audio over `speech.dictate`, the host buffers
  * the utterance and decodes it with an offline transducer in a worker thread.
- * Models are downloaded once into `~/.traycer/models/stt/`; the unary contracts
+ * Models are downloaded once into `~/.cic/models/stt/`; the unary contracts
  * (`speech.getModelStatus` / `speech.ensureModel`) drive that lifecycle so the
  * mic only appears once the model is ready.
  *

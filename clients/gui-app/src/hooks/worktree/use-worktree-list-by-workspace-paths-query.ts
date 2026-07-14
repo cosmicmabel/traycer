@@ -1,9 +1,9 @@
 import { keepPreviousData, type UseQueryResult } from "@tanstack/react-query";
-import type { HostClient } from "@traycer-clients/shared/host-client/host-client";
+import type { HostClient } from "@cic/shared/host-client/host-client";
 import type {
   HostRpcError,
   ResponseOfMethod,
-} from "@traycer-clients/shared/host-transport/host-messenger";
+} from "@cic/shared/host-transport/host-messenger";
 import type { HostRpcRegistry } from "@/lib/host";
 import { useHostQuery } from "@/hooks/host/use-host-query";
 

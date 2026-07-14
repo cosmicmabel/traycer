@@ -3,38 +3,28 @@
 
 ## Project Overview
 
-Traycer is an AI-powered pair-programming platform. This repository holds the
-**open-source clients, CLI, and protocol** — the parts that run on a developer's
-machine and talk to the Traycer host. It uses **Bun workspaces** and **Nx** for
-task orchestration.
-
-The upstream Traycer Host and cloud backend are **not** part of this repo:
-the CLI provisions a signed **host** binary from GitHub Releases, and the
-clients run against the production cloud. See
-[`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md). **This fork additionally
-ships `host/` (`@traycer/open-host`)** — an open-source host implementing
-the same wire contract against a local OpenClaw Gateway — and
-`clients/web/`, a browser shell + serve process. Operating instructions
-for both: [`docs/AGENT_SETUP.md`](docs/AGENT_SETUP.md).
+CIC (Command Information Center) is **local-only software for orchestrating
+AI coding agents from a browser**: no accounts, no telemetry, no cloud. The
+whole product lives in this repo — a host server driving agent turns through
+a local OpenClaw Gateway, plus a web GUI. It uses **Bun workspaces** and
+**Nx** for task orchestration. Operating instructions:
+[`docs/AGENT_SETUP.md`](docs/AGENT_SETUP.md).
 
 ### Workspaces
 
-| Path                   | Package                        | Responsibility                                                                       |
-| ---------------------- | ------------------------------ | ------------------------------------------------------------------------------------ |
-| `protocol/`            | `@traycer/protocol`            | Versioned, runtime-negotiated client⇄host wire contract (schemas, RPC).              |
-| `clients/traycer-cli/` | `@traycer-clients/traycer-cli` | The `traycer` CLI — provisions/upgrades the host, auth, agent & workspace commands.  |
-| `clients/shared/`      | `@traycer-clients/shared`      | Transport (WebSocket/RPC), auth (PKCE/bearer), and formatting shared across clients. |
-| `clients/gui-app/`     | `@traycer-clients/gui-app`     | GUI renderer (React + Vite + TanStack Router/Query + Zustand + shadcn/ui).           |
-| `clients/desktop/`     | `@traycer-clients/desktop`     | Electron shell around `gui-app`.                                                     |
-| `clients/web/`         | `@traycer-clients/web`         | Browser shell + Bun serve process — the GUI as a webapp on Linux.                    |
-| `host/`                | `@traycer/open-host`           | Open-source host server (wire contract over a local OpenClaw Gateway).               |
+| Path               | Package          | Responsibility                                                             |
+| ------------------ | ---------------- | -------------------------------------------------------------------------- |
+| `protocol/`        | `@cic/protocol`  | Versioned, runtime-negotiated client⇄host wire contract (schemas, RPC).    |
+| `clients/shared/`  | `@cic/shared`    | Transport (WebSocket/RPC) and platform contracts shared across clients.    |
+| `clients/gui-app/` | `@cic/gui-app`   | GUI renderer (React + Vite + TanStack Router/Query + Zustand + shadcn/ui). |
+| `clients/web/`     | `@cic/web`       | Browser shell + Bun serve process — the GUI as a webapp on Linux.          |
+| `host/`            | `@cic/open-host` | The host server (wire contract over a local OpenClaw Gateway).             |
 
 ### Workspace-Specific Agent Docs
 
 - `clients/gui-app/` — read [`clients/gui-app/AGENTS.md`](clients/gui-app/AGENTS.md)
   before app-specific changes; it lists the GUI-focused skills in
   `.agents/skills/` to prefer there.
-- `clients/desktop/` — read [`clients/desktop/AGENTS.md`](clients/desktop/AGENTS.md).
 - `host/` — read [`host/README.md`](host/README.md) before host changes; its
   tests run under `bun test` (from `host/`), NOT vitest, and each test run
   must use a unique `--environment` because persistence is real.
@@ -53,29 +43,26 @@ pre-commit run --all-files   # hygiene + workspace checks
 ```
 
 Nx caches and only rebuilds what changed. Target a single package with e.g.
-`bunx nx run @traycer-clients/traycer-cli:build`.
+`bunx nx run @cic/web:build`.
 
-### Running the desktop locally
+### Running the stack locally
 
 ```bash
-make dev-desktop                 # download the latest released host + run the HMR desktop shell
-make dev-desktop VERSION=1.2.3   # pin a specific host release
+make host &        # the host server (loopback WS, writes ~/.cic)
+make serve-web     # build + serve the GUI at http://127.0.0.1:8788
 ```
 
-This downloads the signed host from GitHub Releases, verifies it against the
-trust key committed in `clients/traycer-cli/src/config.ts`, and runs the Electron
-dev shell against the production cloud — no secrets or local backend services.
-macOS / Linux. See [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md).
+No accounts and no external services; chat turns need a local OpenClaw
+Gateway (`ws://127.0.0.1:18789`). See [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md).
 
 ## Architecture
 
 ### Protocol
 
-`@traycer/protocol` is the **versioned, runtime-negotiated** client⇄host wire
+`@cic/protocol` is the **versioned, runtime-negotiated** client⇄host wire
 contract — per-method `{ major, minor }` compatibility negotiated at the
-handshake, not npm semver. Clients and the host can ship independently as long as
-their versions stay compatible. The CLI **inlines** the protocol at build time,
-so the published CLI has no runtime protocol dependency.
+handshake, not npm semver. Clients and the host can ship independently as long
+as their versions stay compatible.
 
 ### Host identity model
 

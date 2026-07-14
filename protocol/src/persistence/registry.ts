@@ -2,18 +2,18 @@ import {
   defineRecordContract,
   defineVersionedRecordRegistry,
   type RecordValue,
-} from "@traycer/protocol/framework/index";
-import { epicSchema } from "@traycer/protocol/persistence/_internal/epic-schemas";
-import { roomMetadataSchema } from "@traycer/protocol/persistence/_internal/room-metadata-schemas";
+} from "@cic/protocol/framework/index";
+import { epicSchema } from "@cic/protocol/persistence/_internal/epic-schemas";
+import { roomMetadataSchema } from "@cic/protocol/persistence/_internal/room-metadata-schemas";
 
 /**
- * Traycer 3.0 persistence record protocol.
+ * CIC 3.0 persistence record protocol.
  *
  * Each entry describes the on-disk shape of a logical record type:
  *
  * - `epic` - the local on-disk epic document at V200. Legacy pre-V200
  *   shapes live as hand-rolled TS interfaces + migrations inside the host
- *   (the external Traycer Host); protocol keeps
+ *   (the external CIC Host); protocol keeps
  *   the current record authority aligned to the live V200 / 2.0.0 line
  *   instead of rebasing it to 1.0.
  * - `room-metadata` - Tiptap Cloud Yjs room metadata stored at
@@ -22,7 +22,7 @@ import { roomMetadataSchema } from "@traycer/protocol/persistence/_internal/room
  *
  * Cloud-catalog / task-ref / workspace-association caches are owned by
  * the cloud data client (internal, not in this repo) and are NOT versioned
- * here. Phases were folded into epics in Traycer 3.0, so there is no
+ * here. Phases were folded into epics in CIC 3.0, so there is no
  * `phase-light` record here either.
  */
 

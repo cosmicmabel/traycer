@@ -1,5 +1,5 @@
 import type { QueryClient } from "@tanstack/react-query";
-import type { IHostQueryInvalidator } from "@traycer-clients/shared/host-client/host-client";
+import type { IHostQueryInvalidator } from "@cic/shared/host-client/host-client";
 import { queryKeys } from "@/lib/query-keys";
 
 /**

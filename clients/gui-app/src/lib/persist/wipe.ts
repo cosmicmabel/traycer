@@ -10,11 +10,11 @@
 //      to clear), then run the authoritative host `clear` RPC. On a shell
 //      without the RPC the drain IS the degraded fallback; in web mode the
 //      caller passes `null` and the flush no-ops.
-//   2. Blanket-prefix sweep    — remove every `traycer-gui-app:`-prefixed key
-//      from BOTH localStorage and sessionStorage. Auth (`traycer.`) and any
-//      non-`traycer-gui-app:` key survive.
+//   2. Blanket-prefix sweep    — remove every `cic-gui-app:`-prefixed key
+//      from BOTH localStorage and sessionStorage. Auth (`cic.`) and any
+//      non-`cic-gui-app:` key survive.
 //   3. Drop landing-image dbs  — delete every per-window IndexedDB partition
-//      (`traycer-gui-app:<partition>:landing-images`) so pasted image bytes
+//      (`cic-gui-app:<partition>:landing-images`) so pasted image bytes
 //      don't outlive the wipe. Enumeration is Chromium-only; absent → no-op.
 //   4. Reload last             — re-hydrate from the now-cleared storage / host
 //      state without racing a pending write.
@@ -24,15 +24,15 @@ import { flushActiveDesktopPerWindowProjection } from "@/lib/windows/per-window-
 import { appLogger, describeLogError } from "@/lib/logger";
 
 // The `:` boundary is load-bearing: a bare `startsWith(PERSIST_PREFIX)` would
-// also sweep a hypothetical `traycer-gui-appX:foo` key. Anchoring on the colon
-// keeps the sweep to exactly the `traycer-gui-app:` namespace.
+// also sweep a hypothetical `cic-gui-appX:foo` key. Anchoring on the colon
+// keeps the sweep to exactly the `cic-gui-app:` namespace.
 const PERSIST_KEY_BOUNDARY = `${PERSIST_PREFIX}:`;
 
 // Landing-image IndexedDB databases are named
-// `traycer-gui-app:<partition>:landing-images` (one per runtime partition —
+// `cic-gui-app:<partition>:landing-images` (one per runtime partition —
 // `landingImagePartition()` in `lib/composer/landing-image-store.ts`). The
 // suffix below pins the db namespace so the wipe only drops image partitions,
-// never any other future `traycer-gui-app:`-prefixed db.
+// never any other future `cic-gui-app:`-prefixed db.
 const LANDING_IMAGE_DB_SUFFIX = ":landing-images";
 
 function sweepStorage(storage: Storage): number {

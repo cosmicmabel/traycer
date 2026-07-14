@@ -25,8 +25,8 @@ import type {
   OwnerResourceSnapshotWire,
   ResourceOwnerKindWire,
   ResourceProcessSnapshotWire,
-} from "@traycer/protocol/host/resources/subscribe";
-import type { TaskLight } from "@traycer/protocol/host/epic/unary-schemas";
+} from "@cic/protocol/host/resources/subscribe";
+import type { TaskLight } from "@cic/protocol/host/epic/unary-schemas";
 import type { EpicNodeRecord } from "@/lib/artifacts/node-display";
 import { Button } from "@/components/ui/button";
 import {
@@ -652,7 +652,7 @@ function DesktopAppResourceSection(props: {
         <div className="flex min-w-0 items-center gap-1.5">
           <Monitor className="size-3.5 shrink-0 text-muted-foreground/80" />
           <span className="min-w-0 truncate text-ui-sm font-medium text-foreground">
-            Traycer Desktop
+            CIC Desktop
           </span>
         </div>
         <MetricPair
@@ -700,7 +700,7 @@ function HostAppResourceSection(props: { readonly app: AppResourceUsage }) {
         <div className="flex min-w-0 items-center gap-1.5">
           <Server className="size-3.5 shrink-0 text-muted-foreground/80" />
           <span className="min-w-0 truncate text-ui-sm font-medium text-foreground">
-            Traycer Host
+            CIC Host
           </span>
         </div>
         <MetricPair

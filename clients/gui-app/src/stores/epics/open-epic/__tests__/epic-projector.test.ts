@@ -11,9 +11,9 @@ import {
   type EpicStreamClientFactory,
   type OpenEpicStoreHandle,
 } from "@/stores/epics/open-epic/store";
-import type { EpicStreamCallbacks } from "@traycer-clients/shared/host-transport/epic-stream-client";
-import type { SnapshotMetaEpic } from "@traycer/protocol/host/epic/snapshot-meta";
-import type { EpicArtifactKind } from "@traycer/protocol/common/registry";
+import type { EpicStreamCallbacks } from "@cic/shared/host-transport/epic-stream-client";
+import type { SnapshotMetaEpic } from "@cic/protocol/host/epic/snapshot-meta";
+import type { EpicArtifactKind } from "@cic/protocol/common/registry";
 import { projectFullState } from "@/stores/epics/open-epic/projection-helpers";
 import { useAuthStore } from "@/stores/auth/auth-store";
 

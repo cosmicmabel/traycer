@@ -143,5 +143,5 @@ function agentModeToggleTooltipLabel(mode: AgentMode): string {
   if (mode === "regular") {
     return "Regular mode: general-purpose coding agent experience.";
   }
-  return "Epic mode: plan and coordinate larger changes with Traycer artifacts.";
+  return "Epic mode: plan and coordinate larger changes with CIC artifacts.";
 }

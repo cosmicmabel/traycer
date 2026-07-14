@@ -2,8 +2,8 @@ import { createContext, use } from "react";
 import {
   RetryableTransportError,
   type HostRpcError,
-} from "@traycer-clients/shared/host-transport/host-messenger";
-import type { HostRpcRegistry } from "@traycer/protocol/host/index";
+} from "@cic/shared/host-transport/host-messenger";
+import type { HostRpcRegistry } from "@cic/protocol/host/index";
 import { useHostQuery } from "@/hooks/host/use-host-query";
 import { useHostClient } from "@/lib/host/runtime";
 

@@ -2,10 +2,10 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { cleanup, renderHook, waitFor } from "@testing-library/react";
 import type { ReactNode } from "react";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { HostClient } from "@traycer-clients/shared/host-client/host-client";
-import { MockHostMessenger } from "@traycer-clients/shared/host-client/mock/mock-host-messenger";
-import { createRequestContext } from "@traycer/protocol/auth/request-context";
-import { hostRpcRegistry } from "@traycer/protocol/host/index";
+import { HostClient } from "@cic/shared/host-client/host-client";
+import { MockHostMessenger } from "@cic/shared/host-client/mock/mock-host-messenger";
+import { createRequestContext } from "@cic/protocol/auth/request-context";
+import { hostRpcRegistry } from "@cic/protocol/host/index";
 import type { HostRpcRegistry } from "@/lib/host";
 import { useWorkspaceEntries } from "../use-workspace-entries";
 

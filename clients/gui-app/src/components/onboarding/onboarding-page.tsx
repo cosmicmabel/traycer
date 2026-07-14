@@ -11,7 +11,7 @@ import {
 } from "react";
 import { useNavigate, useRouter } from "@tanstack/react-router";
 import { AnimatePresence, m } from "motion/react";
-import { traycerInfo } from "@traycer-clients/shared/platform/traycer-info";
+import { cicInfo } from "@cic/shared/platform/cic-info";
 import packageJson from "../../../package.json";
 import geistPixelSquareUrl from "@/assets/fonts/GeistPixel-Square.woff2?url";
 import onboardingBackdropUrl from "@/assets/brand/gradient-bg.jpg?url";
@@ -38,9 +38,9 @@ import { cn } from "@/lib/utils";
 
 const ACT_EASE = [0.32, 0.72, 0, 1] as const;
 const ONBOARDING_FOOTER_LINKS = [
-  { label: "Features", url: traycerInfo.mainWebsiteFeatures },
-  { label: "Enterprise", url: traycerInfo.mainWebsiteEnterprise },
-  { label: "Support", url: traycerInfo.mainWebsiteContactUs },
+  { label: "Source", url: cicInfo.sourceRepository },
+  { label: "Docs", url: cicInfo.documentation },
+  { label: "Support", url: cicInfo.issues },
 ] as const;
 const ONBOARDING_STYLE = `
 @font-face {
@@ -394,7 +394,7 @@ function OnboardingWordmark() {
     <div className="flex h-[1.625rem] w-[6.375rem] items-center gap-3 [@media(min-height:920px)]:h-7 [@media(min-height:920px)]:w-[7rem]">
       <BrandMark className="h-5 w-auto [@media(min-height:920px)]:h-6" />
       <span className="font-heading text-[1.375rem] leading-5 font-medium tracking-normal text-white [@media(min-height:920px)]:text-[1.5rem] [@media(min-height:920px)]:leading-6">
-        traycer
+        cic
       </span>
     </div>
   );
@@ -765,7 +765,7 @@ function OnboardingFooterLinks() {
   );
 
   return (
-    <nav aria-label="Traycer footer links" className="hidden sm:block">
+    <nav aria-label="CIC footer links" className="hidden sm:block">
       <ul className="flex items-center gap-8">
         {ONBOARDING_FOOTER_LINKS.map((link) => (
           <li key={link.label}>

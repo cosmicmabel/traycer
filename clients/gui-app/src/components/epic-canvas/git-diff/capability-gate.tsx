@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import type { HostRpcError } from "@traycer-clients/shared/host-transport/host-messenger";
+import type { HostRpcError } from "@cic/shared/host-transport/host-messenger";
 import { useGitCapabilitiesQuery } from "@/hooks/git/use-git-capabilities-query";
 import { DiffLoadingSkeleton } from "./diff-loading-skeleton";
 import { HostUnsupported } from "./empty-states/host-unsupported";

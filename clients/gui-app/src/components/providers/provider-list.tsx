@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import type { ProviderId } from "@traycer/protocol/host/provider-schemas";
+import type { ProviderId } from "@cic/protocol/host/provider-schemas";
 import { HarnessIcon } from "@/components/home/pickers/harness-icon";
 import {
   providerDisplayName,

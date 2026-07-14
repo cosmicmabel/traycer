@@ -3,7 +3,7 @@ import type { VirtuosoHandle } from "react-virtuoso";
 import type {
   GitChangedFile,
   GitGetFileDiffResponse,
-} from "@traycer/protocol/host";
+} from "@cic/protocol/host";
 import { getBasename, getDirname } from "@/lib/path/cross-platform-path";
 import { gitStageLabel } from "@/lib/git/git-diff-tile";
 import { BUNDLE_INLINE_LINE_THRESHOLD } from "@/lib/git/bundle-thresholds";

@@ -9,7 +9,7 @@ import {
 } from "@/components/home/toolbar/composer-mic-button";
 import { HarnessModelPicker } from "@/components/home/pickers/harness-model-picker";
 import type { DictationPreparingStatus } from "@/hooks/composer/use-dictation-availability";
-import type { ChatActiveTurn } from "@traycer/protocol/host/agent/gui/subscribe";
+import type { ChatActiveTurn } from "@cic/protocol/host/agent/gui/subscribe";
 import type { ComposerToolbarStore } from "@/stores/composer/composer-toolbar-store";
 
 interface ComposerToolbarRightProps {

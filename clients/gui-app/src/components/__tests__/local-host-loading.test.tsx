@@ -7,7 +7,7 @@ import {
   waitFor,
 } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { MockRunnerHost } from "@traycer-clients/shared/host-client/mock/mock-runner-host";
+import { MockRunnerHost } from "@cic/shared/host-client/mock/mock-runner-host";
 
 // The host-boot splash now reuses the shared <AppHeader>, which
 // mounts the real <UserMenu>, <SignInButton>, and
@@ -43,13 +43,13 @@ import { useAuthStore } from "@/stores/auth/auth-store";
 
 function buildHost(): MockRunnerHost {
   return new MockRunnerHost({
-    signInUrl: "https://auth.traycer.invalid/sign-in",
+    signInUrl: "https://auth.cic.invalid/sign-in",
     authnBaseUrl: "http://localhost:5005",
     localHost: null,
     hosts: [],
     workspaceFolderPickerPaths: undefined,
     hasLocalHost: undefined,
-    traycerCli: undefined,
+    cicCli: undefined,
   });
 }
 
@@ -108,7 +108,7 @@ describe("<LocalHostLoading />", () => {
     expect(screen.queryByTestId("local-host-loading-spinner")).not.toBeNull();
 
     // Primary heading.
-    expect(root.textContent).toContain("Starting local Traycer Host…");
+    expect(root.textContent).toContain("Starting local CIC Host…");
 
     // No slow-start surface on the loading stage.
     expect(screen.queryByTestId("local-host-loading-slow-copy")).toBeNull();
@@ -208,7 +208,7 @@ describe("<LocalHostLoading />", () => {
     );
 
     const root = screen.getByTestId("local-host-loading");
-    expect(root.textContent).toContain("Downloading Traycer Host…");
+    expect(root.textContent).toContain("Downloading CIC Host…");
     expect(root.textContent).toContain("downloading host 1.2.3");
     expect(root.textContent).toContain("100 MB of 239 MB");
     expect(root.textContent).toContain("42%");
@@ -248,7 +248,7 @@ describe("<LocalHostLoading />", () => {
     );
 
     const root = screen.getByTestId("local-host-loading");
-    expect(root.textContent).toContain("Setting up Traycer Host…");
+    expect(root.textContent).toContain("Setting up CIC Host…");
     expect(root.textContent).toContain("Setting up…");
     expect(root.textContent).toContain("80%");
     expect(root.textContent).not.toContain("Downloading…");

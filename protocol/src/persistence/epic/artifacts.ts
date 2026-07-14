@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { getRecordSchema } from "@traycer/protocol/framework/versioned-record";
-import { commonRecordRegistry } from "@traycer/protocol/common/registry";
+import { getRecordSchema } from "@cic/protocol/framework/versioned-record";
+import { commonRecordRegistry } from "@cic/protocol/common/registry";
 
 /**
  * Epic artifacts: spec / ticket / story / review (plus their tombstone

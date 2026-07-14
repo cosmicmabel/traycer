@@ -1,8 +1,8 @@
-import { defineRpcContract } from "@traycer/protocol/framework/index";
+import { defineRpcContract } from "@cic/protocol/framework/index";
 import {
   runtimeCapabilitiesRequestSchema,
   runtimeCapabilitiesResponseSchema,
-} from "@traycer/protocol/host/runtime-capabilities/schemas";
+} from "@cic/protocol/host/runtime-capabilities/schemas";
 
 export const hostGetRuntimeCapabilitiesV10 = defineRpcContract({
   method: "host.getRuntimeCapabilities",

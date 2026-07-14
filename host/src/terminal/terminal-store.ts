@@ -3,11 +3,11 @@ import {
   terminalSubscribeClientFrameSchema,
   terminalSubscribeOpenRequestSchema,
   type TerminalSubscribeServerFrame,
-} from "@traycer/protocol/host/terminal/subscribe";
+} from "@cic/protocol/host/terminal/subscribe";
 import type {
   CreateTerminalRequest,
   TerminalSessionInfo,
-} from "@traycer/protocol/host/terminal/unary-schemas";
+} from "@cic/protocol/host/terminal/unary-schemas";
 
 /**
  * Host-owned PTY sessions behind `terminal.*`.

@@ -33,14 +33,14 @@ export function useRunnerRequestHostRespawn(): UseMutationResult<
 > {
   const runnerHost = useRunnerHost();
   const queryClient = useQueryClient();
-  const traycerCli = runnerHost.traycerCli;
+  const cicCli = runnerHost.cicCli;
   return useMutation<void>({
     mutationKey: runnerMutationKeys.requestHostRespawn(),
     mutationFn: () => runnerHost.requestHostRespawn(),
     onSuccess: () => {
-      if (traycerCli === null) return;
+      if (cicCli === null) return;
       void queryClient.invalidateQueries({
-        queryKey: runnerQueryKeys.traycerHostStatus(traycerCli),
+        queryKey: runnerQueryKeys.cicHostStatus(cicCli),
       });
     },
     onError: (err) => toastFromRunnerError(err, "Couldn't restart host"),

@@ -20,7 +20,7 @@ host:
 	@bun host/src/index.ts --port 47100 $(ARGS)
 
 serve-web:
-	@bunx nx run @traycer-clients/web:build
+	@bunx nx run @cic/web:build
 	@bun clients/web/src/server/serve.ts $(ARGS)
 
 docker-web:

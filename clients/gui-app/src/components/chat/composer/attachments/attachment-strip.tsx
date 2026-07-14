@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import type { JsonContent } from "@traycer/protocol/common/registry";
+import type { JsonContent } from "@cic/protocol/common/registry";
 
 import { type ImageBytesFetcher } from "@/lib/attachments/image-blob-cache";
 import { collectImageAtoms } from "@/lib/composer/image-atoms";

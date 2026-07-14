@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
-import type { Message } from "@traycer/protocol/persistence/epic/schemas";
+import type { Message } from "@cic/protocol/persistence/epic/schemas";
 import type { InitialChatHandoff } from "@/stores/epics/initial-chat-handoff-store";
 import {
   nextHandoffTransition,
   type HandoffTransitionContext,
 } from "../next-handoff-transition";
-import type { JsonContent } from "@traycer/protocol/common/registry";
+import type { JsonContent } from "@cic/protocol/common/registry";
 
 const NODE_ID = "chat-1";
 

@@ -1,6 +1,6 @@
 import "../../../../__tests__/test-browser-apis";
 import { describe, expect, it } from "vitest";
-import type { CommentThreadWire } from "@traycer/protocol/host/epic/unary-schemas";
+import type { CommentThreadWire } from "@cic/protocol/host/epic/unary-schemas";
 import {
   countOpenThreads,
   filterThreadsByStatus,

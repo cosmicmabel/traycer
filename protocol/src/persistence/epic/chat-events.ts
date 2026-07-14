@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { userMessageSenderSchema } from "@traycer/protocol/persistence/epic/senders";
+import { userMessageSenderSchema } from "@cic/protocol/persistence/epic/senders";
 
 /**
  * Durable chat event log - append-only record of state transitions a

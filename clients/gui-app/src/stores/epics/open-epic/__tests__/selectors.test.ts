@@ -7,8 +7,8 @@ import {
 import type {
   EpicStreamCallbacks,
   EpicStreamClient,
-} from "@traycer-clients/shared/host-transport/epic-stream-client";
-import type { SnapshotMetaEpic } from "@traycer/protocol/host/epic/snapshot-meta";
+} from "@cic/shared/host-transport/epic-stream-client";
+import type { SnapshotMetaEpic } from "@cic/protocol/host/epic/snapshot-meta";
 import { buildEpicNodeTree } from "@/lib/artifacts/node-display";
 import type { EpicNodeRecord } from "@/lib/artifacts/node-display";
 import {

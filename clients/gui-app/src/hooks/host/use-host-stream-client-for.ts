@@ -1,17 +1,17 @@
 import { useEffect, useMemo } from "react";
-import { WsStreamClient } from "@traycer-clients/shared/host-transport/ws-stream-client";
-import { DEFAULT_DIAL_TIMEOUT_MS } from "@traycer-clients/shared/host-transport/transport-config";
-import { createWhatwgStreamWebSocketFactory } from "@traycer-clients/shared/host-transport/whatwg-stream-ws-factory";
-import type { HostDirectoryEntry } from "@traycer-clients/shared/host-client/host-directory";
+import { WsStreamClient } from "@cic/shared/host-transport/ws-stream-client";
+import { DEFAULT_DIAL_TIMEOUT_MS } from "@cic/shared/host-transport/transport-config";
+import { createWhatwgStreamWebSocketFactory } from "@cic/shared/host-transport/whatwg-stream-ws-factory";
+import type { HostDirectoryEntry } from "@cic/shared/host-client/host-directory";
 import {
   hostStreamRpcRegistry,
   type HostStreamRpcRegistry,
-} from "@traycer/protocol/host/registry";
-import type { StreamAuthRevalidator } from "@traycer-clients/shared/auth/bearer-revalidator";
-import type { BearerSourceProvider } from "@traycer-clients/shared/auth/bearer-source";
-import type { HostEndpointProvider } from "@traycer-clients/shared/host-transport/ws-rpc-client";
-import type { HostClient } from "@traycer-clients/shared/host-client/host-client";
-import type { HostRpcRegistry } from "@traycer/protocol/host/index";
+} from "@cic/protocol/host/registry";
+import type { StreamAuthRevalidator } from "@cic/shared/auth/bearer-revalidator";
+import type { BearerSourceProvider } from "@cic/shared/auth/bearer-source";
+import type { HostEndpointProvider } from "@cic/shared/host-transport/ws-rpc-client";
+import type { HostClient } from "@cic/shared/host-client/host-client";
+import type { HostRpcRegistry } from "@cic/protocol/host/index";
 import { useHostClient } from "@/lib/host/runtime";
 import { hostTransportKey } from "@/lib/host/transport-key";
 import { useCloseWsStreamClientOnReplace } from "@/lib/host/use-close-ws-stream-client-on-replace";

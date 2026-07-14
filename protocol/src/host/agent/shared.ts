@@ -1,17 +1,17 @@
 import { z } from "zod";
-import { commonRecordRegistry } from "@traycer/protocol/common/registry";
+import { commonRecordRegistry } from "@cic/protocol/common/registry";
 import {
   DEFAULT_AGENT_MODE,
   agentModeSchema,
   type AgentMode,
-} from "@traycer/protocol/common/schemas";
-import { getRecordSchema } from "@traycer/protocol/framework/index";
+} from "@cic/protocol/common/schemas";
+import { getRecordSchema } from "@cic/protocol/framework/index";
 
 export { DEFAULT_AGENT_MODE, agentModeSchema, type AgentMode };
 
 // ─── Harness identity ─────────────────────────────────────────────────────
 //
-// A "harness" is a coding-agent CLI that Traycer drives - Claude Code, Codex
+// A "harness" is a coding-agent CLI that CIC drives - Claude Code, Codex
 // CLI, OpenCode, etc. The same vendor is addressed by both surfaces:
 //
 //   - **GUI** agents render in a chat tab. The host drives the harness via
@@ -314,7 +314,7 @@ export type AgentSelectionGuideResponse = z.infer<
   typeof agentSelectionGuideResponseSchema
 >;
 
-// Settings/onboarding surface for the global guide file (~/.traycer/...).
+// Settings/onboarding surface for the global guide file (~/.cic/...).
 // Distinct from `agent.selectionGuide`, which resolves the full
 // workspace+global hierarchy for an agent. These are default-host scoped and
 // carry no epic. Provider choices are already host state, so the host computes
@@ -489,7 +489,7 @@ export type ListAgentsResponse = z.infer<typeof listAgentsResponseSchema>;
 
 // ── Frozen protocol-v1.0 agent.list response ───────────────────────────────
 // `agent.list` enumerates every agent in the epic - including ACP GUI harness
-// chats a newer client created - and the `traycer` CLI inlines the protocol at
+// chats a newer client created - and the `cic` CLI inlines the protocol at
 // build time, so an old CLI would hit a strict enum on those rows. v1.0 is
 // frozen; the v2.0 line carries them and a v2→v1 bridge drops them for v1.0
 // callers. Do not add new harnesses here - use the existing v2 bridge.

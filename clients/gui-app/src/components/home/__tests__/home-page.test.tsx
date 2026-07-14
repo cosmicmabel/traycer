@@ -9,7 +9,7 @@ import {
   waitFor,
 } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import type { JsonContent } from "@traycer/protocol/common/registry";
+import type { JsonContent } from "@cic/protocol/common/registry";
 import type { ComposerPromptEditorHandle } from "@/components/chat/composer/composer-prompt-editor";
 import { useAuthStore } from "@/stores/auth/auth-store";
 import { useEpicCanvasStore } from "@/stores/epics/canvas/store";
@@ -335,11 +335,11 @@ describe("<HomePage />", () => {
 
   it("creates a host-backed epic and navigates to the returned route", async () => {
     useWorkspaceFoldersStore.setState({
-      folders: ["/tmp/traycer"],
+      folders: ["/tmp/cic"],
       folderInfoByPath: {
-        "/tmp/traycer": {
-          path: "/tmp/traycer",
-          name: "traycer",
+        "/tmp/cic": {
+          path: "/tmp/cic",
+          name: "cic",
           repoIdentifier: null,
         },
       },
@@ -402,7 +402,7 @@ describe("<HomePage />", () => {
         version: "2.0.0",
       },
       repoIdentifiers: [],
-      workspaces: [{ workspacePath: "/tmp/traycer" }],
+      workspaces: [{ workspacePath: "/tmp/cic" }],
     });
 
     await waitFor(() => {
@@ -440,12 +440,12 @@ describe("<HomePage />", () => {
         "/tmp/gui-app": {
           path: "/tmp/gui-app",
           name: "gui-app",
-          repoIdentifier: { owner: "traycerai", repo: "gui-app" },
+          repoIdentifier: { owner: "cicai", repo: "gui-app" },
         },
         "/tmp/host": {
           path: "/tmp/host",
           name: "host",
-          repoIdentifier: { owner: "traycerai", repo: "host" },
+          repoIdentifier: { owner: "cicai", repo: "host" },
         },
       },
     });
@@ -475,8 +475,8 @@ describe("<HomePage />", () => {
     );
     expect(createEpicCall?.[1]).toMatchObject({
       repoIdentifiers: [
-        { owner: "traycerai", repo: "gui-app" },
-        { owner: "traycerai", repo: "host" },
+        { owner: "cicai", repo: "gui-app" },
+        { owner: "cicai", repo: "host" },
       ],
       workspaces: [
         { workspacePath: "/tmp/gui-app" },

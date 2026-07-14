@@ -1,11 +1,8 @@
-blank_issues_enabled: false
+blank_issues_enabled: true
 contact_links:
-  - name: Questions & discussions
-    url: https://github.com/traycerai/traycer/discussions
-    about: Ask questions and share ideas here.
+  - name: Questions & discussion
+    url: https://github.com/cosmicmabel/traycer/discussions
+    about: Ask questions and discuss ideas.
   - name: Report a security vulnerability
-    url: https://github.com/traycerai/traycer/security/advisories/new
-    about: Please report security issues privately — not as public issues.
-  - name: Traycer product & account help
-    url: https://traycer.ai
-    about: Help with the hosted product and your account.
+    url: https://github.com/cosmicmabel/traycer/security/advisories/new
+    about: Please report security issues privately via a GitHub security advisory.

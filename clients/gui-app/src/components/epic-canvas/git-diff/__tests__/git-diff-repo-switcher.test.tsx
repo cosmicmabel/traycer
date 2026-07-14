@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
-import type { WorktreeBindingSelectorRow } from "@traycer/protocol/host";
+import type { WorktreeBindingSelectorRow } from "@cic/protocol/host";
 import type { GitSubmoduleSummary } from "@/lib/git/git-repo-tree";
 import {
   buildGitDiffRepoSwitcherModel,
@@ -23,7 +23,7 @@ function row(
     worktreePath: null,
     mode: "local",
     isGitRepo: true,
-    repoIdentifier: { owner: "acme", repo: "traycer-internal" },
+    repoIdentifier: { owner: "acme", repo: "cic-internal" },
     branch: "development",
     isPrimary: true,
     isImported: false,
@@ -38,9 +38,9 @@ function submoduleNode(
   overrides: Partial<GitSubmoduleSummary>,
 ): GitSubmoduleSummary {
   return {
-    repoRoot: "/repo/vendor/traycer",
-    parentPath: "vendor/traycer",
-    label: "vendor/traycer",
+    repoRoot: "/repo/vendor/cic",
+    parentPath: "vendor/cic",
+    label: "vendor/cic",
     headLabel: "feature/submodule-ui",
     changeCount: 2,
     hasChanges: true,
@@ -169,7 +169,7 @@ describe("<GitDiffRepoSwitcherDropdown />", () => {
         onOpenChange={vi.fn()}
         roots={roots()}
         activeRootSubmodules={changedSubmodules()}
-        selected={selection({ repoRoot: "/repo/vendor/traycer" })}
+        selected={selection({ repoRoot: "/repo/vendor/cic" })}
         onSelectRoot={vi.fn()}
         hostSection={null}
         autoFocusSearch={false}
@@ -181,11 +181,11 @@ describe("<GitDiffRepoSwitcherDropdown />", () => {
     );
 
     expect(screen.getByTestId("repo-switcher-trigger").textContent).toContain(
-      "traycer-internal",
+      "cic-internal",
     );
     expect(
       screen.getByTestId("repo-switcher-trigger").textContent,
-    ).not.toContain("vendor/traycer");
+    ).not.toContain("vendor/cic");
     expect(
       screen.getByTestId("repo-switcher-trigger").getAttribute("title"),
     ).toContain(`Path: /repo`);
@@ -197,7 +197,7 @@ describe("<GitDiffRepoSwitcherDropdown />", () => {
     ).toContain("6 changed files");
     expect(
       screen.getByRole("button", {
-        name: /Git workspace,\s*traycer-internal,.*1 changed submodule, 6 changed files/,
+        name: /Git workspace,\s*cic-internal,.*1 changed submodule, 6 changed files/,
       }),
     ).toBeDefined();
     expect(screen.getByLabelText("1 changed submodule")).toBeDefined();
@@ -273,9 +273,7 @@ describe("<GitDiffRepoSwitcherDropdown />", () => {
     );
 
     const options = screen.getAllByRole("option");
-    const root = screen.getByTestId(
-      "git-diff-repo-switcher-root-traycer-internal",
-    );
+    const root = screen.getByTestId("git-diff-repo-switcher-root-cic-internal");
 
     expect(options).toHaveLength(roots().length);
     expect(
@@ -289,7 +287,7 @@ describe("<GitDiffRepoSwitcherDropdown />", () => {
     expect(screen.getByLabelText("6 changed files")).toBeDefined();
     expect(root.textContent).toContain("6");
     expect(
-      screen.queryByTestId("git-diff-repo-switcher-submodule-vendor/traycer"),
+      screen.queryByTestId("git-diff-repo-switcher-submodule-vendor/cic"),
     ).toBeNull();
   });
 
@@ -302,9 +300,7 @@ describe("<GitDiffRepoSwitcherDropdown />", () => {
       />,
     );
 
-    const root = screen.getByTestId(
-      "git-diff-repo-switcher-root-traycer-internal",
-    );
+    const root = screen.getByTestId("git-diff-repo-switcher-root-cic-internal");
     expect(root.textContent).toContain("/repo");
     expect(root.textContent).not.toContain("submodule status unavailable");
     expect(
@@ -337,15 +333,13 @@ describe("<GitDiffRepoSwitcherDropdown />", () => {
       />,
     );
 
-    const root = screen.getByTestId(
-      "git-diff-repo-switcher-root-traycer-internal",
-    );
+    const root = screen.getByTestId("git-diff-repo-switcher-root-cic-internal");
     expect(root.textContent).toContain("/repo");
     expect(root.textContent).not.toContain("2 submodules · 1 changed");
     expect(screen.getByLabelText("1 changed submodule")).toBeDefined();
     expect(screen.queryByLabelText("1 changed file")).toBeNull();
     expect(
-      screen.queryByTestId("git-diff-repo-switcher-submodule-vendor/traycer"),
+      screen.queryByTestId("git-diff-repo-switcher-submodule-vendor/cic"),
     ).toBeNull();
   });
 
@@ -382,9 +376,7 @@ describe("<GitDiffRepoSwitcherDropdown />", () => {
       />,
     );
 
-    const root = screen.getByTestId(
-      "git-diff-repo-switcher-root-traycer-internal",
-    );
+    const root = screen.getByTestId("git-diff-repo-switcher-root-cic-internal");
     const disabled = screen.getByTestId("git-diff-repo-switcher-root-notes");
     const otherRoot = screen.getByTestId(
       "git-diff-repo-switcher-root-other-repo",
@@ -422,10 +414,10 @@ describe("<GitDiffRepoSwitcherDropdown />", () => {
 
     expect(screen.getAllByRole("option")).toHaveLength(1);
     expect(
-      screen.getByTestId("git-diff-repo-switcher-root-traycer-internal"),
+      screen.getByTestId("git-diff-repo-switcher-root-cic-internal"),
     ).toBeDefined();
     expect(
-      screen.queryByTestId("git-diff-repo-switcher-submodule-vendor/traycer"),
+      screen.queryByTestId("git-diff-repo-switcher-submodule-vendor/cic"),
     ).toBeNull();
     expect(
       screen.queryByTestId("git-diff-repo-switcher-root-other-repo"),
@@ -458,7 +450,7 @@ describe("<GitDiffRepoSwitcherDropdown />", () => {
       expect.objectContaining({ runningDir: "/other/repo" }),
     );
     expect(
-      screen.queryByTestId("git-diff-repo-switcher-submodule-vendor/traycer"),
+      screen.queryByTestId("git-diff-repo-switcher-submodule-vendor/cic"),
     ).toBeNull();
   });
 });

@@ -1,4 +1,4 @@
-import type { ChatActiveTurn } from "@traycer/protocol/host/agent/gui/subscribe";
+import type { ChatActiveTurn } from "@cic/protocol/host/agent/gui/subscribe";
 import { memo, useState } from "react";
 import { useStore } from "zustand";
 

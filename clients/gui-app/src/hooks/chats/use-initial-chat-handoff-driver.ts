@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useStore } from "zustand";
 import { useShallow } from "zustand/react/shallow";
-import type { UserMessageSender } from "@traycer/protocol/persistence/epic/schemas";
+import type { UserMessageSender } from "@cic/protocol/persistence/epic/schemas";
 import type {
   ChatSessionState,
   ChatSessionStoreHandle,

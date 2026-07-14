@@ -19,8 +19,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { create } from "zustand";
 import * as Y from "yjs";
 import { Awareness } from "y-protocols/awareness";
-import type { IRunnerHost } from "@traycer-clients/shared/platform/runner-host";
-import type { TaskLight } from "@traycer/protocol/host/epic/unary-schemas";
+import type { IRunnerHost } from "@cic/shared/platform/runner-host";
+import type { TaskLight } from "@cic/protocol/host/epic/unary-schemas";
 import { RunnerHostProvider } from "@/providers/runner-host-provider";
 import { useDesktopDialogStore } from "@/stores/dialogs/desktop-dialog-store";
 import type {
@@ -62,7 +62,7 @@ vi.mock("@/hooks/epics/use-cloud-epic-tasks-query", () => ({
 import { DesktopDialogHost } from "@/components/layout/dialogs/desktop-dialog-host";
 
 const snapshot: DesktopSupportSnapshot = {
-  appName: "Traycer",
+  appName: "CIC",
   appVersion: "1.2.3",
   platform: "darwin",
   arch: "arm64",
@@ -82,7 +82,7 @@ const snapshot: DesktopSupportSnapshot = {
     {
       target: "desktop",
       label: "Desktop Log",
-      path: "/tmp/traycer-desktop.log",
+      path: "/tmp/cic-desktop.log",
     },
     {
       target: "host",
@@ -94,30 +94,30 @@ const snapshot: DesktopSupportSnapshot = {
     {
       id: "website",
       label: "Website",
-      url: "https://traycer.ai",
+      url: "https://site.example.invalid",
     },
     {
       id: "documentation",
       label: "Documentation",
-      url: "https://docs.traycer.ai",
+      url: "https://docs.example.invalid",
     },
     {
       id: "release-notes",
       label: "Release Notes",
-      url: "https://docs.traycer.ai/changelog",
+      url: "https://docs.example.invalid/changelog",
     },
     {
       id: "discord",
       label: "Discord",
-      url: "https://traycer.ai/discord",
+      url: "https://chat.example.invalid",
     },
     {
       id: "support",
       label: "Contact Support",
-      url: "mailto:support@traycer.ai",
+      url: "mailto:support@example.invalid",
     },
   ],
-  supportEmail: "support@traycer.ai",
+  supportEmail: "support@example.invalid",
 };
 
 const EPIC_A = { id: "e-a", name: "A", draft: false };
@@ -213,7 +213,7 @@ function createBaseRunnerHost(): IRunnerHost {
     onSystemResumed: () => ({ dispose: () => undefined }),
     requestHostRespawn: () => Promise.resolve(),
     service: null,
-    traycerCli: null,
+    cicCli: null,
     migration: null,
     hostManagement: null,
     hostTray: null,
@@ -464,7 +464,7 @@ describe("<DesktopDialogHost />", () => {
 
     expect(screen.getByText("1.2.3")).not.toBeNull();
     expect(screen.getByText("Test User <test@example.com>")).not.toBeNull();
-    expect(screen.getByText("support@traycer.ai")).not.toBeNull();
+    expect(screen.getByText("support@example.invalid")).not.toBeNull();
     expect(screen.getByText("darwin arm64")).not.toBeNull();
     expect(screen.getByText("0.4.0 (pid 1234)")).not.toBeNull();
 
@@ -473,8 +473,8 @@ describe("<DesktopDialogHost />", () => {
 
     await waitFor(() => {
       expect(openedLinks).toEqual([
-        "https://docs.traycer.ai",
-        "https://docs.traycer.ai/changelog",
+        "https://docs.example.invalid",
+        "https://docs.example.invalid/changelog",
       ]);
     });
   });

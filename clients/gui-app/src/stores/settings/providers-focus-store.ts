@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { GuiHarnessId } from "@traycer/protocol/host/index";
+import type { GuiHarnessId } from "@cic/protocol/host/index";
 
 interface ProvidersFocusState {
   // The harness/provider to pre-select the next time the Providers settings

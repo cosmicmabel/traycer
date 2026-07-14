@@ -3,7 +3,7 @@ import type {
   HostDoctorIssue,
   FreePortAndRestartInput,
   IHostManagement,
-} from "@traycer-clients/shared/platform/runner-host";
+} from "@cic/shared/platform/runner-host";
 
 export function copyTerminalCommand(command: string): void {
   void navigator.clipboard.writeText(command).then(

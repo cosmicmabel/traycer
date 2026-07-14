@@ -22,8 +22,8 @@ import type {
   IHostManagement,
   IRunnerHost,
   LocalHostSnapshot,
-} from "@traycer-clients/shared/platform/runner-host";
-import { MockRunnerHost } from "@traycer-clients/shared/host-client/mock/mock-runner-host";
+} from "@cic/shared/platform/runner-host";
+import { MockRunnerHost } from "@cic/shared/host-client/mock/mock-runner-host";
 
 vi.mock("sonner", () => ({
   toast: {
@@ -361,7 +361,7 @@ function makeManagement(
     uninstallHost:
       overrides.uninstallHost ?? vi.fn(notImplemented("uninstallHost")),
     restartHost: overrides.restartHost ?? vi.fn(() => Promise.resolve()),
-    uninstallTraycer: vi.fn(notImplemented("uninstallTraycer")),
+    uninstallCic: vi.fn(notImplemented("uninstallCic")),
     getRemovalState: vi.fn(() => Promise.resolve({ removedByUser: false })),
     clearRemoval: vi.fn(() => Promise.resolve()),
     getHostLogs: vi.fn(() => Promise.resolve({ path: null, tail: "" })),
@@ -476,7 +476,7 @@ function makeInstallResult(version: string): HostInstallResult {
   return {
     version,
     installedAt: "2026-05-15T00:00:00Z",
-    executablePath: `/tmp/traycer/${version}/host`,
+    executablePath: `/tmp/cic/${version}/host`,
     source: { kind: "registry", value: version },
     archiveSha256: "abc",
     signatureKeyId: "key",
@@ -495,7 +495,7 @@ function makeInstalledRecord(version: string): HostInstalledRecord {
   return {
     version,
     installedAt: "2026-05-10T00:00:00Z",
-    executablePath: `/tmp/traycer/${version}/host`,
+    executablePath: `/tmp/cic/${version}/host`,
     source: { kind: "registry", value: version },
     archiveSha256: "abc",
     signatureKeyId: "key",
@@ -517,7 +517,7 @@ function makeHost(
     hosts: [],
     workspaceFolderPickerPaths: undefined,
     hasLocalHost: undefined,
-    traycerCli: undefined,
+    cicCli: undefined,
   });
   const proto = Object.getPrototypeOf(host) as object;
   return Object.assign(Object.create(proto) as IRunnerHost, host, {

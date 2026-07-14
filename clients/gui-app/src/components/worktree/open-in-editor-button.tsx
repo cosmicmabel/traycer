@@ -1,7 +1,7 @@
 import type { ComponentType } from "react";
 import { ChevronDown, Code, Copy } from "lucide-react";
 import { toast } from "sonner";
-import { EDITORS, type EditorId } from "@traycer/protocol/host";
+import { EDITORS, type EditorId } from "@cic/protocol/host";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,

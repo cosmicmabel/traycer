@@ -4,7 +4,7 @@
  * for "local" mode, returns workspacePath.
  */
 
-import type { WorktreeBindingEntry } from "@traycer/protocol/host";
+import type { WorktreeBindingEntry } from "@cic/protocol/host";
 
 export function resolveBindingRunningDir(
   entry: WorktreeBindingEntry,

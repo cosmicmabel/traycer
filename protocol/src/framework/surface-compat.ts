@@ -4,7 +4,7 @@ import {
   type ProtocolSurface,
   type SurfaceMethod,
   type SurfaceVersion,
-} from "@traycer/protocol/framework/surface-build";
+} from "@cic/protocol/framework/surface-build";
 
 /**
  * Released-peer compatibility oracle over dumped protocol surfaces.

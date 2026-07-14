@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import type { WorktreeBindingOwnerKind } from "@traycer/protocol/host/worktree-schemas";
+import type { WorktreeBindingOwnerKind } from "@cic/protocol/host/worktree-schemas";
 import { useHostClient } from "@/lib/host";
 import { useReactiveActiveHostId } from "@/hooks/host/use-reactive-active-host-id";
 import { useWorktreeGetBinding } from "@/hooks/worktree/use-worktree-get-binding-query";

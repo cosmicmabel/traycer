@@ -1,4 +1,4 @@
-import type { LogLevel } from "@traycer/protocol/config/log-level";
+import type { LogLevel } from "@cic/protocol/config/log-level";
 
 /**
  * Feature-detected access to the desktop-only `platform.logLevels` namespace the

@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   isNoOpCheckpointEntry,
   type TurnCheckpointManifestEntry,
-} from "@traycer/protocol/persistence/epic/checkpoint-manifests";
+} from "@cic/protocol/persistence/epic/checkpoint-manifests";
 
 function entry(
   partial: Partial<TurnCheckpointManifestEntry>,

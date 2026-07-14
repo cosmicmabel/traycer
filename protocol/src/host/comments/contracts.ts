@@ -1,4 +1,4 @@
-import { defineRpcContract } from "@traycer/protocol/framework/index";
+import { defineRpcContract } from "@cic/protocol/framework/index";
 import {
   commentsListThreadsRequestSchema,
   commentsListThreadsResponseSchema,

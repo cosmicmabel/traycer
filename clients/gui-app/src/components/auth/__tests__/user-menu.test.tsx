@@ -15,9 +15,9 @@ import {
   createRouter,
   RouterProvider,
 } from "@tanstack/react-router";
-import { MockHostMessenger } from "@traycer-clients/shared/host-client/mock/mock-host-messenger";
-import { MockRunnerHost } from "@traycer-clients/shared/host-client/mock/mock-runner-host";
-import type { IHostMessenger } from "@traycer-clients/shared/host-transport/host-messenger";
+import { MockHostMessenger } from "@cic/shared/host-client/mock/mock-host-messenger";
+import { MockRunnerHost } from "@cic/shared/host-client/mock/mock-runner-host";
+import type { IHostMessenger } from "@cic/shared/host-transport/host-messenger";
 import { UserMenu } from "@/components/auth/user-menu";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import {
@@ -30,13 +30,13 @@ import { useAuthStore } from "@/stores/auth/auth-store";
 
 function buildHost(): MockRunnerHost {
   return new MockRunnerHost({
-    signInUrl: "https://auth.traycer.invalid/sign-in",
+    signInUrl: "https://auth.cic.invalid/sign-in",
     authnBaseUrl: "http://localhost:5005",
     localHost: null,
     hosts: [],
     workspaceFolderPickerPaths: undefined,
     hasLocalHost: undefined,
-    traycerCli: undefined,
+    cicCli: undefined,
   });
 }
 

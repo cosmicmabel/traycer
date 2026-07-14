@@ -8,7 +8,7 @@ vi.mock("sonner", () => ({
 
 vi.mock("@/lib/host/runtime", async () => {
   const { HostRpcError } =
-    await import("@traycer-clients/shared/host-transport/host-messenger");
+    await import("@cic/shared/host-transport/host-messenger");
   return {
     useHostClient: () => ({
       request: () =>
@@ -38,7 +38,7 @@ vi.mock("@/lib/registries/chat-session-registry", () => ({
   }),
 }));
 
-import type { CreateChatRequest } from "@traycer/protocol/host/epic/unary-schemas";
+import type { CreateChatRequest } from "@cic/protocol/host/epic/unary-schemas";
 import type {
   CreateChatMutationInput,
   DeleteChatMutationOptions,
@@ -71,8 +71,8 @@ import {
   useEpicRenameChat,
   useEpicDeleteChat,
 } from "@/hooks/epic/use-epic-chat-mutations";
-import { HostRpcError } from "@traycer-clients/shared/host-transport/host-messenger";
-import type { RpcErrorCode } from "@traycer/protocol/framework/index";
+import { HostRpcError } from "@cic/shared/host-transport/host-messenger";
+import type { RpcErrorCode } from "@cic/protocol/framework/index";
 
 function makeError(code: RpcErrorCode): HostRpcError {
   return new HostRpcError({

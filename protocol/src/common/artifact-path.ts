@@ -5,7 +5,7 @@
  * (Node), the RPC resolver, and the gui-app renderer (browser).
  *
  * This is the single home for the ROOT-AGNOSTIC subsequence scan that used to
- * be copy-pasted in the host (the external Traycer Host) and
+ * be copy-pasted in the host (the external CIC Host) and
  * `clients/gui-app/src/markdown/links/artifact-link-path.ts`. Both now
  * consume {@link deriveArtifactPathLayoutRootAgnostic}; the host's local
  * root-CHECKED deriver reuses {@link artifactLayoutFromChain} for the shared
@@ -70,7 +70,7 @@ export function artifactLayoutFromChain(
  * Locate the `epics/<epicId>/artifacts/<chain>/index.md` SUBSEQUENCE anywhere
  * inside `filePath`, regardless of the leading disk root (C1). An artifact link
  * authored on another machine / by another user carries an absolute path under
- * a different home prefix (`/Users/them/.traycer/...`, `C:\Users\...`); gating
+ * a different home prefix (`/Users/them/.cic/...`, `C:\Users\...`); gating
  * on a local prefix would silently fail every cross-machine link, so this
  * matches purely on the structural marker.
  *

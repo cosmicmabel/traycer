@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { DEFAULT_ACCOUNT_CONTEXT } from "@traycer/protocol/common/schemas";
-import { downgradeResponseAcrossMajors } from "@traycer/protocol/framework/index";
-import { hostGetRateLimitUsageDowngradeV2ToV1 } from "@traycer/protocol/host/rate-limit/contracts";
-import { hostRpcRegistry } from "@traycer/protocol/host/index";
+import { DEFAULT_ACCOUNT_CONTEXT } from "@cic/protocol/common/schemas";
+import { downgradeResponseAcrossMajors } from "@cic/protocol/framework/index";
+import { hostGetRateLimitUsageDowngradeV2ToV1 } from "@cic/protocol/host/rate-limit/contracts";
+import { hostRpcRegistry } from "@cic/protocol/host/index";
 import {
   providerRateLimitsSchema,
   rateLimitUnavailableReasonSchemaV1,
@@ -10,7 +10,7 @@ import {
   rateLimitUsageRequestSchemaV12,
   rateLimitUsageResponseSchemaV12,
   rateLimitUsageResponseSchemaV20,
-} from "@traycer/protocol/host/rate-limit/schemas";
+} from "@cic/protocol/host/rate-limit/schemas";
 
 // `providerRateLimitsSchema` is a plain `z.union`, not a `z.discriminatedUnion`,
 // because its "unavailable" arm's `provider` field ranges over the full

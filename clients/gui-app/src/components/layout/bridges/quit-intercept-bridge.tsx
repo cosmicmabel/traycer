@@ -92,7 +92,7 @@ const SNAPSHOT_DEBOUNCE_MS = 100;
 
 /**
  * Bridges the renderer's live Open-Epic registry with the Electron main
- * process so Cmd+Q / "Quit Traycer" can block on unsynced Tiptap edits and
+ * process so Cmd+Q / "Quit CIC" can block on unsynced Tiptap edits and
  * the user can opt to wait-for-sync or quit-and-discard. Mounts once per
  * session, inside the post-auth providers in `AppShell`.
  *

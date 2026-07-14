@@ -4,17 +4,17 @@ import { describe, expect, it } from "vitest";
 import {
   hostRpcRegistry,
   hostStreamRpcRegistry,
-} from "@traycer/protocol/host/index";
-import { buildStreamManifest } from "@traycer/protocol/framework/stream-compat";
+} from "@cic/protocol/host/index";
+import { buildStreamManifest } from "@cic/protocol/framework/stream-compat";
 import {
   manifestFromSurface,
   protocolSurfaceSchema,
-} from "@traycer/protocol/framework/surface-compat";
+} from "@cic/protocol/framework/surface-compat";
 import {
   createRequestContext,
   identityFromAuthenticatedUser,
   type RequestContext,
-} from "@traycer/protocol/auth/request-context";
+} from "@cic/protocol/auth/request-context";
 import { mockLocalHostEntry } from "../../host-client/mock/mock-host-directory";
 import { createAuthenticatedUserFixture } from "../../test-fixtures/authenticated-user";
 import type {
@@ -35,7 +35,7 @@ import { WsStreamClient } from "../ws-stream-client";
 import type {
   ClientFrame,
   HostFrame,
-} from "@traycer/protocol/framework/ws-protocol";
+} from "@cic/protocol/framework/ws-protocol";
 
 /**
  * Released-peer handshake smoke: drives the REAL shipped transports

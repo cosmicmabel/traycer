@@ -7,7 +7,7 @@ import type {
   SteerBlock,
   SubAgentBlock,
   TodoBlock,
-} from "@traycer/protocol/persistence/epic/schemas";
+} from "@cic/protocol/persistence/epic/schemas";
 import { extractPlainTextFromComposerJSONContent } from "@/lib/composer/tiptap-json-content";
 import { isRenderableSubAgentBlock } from "./subagent-blocks";
 

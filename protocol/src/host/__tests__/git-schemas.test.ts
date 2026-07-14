@@ -14,11 +14,11 @@ import {
   gitGetCapabilitiesResponseSchema,
   gitSubscribeStatusEventSchema,
   gitStageSchema,
-} from "@traycer/protocol/host/git-schemas";
+} from "@cic/protocol/host/git-schemas";
 import {
   DEFAULT_GIT_FILE_DIFF_BYTE_BUDGET,
   DEFAULT_GIT_FILE_DIFFS_BYTE_BUDGET,
-} from "@traycer/protocol/host/git-constants";
+} from "@cic/protocol/host/git-constants";
 
 describe("gitChangedFileSchema", () => {
   it("parses and reparses unchanged", () => {

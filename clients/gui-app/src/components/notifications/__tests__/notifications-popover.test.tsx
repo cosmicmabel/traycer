@@ -28,16 +28,16 @@ import {
   useNotificationsStore,
 } from "@/stores/notifications/notifications-store";
 import { useEpicCanvasStore } from "@/stores/epics/canvas/store";
-import type { NotificationsStreamCallbacks } from "@traycer-clients/shared/host-transport/notifications-stream-client";
+import type { NotificationsStreamCallbacks } from "@cic/shared/host-transport/notifications-stream-client";
 import {
   type NotificationEntry,
   NOTIFICATION_EVENT_TYPES,
-} from "@traycer/protocol/notifications/notification-entry";
+} from "@cic/protocol/notifications/notification-entry";
 import {
   type NotificationRoomEntryMap,
   NOTIFICATIONS_ARRAY_KEY,
   createNotificationRoomEntryMap,
-} from "@traycer/protocol/notifications/notification-room";
+} from "@cic/protocol/notifications/notification-room";
 
 function seedEntries(
   callbacks: NotificationsStreamCallbacks,

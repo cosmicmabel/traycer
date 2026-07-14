@@ -25,7 +25,7 @@
 
 import { toast } from "sonner";
 
-import type { JsonContent } from "@traycer/protocol/common/registry";
+import type { JsonContent } from "@cic/protocol/common/registry";
 
 import { collectImageAtoms } from "@/lib/composer/image-atoms";
 import {

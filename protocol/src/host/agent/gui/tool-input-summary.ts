@@ -185,11 +185,11 @@ const TOOL_REGISTRY: Record<string, SummaryFn> = {
     const r = asRecord(input);
     return r === null ? null : summarizeQuery(r);
   },
-  traycer_list_comment_threads: (input) => {
+  cic_list_comment_threads: (input) => {
     const r = asRecord(input);
     return r === null ? null : summarizeCommentThreadList(r);
   },
-  traycer_set_comment_thread_status: (input) => {
+  cic_set_comment_thread_status: (input) => {
     const r = asRecord(input);
     return r === null ? null : summarizeCommentThreadStatus(r);
   },

@@ -1,9 +1,9 @@
 import { describe, expect, it, vi } from "vitest";
 import { createAuthAwareMessenger } from "../auth-aware-messenger";
 import { HostRpcError, type IHostMessenger } from "../host-messenger";
-import { MutableBearerLease } from "@traycer-clients/shared/auth/bearer-source";
-import type { AuthRevalidator } from "@traycer-clients/shared/auth/bearer-revalidator";
-import { hostRpcRegistry } from "@traycer/protocol/host/index";
+import { MutableBearerLease } from "@cic/shared/auth/bearer-source";
+import type { AuthRevalidator } from "@cic/shared/auth/bearer-revalidator";
+import { hostRpcRegistry } from "@cic/protocol/host/index";
 
 type Registry = typeof hostRpcRegistry;
 

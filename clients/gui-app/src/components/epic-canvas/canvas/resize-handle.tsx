@@ -7,7 +7,7 @@
  * `style.flexGrow` on its two adjacent sibling child wrappers per frame
  * (refs resolved from the DOM at pointer-down), and commits the final
  * fractions to the store ONCE on pointer-up via `onCommitSizes`. The
- * global `traycer-panel-resizing` class freezes expensive overlays for the
+ * global `cic-panel-resizing` class freezes expensive overlays for the
  * drag's duration (see `lib/layout/panel-resizing-class.ts`).
  *
  * Double-click equalizes the containing group's fractions. Arrow keys nudge

@@ -1,4 +1,4 @@
-import type { JsonContent } from "@traycer/protocol/common/registry";
+import type { JsonContent } from "@cic/protocol/common/registry";
 
 interface InsertImagesResult {
   readonly content: JsonContent[];

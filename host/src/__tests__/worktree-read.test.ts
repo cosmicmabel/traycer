@@ -3,8 +3,8 @@ import { afterAll, beforeAll, describe, expect, it } from "bun:test";
 import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { hostRpcRegistry } from "@traycer/protocol/host/registry";
-import { hostFrameSchema } from "@traycer/protocol/framework/ws-protocol";
+import { hostRpcRegistry } from "@cic/protocol/host/registry";
+import { hostFrameSchema } from "@cic/protocol/framework/ws-protocol";
 import { startOpenHostServer, type RunningOpenHost } from "../server";
 import { RegistryRuntime } from "../registry-runtime";
 
@@ -37,10 +37,10 @@ async function git(args: readonly string[]): Promise<void> {
 
 beforeAll(async () => {
   workspacePath = await mkdtemp(join(tmpdir(), "open-host-worktree-"));
-  await mkdir(join(workspacePath, ".traycer"), { recursive: true });
+  await mkdir(join(workspacePath, ".cic"), { recursive: true });
   await writeFile(join(workspacePath, "README.md"), "# fixture\n");
   await writeFile(
-    join(workspacePath, ".traycer", "environment.json"),
+    join(workspacePath, ".cic", "environment.json"),
     JSON.stringify(SCRIPTS_FIXTURE),
   );
   await git(["init", "-b", "main"]);

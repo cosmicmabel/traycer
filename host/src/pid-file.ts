@@ -5,15 +5,15 @@ import { randomUUID } from "node:crypto";
 
 /**
  * pid.json writer - the host side of the on-disk contract the CLI, desktop,
- * and web serve process read (`clients/traycer-cli/src/host/pid-metadata.ts`):
+ * and web serve process read (`clients/cic-cli/src/host/pid-metadata.ts`):
  * `{ pid, hostId, version, websocketUrl, startedAt }` at
- * `~/.traycer/host/pid.json` (production) or `~/.traycer/host/<env>/pid.json`.
+ * `~/.cic/host/pid.json` (production) or `~/.cic/host/<env>/pid.json`.
  *
  * `hostId` ≡ deviceId (see CLAUDE.md "host identity model"), so it must be
  * stable across restarts: it is minted once and persisted next to pid.json.
  */
 export function hostHomeDir(environment: string): string {
-  const base = join(homedir(), ".traycer", "host");
+  const base = join(homedir(), ".cic", "host");
   return environment === "production" ? base : join(base, environment);
 }
 

@@ -2,14 +2,14 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, cleanup, render, screen, waitFor } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type { ReactNode } from "react";
-import { MockHostMessenger } from "@traycer-clients/shared/host-client/mock/mock-host-messenger";
-import { MockRunnerHost } from "@traycer-clients/shared/host-client/mock/mock-runner-host";
+import { MockHostMessenger } from "@cic/shared/host-client/mock/mock-host-messenger";
+import { MockRunnerHost } from "@cic/shared/host-client/mock/mock-runner-host";
 import {
   HostRpcError,
   type RequestOfMethod,
   type ResponseOfMethod,
-} from "@traycer-clients/shared/host-transport/host-messenger";
-import type { LocalHostSnapshot } from "@traycer-clients/shared/platform/runner-host";
+} from "@cic/shared/host-transport/host-messenger";
+import type { LocalHostSnapshot } from "@cic/shared/platform/runner-host";
 import {
   HostCompatibilityProvider,
   hostRpcRegistry,
@@ -31,8 +31,8 @@ import {
   clearSessionCreatedEpics,
   markEpicCreatedThisSession,
 } from "@/lib/epics/session-created-epics";
-import type { JsonContent } from "@traycer/protocol/common/registry";
-import type { ChatRunSettings } from "@traycer/protocol/host/agent/gui/subscribe";
+import type { JsonContent } from "@cic/protocol/common/registry";
+import type { ChatRunSettings } from "@cic/protocol/host/agent/gui/subscribe";
 
 const STARTUP_EPIC_ID = "epic-startup-compat";
 const STALE_EPIC_ID = "epic-stale-persisted";
@@ -155,13 +155,13 @@ function mountStartupConsumers(
   options: StartupConsumersOptions,
 ): StartupConsumersMount {
   const host = new MockRunnerHost({
-    signInUrl: "https://auth.traycer.invalid/sign-in",
+    signInUrl: "https://auth.cic.invalid/sign-in",
     authnBaseUrl: "http://localhost:5005",
     localHost: localSnapshot,
     hosts: [],
     workspaceFolderPickerPaths: undefined,
     hasLocalHost: undefined,
-    traycerCli: undefined,
+    cicCli: undefined,
   });
   void host.tokenStore.set({
     token: "test-token",

@@ -51,7 +51,7 @@ import {
   type EpicNodeRef,
   type WorkspaceFileRef,
 } from "@/stores/epics/canvas/types";
-import type { WorkspaceFileTreeNode } from "@traycer/protocol/host/workspace/unary-schemas";
+import type { WorkspaceFileTreeNode } from "@cic/protocol/host/workspace/unary-schemas";
 import { extractPierreItemPathFromEvent } from "@/components/epic-canvas/pierre-tree-adapter";
 import { type GitStatusEntry } from "@pierre/trees";
 import {

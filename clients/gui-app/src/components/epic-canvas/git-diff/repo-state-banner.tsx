@@ -1,4 +1,4 @@
-import type { RepoState, RepoMode } from "@traycer/protocol/host/git-schemas";
+import type { RepoState, RepoMode } from "@cic/protocol/host/git-schemas";
 import { Badge } from "@/components/ui/badge";
 
 function short(sha: string, len: number): string {

@@ -3,8 +3,8 @@ import {
   defineUpgradePath,
   defineVersionedRpcRegistry,
   type DowngradeResult,
-} from "@traycer/protocol/framework/index";
-import { defineVersionedStreamRpcRegistry } from "@traycer/protocol/framework/versioned-stream-rpc";
+} from "@cic/protocol/framework/index";
+import { defineVersionedStreamRpcRegistry } from "@cic/protocol/framework/versioned-stream-rpc";
 import {
   agentCreateV10,
   agentGetTranscriptV10,
@@ -32,11 +32,11 @@ import {
   agentSelectionGuideGlobalSetV10,
   agentSendMessageV10,
   agentStopV10,
-} from "@traycer/protocol/host/agent/contracts";
+} from "@cic/protocol/host/agent/contracts";
 import {
   agentInboxReadV10,
   agentInboxSubscribeV10,
-} from "@traycer/protocol/host/agent/inbox";
+} from "@cic/protocol/host/agent/inbox";
 import {
   agentGuiGetPlanV10,
   agentGuiListCommandsV10,
@@ -58,7 +58,7 @@ import {
   chatSubscribeV11,
   chatSubscribeV12,
   chatSubscribeV13,
-} from "@traycer/protocol/host/agent/gui/contracts";
+} from "@cic/protocol/host/agent/gui/contracts";
 import {
   agentTuiGenerateTitleV10,
   agentTuiTurnEndedV10,
@@ -67,13 +67,13 @@ import {
   agentTuiRecordActivityV10,
   agentTuiRecordActivityV11,
   agentTuiRecordActivityUpgradeV10ToV11,
-} from "@traycer/protocol/host/agent/tui/contracts";
+} from "@cic/protocol/host/agent/tui/contracts";
 import {
   commentsListThreadsV10,
   commentsSetThreadStatusV10,
-} from "@traycer/protocol/host/comments/contracts";
-import { hostStatusV10 } from "@traycer/protocol/host/status/contracts";
-import { hostGetRuntimeCapabilitiesV10 } from "@traycer/protocol/host/runtime-capabilities/contracts";
+} from "@cic/protocol/host/comments/contracts";
+import { hostStatusV10 } from "@cic/protocol/host/status/contracts";
+import { hostGetRuntimeCapabilitiesV10 } from "@cic/protocol/host/runtime-capabilities/contracts";
 import {
   hostGetRateLimitUsageV10,
   hostGetRateLimitUsageV11,
@@ -83,7 +83,7 @@ import {
   hostGetRateLimitUsageUpgradeV11ToV12,
   hostGetRateLimitUsageUpgradeV12ToV20,
   hostGetRateLimitUsageDowngradeV2ToV1,
-} from "@traycer/protocol/host/rate-limit/contracts";
+} from "@cic/protocol/host/rate-limit/contracts";
 import {
   epicBatchDeleteV10,
   epicBatchUpdateRolesV10,
@@ -120,7 +120,7 @@ import {
   epicSubscribeV10,
   epicUpdateArtifactStatusV10,
   epicUpdateTitleV10,
-} from "@traycer/protocol/host/epic/contracts";
+} from "@cic/protocol/host/epic/contracts";
 import {
   workspaceMentionFilesV10,
   workspaceMentionFoldersV10,
@@ -133,7 +133,7 @@ import {
   workspacePrepareFoldersV10,
   workspaceReadFileV10,
   workspaceResolvePathsByRepoIdentifiersV10,
-} from "@traycer/protocol/host/workspace/contracts";
+} from "@cic/protocol/host/workspace/contracts";
 import {
   terminalCreateV10,
   terminalKillV10,
@@ -143,23 +143,23 @@ import {
   terminalSubscribeV11,
   terminalSubscribeV12,
   terminalSubscribeV13,
-} from "@traycer/protocol/host/terminal/contracts";
-import { notificationsSubscribeV10 } from "@traycer/protocol/host/notifications/contracts";
+} from "@cic/protocol/host/terminal/contracts";
+import { notificationsSubscribeV10 } from "@cic/protocol/host/notifications/contracts";
 import {
   resourcesSubscribeV10,
   resourcesSubscribeV11,
-} from "@traycer/protocol/host/resources/subscribe";
+} from "@cic/protocol/host/resources/subscribe";
 import {
   speechEnsureModelV10,
   speechGetModelStatusV10,
-} from "@traycer/protocol/host/speech/contracts";
-import { speechDictateV10 } from "@traycer/protocol/host/speech/subscribe";
+} from "@cic/protocol/host/speech/contracts";
+import { speechDictateV10 } from "@cic/protocol/host/speech/subscribe";
 import {
   migrationRunV10,
   phaseMigrateToEpicV10,
-} from "@traycer/protocol/host/migration/contracts";
-import { worktreeDeleteByPathStreamV10 } from "@traycer/protocol/host/worktree-delete-stream";
-import { editorOpenPathsV10 } from "@traycer/protocol/host/editor/contracts";
+} from "@cic/protocol/host/migration/contracts";
+import { worktreeDeleteByPathStreamV10 } from "@cic/protocol/host/worktree-delete-stream";
+import { editorOpenPathsV10 } from "@cic/protocol/host/editor/contracts";
 import {
   gitListChangedFilesV10,
   gitListChangedFilesV11,
@@ -168,8 +168,8 @@ import {
   gitGetFileDiffsV10,
   gitGetCapabilitiesV10,
   gitSubscribeStatusV10,
-} from "@traycer/protocol/host/git-contracts";
-import { defineRpcContract } from "@traycer/protocol/framework/index";
+} from "@cic/protocol/host/git-contracts";
+import { defineRpcContract } from "@cic/protocol/framework/index";
 import {
   worktreeCreateRequestSchema,
   worktreeCreateResponseSchema,
@@ -202,7 +202,7 @@ import {
   worktreeSetRepoScriptsResponseSchema,
   worktreeGetBindingRequestSchema,
   worktreeGetBindingResponseSchema,
-} from "@traycer/protocol/host/worktree-schemas";
+} from "@cic/protocol/host/worktree-schemas";
 import {
   snapshotsClearLocalSnapshotsRequestSchema,
   snapshotsClearLocalSnapshotsResponseSchema,
@@ -210,7 +210,7 @@ import {
   snapshotsGetLocalStorageSizeResponseSchema,
   snapshotsReadSnapshotDiffRequestSchema,
   snapshotsReadSnapshotDiffResponseSchema,
-} from "@traycer/protocol/host/snapshot-schemas";
+} from "@cic/protocol/host/snapshot-schemas";
 import {
   providersAddCustomPathRequestSchema,
   providersAddCustomPathRequestSchemaV10,
@@ -270,13 +270,13 @@ import {
   type ProviderCliState,
   type ProviderCliStateV10,
   type ProviderCliStateV20,
-} from "@traycer/protocol/host/provider-schemas";
+} from "@cic/protocol/host/provider-schemas";
 
 export { hostGetRuntimeCapabilitiesV10 };
 export { hostGetRateLimitUsageV10 };
 
 /**
- * Traycer 3.0 host RPC protocol.
+ * CIC 3.0 host RPC protocol.
  *
  * Authoritative home for contracts the local host publishes (`host.*`,
  * `agent.*`, and `epic.*` methods). Every host consumer - the host
@@ -425,7 +425,7 @@ export const worktreeDeleteV10 = defineRpcContract({
 });
 
 // Host-wide worktree surface for Settings ▸ Worktrees. `listAllForHost`
-// is a disk walk of `~/.traycer/worktrees/` (surfaces orphans);
+// is a disk walk of `~/.cic/worktrees/` (surfaces orphans);
 // `deleteByPath` is path-keyed and resolves the main repo from the worktree
 // path itself, so it works without an epic/workspace context.
 export const worktreeListAllForHostV10 = defineRpcContract({

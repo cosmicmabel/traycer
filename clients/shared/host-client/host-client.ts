@@ -1,5 +1,5 @@
-import type { VersionedRpcRegistry } from "@traycer/protocol/framework/index";
-import type { RequestContext } from "@traycer/protocol/auth/request-context";
+import type { VersionedRpcRegistry } from "@cic/protocol/framework/index";
+import type { RequestContext } from "@cic/protocol/auth/request-context";
 import type {
   HostRpcError,
   IHostMessenger,

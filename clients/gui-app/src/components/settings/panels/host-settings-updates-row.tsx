@@ -5,7 +5,7 @@ import {
   formatCheckedAtTooltip,
   updatesDescription,
 } from "@/components/settings/panels/host-settings-panel-model";
-import type { HostRegistryUpdateState } from "@traycer-clients/shared/platform/runner-host";
+import type { HostRegistryUpdateState } from "@cic/shared/platform/runner-host";
 
 interface UpdatesRowProps {
   readonly registryState: HostRegistryUpdateState | undefined;

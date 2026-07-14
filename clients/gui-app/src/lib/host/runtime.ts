@@ -1,5 +1,5 @@
 import { createHostRuntime } from "@/providers/host-runtime-provider";
-import type { HostRpcRegistry } from "@traycer/protocol/host/index";
+import type { HostRpcRegistry } from "@cic/protocol/host/index";
 
 /**
  * Typed host-runtime hook bundle bound to the host's published

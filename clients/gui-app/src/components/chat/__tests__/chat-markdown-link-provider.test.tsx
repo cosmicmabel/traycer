@@ -18,7 +18,7 @@ import { MarkdownLinkContext } from "@/markdown/links/markdown-link-context";
 import type { MarkdownFileLink } from "@/markdown/links/markdown-link-context";
 import type { FetchResolveArtifactByPathArgs } from "@/lib/host/resolve-artifact-by-path";
 import type { ProjectedSidebarNodeOpenArgs } from "@/components/epic-canvas/sidebar/open-projected-sidebar-node";
-import type { ResolveArtifactByPathResult } from "@traycer/protocol/host/epic/unary-schemas";
+import type { ResolveArtifactByPathResult } from "@cic/protocol/host/epic/unary-schemas";
 import { useEpicCanvasStore } from "@/stores/epics/canvas/store";
 import { collectPanes, type TilePane } from "@/stores/epics/canvas/tile-tree";
 import { useWorkspaceFileRevealStore } from "@/stores/epics/canvas/workspace-file-reveal-store";
@@ -109,9 +109,9 @@ vi.mock("@/lib/tab-navigation", async () => {
 
 // A structurally valid artifact link path under the OPEN epic and a FOREIGN
 // epic (note the foreign-home prefix to prove root-prefix-agnostic matching).
-const SAME_EPIC_ARTIFACT_PATH = `/Users/me/.traycer/epics/${OPEN_EPIC_ID}/artifacts/some-spec/index.md`;
+const SAME_EPIC_ARTIFACT_PATH = `/Users/me/.cic/epics/${OPEN_EPIC_ID}/artifacts/some-spec/index.md`;
 const CROSS_EPIC_ARTIFACT_PATH =
-  "/Users/them/.traycer/epics/epic-other/artifacts/parent/child-ticket/index.md";
+  "/Users/them/.cic/epics/epic-other/artifacts/parent/child-ticket/index.md";
 
 beforeEach(() => {
   window.localStorage.clear();
@@ -414,7 +414,7 @@ describe("ChatMarkdownLinkProvider", () => {
   });
 
   it("makes an artifact link a no-op when it resolves to null and its index.md is outside the chat roots", async () => {
-    // SAME_EPIC_ARTIFACT_PATH lives under ~/.traycer, outside the chat's
+    // SAME_EPIC_ARTIFACT_PATH lives under ~/.cic, outside the chat's
     // workspaceRoots (["/repo"]). Before the CL-1 boundary fix the null-resolve
     // fallback synthesized a workspace from the path's dirname and previewed the
     // raw index.md; CL-1 removed that synthesis, so an out-of-root artifact path

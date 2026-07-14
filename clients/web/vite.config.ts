@@ -8,7 +8,7 @@ import { CONTENT_SECURITY_POLICY } from "./src/shell/content-security-policy";
 
 const webEnvPrefix = [
   "VITE_APP_",
-  "VITE_TRAYCER_OSS_REPO",
+  "VITE_CIC_OSS_REPO",
   "VITE_VIRTUOSO_MESSAGE_LIST_LICENSE_KEY",
 ];
 
@@ -16,7 +16,7 @@ const webEnvPrefix = [
  * Web (browser) shell Vite config.
  *
  * Builds `src/shell/index.html` + `src/shell/main.tsx` into `dist/`. The shell
- * consumes `@traycer-clients/gui-app` as a workspace library - exactly like
+ * consumes `@cic/gui-app` as a workspace library - exactly like
  * the desktop renderer - so this config mirrors
  * `clients/desktop/vite.renderer.config.ts` hunk-for-hunk (minus Sentry and
  * the Electron dev-server wiring).
@@ -43,7 +43,7 @@ export default defineConfig((): UserConfig => {
       // (src/shell/content-security-policy.ts) so the built page always ships
       // its policy regardless of which server fronts the static bundle.
       {
-        name: "traycer-inject-csp-meta",
+        name: "cic-inject-csp-meta",
         transformIndexHtml(): HtmlTagDescriptor[] {
           return [
             {
@@ -76,15 +76,15 @@ export default defineConfig((): UserConfig => {
     resolve: {
       alias: {
         "@": resolve(guiAppRoot, "src"),
-        "@traycer-clients/gui-app": resolve(guiAppRoot, "index.ts"),
-        "@traycer-clients/shared": sharedRoot,
+        "@cic/gui-app": resolve(guiAppRoot, "index.ts"),
+        "@cic/shared": sharedRoot,
         // Cross-workspace imports that gui-app makes at runtime - the
         // tsconfig `paths` entries cover type-checking, but vite needs
         // explicit aliases so dependency pre-bundling can resolve them.
-        // The `utils` entry must precede the bare `@traycer/protocol`
+        // The `utils` entry must precede the bare `@cic/protocol`
         // entry so vite matches the longer prefix first.
-        "@traycer/protocol/utils": resolve(protocolRoot, "utils"),
-        "@traycer/protocol": resolve(protocolRoot, "src"),
+        "@cic/protocol/utils": resolve(protocolRoot, "utils"),
+        "@cic/protocol": resolve(protocolRoot, "src"),
       },
     },
     build: {

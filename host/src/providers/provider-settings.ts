@@ -8,7 +8,7 @@ import {
   providerSelectionSchema,
   type ProviderCliState,
   type ProviderId,
-} from "@traycer/protocol/host/provider-schemas";
+} from "@cic/protocol/host/provider-schemas";
 import { hostHomeDir } from "../pid-file";
 
 /**
@@ -150,7 +150,7 @@ export function buildProviderState(
         ? available
           ? "Local OpenClaw Gateway"
           : "Start the OpenClaw Gateway to enable this provider"
-        : "Not implemented in @traycer/open-host yet",
+        : "Not implemented in @cic/open-host yet",
     },
     authPending: false,
     checkedAt: Date.now(),

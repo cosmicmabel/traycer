@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { ListTasksResponse } from "@traycer/protocol/host/epic/unary-schemas";
+import type { ListTasksResponse } from "@cic/protocol/host/epic/unary-schemas";
 
 /**
  * Accumulated "Show more" pages for the cloud epic-tasks list, keyed by the

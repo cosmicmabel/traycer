@@ -2,7 +2,7 @@ import { createContext } from "react";
 import type {
   ChatAccess,
   ChatActiveTurn,
-} from "@traycer/protocol/host/agent/gui/subscribe";
+} from "@cic/protocol/host/agent/gui/subscribe";
 import type { AccumulatedFileChange } from "@/lib/chat/accumulated-file-changes-from-messages";
 import type { ChatRestoreSlot } from "@/stores/chats/chat-session-store";
 

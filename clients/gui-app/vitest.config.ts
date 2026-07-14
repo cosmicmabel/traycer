@@ -16,11 +16,11 @@ export default defineConfig({
     alias: [
       { find: "@", replacement: path.resolve(__dirname, "src") },
       {
-        find: "@traycer-clients/shared",
+        find: "@cic/shared",
         replacement: path.resolve(__dirname, "..", "shared"),
       },
       {
-        find: /^@traycer\/protocol\/utils\/(.*)$/,
+        find: /^@cic\/protocol\/utils\/(.*)$/,
         replacement: path.resolve(
           __dirname,
           "..",
@@ -31,7 +31,7 @@ export default defineConfig({
         ),
       },
       {
-        find: /^@traycer\/protocol\/(.*)$/,
+        find: /^@cic\/protocol\/(.*)$/,
         replacement: path.resolve(
           __dirname,
           "..",

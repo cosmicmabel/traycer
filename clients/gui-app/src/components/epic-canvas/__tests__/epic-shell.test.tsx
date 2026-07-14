@@ -3,9 +3,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import * as Y from "yjs";
-import type { EpicStreamCallbacks } from "@traycer-clients/shared/host-transport/epic-stream-client";
-import type { PermissionRole } from "@traycer/protocol/host/epic/unary-schemas";
-import type { SnapshotMetaEpic } from "@traycer/protocol/host/epic/snapshot-meta";
+import type { EpicStreamCallbacks } from "@cic/shared/host-transport/epic-stream-client";
+import type { PermissionRole } from "@cic/protocol/host/epic/unary-schemas";
+import type { SnapshotMetaEpic } from "@cic/protocol/host/epic/snapshot-meta";
 import { EpicShell } from "@/components/epic-canvas/epic-shell";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { EpicSessionProvider } from "@/providers/epic-session-provider";
@@ -101,7 +101,7 @@ function buildMeta(
     repos: [
       {
         task: null,
-        repoIdentifier: { owner: "traycer", repo: "cached-repo" },
+        repoIdentifier: { owner: "cic", repo: "cached-repo" },
         createdAt: 0,
         createdBy: "u",
       },

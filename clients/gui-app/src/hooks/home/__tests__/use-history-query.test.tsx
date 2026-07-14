@@ -4,7 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type {
   ListTasksResponse,
   TaskLight,
-} from "@traycer/protocol/host/epic/unary-schemas";
+} from "@cic/protocol/host/epic/unary-schemas";
 import {
   DEFAULT_HISTORY_SEARCH,
   patchHistorySearch,
@@ -53,8 +53,8 @@ describe("useHistoryQuery", () => {
       Date.parse("2026-04-22T12:00:00.000Z"),
     );
     testState.tasks = [
-      taskLight("epic-alpha", "Alpha workbench", "traycer/gui-app"),
-      taskLight("epic-beta", "Beta search flow", "traycer/server"),
+      taskLight("epic-alpha", "Alpha workbench", "cic/gui-app"),
+      taskLight("epic-beta", "Beta search flow", "cic/server"),
     ];
     testState.response = { tasks: testState.tasks, hasMore: false };
     testState.isFetching = false;
@@ -99,7 +99,7 @@ describe("useHistoryQuery", () => {
       facets: {
         repos: [
           {
-            repoIdentifier: { owner: "traycer", repo: "gui-app" },
+            repoIdentifier: { owner: "cic", repo: "gui-app" },
             count: 37,
           },
         ],

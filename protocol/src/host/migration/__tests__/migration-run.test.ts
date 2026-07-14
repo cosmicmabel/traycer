@@ -3,7 +3,7 @@ import {
   migrationRunClientFrameSchema,
   migrationRunServerFrameSchema,
   migrationRunV10,
-} from "@traycer/protocol/host/migration/run";
+} from "@cic/protocol/host/migration/run";
 
 /**
  * `migration.run@1.0` frame fixtures.

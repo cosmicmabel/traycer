@@ -40,7 +40,7 @@ function isDesktopSaveFile(value: unknown): value is DesktopSaveFile {
 }
 
 /**
- * Traycer Desktop exposes a native save bridge under
+ * CIC Desktop exposes a native save bridge under
  * `runnerHost.fileDrops.saveFile`. The sandboxed Electron renderer cannot use
  * the File System Access API's `createWritable()` (it throws `NotAllowedError`),
  * so the bytes are handed to the main process, which writes them after a native
@@ -72,7 +72,7 @@ function buildSaveFilePickerTypes(
 
 /**
  * Persist a Blob to disk, picking the best mechanism for the current runtime:
- *   1. Traycer Desktop → native save dialog via the `runnerHost` IPC bridge.
+ *   1. CIC Desktop → native save dialog via the `runnerHost` IPC bridge.
  *   2. Browsers with the File System Access API → `showSaveFilePicker`.
  *   3. Everything else (and recoverable FSA write failures) → `<a download>`.
  * Returns the saved file name, or `null` when the user cancels the picker.

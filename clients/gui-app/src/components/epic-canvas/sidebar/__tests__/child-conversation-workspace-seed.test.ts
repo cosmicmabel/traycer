@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { WorktreeBindingEntry } from "@traycer/protocol/host/worktree-schemas";
+import type { WorktreeBindingEntry } from "@cic/protocol/host/worktree-schemas";
 import { buildOwnerWorkspaceInheritanceSeed } from "@/lib/worktree/owner-workspace-inheritance-seed";
 import { buildFixedHostWorkspaceControlsScope } from "@/components/home/host-workspace-selector/host-workspace-controls-scope";
 import { resolveOwnerWorkspaceInheritanceSeed } from "@/hooks/worktree/use-owner-workspace-inheritance-seed";

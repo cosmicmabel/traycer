@@ -10,7 +10,7 @@ import type {
   HarnessOption,
   ProviderId,
 } from "@/components/home/data/landing-options";
-import type { GuiHarnessId } from "@traycer/protocol/host/index";
+import type { GuiHarnessId } from "@cic/protocol/host/index";
 import { usePickerProviderLeaderForIndex } from "@/providers/keybinding-context";
 import { leaderDigitFor } from "@/components/ui/leader-digit-shortcuts";
 import { PickerLeaderBadge } from "@/components/home/pickers/harness-model-picker-leader-badge";

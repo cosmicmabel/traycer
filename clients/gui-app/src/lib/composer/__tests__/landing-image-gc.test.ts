@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import type { JsonContent } from "@traycer/protocol/common/registry";
+import type { JsonContent } from "@cic/protocol/common/registry";
 
 // In-memory stand-in for idb-keyval, mirroring landing-image-store.test. Keyed by
 // string hash; the store argument is ignored. Re-created on every

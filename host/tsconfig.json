@@ -17,8 +17,8 @@
     "types": ["node", "bun"],
     "baseUrl": ".",
     "paths": {
-      "@traycer/protocol/utils/*": ["../protocol/utils/*"],
-      "@traycer/protocol/*": ["../protocol/src/*"]
+      "@cic/protocol/utils/*": ["../protocol/utils/*"],
+      "@cic/protocol/*": ["../protocol/src/*"]
     }
   },
   "include": ["src"],

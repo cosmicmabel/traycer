@@ -2,8 +2,8 @@ import {
   defineDowngradePath,
   defineRpcContract,
   defineUpgradePath,
-} from "@traycer/protocol/framework/index";
-import { DEFAULT_ACCOUNT_CONTEXT } from "@traycer/protocol/common/schemas";
+} from "@cic/protocol/framework/index";
+import { DEFAULT_ACCOUNT_CONTEXT } from "@cic/protocol/common/schemas";
 import {
   rateLimitUsageRequestSchemaV10,
   rateLimitUsageRequestSchemaV11,
@@ -11,7 +11,7 @@ import {
   rateLimitUsageResponseSchema,
   rateLimitUsageResponseSchemaV12,
   rateLimitUsageResponseSchemaV20,
-} from "@traycer/protocol/host/rate-limit/schemas";
+} from "@cic/protocol/host/rate-limit/schemas";
 
 export const hostGetRateLimitUsageV10 = defineRpcContract({
   method: "host.getRateLimitUsage",

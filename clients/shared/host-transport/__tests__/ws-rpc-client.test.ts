@@ -6,13 +6,13 @@ import {
   defineUpgradePath,
   defineVersionedRpcRegistry,
   type VersionedRpcRegistry,
-} from "@traycer/protocol/framework/index";
+} from "@cic/protocol/framework/index";
 import { HostRpcError, RetryableTransportError } from "../host-messenger";
 import {
   createRequestContext,
   identityFromAuthenticatedUser,
   type RequestContext,
-} from "@traycer/protocol/auth/request-context";
+} from "@cic/protocol/auth/request-context";
 import { mockLocalHostEntry } from "../../host-client/mock/mock-host-directory";
 import { createAuthenticatedUserFixture } from "../../test-fixtures/authenticated-user";
 import type {
@@ -30,7 +30,7 @@ import type {
   ClientRequestFrame,
   ClientFatalErrorFrame,
   HostFrame,
-} from "@traycer/protocol/framework/ws-protocol";
+} from "@cic/protocol/framework/ws-protocol";
 
 const echoV10 = defineRpcContract({
   method: "host.echo",

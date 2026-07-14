@@ -1,6 +1,6 @@
 {
-  "name": "@traycer-clients/web",
-  "description": "Traycer browser shell + Bun serve process: hosts the gui-app renderer as a webapp on a Linux machine running the Traycer host.",
+  "name": "@cic/web",
+  "description": "CIC browser shell + Bun serve process: hosts the gui-app renderer as a webapp on a Linux machine running the CIC host.",
   "version": "0.0.0",
   "type": "module",
   "private": true,

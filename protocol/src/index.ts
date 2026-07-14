@@ -1,11 +1,11 @@
 /**
- * `@traycer/protocol` - the single home for traycer 3.0 message schemas.
+ * `@cic/protocol` - the single home for cic 3.0 message schemas.
  *
  * The split is strict:
  *
  * - `framework/` holds the active runtime: versioned contract builders,
  *   validators, upgrade/downgrade traversal. These modules carry logic.
- * - `host/`, `persistence/`, and the Traycer cloud message groups hold
+ * - `host/`, `persistence/`, and the CIC cloud message groups hold
  *   inert Zod message definitions, grouped by the system that owns the wire
  *   or storage boundary. These modules only declare registries; no runtime
  *   branching or transport code lives there.

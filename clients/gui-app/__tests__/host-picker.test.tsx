@@ -11,12 +11,12 @@ import {
   screen,
   waitFor,
 } from "@testing-library/react";
-import { MockRunnerHost } from "@traycer-clients/shared/host-client/mock/mock-runner-host";
-import { mockRemoteHostEntry } from "@traycer-clients/shared/host-client/mock/mock-host-directory";
-import type { HostDirectoryEntry } from "@traycer-clients/shared/host-client/host-directory";
-import type { LocalHostSnapshot } from "@traycer-clients/shared/platform/runner-host";
-import type { RemoteHostFetcher } from "@traycer-clients/shared/host-client/remote-fetcher";
-import { TraycerApp, hostRpcRegistry } from "../index";
+import { MockRunnerHost } from "@cic/shared/host-client/mock/mock-runner-host";
+import { mockRemoteHostEntry } from "@cic/shared/host-client/mock/mock-host-directory";
+import type { HostDirectoryEntry } from "@cic/shared/host-client/host-directory";
+import type { LocalHostSnapshot } from "@cic/shared/platform/runner-host";
+import type { RemoteHostFetcher } from "@cic/shared/host-client/remote-fetcher";
+import { CicApp, hostRpcRegistry } from "../index";
 import { useAuthStore } from "@/stores/auth/auth-store";
 import { useAppDialogStore } from "@/stores/dialogs/app-dialog-store";
 import { useOnboardingStore } from "@/stores/onboarding/onboarding-store";
@@ -54,13 +54,13 @@ const HOST_PICKER_TEST_TIMEOUT_MS = 30_000;
 
 function buildHost(initialLocal: LocalHostSnapshot | null): MockRunnerHost {
   return new MockRunnerHost({
-    signInUrl: "https://auth.traycer.invalid/sign-in",
+    signInUrl: "https://auth.cic.invalid/sign-in",
     authnBaseUrl: "http://localhost:5005",
     localHost: initialLocal,
     hosts: [],
     workspaceFolderPickerPaths: undefined,
     hasLocalHost: undefined,
-    traycerCli: undefined,
+    cicCli: undefined,
   });
 }
 
@@ -100,7 +100,7 @@ describe("<HostPicker /> directory-change reactivity", () => {
     async () => {
       const host = buildHost(null);
       render(
-        <TraycerApp
+        <CicApp
           runnerHost={host}
           registry={hostRpcRegistry}
           remoteFetcher={staticFetcher([])}
@@ -153,7 +153,7 @@ describe("<HostPicker /> directory-change reactivity", () => {
     async () => {
       const host = buildHost(localSnapshot);
       render(
-        <TraycerApp
+        <CicApp
           runnerHost={host}
           registry={hostRpcRegistry}
           remoteFetcher={staticFetcher([mockRemoteHostEntry])}
@@ -217,7 +217,7 @@ describe("<HostPicker /> directory-change reactivity", () => {
     async () => {
       const host = buildHost(localSnapshot);
       render(
-        <TraycerApp
+        <CicApp
           runnerHost={host}
           registry={hostRpcRegistry}
           remoteFetcher={staticFetcher([mockRemoteHostEntry])}

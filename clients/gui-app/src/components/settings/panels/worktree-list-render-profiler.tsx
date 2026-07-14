@@ -17,7 +17,7 @@ import { roundPerfMs } from "@/components/settings/panels/worktrees-settings-per
  * NOTE: `Profiler.onRender` only fires under a profiling-enabled React build
  * (`react-dom/profiling`); the desktop app ships the standard production
  * bundle, so `worktree.list_render` is effectively dev/profiling-build-only -
- * unlike the `localStorage["traycer:perf:telemetry"]` opt-in that gates other
+ * unlike the `localStorage["cic:perf:telemetry"]` opt-in that gates other
  * perf events, there is no runtime flag that makes this one fire in a shipped
  * build. Aliasing the renderer to the profiling build would enable it, but
  * that carries render overhead for every user, not just this one signal - not

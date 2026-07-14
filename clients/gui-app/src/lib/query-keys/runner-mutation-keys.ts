@@ -7,11 +7,11 @@ export const runnerMutationKeys = {
   serviceRestart: () => ["runner.serviceRestart"] as const,
   serviceUpgrade: () => ["runner.serviceUpgrade"] as const,
   serviceEnableLinger: () => ["runner.serviceEnableLinger"] as const,
-  traycerShellConfigSet: () => ["runner.traycer.shellConfigSet"] as const,
-  traycerShellConfigReset: () => ["runner.traycer.shellConfigReset"] as const,
-  traycerEnvOverrideSet: () => ["runner.traycer.envOverrideSet"] as const,
-  traycerEnvOverrideDelete: () => ["runner.traycer.envOverrideDelete"] as const,
-  traycerCliLogin: () => ["runner.traycer.cliLogin"] as const,
+  cicShellConfigSet: () => ["runner.cic.shellConfigSet"] as const,
+  cicShellConfigReset: () => ["runner.cic.shellConfigReset"] as const,
+  cicEnvOverrideSet: () => ["runner.cic.envOverrideSet"] as const,
+  cicEnvOverrideDelete: () => ["runner.cic.envOverrideDelete"] as const,
+  cicCliLogin: () => ["runner.cic.cliLogin"] as const,
   // Host-management mutations consumed by Settings → Host and the
   // Doctor failure card.
   hostInstall: () => ["runner.host.install"] as const,
@@ -23,10 +23,10 @@ export const runnerMutationKeys = {
   hostRunDoctor: () => ["runner.host.runDoctor"] as const,
   hostFreePortAndRestart: () => ["runner.host.freePortAndRestart"] as const,
   hostNameSet: () => ["runner.host.name.set"] as const,
-  // In-app "Remove Traycer" (Settings → General → Danger Zone) and the
+  // In-app "Remove CIC" (Settings → General → Danger Zone) and the
   // removed-surface "Reinstall" escape hatch.
-  uninstallTraycer: () => ["runner.host.uninstallTraycer"] as const,
-  reinstallTraycer: () => ["runner.host.reinstallTraycer"] as const,
+  uninstallCic: () => ["runner.host.uninstallCic"] as const,
+  reinstallCic: () => ["runner.host.reinstallCic"] as const,
   supportSubmitReport: () => ["runner.support.submitReport"] as const,
   // Reveal a log file in the OS file manager (Diagnostics → Logs).
   revealLog: () => ["runner.support.revealLog"] as const,
@@ -55,18 +55,16 @@ export const runnerQueryKeys = {
     ["runner.serviceStatus", service] as const,
   serviceLogTail: (service: object, maxLines: number) =>
     ["runner.serviceLogTail", service, maxLines] as const,
-  // `traycerCli: object` keys these queries to a specific runner-host
+  // `cicCli: object` keys these queries to a specific runner-host
   // instance so a host swap (test setups, hot reload) invalidates the
   // cache cleanly. Identity comparison only - the object is never
   // serialised.
-  traycerHostStatus: (traycerCli: object) =>
-    ["runner.traycer.hostStatus", traycerCli] as const,
-  traycerShellConfig: (traycerCli: object) =>
-    ["runner.traycer.shellConfig", traycerCli] as const,
-  traycerShellList: (traycerCli: object) =>
-    ["runner.traycer.shellList", traycerCli] as const,
-  traycerEnvOverrideList: (traycerCli: object) =>
-    ["runner.traycer.envOverrideList", traycerCli] as const,
+  cicHostStatus: (cicCli: object) => ["runner.cic.hostStatus", cicCli] as const,
+  cicShellConfig: (cicCli: object) =>
+    ["runner.cic.shellConfig", cicCli] as const,
+  cicShellList: (cicCli: object) => ["runner.cic.shellList", cicCli] as const,
+  cicEnvOverrideList: (cicCli: object) =>
+    ["runner.cic.envOverrideList", cicCli] as const,
   // Host-management queries are scoped by the `IHostManagement`
   // instance identity so a host swap invalidates them cleanly.
   hostAvailableVersionsScope: (management: object) =>

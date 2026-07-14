@@ -1,4 +1,4 @@
-import type { WorktreeBindingSelectorRow } from "@traycer/protocol/host";
+import type { WorktreeBindingSelectorRow } from "@cic/protocol/host";
 import { MutedAgentSpinner } from "@/components/ui/agent-spinning-dots";
 import { WorktreeFolderList } from "@/components/worktree/worktree-folder-list";
 import { formatWorktreeFolderDisabledReason } from "@/lib/worktree/worktree-folder-disabled-reason";

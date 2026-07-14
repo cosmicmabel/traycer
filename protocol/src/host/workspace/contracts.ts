@@ -1,8 +1,8 @@
-import { defineRpcContract } from "@traycer/protocol/framework/index";
+import { defineRpcContract } from "@cic/protocol/framework/index";
 import {
   prepareWorkspaceFoldersRequestSchema,
   prepareWorkspaceFoldersResponseSchema,
-} from "@traycer/protocol/host/epic/unary-schemas";
+} from "@cic/protocol/host/epic/unary-schemas";
 import {
   workspaceFileMentionSuggestionsResponseSchema,
   workspaceFolderMentionSuggestionsResponseSchema,
@@ -20,7 +20,7 @@ import {
   workspaceResolvePathsByRepoIdentifiersRequestSchema,
   workspaceResolvePathsByRepoIdentifiersResponseSchema,
   workspaceWorktreeMentionSuggestionsResponseSchema,
-} from "@traycer/protocol/host/workspace/unary-schemas";
+} from "@cic/protocol/host/workspace/unary-schemas";
 
 export const workspacePrepareFoldersV10 = defineRpcContract({
   method: "workspace.prepareFolders",

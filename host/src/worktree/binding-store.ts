@@ -6,7 +6,7 @@ import {
   worktreeBindingSchema,
   type WorktreeBinding,
   type WorktreeBindingOwnerKind,
-} from "@traycer/protocol/host/worktree-schemas";
+} from "@cic/protocol/host/worktree-schemas";
 import { hostHomeDir } from "../pid-file";
 
 /**

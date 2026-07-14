@@ -27,7 +27,7 @@ import { useRunnerHost } from "@/providers/use-runner-host";
  * `HostRuntime.onSelectionChange(...)` and rebinds `HostClient`
  * (Decision 14 - host-scoped cache invalidation fires automatically).
  *
- * The component is always mounted inside `<TraycerApp />` and short-
+ * The component is always mounted inside `<CicApp />` and short-
  * circuits to `null` when the runtime binding is not yet ready (auth
  * still booting) so the shell affordance does not render pre-binding.
  */

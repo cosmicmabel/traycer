@@ -31,7 +31,7 @@
 import type { EpicNodeKind } from "@/lib/artifacts/node-display";
 import { TUI_AGENT_HARNESS_LABELS } from "@/lib/artifacts/node-display";
 import { createEpicName } from "@/lib/epic-name";
-import type { TuiHarnessId } from "@traycer/protocol/persistence/epic/schemas";
+import type { TuiHarnessId } from "@cic/protocol/persistence/epic/schemas";
 
 /**
  * Kinds that carry a display title. Superset of `EpicNodeKind` with the two

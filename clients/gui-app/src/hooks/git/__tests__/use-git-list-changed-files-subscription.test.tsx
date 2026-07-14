@@ -2,23 +2,23 @@ import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { renderHook, waitFor } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type { ReactNode } from "react";
-import type { GitSubscribeStatusEvent } from "@traycer/protocol/host/git-schemas";
+import type { GitSubscribeStatusEvent } from "@cic/protocol/host/git-schemas";
 import type {
   IStreamSession,
   ServerFrameHandler,
   StatusChangeHandler,
   StreamFrameEnvelope,
   StreamCloseReason,
-} from "@traycer-clients/shared/host-transport/i-stream-session";
+} from "@cic/shared/host-transport/i-stream-session";
 import {
   hostStreamRpcRegistry,
   type HostStreamRpcRegistry,
-} from "@traycer/protocol/host/registry";
+} from "@cic/protocol/host/registry";
 import {
   WsStreamClient,
   type ParamsOf,
-} from "@traycer-clients/shared/host-transport/ws-stream-client";
-import { DEFAULT_GIT_FILE_DIFF_BYTE_BUDGET } from "@traycer/protocol/host";
+} from "@cic/shared/host-transport/ws-stream-client";
+import { DEFAULT_GIT_FILE_DIFF_BYTE_BUDGET } from "@cic/protocol/host";
 import { StreamRuntimeContext } from "@/lib/host/stream-runtime-context";
 import { gitQueryKeys } from "@/lib/query-keys/git-query-keys";
 import {

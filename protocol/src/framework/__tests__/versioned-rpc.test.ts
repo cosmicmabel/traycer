@@ -12,7 +12,7 @@ import {
   validateVersionedRpcRegistry,
   type UncheckedVersionedRpcRegistry,
   type VersionedRpcRegistry,
-} from "@traycer/protocol/framework/index";
+} from "@cic/protocol/framework/index";
 
 const echoV10 = defineRpcContract({
   method: "echo",

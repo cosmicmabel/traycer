@@ -82,7 +82,7 @@ export function useWorktreeListQueryPerf(input: {
  * the transition from "some per-path enrichment query fetching" to "none". Carries
  * how many paths the window probed and how many SETTLED to an error, so a
  * wholesale enrichment failure (e.g. every per-path RPC timing out on a gh network
- * stall) is visible in `traycer-perf.ndjson` instead of only showing up as
+ * stall) is visible in `cic-perf.ndjson` instead of only showing up as
  * infinite "Checking…" spinners with no trace. `durationMs` spans from the first
  * in-flight query to the settle, measured in the renderer (includes scheduling).
  *

@@ -2,9 +2,9 @@ import { createContext, use, useCallback, useSyncExternalStore } from "react";
 import type {
   StreamMethodSupport,
   WsStreamClient,
-} from "@traycer-clients/shared/host-transport/ws-stream-client";
-import type { SchemaVersion } from "@traycer/protocol/framework/versioned-stream-rpc";
-import type { HostStreamRpcRegistry } from "@traycer/protocol/host/registry";
+} from "@cic/shared/host-transport/ws-stream-client";
+import type { SchemaVersion } from "@cic/protocol/framework/versioned-stream-rpc";
+import type { HostStreamRpcRegistry } from "@cic/protocol/host/registry";
 
 /**
  * Streaming-transport seam. The single `WsStreamClient<HostStreamRpcRegistry>`

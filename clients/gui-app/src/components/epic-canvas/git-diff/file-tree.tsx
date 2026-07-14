@@ -5,7 +5,7 @@ import type {
   FileTreeDirectoryHandle,
   FileTreeItemHandle,
 } from "@pierre/trees";
-import type { GitChangedFile } from "@traycer/protocol/host";
+import type { GitChangedFile } from "@cic/protocol/host";
 import {
   buildGitTreeDirectoryPaths,
   buildGitPanelFileSections,

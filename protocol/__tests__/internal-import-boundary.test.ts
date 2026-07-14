@@ -3,7 +3,7 @@ import { readdirSync, readFileSync, statSync } from "node:fs";
 import path from "node:path";
 
 /**
- * Hard-enforces the `_internal/` privacy boundary for `@traycer/protocol`.
+ * Hard-enforces the `_internal/` privacy boundary for `@cic/protocol`.
  *
  * Files under `protocol/<domain>/_internal/` host the raw Zod values for
  * registered records (e.g. `epicSchema`, `permissionRoleSchema`,
@@ -22,7 +22,7 @@ import path from "node:path";
  * record schemas through `getRecordSchema(<registry>, "<record-name>")`.
  *
  * This test scans every `.ts`/`.tsx` file in the monorepo and fails on
- * any import path matching `@traycer/protocol/.../_internal/...` from a
+ * any import path matching `@cic/protocol/.../_internal/...` from a
  * file that is not an authorized importer.
  */
 
@@ -45,13 +45,13 @@ const SKIP_DIRS = new Set([
 ]);
 
 // Matches any import (runtime or type-only) referencing a path under
-// `@traycer/protocol/.../_internal/...`. The privacy boundary is
+// `@cic/protocol/.../_internal/...`. The privacy boundary is
 // total: even type-only imports leak structural detail across the
 // boundary. Recursive types that require a `z.ZodType<...>`
 // annotation must be co-located with the owning registry, not
 // imported from `_internal/`.
 const FORBIDDEN_IMPORT_PATTERN =
-  /["']@traycer\/protocol\/[^"']*\/_internal\/[^"']*["']/g;
+  /["']@cic\/protocol\/[^"']*\/_internal\/[^"']*["']/g;
 
 /**
  * Files allowed to import from `_internal/`. Update the list below when
@@ -112,7 +112,7 @@ function findForbiddenImports(
   return matches;
 }
 
-describe("@traycer/protocol _internal/ privacy boundary", () => {
+describe("@cic/protocol _internal/ privacy boundary", () => {
   it("only registries and _internal/ files import from a protocol _internal/ path", () => {
     const violations: string[] = [];
 
@@ -129,7 +129,7 @@ describe("@traycer/protocol _internal/ privacy boundary", () => {
     if (violations.length > 0) {
       throw new Error(
         [
-          "Files are importing from `@traycer/protocol/.../_internal/...`",
+          "Files are importing from `@cic/protocol/.../_internal/...`",
           "outside the registry / _internal/ allow-list.",
           "",
           "Use `getRecordSchema(<registry>, \"<record-name>\")` instead.",

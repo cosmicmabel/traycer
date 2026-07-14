@@ -14,7 +14,7 @@ import type {
   WorkspaceEntry,
 } from "@/lib/composer/types";
 import { dirnameOfPath, mentionPathTree } from "@/lib/path";
-import type { EpicArtifactKind } from "@traycer/protocol/common/registry";
+import type { EpicArtifactKind } from "@cic/protocol/common/registry";
 
 /**
  * Row-display mapping for @mention suggestion entries: the picker's

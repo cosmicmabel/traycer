@@ -1,7 +1,7 @@
 import {
   agentInboxSubscribeOpenRequestSchema,
   type AgentInboxSubscribeServerFrame,
-} from "@traycer/protocol/host/agent/inbox";
+} from "@cic/protocol/host/agent/inbox";
 
 /**
  * `agent.inbox.subscribe@1.0` sessions. The open host runs no inter-agent

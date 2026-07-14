@@ -9,7 +9,7 @@ import {
   type ReactNode,
 } from "react";
 import { Check, FileText, FolderGit2, Search } from "lucide-react";
-import type { WorktreeBindingSelectorRow } from "@traycer/protocol/host";
+import type { WorktreeBindingSelectorRow } from "@cic/protocol/host";
 import { Badge } from "@/components/ui/badge";
 import {
   InputGroup,

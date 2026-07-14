@@ -7,7 +7,7 @@ import type {
   HostRegistryUpdateState,
   LocalHostSnapshot,
   ServiceStatusSnapshot,
-} from "@traycer-clients/shared/platform/runner-host";
+} from "@cic/shared/platform/runner-host";
 
 export const VERSION_LIST_PREVIEW = 10;
 

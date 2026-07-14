@@ -2,17 +2,17 @@ import type {
   MethodVersionRegistry,
   SchemaVersion,
   VersionedRpcRegistry,
-} from "@traycer/protocol/framework/index";
+} from "@cic/protocol/framework/index";
 import {
   downgradeRequestAcrossMajors,
   isRpcErrorCode,
   upgradeResponseToVersion,
-} from "@traycer/protocol/framework/index";
-import { CredentialLeaseReleasedError } from "@traycer/protocol/auth/request-context";
+} from "@cic/protocol/framework/index";
+import { CredentialLeaseReleasedError } from "@cic/protocol/auth/request-context";
 import type {
   BearerSourceProvider,
   OpenFrameBearerSource,
-} from "@traycer-clients/shared/auth/bearer-source";
+} from "@cic/shared/auth/bearer-source";
 import {
   HostRpcError,
   RetryableTransportError,
@@ -37,8 +37,8 @@ import {
   type HostFatalErrorFrame,
   type IncompatibleMethodDetails,
   type FatalErrorDetails,
-} from "@traycer/protocol/framework/index";
-import { canonicalForMethodVersionLine } from "@traycer/protocol/framework/compat-helpers";
+} from "@cic/protocol/framework/index";
+import { canonicalForMethodVersionLine } from "@cic/protocol/framework/compat-helpers";
 import type { TimerHandle } from "./timer-handle";
 
 /**

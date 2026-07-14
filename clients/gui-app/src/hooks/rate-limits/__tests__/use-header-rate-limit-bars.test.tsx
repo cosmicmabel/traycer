@@ -3,7 +3,7 @@ import { cleanup, renderHook } from "@testing-library/react";
 import type {
   ProviderRateLimits,
   ProviderRateLimitWindow,
-} from "@traycer/protocol/host";
+} from "@cic/protocol/host";
 import type { RateLimitProviderId } from "@/lib/rate-limit-providers";
 import type {
   AvailableProviderRateLimits,

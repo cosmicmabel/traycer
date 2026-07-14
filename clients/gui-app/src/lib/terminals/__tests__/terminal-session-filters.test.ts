@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { TerminalSessionInfo } from "@traycer/protocol/host/terminal/unary-schemas";
+import type { TerminalSessionInfo } from "@cic/protocol/host/terminal/unary-schemas";
 import { isVisibleRawTerminalSession } from "../terminal-session-filters";
 
 function session(

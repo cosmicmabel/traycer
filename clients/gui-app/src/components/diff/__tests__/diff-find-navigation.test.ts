@@ -10,8 +10,8 @@ import {
 import { revealDiffFindMatches } from "@/components/diff/diff-find-navigation";
 import type { DiffFindMatch, DiffFindUnit } from "@/lib/diff/diff-find";
 
-const MATCH_ATTR = "data-traycer-diff-find-match";
-const ACTIVE_ATTR = "data-traycer-diff-find-active";
+const MATCH_ATTR = "data-cic-diff-find-match";
+const ACTIVE_ATTR = "data-cic-diff-find-active";
 
 let scrollIntoViewSpy: Mock;
 let originalScrollIntoView: PropertyDescriptor | undefined;

@@ -1,28 +1,28 @@
 import { type ComponentType, type ReactNode } from "react";
-import { TraycerMarkdown } from "@/markdown";
+import { CicMarkdown } from "@/markdown";
 import { AgentReferenceChip } from "@/components/chat/agent-reference-chip";
 import { CodeBlock } from "@/markdown/components/code-block";
 import { extractText } from "@/markdown/components/extract-react-node-text";
-import { TRAYCER_AGENT_TAG } from "@/markdown/plugins/const";
-import { rehypeTraycerAgentReferences } from "@/markdown/plugins/rehype-traycer-agent-references";
+import { CIC_AGENT_TAG } from "@/markdown/plugins/const";
+import { rehypeCicAgentReferences } from "@/markdown/plugins/rehype-cic-agent-references";
 import { z } from "zod";
 
 const AGENT_ID_SCHEMA = z.uuid();
 
-const AGENT_REFERENCE_REHYPE_PLUGINS = [rehypeTraycerAgentReferences];
+const AGENT_REFERENCE_REHYPE_PLUGINS = [rehypeCicAgentReferences];
 
 const AGENT_REFERENCE_MARKDOWN_COMPONENTS: Record<
   string,
   ComponentType<Record<string, unknown>>
 > = {
-  [TRAYCER_AGENT_TAG]: AgentReferenceMarkdownNode as ComponentType<
+  [CIC_AGENT_TAG]: AgentReferenceMarkdownNode as ComponentType<
     Record<string, unknown>
   >,
   code: AgentAwareCodeBlock as ComponentType<Record<string, unknown>>,
 };
 
 /**
- * Renders a markdown string through {@link TraycerMarkdown} with the
+ * Renders a markdown string through {@link CicMarkdown} with the
  * agent-reference plugin set wired in: `@agent` mentions and bare
  * agent-id code spans resolve to live {@link AgentReferenceChip}s. This is
  * the single renderer shared by assistant text segments and the A2A
@@ -43,7 +43,7 @@ export function AgentReferenceMarkdown({
 }): ReactNode {
   if (markdown.length === 0) return null;
   return (
-    <TraycerMarkdown
+    <CicMarkdown
       className={null}
       proseSize={proseSize}
       components={AGENT_REFERENCE_MARKDOWN_COMPONENTS}
@@ -53,7 +53,7 @@ export function AgentReferenceMarkdown({
       isStreaming={isStreaming}
     >
       {markdown}
-    </TraycerMarkdown>
+    </CicMarkdown>
   );
 }
 

@@ -9,7 +9,7 @@ import {
   toolCallErroredEventSchema,
   toolCallStartedEventSchema,
 } from "../agent-runtime";
-import type { ContentBlock } from "@traycer/protocol/persistence/epic/schemas";
+import type { ContentBlock } from "@cic/protocol/persistence/epic/schemas";
 
 function makeBlocks(): ContentBlock[] {
   return [];

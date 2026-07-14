@@ -33,7 +33,7 @@ import type { AuthIdentityValidationResult } from "../auth/auth-validation-types
  *   UX. Shells without native folder access return an empty selection.
  *
  * The concrete `IRunnerHost` is constructed by each shell at bootstrap and
- * passed explicitly into `<TraycerApp />`. Shared code does not resolve or
+ * passed explicitly into `<CicApp />`. Shared code does not resolve or
  * register it through module-level globals.
  */
 export interface IRunnerHost {
@@ -54,7 +54,7 @@ export interface IRunnerHost {
   readonly authnBaseUrl: string;
 
   /**
-   * Validates a Traycer bearer token against the shell-owned AuthnV3 base URL
+   * Validates a CIC bearer token against the shell-owned AuthnV3 base URL
    * and projects the minimum profile shape the GUI needs for signed-in state.
    * If the user lookup fails but the bundled refresh token is still accepted,
    * implementations return a valid result with `refreshedToken`.
@@ -69,7 +69,7 @@ export interface IRunnerHost {
   ): Promise<AuthTokenValidationResult>;
 
   /**
-   * Validates a Traycer bearer token and returns the full AuthnV3 identity
+   * Validates a CIC bearer token and returns the full AuthnV3 identity
    * shape required to mint a client `RequestContext`. Desktop shells perform
    * this in Electron main so renderer CSP/CORS cannot turn a valid OAuth
    * callback into a false invalid-token result. Browser-only test/dev shells
@@ -142,7 +142,7 @@ export interface IRunnerHost {
 
   /**
    * Subscribes to the browser-return signal the shell delivers when the user
-   * comes back from the device-approval browser tab (the `traycer://` deep
+   * comes back from the device-approval browser tab (the `cic://` deep
    * link on desktop). The signal is **payload-free**: device flow is the only
    * interactive login, so the shell carries no token or code here - it only
    * tells the renderer "the browser returned" so the in-flight device poll can
@@ -244,7 +244,7 @@ export interface IRunnerHost {
   readonly service: IServiceHost | null;
 
   /**
-   * Surface to the local `traycer` CLI subprocess. Used by the renderer
+   * Surface to the local `cic` CLI subprocess. Used by the renderer
    * for two host-independent concerns:
    *   1. Reading bootstrap status (pid metadata + recent bootstrap.log
    *      markers) when the host is unreachable, so the failure card
@@ -254,10 +254,10 @@ export interface IRunnerHost {
    *
    * Present on shells where the CLI ships (desktop) and `null` everywhere
    * else (mobile, web, in-browser dev). Each call corresponds to a single
-   * `traycer` subcommand invocation; failures bubble as rejected promises
+   * `cic` subcommand invocation; failures bubble as rejected promises
    * with the CLI's stderr in the message.
    */
-  readonly traycerCli: ITraycerCli | null;
+  readonly cicCli: ICicCli | null;
 
   /**
    * Cross-window migration-run channel. Used by the migration controller to
@@ -268,8 +268,8 @@ export interface IRunnerHost {
   readonly migration: IMigrationHost | null;
 
   /**
-   * Host-management surface for the local Traycer host. Backed by NDJSON
-   * subcommand invocations against the `traycer` CLI subprocess on desktop;
+   * Host-management surface for the local CIC host. Backed by NDJSON
+   * subcommand invocations against the `cic` CLI subprocess on desktop;
    * `null` on shells that don't ship the CLI (mobile, web). Settings → Host
    * and the Doctor failure card consume this surface; long-running operations
    * (install / update / register-service) call `onProgress` for every NDJSON
@@ -330,26 +330,26 @@ export interface IMigrationHost {
 }
 
 /**
- * Renderer-facing view of `traycer host status` output. Mirrors the JSON
+ * Renderer-facing view of `cic host status` output. Mirrors the JSON
  * the CLI prints on stdout. Field semantics:
- *   - `running`: `true` iff `~/.traycer/host.pid.json` exists and parsed.
+ *   - `running`: `true` iff `~/.cic/host.pid.json` exists and parsed.
  *     A stale PID file (process gone, file not yet cleaned up) still reads
  *     as `running: true` here - the renderer pairs this with its own
  *     `LocalHostSnapshot` stream to reconcile.
  *   - `pidMetadata`: same shape the host writes; mirrored locally so
- *     `gui-app` does not import from `traycer-host` directly.
- *   - `bootstrapMarkers`: most-recent N entries from `~/.traycer/bootstrap.log`,
+ *     `gui-app` does not import from `cic-host` directly.
+ *   - `bootstrapMarkers`: most-recent N entries from `~/.cic/bootstrap.log`,
  *     newest last. Lines that aren't structured markers (raw host stdout
  *     captured into the same file) are filtered out by the CLI.
  *   - `bootstrapLogPath`: absolute path the user can `tail` to debug.
  */
-export interface TraycerHostStatusSnapshot {
+export interface CicHostStatusSnapshot {
   readonly running: boolean;
-  readonly pidMetadata: TraycerPidMetadata | null;
+  readonly pidMetadata: CicPidMetadata | null;
   readonly bootstrapMarkers: readonly BootstrapMarkerEntry[];
   readonly bootstrapLogPath: string;
   /**
-   * Last ~80 lines of `~/.traycer/bootstrap.log` verbatim - includes both
+   * Last ~80 lines of `~/.cic/bootstrap.log` verbatim - includes both
    * structured markers and raw shell stdout/stderr captured into the same
    * file. The loading card renders this live so users see what their shell
    * is doing during a slow init (sourcing zshrc, fzf prompts, asdf shim
@@ -358,7 +358,7 @@ export interface TraycerHostStatusSnapshot {
   readonly bootstrapLogTail: string;
 }
 
-export interface TraycerPidMetadata {
+export interface CicPidMetadata {
   readonly pid: number;
   readonly hostId: string;
   readonly version: string;
@@ -381,7 +381,7 @@ export interface BootstrapMarkerEntry {
  * defaults were filled in by the CLI - the settings UI surfaces this as
  * "(default - not stored)".
  */
-export interface TraycerShellConfig {
+export interface CicShellConfig {
   readonly path: string;
   readonly args: readonly string[];
   readonly synthesised: boolean;
@@ -393,7 +393,7 @@ export interface TraycerShellConfig {
  * be a bare command name, e.g. Windows `powershell.exe`); `isDefault` marks
  * the OS-default shell.
  */
-export interface TraycerDetectedShell {
+export interface CicDetectedShell {
   readonly name: string;
   readonly path: string;
   readonly isDefault: boolean;
@@ -403,12 +403,12 @@ export interface TraycerDetectedShell {
 // at its next start. Per-harness env overrides live per-provider in the
 // host's provider-overrides (Settings → Providers), set over the
 // `providers.*` RPC - not through this CLI bridge.
-export interface TraycerEnvOverride {
+export interface CicEnvOverride {
   readonly key: string;
   readonly value: string | null;
 }
 
-export interface TraycerShellConfigSetInput {
+export interface CicShellConfigSetInput {
   /** New shell path; null preserves the stored value (or default). */
   readonly path: string | null;
   /**
@@ -419,13 +419,13 @@ export interface TraycerShellConfigSetInput {
   readonly args: readonly string[] | null;
 }
 
-export interface ITraycerCli {
-  hostStatus(): Promise<TraycerHostStatusSnapshot>;
-  shellConfigGet(): Promise<TraycerShellConfig>;
-  shellConfigSet(input: TraycerShellConfigSetInput): Promise<void>;
+export interface ICicCli {
+  hostStatus(): Promise<CicHostStatusSnapshot>;
+  shellConfigGet(): Promise<CicShellConfig>;
+  shellConfigSet(input: CicShellConfigSetInput): Promise<void>;
   shellConfigReset(): Promise<void>;
-  shellListDetected(): Promise<readonly TraycerDetectedShell[]>;
-  envOverrideList(): Promise<readonly TraycerEnvOverride[]>;
+  shellListDetected(): Promise<readonly CicDetectedShell[]>;
+  envOverrideList(): Promise<readonly CicEnvOverride[]>;
   envOverrideSet(input: {
     readonly key: string;
     readonly value: string | null;
@@ -695,7 +695,7 @@ export interface LocalHostSnapshot {
 /**
  * Host-management types crossing the shell↔renderer boundary.
  *
- * Mirrors the NDJSON `result.data` payloads emitted by the `traycer host …`
+ * Mirrors the NDJSON `result.data` payloads emitted by the `cic host …`
  * subcommands. Renderer-facing copy of `clients/desktop/src/
  * ipc-contracts/host-management-types.ts` so `gui-app` can import the
  * shapes from the platform contract instead of reaching across into the
@@ -762,8 +762,8 @@ export interface HostInstallResult {
 // reachable; `host-busy` means the running host had work in progress, so
 // the CLI did not restart it and the desktop surfaced it for the renderer's
 // compat probe (continue if compatible, else prompt Retry/Force restart);
-// `removed` means the user uninstalled Traycer's background components from
-// this device (see `uninstallTraycer`), so provisioning is intentionally
+// `removed` means the user uninstalled CIC's background components from
+// this device (see `uninstallCic`), so provisioning is intentionally
 // skipped until they reinstall - the renderer shows the removed surface
 // instead of reinstalling the host.
 export interface HostEnsureResult {
@@ -772,7 +772,7 @@ export interface HostEnsureResult {
   readonly version: string | null;
 }
 
-// Whether the user has uninstalled Traycer's background components from this
+// Whether the user has uninstalled CIC's background components from this
 // device via Settings → General → Danger Zone. Persisted by the desktop main
 // process; gates every auto-provision / respawn path so a removed host is not
 // silently reinstalled when it goes unreachable. Cleared by an explicit
@@ -781,11 +781,11 @@ export interface HostRemovalState {
   readonly removedByUser: boolean;
 }
 
-// Result of the in-app "Remove Traycer" action. The desktop stops + removes
+// Result of the in-app "Remove CIC" action. The desktop stops + removes
 // the host service, the host install, and (on macOS) the SMAppService login
-// item, while preserving all `~/.traycer` user data. Each flag reports what
+// item, while preserving all `~/.cic` user data. Each flag reports what
 // the teardown actually accomplished so the renderer can confirm.
-export interface TraycerUninstallResult {
+export interface CicUninstallResult {
   readonly removedHost: boolean;
   readonly deregisteredService: boolean;
   readonly removedLoginItem: boolean;
@@ -892,7 +892,7 @@ export type HostTrayCommand =
 /**
  * Snapshot of the CLI install manifest exposed to the renderer. Used by the
  * Settings → Host and Doctor panels to surface the staged-but-not-applied
- * `pendingUpgrade` state recorded by `traycer cli upgrade` when the live
+ * `pendingUpgrade` state recorded by `cic cli upgrade` when the live
  * binary was locked at upgrade time, plus the Desktop-driven launch-time
  * reconciliation hint for package-manager-owned installs that are older than
  * the bundled CLI. `null` when no manifest or reconciliation hint exists yet.
@@ -950,10 +950,10 @@ export interface IHostManagement {
   readonly uninstallHost: (input: {
     readonly all: boolean;
   }) => Promise<HostUninstallResult>;
-  // In-app "Remove Traycer" (Settings → General → Danger Zone). Marks the
+  // In-app "Remove CIC" (Settings → General → Danger Zone). Marks the
   // device as removed-by-user (suppressing auto-reinstall), tears down the
   // host service + install + macOS login item, and preserves all user data.
-  readonly uninstallTraycer: () => Promise<TraycerUninstallResult>;
+  readonly uninstallCic: () => Promise<CicUninstallResult>;
   // Reads the persisted removal sentinel so the renderer can short-circuit to
   // the removed surface before attempting any provisioning.
   readonly getRemovalState: () => Promise<HostRemovalState>;
@@ -974,7 +974,7 @@ export interface IHostManagement {
   }) => Promise<void>;
   // Post-auth provisioning: idempotently ensure the host is installed,
   // registered, and running. The desktop delegates the whole lifecycle to
-  // the CLI (`traycer host ensure`) and streams progress; a fast no-op
+  // the CLI (`cic host ensure`) and streams progress; a fast no-op
   // when the persistent host is already reachable.
   readonly ensureHost: (input: {
     readonly onProgress: ((event: HostProgressEvent) => void) | null;

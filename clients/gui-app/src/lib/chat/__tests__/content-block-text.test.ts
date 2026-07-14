@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { ContentBlock } from "@traycer/protocol/persistence/epic/schemas";
+import type { ContentBlock } from "@cic/protocol/persistence/epic/schemas";
 import { contentBlocksText } from "@/lib/chat/content-block-text";
 
 describe("contentBlocksText", () => {

@@ -1,5 +1,5 @@
-import { commonRecordRegistry } from "@traycer/protocol/common/registry";
-import { getRecordSchema } from "@traycer/protocol/framework/index";
+import { commonRecordRegistry } from "@cic/protocol/common/registry";
+import { getRecordSchema } from "@cic/protocol/framework/index";
 import { z } from "zod";
 
 export const checkpointFileOperationSchema = z.enum([
@@ -18,7 +18,7 @@ const checkpointArtifactKindSchema = getRecordSchema(
 );
 
 /**
- * Tags a manifest entry whose `filePath` is a Traycer artifact `index.md`. The
+ * Tags a manifest entry whose `filePath` is a CIC artifact `index.md`. The
  * presence of this tag (non-null) is what marks an entry as an artifact change:
  * the renderer shows it as a titled artifact row (click → open / diff) instead
  * of a raw file path, and the bulk-revert opt-out filters on it. Resolved at

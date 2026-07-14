@@ -3,16 +3,16 @@ import { v4 as uuidv4 } from "uuid";
 import {
   HostClient,
   type IHostQueryInvalidator,
-} from "@traycer-clients/shared/host-client/host-client";
-import type { HostDirectoryEntry } from "@traycer-clients/shared/host-client/host-directory";
-import { WsRpcClient } from "@traycer-clients/shared/host-transport/ws-rpc-client";
+} from "@cic/shared/host-client/host-client";
+import type { HostDirectoryEntry } from "@cic/shared/host-client/host-directory";
+import { WsRpcClient } from "@cic/shared/host-transport/ws-rpc-client";
 import {
   createRetryingMessenger,
   DEFAULT_TRANSPORT_RETRY_POLICY,
-} from "@traycer-clients/shared/host-transport/retrying-messenger";
-import { DEFAULT_DIAL_TIMEOUT_MS } from "@traycer-clients/shared/host-transport/transport-config";
-import { createWhatwgWebSocketFactory } from "@traycer-clients/shared/host-transport/whatwg-ws-factory";
-import type { HostRpcRegistry } from "@traycer/protocol/host/index";
+} from "@cic/shared/host-transport/retrying-messenger";
+import { DEFAULT_DIAL_TIMEOUT_MS } from "@cic/shared/host-transport/transport-config";
+import { createWhatwgWebSocketFactory } from "@cic/shared/host-transport/whatwg-ws-factory";
+import type { HostRpcRegistry } from "@cic/protocol/host/index";
 import { useHostClient } from "@/lib/host/runtime";
 
 /**

@@ -1,6 +1,6 @@
 import "../../../../__tests__/test-browser-apis";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import type { ChatRunSettings } from "@traycer/protocol/host/agent/gui/subscribe";
+import type { ChatRunSettings } from "@cic/protocol/host/agent/gui/subscribe";
 import {
   COMPOSER_RUN_SETTINGS_EPIC_CAP,
   useComposerRunSettingsStore,
@@ -177,10 +177,10 @@ describe("composer run settings store", () => {
 
   it("auth bucket helper returns anonymous and email-scoped keys", () => {
     expect(composerRunSettingsKey(null)).toBe(
-      "traycer-gui-app:composer-run-settings:anon",
+      "cic-gui-app:composer-run-settings:anon",
     );
     expect(composerRunSettingsKey("alice@example.com")).toBe(
-      "traycer-gui-app:composer-run-settings:alice@example.com",
+      "cic-gui-app:composer-run-settings:alice@example.com",
     );
   });
 });

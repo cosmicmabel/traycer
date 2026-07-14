@@ -1,4 +1,4 @@
-import type { VersionedRpcRegistry } from "@traycer/protocol/framework/index";
+import type { VersionedRpcRegistry } from "@cic/protocol/framework/index";
 
 /**
  * Remote / relay path contract (non-MVP-gating).
@@ -12,7 +12,7 @@ import type { VersionedRpcRegistry } from "@traycer/protocol/framework/index";
  * that the local host accepts over its WebSocket transport.
  *
  * Why this lives in `shared/`:
- *   - the committed envelope is defined once in `@traycer/protocol/framework`
+ *   - the committed envelope is defined once in `@cic/protocol/framework`
  *     and is the only wire contract that client, host, and any intermediate
  *     relay are allowed to speak;
  *   - mobile / desktop clients can target a local or remote host by swapping

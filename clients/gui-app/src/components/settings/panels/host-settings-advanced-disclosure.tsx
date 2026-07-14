@@ -14,7 +14,7 @@ import type {
   HostAvailableVersionEntry,
   HostRegistryUpdateState,
   ServiceStatusSnapshot,
-} from "@traycer-clients/shared/platform/runner-host";
+} from "@cic/shared/platform/runner-host";
 
 interface AdvancedDisclosureProps {
   readonly installedVersion: string | null;

@@ -14,7 +14,7 @@
  * declares `hasBinaryPayload: true`.
  */
 import { z } from "zod";
-import { defineStreamRpcContract } from "@traycer/protocol/framework/versioned-stream-rpc";
+import { defineStreamRpcContract } from "@cic/protocol/framework/versioned-stream-rpc";
 
 const textFrameFields = {
   hasBinaryPayload: z.literal(false),

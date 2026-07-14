@@ -7,16 +7,16 @@ import type {
 import type { MarkdownFileLink } from "@/markdown/links/markdown-link-context";
 import type { FetchResolveArtifactByPathArgs } from "@/lib/host/resolve-artifact-by-path";
 import type { ProjectedSidebarNodeOpenArgs } from "@/components/epic-canvas/sidebar/open-projected-sidebar-node";
-import type { ResolveArtifactByPathResult } from "@traycer/protocol/host/epic/unary-schemas";
+import type { ResolveArtifactByPathResult } from "@cic/protocol/host/epic/unary-schemas";
 
 const OPEN_EPIC_ID = "epic-open";
 const ACTIVE_HOST_ID = "host-active";
 const CHAT_HOST_ID = "host-chat";
 const TAB_ID = "tab-1";
 
-const SAME_EPIC_ARTIFACT_PATH = `/Users/me/.traycer/epics/${OPEN_EPIC_ID}/artifacts/some-spec/index.md`;
+const SAME_EPIC_ARTIFACT_PATH = `/Users/me/.cic/epics/${OPEN_EPIC_ID}/artifacts/some-spec/index.md`;
 const CROSS_EPIC_ARTIFACT_PATH =
-  "/Users/them/.traycer/epics/epic-other/artifacts/parent/child-ticket/index.md";
+  "/Users/them/.cic/epics/epic-other/artifacts/parent/child-ticket/index.md";
 
 const mocks = vi.hoisted(() => ({
   resolveArtifactByPath:
@@ -423,8 +423,7 @@ describe("buildChatLinkPolicy", () => {
     mocks.workspaceFileRefFromAbsoluteFilePath.mockReturnValue({
       id: "abs-content",
     });
-    const skillPath =
-      "/Users/me/.traycer/.codex/skills/traycer-review/SKILL.md";
+    const skillPath = "/Users/me/.cic/.codex/skills/cic-review/SKILL.md";
     const run = buildChatLinkPolicy(makeDeps({}));
 
     expect(run(fileLink({ path: skillPath }), lifecycle)).toBe(true);

@@ -1,10 +1,10 @@
 import {
-  TRAYCER_AGENT_TAG,
-  TRAYCER_CHAT_TAG,
-  TRAYCER_EPIC_TAG,
-  TRAYCER_MERMAID_TAG,
-  TRAYCER_SPEC_TAG,
-  TRAYCER_TICKET_TAG,
+  CIC_AGENT_TAG,
+  CIC_CHAT_TAG,
+  CIC_EPIC_TAG,
+  CIC_MERMAID_TAG,
+  CIC_SPEC_TAG,
+  CIC_TICKET_TAG,
 } from "./const";
 import type { Schema } from "hast-util-sanitize";
 import { defaultSchema } from "rehype-sanitize";
@@ -21,7 +21,7 @@ const DRIVE_LETTER_SCHEMES = Array.from({ length: 26 }, (_, index) => [
   String.fromCharCode(97 + index),
 ]).flat();
 
-export const TRAYCER_SANITIZE_SCHEMA: Schema = {
+export const CIC_SANITIZE_SCHEMA: Schema = {
   ...defaultSchema,
 
   // Keep `file:` links after react-markdown's urlTransform preserves them: the
@@ -39,27 +39,27 @@ export const TRAYCER_SANITIZE_SCHEMA: Schema = {
 
   tagNames: [
     ...(defaultSchema.tagNames ?? []),
-    TRAYCER_CHAT_TAG,
-    TRAYCER_AGENT_TAG,
-    TRAYCER_EPIC_TAG,
-    TRAYCER_SPEC_TAG,
-    TRAYCER_TICKET_TAG,
-    TRAYCER_MERMAID_TAG,
+    CIC_CHAT_TAG,
+    CIC_AGENT_TAG,
+    CIC_EPIC_TAG,
+    CIC_SPEC_TAG,
+    CIC_TICKET_TAG,
+    CIC_MERMAID_TAG,
   ],
 
   attributes: {
     ...defaultSchema.attributes,
 
-    [TRAYCER_CHAT_TAG]: ["data-epic-id", "data-chat-id", "data-title"],
+    [CIC_CHAT_TAG]: ["data-epic-id", "data-chat-id", "data-title"],
 
-    [TRAYCER_AGENT_TAG]: ["data-agent-id", "data-display"],
+    [CIC_AGENT_TAG]: ["data-agent-id", "data-display"],
 
-    [TRAYCER_EPIC_TAG]: ["data-epic-id", "data-title"],
+    [CIC_EPIC_TAG]: ["data-epic-id", "data-title"],
 
-    [TRAYCER_SPEC_TAG]: ["data-epic-id", "data-spec-id", "data-title"],
+    [CIC_SPEC_TAG]: ["data-epic-id", "data-spec-id", "data-title"],
 
-    [TRAYCER_TICKET_TAG]: ["data-epic-id", "data-ticket-id", "data-title"],
+    [CIC_TICKET_TAG]: ["data-epic-id", "data-ticket-id", "data-title"],
 
-    [TRAYCER_MERMAID_TAG]: ["data-code"],
+    [CIC_MERMAID_TAG]: ["data-code"],
   },
 };

@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
-import type { HostProgressEvent } from "@traycer-clients/shared/platform/runner-host";
+import type { HostProgressEvent } from "@cic/shared/platform/runner-host";
 import { AppHeader } from "@/components/layout/header/app-header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { AgentSpinningDots } from "@/components/ui/agent-spinning-dots";
 import { useRunnerHost } from "@/providers/use-runner-host";
 import { useRunnerRequestHostRespawn } from "@/hooks/runner/use-runner-request-host-respawn-mutation";
-import { useRunnerTraycerHostStatusQuery } from "@/hooks/runner/use-runner-traycer-host-status-query";
+import { useRunnerCicHostStatusQuery } from "@/hooks/runner/use-runner-cic-host-status-query";
 
 export type LocalHostLoadingStage = "loading" | "slow";
 
@@ -34,11 +34,11 @@ const BOOTSTRAP_TAIL_POLL_MS = 1500;
 export function LocalHostLoading(props: LocalHostLoadingProps) {
   const respawn = useRunnerRequestHostRespawn();
   const runnerHost = useRunnerHost();
-  const hasCli = runnerHost.traycerCli !== null;
+  const hasCli = runnerHost.cicCli !== null;
   const [showDetails, setShowDetails] = useState<boolean>(false);
   // Only poll while the disclosure is open. Cache stays warm if the user
   // toggles closed-then-open quickly.
-  const status = useRunnerTraycerHostStatusQuery({
+  const status = useRunnerCicHostStatusQuery({
     pollIntervalMs: showDetails ? BOOTSTRAP_TAIL_POLL_MS : null,
   });
   const tail = status.data?.bootstrapLogTail ?? "";
@@ -134,7 +134,7 @@ interface ProgressView {
 function buildProgressView(progress: HostProgressEvent | null): ProgressView {
   if (progress === null) {
     return {
-      heading: "Starting local Traycer Host…",
+      heading: "Starting local CIC Host…",
       detail: null,
       stage: null,
       percent: null,
@@ -148,8 +148,8 @@ function buildProgressView(progress: HostProgressEvent | null): ProgressView {
   return {
     heading:
       progress.stage === "download"
-        ? "Downloading Traycer Host…"
-        : "Setting up Traycer Host…",
+        ? "Downloading CIC Host…"
+        : "Setting up CIC Host…",
     detail: progress.message,
     stage: progress.stage,
     percent,
@@ -252,7 +252,7 @@ interface BootstrapLogTailProps {
 }
 
 /**
- * Live tail of `~/.traycer/bootstrap.log`. Auto-scrolls to the bottom on
+ * Live tail of `~/.cic/bootstrap.log`. Auto-scrolls to the bottom on
  * every refresh so the most recent line stays visible - same UX as a
  * `tail -f` in a terminal pane.
  */

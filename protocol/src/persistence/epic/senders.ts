@@ -1,5 +1,5 @@
-import { sessionWorkspaceSnapshotSchema } from "@traycer/protocol/common/workspace-association";
-import { guiHarnessIdSchema } from "@traycer/protocol/persistence/epic/foundation";
+import { sessionWorkspaceSnapshotSchema } from "@cic/protocol/common/workspace-association";
+import { guiHarnessIdSchema } from "@cic/protocol/persistence/epic/foundation";
 import { z } from "zod";
 
 /**
@@ -29,7 +29,7 @@ export const agentSenderSchema = z.object({
    * final replies that close a thread, and assistant turns use
    * `{ expectsReply: false }` — the field is only meaningful on user
    * messages with `type: "agent"`. The receiving GUI surfaces reply-expected
-   * messages in the "how to reply" footer (`traycer agent send …
+   * messages in the "how to reply" footer (`cic agent send …
    * --response-id <id>` closes the thread when replying with
    * `expectReply=false`).
    */

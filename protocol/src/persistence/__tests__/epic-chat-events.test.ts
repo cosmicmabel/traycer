@@ -3,14 +3,14 @@ import {
   chatEventSchema,
   chatEventTypeSchema,
   chatSchema,
-} from "@traycer/protocol/persistence/epic/schemas";
+} from "@cic/protocol/persistence/epic/schemas";
 import {
   restoreResultManifestSchema,
   restoreStartedManifestSchema,
   turnCheckpointManifestSchema,
-} from "@traycer/protocol/persistence/epic/checkpoint-manifests";
-import { getRecordSchema } from "@traycer/protocol/framework/index";
-import { persistenceRecordRegistry } from "@traycer/protocol/persistence/registry";
+} from "@cic/protocol/persistence/epic/checkpoint-manifests";
+import { getRecordSchema } from "@cic/protocol/framework/index";
+import { persistenceRecordRegistry } from "@cic/protocol/persistence/registry";
 
 const epicSchema = getRecordSchema(persistenceRecordRegistry, "epic", "latest");
 

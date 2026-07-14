@@ -4,7 +4,7 @@ import {
   useNotificationUnreadCount,
   useNotificationsStore,
 } from "@/stores/notifications/notifications-store";
-import type { NotificationEntry } from "@traycer/protocol/notifications/notification-entry";
+import type { NotificationEntry } from "@cic/protocol/notifications/notification-entry";
 
 export interface NotificationsActions {
   markAsRead: (notificationId: string) => void;

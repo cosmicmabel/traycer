@@ -8,8 +8,8 @@ import {
 import {
   CURRENT_EPIC_VERSION,
   CURRENT_PHASE_VERSION,
-} from "@traycer-clients/shared/epic/epic-version";
-import type { ListTasksResponse } from "@traycer/protocol/host/epic/unary-schemas";
+} from "@cic/shared/epic/epic-version";
+import type { ListTasksResponse } from "@cic/protocol/host/epic/unary-schemas";
 import { useShallow } from "zustand/react/shallow";
 import {
   useHostClient,

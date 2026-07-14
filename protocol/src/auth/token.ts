@@ -7,7 +7,7 @@
  * `RecordValue<>` and re-exported from `protocol/auth/registry.ts`.
  *
  * Consumers should `import type { RefreshTokenResponse, ExchangeTokenResponse }
- * from "@traycer/protocol/auth/registry"`. This module re-exports them
+ * from "@cic/protocol/auth/registry"`. This module re-exports them
  * for backward compatibility but adds no new declarations.
  */
 export type {

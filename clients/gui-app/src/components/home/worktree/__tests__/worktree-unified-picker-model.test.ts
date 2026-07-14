@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import type {
   WorktreeBranch,
   WorktreeWorkspaceSummary,
-} from "@traycer/protocol/host/worktree-schemas";
+} from "@cic/protocol/host/worktree-schemas";
 import {
   buildUnifiedPickerModel,
   newWorktreeIntent,
@@ -58,7 +58,7 @@ function build(input: {
     summary: input.summary,
     branches: input.branches,
     currentIntent: input.currentIntent ?? null,
-    defaultNewBranchName: "traycer/swift-otter",
+    defaultNewBranchName: "cic/swift-otter",
     uncommittedFileCount: input.uncommittedFileCount ?? 0,
   });
 }
@@ -100,7 +100,7 @@ describe("buildUnifiedPickerModel — partition invariant", () => {
       label: "feat/login",
       carryUncommittedChanges: false,
       isRemote: false,
-      defaultNewBranchName: "traycer/swift-otter",
+      defaultNewBranchName: "cic/swift-otter",
     });
     expect(model.sourceOptions.map((r) => r.name)).toEqual([
       "development",
@@ -193,7 +193,7 @@ describe("buildUnifiedPickerModel — partition invariant", () => {
     const source = model.sourceOptions.find((r) => r.name === "feat/x");
     expect(source).toMatchObject({
       name: "feat/x",
-      defaultNewBranchName: "traycer/swift-otter",
+      defaultNewBranchName: "cic/swift-otter",
     });
   });
 
@@ -253,7 +253,7 @@ describe("buildUnifiedPickerModel — partition invariant", () => {
         isPrimary: true,
         branch: {
           type: "new",
-          name: "traycer/swift-otter",
+          name: "cic/swift-otter",
           source: "development",
           carryUncommittedChanges: false,
         },
@@ -275,7 +275,7 @@ describe("buildUnifiedPickerModel — partition invariant", () => {
         isPrimary: true,
         branch: {
           type: "new",
-          name: "traycer/swift-otter",
+          name: "cic/swift-otter",
           source: "development",
           carryUncommittedChanges: true,
         },
@@ -381,7 +381,7 @@ describe("newWorktreeIntent", () => {
           label: "development",
           carryUncommittedChanges: false,
           isRemote: false,
-          defaultNewBranchName: "traycer/swift-otter",
+          defaultNewBranchName: "cic/swift-otter",
         },
         branchName: "feat/new",
       }),
@@ -412,7 +412,7 @@ describe("newWorktreeIntent", () => {
           label: "Working tree · development",
           carryUncommittedChanges: true,
           isRemote: false,
-          defaultNewBranchName: "traycer/swift-otter",
+          defaultNewBranchName: "cic/swift-otter",
         },
         branchName: "feat/new",
       }),
@@ -439,7 +439,7 @@ describe("newWorktreeIntent", () => {
           label: "feat/existing",
           carryUncommittedChanges: false,
           isRemote: false,
-          defaultNewBranchName: "traycer/swift-otter",
+          defaultNewBranchName: "cic/swift-otter",
         },
         branchName: "",
       }),
@@ -458,16 +458,16 @@ describe("newWorktreeIntent", () => {
           label: "development",
           carryUncommittedChanges: false,
           isRemote: false,
-          defaultNewBranchName: "traycer/swift-otter",
+          defaultNewBranchName: "cic/swift-otter",
         },
-        branchName: "traycer/swift-otter",
+        branchName: "cic/swift-otter",
       }),
     ).toMatchObject({
       kind: "worktree",
       scripts: null,
       branch: {
         type: "new",
-        name: "traycer/swift-otter",
+        name: "cic/swift-otter",
         source: "development",
         carryUncommittedChanges: false,
       },

@@ -3,7 +3,7 @@ import { StartTruncatedText } from "@/components/ui/start-truncated-text";
 import { useWorkspaceReadFile } from "@/hooks/workspace/use-read-file-query";
 import { languageFromFilePath } from "@/lib/file-change-diff-hunks";
 import { cn } from "@/lib/utils";
-import { TraycerMarkdown } from "@/markdown";
+import { CicMarkdown } from "@/markdown";
 import { useShikiHighlighter } from "@/markdown/shiki-highlighter";
 import { useThrottledCodeHighlight } from "@/markdown/use-throttled-code-highlight";
 import { useRegisterTileFindAdapter } from "@/components/epic-canvas/tile-find/tile-find-adapter-context";
@@ -453,7 +453,7 @@ function MarkdownFilePreview(props: {
       className="min-size-full bg-canvas px-6 py-5"
       aria-label={`${fileName} markdown preview`}
     >
-      <TraycerMarkdown
+      <CicMarkdown
         className="mx-auto w-full max-w-4xl text-foreground"
         proseSize="normal"
         components={null}
@@ -463,7 +463,7 @@ function MarkdownFilePreview(props: {
         isStreaming={false}
       >
         {markdown}
-      </TraycerMarkdown>
+      </CicMarkdown>
     </section>
   );
 }
@@ -610,7 +610,7 @@ function CodeEditorPreview(props: {
         <div ref={codeContentRef} className="min-w-0 flex-1 p-4">
           {highlightedNodes !== null ? (
             <div
-              className="traycer-md-shiki"
+              className="cic-md-shiki"
               aria-label={`${props.fileName} source`}
             >
               {highlightedNodes}

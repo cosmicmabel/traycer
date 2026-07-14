@@ -6,7 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   DEFAULT_GIT_FILE_DIFF_BYTE_BUDGET,
   type GitGetFileDiffResponse,
-} from "@traycer/protocol/host";
+} from "@cic/protocol/host";
 import { gitQueryKeys } from "@/lib/query-keys/git-query-keys";
 import { useGitGetFileDiffQuery } from "../use-git-get-file-diff-query";
 
@@ -324,7 +324,7 @@ describe("useGitGetFileDiffQuery", () => {
     );
     const submoduleKey = gitQueryKeys.fileDiff(
       "host-1",
-      "/repo/traycer",
+      "/repo/cic",
       "src/foo.ts",
       null,
       "unstaged",

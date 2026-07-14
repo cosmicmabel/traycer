@@ -1,6 +1,6 @@
 /**
  * `agent.inbox.subscribe@1.0` - streaming-RPC contract used by the
- * `traycer monitor` background command (spawned inside a Claude Code TUI
+ * `cic monitor` background command (spawned inside a Claude Code TUI
  * session) to receive inbox messages addressed to a single agent id.
  *
  * Delivery model:
@@ -21,8 +21,8 @@
  * `AgentActivityTracker` on open/close, replacing the older PTY-data
  * heuristic from `TerminalSessionManager`.
  */
-import { defineRpcContract } from "@traycer/protocol/framework/index";
-import { defineStreamRpcContract } from "@traycer/protocol/framework/versioned-stream-rpc";
+import { defineRpcContract } from "@cic/protocol/framework/index";
+import { defineStreamRpcContract } from "@cic/protocol/framework/versioned-stream-rpc";
 import { z } from "zod";
 
 const textFrameFields = {
@@ -208,17 +208,17 @@ export const agentInboxSubscribeV10 = defineStreamRpcContract({
 // ─── `agent.inbox.read@1.0` - unary recent-inbox read ─────────────────────
 //
 // Lets a TUI agent re-read its recently-delivered inbox messages IN FULL.
-// The `traycer monitor` stream surfaces each message to the agent through a
+// The `cic monitor` stream surfaces each message to the agent through a
 // harness background-output notification, which the harness truncates for
 // large payloads. This unary read returns the broker's retained ring (full
 // bodies, oldest first) so the agent can recover the complete message via a
-// direct `traycer agent inbox` call, whose stdout is not subject to that
+// direct `cic agent inbox` call, whose stdout is not subject to that
 // notification cap. GUI agents have no truncation problem and never route
 // through the broker inbox, so this is a TUI-only recovery path.
 
 export const agentInboxReadRequestSchema = z.object({
   epicId: z.string(),
-  /** The calling agent reading its own inbox (defaults to $TRAYCER_AGENT_ID). */
+  /** The calling agent reading its own inbox (defaults to $CIC_AGENT_ID). */
   agentId: z.string(),
 });
 export type AgentInboxReadRequest = z.infer<typeof agentInboxReadRequestSchema>;

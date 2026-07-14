@@ -4,12 +4,12 @@ import { useShallow } from "zustand/react/shallow";
 import type {
   WorktreeDeleteOutputChannel,
   WorktreeDeletePhase,
-} from "@traycer/protocol/host/worktree-delete-stream";
-import type { WorktreeHostEntry } from "@traycer/protocol/host/index";
-import type { WorktreeEntryScripts } from "@traycer/protocol/host/worktree-schemas";
-import type { HostStreamRpcRegistry } from "@traycer/protocol/host/registry";
-import type { WsStreamClient } from "@traycer-clients/shared/host-transport/ws-stream-client";
-import { WorktreeDeleteStreamClient } from "@traycer-clients/shared/host-transport/worktree-delete-stream-client";
+} from "@cic/protocol/host/worktree-delete-stream";
+import type { WorktreeHostEntry } from "@cic/protocol/host/index";
+import type { WorktreeEntryScripts } from "@cic/protocol/host/worktree-schemas";
+import type { HostStreamRpcRegistry } from "@cic/protocol/host/registry";
+import type { WsStreamClient } from "@cic/shared/host-transport/ws-stream-client";
+import { WorktreeDeleteStreamClient } from "@cic/shared/host-transport/worktree-delete-stream-client";
 import type { DurableStreamTransport } from "@/lib/host/durable-stream-transport";
 import { openOwnedDurableStreamClient } from "@/lib/host/owned-durable-stream-client";
 

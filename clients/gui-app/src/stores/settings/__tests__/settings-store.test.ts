@@ -61,7 +61,7 @@ describe("useSettingsStore", () => {
 
   it("rehydrates persisted artifact icon settings via default hydration", async () => {
     window.localStorage.setItem(
-      "traycer-gui-app:settings",
+      "cic-gui-app:settings",
       JSON.stringify({
         state: {
           artifactIconColorMode: "none",
@@ -111,7 +111,7 @@ describe("useSettingsStore", () => {
 
   it("rehydrates a persisted defaultEditor via default hydration", async () => {
     window.localStorage.setItem(
-      "traycer-gui-app:settings",
+      "cic-gui-app:settings",
       JSON.stringify({
         state: { defaultEditor: "cursor" },
         version: 1,
@@ -125,7 +125,7 @@ describe("useSettingsStore", () => {
 
   it("keeps the initial defaultEditor when none is persisted", async () => {
     window.localStorage.setItem(
-      "traycer-gui-app:settings",
+      "cic-gui-app:settings",
       JSON.stringify({
         state: { artifactIconColorMode: "none" },
         version: 1,
@@ -149,14 +149,14 @@ describe("useSettingsStore", () => {
 
   it("persists the chat turn-completion notification preference", () => {
     useSettingsStore.getState().setNotifyOnChatTurnComplete(false);
-    const persisted = window.localStorage.getItem("traycer-gui-app:settings");
+    const persisted = window.localStorage.getItem("cic-gui-app:settings");
 
     expect(persisted ?? "").toContain('"notifyOnChatTurnComplete":false');
   });
 
   it("rehydrates the chat turn-completion preference from persisted settings", async () => {
     window.localStorage.setItem(
-      "traycer-gui-app:settings",
+      "cic-gui-app:settings",
       JSON.stringify({
         state: { notifyOnChatTurnComplete: false },
         version: 1,
@@ -174,7 +174,7 @@ describe("useSettingsStore", () => {
 
   it("toggles and persists the global resource monitor button preference", () => {
     useSettingsStore.getState().setShowGlobalResourceMonitor(false);
-    const persisted = window.localStorage.getItem("traycer-gui-app:settings");
+    const persisted = window.localStorage.getItem("cic-gui-app:settings");
 
     expect(useSettingsStore.getState().showGlobalResourceMonitor).toBe(false);
     expect(persisted ?? "").toContain('"showGlobalResourceMonitor":false');
@@ -182,7 +182,7 @@ describe("useSettingsStore", () => {
 
   it("rehydrates the global resource monitor button preference", async () => {
     window.localStorage.setItem(
-      "traycer-gui-app:settings",
+      "cic-gui-app:settings",
       JSON.stringify({
         state: { showGlobalResourceMonitor: false },
         version: 1,
@@ -200,7 +200,7 @@ describe("useSettingsStore", () => {
 
   it("toggles and persists navigator resource stats", () => {
     useSettingsStore.getState().setShowNavigatorResourceStats(true);
-    const persisted = window.localStorage.getItem("traycer-gui-app:settings");
+    const persisted = window.localStorage.getItem("cic-gui-app:settings");
 
     expect(useSettingsStore.getState().showNavigatorResourceStats).toBe(true);
     expect(persisted ?? "").toContain('"showNavigatorResourceStats":true');
@@ -208,7 +208,7 @@ describe("useSettingsStore", () => {
 
   it("rehydrates navigator resource stats from persisted settings", async () => {
     window.localStorage.setItem(
-      "traycer-gui-app:settings",
+      "cic-gui-app:settings",
       JSON.stringify({
         state: { showNavigatorResourceStats: true },
         version: 1,
@@ -232,14 +232,14 @@ describe("useSettingsStore", () => {
 
   it("persists the pinned context usage breakdown preference", () => {
     useSettingsStore.getState().setPinContextUsageBreakdown(true);
-    const persisted = window.localStorage.getItem("traycer-gui-app:settings");
+    const persisted = window.localStorage.getItem("cic-gui-app:settings");
 
     expect(persisted ?? "").toContain('"pinContextUsageBreakdown":true');
   });
 
   it("rehydrates the pinned context usage breakdown from persisted settings", async () => {
     window.localStorage.setItem(
-      "traycer-gui-app:settings",
+      "cic-gui-app:settings",
       JSON.stringify({
         state: { pinContextUsageBreakdown: true },
         version: 1,
@@ -253,7 +253,7 @@ describe("useSettingsStore", () => {
 
   it("rehydrates old settings without the field to the default off", async () => {
     window.localStorage.setItem(
-      "traycer-gui-app:settings",
+      "cic-gui-app:settings",
       JSON.stringify({
         state: { artifactIconColorMode: "none" },
         version: 1,
@@ -277,14 +277,14 @@ describe("useSettingsStore", () => {
 
   it("persists the quote reply preference", () => {
     useSettingsStore.getState().setQuoteReplyEnabled(false);
-    const persisted = window.localStorage.getItem("traycer-gui-app:settings");
+    const persisted = window.localStorage.getItem("cic-gui-app:settings");
 
     expect(persisted ?? "").toContain('"quoteReplyEnabled":false');
   });
 
   it("rehydrates the quote reply preference from persisted settings", async () => {
     window.localStorage.setItem(
-      "traycer-gui-app:settings",
+      "cic-gui-app:settings",
       JSON.stringify({
         state: { quoteReplyEnabled: false },
         version: 1,
@@ -298,7 +298,7 @@ describe("useSettingsStore", () => {
 
   it("rehydrates old settings without quoteReplyEnabled to the default on", async () => {
     window.localStorage.setItem(
-      "traycer-gui-app:settings",
+      "cic-gui-app:settings",
       JSON.stringify({
         state: { artifactIconColorMode: "none" },
         version: 1,
@@ -321,7 +321,7 @@ describe("useSettingsStore", () => {
   it("persists regular mode when selected", () => {
     useSettingsStore.getState().setDefaultAgentMode("regular");
     const persistedSettings = window.localStorage.getItem(
-      "traycer-gui-app:settings",
+      "cic-gui-app:settings",
     );
 
     expect(useSettingsStore.getState().defaultAgentMode).toBe("regular");
@@ -331,7 +331,7 @@ describe("useSettingsStore", () => {
 
   it("rehydrates regular mode from persisted settings", async () => {
     window.localStorage.setItem(
-      "traycer-gui-app:settings",
+      "cic-gui-app:settings",
       JSON.stringify({
         state: {
           defaultAgentMode: "regular",
@@ -347,7 +347,7 @@ describe("useSettingsStore", () => {
 
   it("accepts valid persisted default permissions", async () => {
     window.localStorage.setItem(
-      "traycer-gui-app:settings",
+      "cic-gui-app:settings",
       JSON.stringify({
         state: {
           defaultPermission: "auto_accept_edits",
@@ -413,7 +413,7 @@ describe("useSettingsStore", () => {
       mode: "unified",
       ignoreWhitespace: true,
     });
-    const persisted = window.localStorage.getItem("traycer-gui-app:settings");
+    const persisted = window.localStorage.getItem("cic-gui-app:settings");
 
     expect(persisted ?? "").toContain('"mode":"unified"');
     expect(persisted ?? "").toContain('"ignoreWhitespace":true');
@@ -421,7 +421,7 @@ describe("useSettingsStore", () => {
 
   it("rehydrates valid persisted diff viewer preferences", async () => {
     window.localStorage.setItem(
-      "traycer-gui-app:settings",
+      "cic-gui-app:settings",
       JSON.stringify({
         state: {
           diffViewerPreferences: {

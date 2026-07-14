@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import type { ProviderCliState } from "@traycer/protocol/host/provider-schemas";
+import type { ProviderCliState } from "@cic/protocol/host/provider-schemas";
 import { MutedAgentSpinner } from "@/components/ui/agent-spinning-dots";
 import { Badge } from "@/components/ui/badge";
 import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";

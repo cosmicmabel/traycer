@@ -25,7 +25,7 @@ import {
 import { ContextUsageChip } from "@/components/chat/context-usage-chip";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { useSettingsStore } from "@/stores/settings/settings-store";
-import type { TokenUsage } from "@traycer/protocol/persistence/epic/foundation";
+import type { TokenUsage } from "@cic/protocol/persistence/epic/foundation";
 
 const RELIABLE_USAGE: TokenUsage = {
   inputTokens: 50_000,

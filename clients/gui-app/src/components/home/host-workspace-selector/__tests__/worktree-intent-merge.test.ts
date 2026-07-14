@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import type {
   WorktreeEntryScripts,
   WorktreeFolderIntent,
-} from "@traycer/protocol/host/worktree-schemas";
+} from "@cic/protocol/host/worktree-schemas";
 import {
   mergeWorktreeIntent,
   mergeWorktreeIntentEntry,
@@ -39,12 +39,12 @@ describe("worktree intent merge", () => {
   it("preserves previous workspace intent entries when scoped create capture adds another workspace", () => {
     const first = createEntry({
       workspacePath: "/workspace/first",
-      newBranch: "traycer/first",
+      newBranch: "cic/first",
       isPrimary: true,
     });
     const second = createEntry({
       workspacePath: "/workspace/second",
-      newBranch: "traycer/second",
+      newBranch: "cic/second",
       isPrimary: true,
     });
 
@@ -58,17 +58,17 @@ describe("worktree intent merge", () => {
   it("replaces an existing entry for the same workspace path", () => {
     const first = createEntry({
       workspacePath: "/workspace/first",
-      newBranch: "traycer/first",
+      newBranch: "cic/first",
       isPrimary: true,
     });
     const second = createEntry({
       workspacePath: "/workspace/second",
-      newBranch: "traycer/second",
+      newBranch: "cic/second",
       isPrimary: false,
     });
     const changedFirst = createEntry({
       workspacePath: "/workspace/first",
-      newBranch: "traycer/changed",
+      newBranch: "cic/changed",
       isPrimary: false,
     });
 
@@ -82,12 +82,12 @@ describe("worktree intent merge", () => {
   it("removes entries by workspace path and returns null when none remain", () => {
     const first = createEntry({
       workspacePath: "/workspace/first",
-      newBranch: "traycer/first",
+      newBranch: "cic/first",
       isPrimary: true,
     });
     const second = createEntry({
       workspacePath: "/workspace/second",
-      newBranch: "traycer/second",
+      newBranch: "cic/second",
       isPrimary: false,
     });
 
@@ -105,7 +105,7 @@ describe("worktree intent merge", () => {
   it("sets the scripts override on a worktree entry, preserving its branch", () => {
     const entry = createEntry({
       workspacePath: "/workspace/first",
-      newBranch: "traycer/first",
+      newBranch: "cic/first",
       isPrimary: true,
     });
     const next = setWorktreeIntentEntryScripts(
@@ -121,7 +121,7 @@ describe("worktree intent merge", () => {
       SCRIPTS,
     );
     expect(updated?.kind === "worktree" ? updated.branch.name : null).toBe(
-      "traycer/first",
+      "cic/first",
     );
   });
 

@@ -17,10 +17,10 @@ import {
 } from "lucide-react";
 import type { TreeNodeNested } from "@/lib/tree-types";
 import { buildTreeFromFlatRecords } from "@/lib/tree-utils";
-import { getRecordSchema } from "@traycer/protocol/framework/index";
-import { commonRecordRegistry } from "@traycer/protocol/common/registry";
-import { type EpicArtifactKind } from "@traycer/protocol/common/registry";
-import type { TuiHarnessId } from "@traycer/protocol/persistence/epic/schemas";
+import { getRecordSchema } from "@cic/protocol/framework/index";
+import { commonRecordRegistry } from "@cic/protocol/common/registry";
+import { type EpicArtifactKind } from "@cic/protocol/common/registry";
+import type { TuiHarnessId } from "@cic/protocol/persistence/epic/schemas";
 
 const epicArtifactKindSchema = getRecordSchema(
   commonRecordRegistry,

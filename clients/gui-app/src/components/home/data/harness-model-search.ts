@@ -42,8 +42,8 @@ export interface HarnessModelRow {
   readonly capacityLabel: string | null;
   /**
    * Human-readable sunset notice when the host's catalog flags this model as
-   * deprecated (currently only the Traycer harness does). `null` for every
-   * actively-recommended model, including every non-Traycer harness (the
+   * deprecated (currently only the CIC harness does). `null` for every
+   * actively-recommended model, including every non-CIC harness (the
    * field is optional on the wire - see `deprecationNotice` on
    * `GuiAgentModelOption`).
    */

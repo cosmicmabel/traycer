@@ -1,15 +1,15 @@
-import type { VersionedStreamRpcRegistry } from "@traycer/protocol/framework/versioned-stream-rpc";
+import type { VersionedStreamRpcRegistry } from "@cic/protocol/framework/versioned-stream-rpc";
 import {
   clientStreamOpenFrameSchema,
   clientStreamSubscribeFrameSchema,
   type HostStreamOpenAckFrame,
   type HostStreamFatalErrorFrame,
-} from "@traycer/protocol/framework/stream-ws-protocol";
+} from "@cic/protocol/framework/stream-ws-protocol";
 import type {
   ConnectionManifest,
   FatalErrorDetails,
-} from "@traycer/protocol/framework/ws-protocol";
-import { checkStreamCompatibility } from "@traycer/protocol/framework/stream-compat";
+} from "@cic/protocol/framework/ws-protocol";
+import { checkStreamCompatibility } from "@cic/protocol/framework/stream-compat";
 import { z } from "zod";
 import type {
   AgentInboxStream,
@@ -399,7 +399,7 @@ export class StreamConnection {
       // (Backoff-worthy failures use retryable:true.)
       this.fatal({
         code: "RPC_ERROR",
-        reason: `stream method not implemented in @traycer/open-host: ${subscribe.data.method}`,
+        reason: `stream method not implemented in @cic/open-host: ${subscribe.data.method}`,
         incompatibleMethods: null,
         upgradeGuidance: null,
       });

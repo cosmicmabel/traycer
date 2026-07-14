@@ -64,7 +64,7 @@ export interface PersistentHistoryController {
  * single signal that gates the in-app navigation feature.
  */
 export const PERSISTENT_HISTORY_CONTROLLER: unique symbol = Symbol(
-  "traycer.persistentHistoryController",
+  "cic.persistentHistoryController",
 );
 
 /** The branded history returned by `createPersistentMemoryHistory`. */
@@ -123,9 +123,8 @@ export function getHistoryController(
  * unreliable in practice.
  */
 
-const STORAGE_KEY_PREFIX = "traycer-gui-app:last-route";
-const CONSUMED_INITIAL_ROUTE_KEY_PREFIX =
-  "traycer-gui-app:consumed-initial-route";
+const STORAGE_KEY_PREFIX = "cic-gui-app:last-route";
+const CONSUMED_INITIAL_ROUTE_KEY_PREFIX = "cic-gui-app:consumed-initial-route";
 const MAX_ENTRIES = 100;
 
 type LocationState = HistoryLocation["state"];

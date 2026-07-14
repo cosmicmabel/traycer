@@ -3,7 +3,7 @@
 // `permission-diff-undo-e2e.test.ts` which covers diff emission.
 import { describe, expect, it, vi } from "vitest";
 import { render, cleanup, screen } from "@testing-library/react";
-import type { TurnCheckpointManifest } from "@traycer/protocol/persistence/epic/checkpoint-manifests";
+import type { TurnCheckpointManifest } from "@cic/protocol/persistence/epic/checkpoint-manifests";
 import { ChatRestoreProvider } from "@/components/chat/chat-restore-context";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { FileChangeGroupSegment } from "@/components/chat/segments/file-change-group-segment";
@@ -12,7 +12,7 @@ import type { ChatRestoreSlot } from "@/stores/chats/chat-session-store";
 import type {
   ChatAccess,
   ChatActiveTurn,
-} from "@traycer/protocol/host/agent/gui/subscribe";
+} from "@cic/protocol/host/agent/gui/subscribe";
 
 const PERMISSION_MODES = [
   "supervised",

@@ -2,7 +2,7 @@ import type { UseQueryResult } from "@tanstack/react-query";
 import type {
   HostRpcError,
   ResponseOfMethod,
-} from "@traycer-clients/shared/host-transport/host-messenger";
+} from "@cic/shared/host-transport/host-messenger";
 import { useHostClient, type HostRpcRegistry } from "@/lib/host";
 import { useHostQuery } from "@/hooks/host/use-host-query";
 

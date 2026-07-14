@@ -4,7 +4,7 @@ import type {
   RuntimePlanAction,
   RuntimePlanStep,
   RuntimeTodoItem,
-} from "@traycer/protocol/host/agent/gui/agent-runtime";
+} from "@cic/protocol/host/agent/gui/agent-runtime";
 import type {
   ApprovalDecision as PersistenceApprovalDecision,
   ContentBlock,
@@ -17,13 +17,13 @@ import type {
   TodoItem,
   WorkflowActivityEntry,
   WorkflowMeta,
-} from "@traycer/protocol/persistence/epic/schemas";
-import { deriveToolInputDetail } from "@traycer/protocol/host/agent/gui/tool-input-detail";
-import { deriveToolInputSummary } from "@traycer/protocol/host/agent/gui/tool-input-summary";
+} from "@cic/protocol/persistence/epic/schemas";
+import { deriveToolInputDetail } from "@cic/protocol/host/agent/gui/tool-input-detail";
+import { deriveToolInputSummary } from "@cic/protocol/host/agent/gui/tool-input-summary";
 import {
   isTaskTodoToolName,
   parseTaskTodoToolPayloads,
-} from "@traycer/protocol/host/agent/gui/task-todo-tools";
+} from "@cic/protocol/host/agent/gui/task-todo-tools";
 
 export interface TurnContentState {
   readonly blocks: ContentBlock[];

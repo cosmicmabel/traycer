@@ -27,12 +27,12 @@ vi.mock("@/components/ui/tooltip-wrapper", () => ({
 }));
 
 const COMPLETE_BLOCK = [
-  "<TRAYCER_NEXT_STEPS>",
+  "<CIC_NEXT_STEPS>",
   "Implementation is complete.",
   "",
   "- [] Use /implementation-validation to validate the work",
   "- [ ] Review the changed files with /review-files",
-  "</TRAYCER_NEXT_STEPS>",
+  "</CIC_NEXT_STEPS>",
 ].join("\n");
 
 describe("TextSegment next steps rendering", () => {
@@ -90,14 +90,14 @@ describe("TextSegment next steps rendering", () => {
         name: "Review the changed files with /review-files",
       }),
     ).toBeTruthy();
-    expect(screen.queryByText(/TRAYCER_NEXT_STEPS/)).toBeNull();
+    expect(screen.queryByText(/CIC_NEXT_STEPS/)).toBeNull();
   });
 
   it("disables action buttons while a next steps block is still streaming", () => {
     render(
       <TextSegment
         findUnitId={null}
-        markdown={COMPLETE_BLOCK.replace("\n</TRAYCER_NEXT_STEPS>", "")}
+        markdown={COMPLETE_BLOCK.replace("\n</CIC_NEXT_STEPS>", "")}
         isStreaming
         nextStepActions={{ canSend: true, onSend: () => true }}
       />,
@@ -175,11 +175,11 @@ describe("TextSegment next steps rendering", () => {
       <TextSegment
         findUnitId={null}
         markdown={[
-          "<TRAYCER_NEXT_STEPS>",
+          "<CIC_NEXT_STEPS>",
           "Readable prose survives.",
           "",
           "- []",
-          "</TRAYCER_NEXT_STEPS>",
+          "</CIC_NEXT_STEPS>",
         ].join("\n")}
         isStreaming={false}
         nextStepActions={{ canSend: true, onSend: () => true }}
@@ -188,7 +188,7 @@ describe("TextSegment next steps rendering", () => {
 
     expect(screen.getByText("Readable prose survives.")).toBeTruthy();
     expect(screen.queryByRole("button")).toBeNull();
-    expect(screen.queryByText(/TRAYCER_NEXT_STEPS/)).toBeNull();
+    expect(screen.queryByText(/CIC_NEXT_STEPS/)).toBeNull();
   });
 
   it("excludes next-step action groups from quote selection", () => {
@@ -202,9 +202,7 @@ describe("TextSegment next steps rendering", () => {
     );
 
     expect(
-      screen
-        .getByTestId("traycer-next-steps")
-        .getAttribute("data-quote-exclude"),
+      screen.getByTestId("cic-next-steps").getAttribute("data-quote-exclude"),
     ).toBe("");
   });
 
@@ -212,13 +210,13 @@ describe("TextSegment next steps rendering", () => {
     render(
       <TextSegment
         findUnitId={null}
-        markdown="<TRAYCER_NEXT_STEPS"
+        markdown="<CIC_NEXT_STEPS"
         isStreaming
         nextStepActions={{ canSend: true, onSend: () => true }}
       />,
     );
 
-    expect(screen.queryByText(/TRAYCER_NEXT_STEPS/)).toBeNull();
+    expect(screen.queryByText(/CIC_NEXT_STEPS/)).toBeNull();
   });
 
   it("renders known agent ids as agent reference chips", () => {

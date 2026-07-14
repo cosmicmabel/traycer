@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { cleanup, renderHook } from "@testing-library/react";
-import type { WorktreeBindingSelectorRow } from "@traycer/protocol/host";
-import type { WorktreeIntent } from "@traycer/protocol/host/worktree-schemas";
+import type { WorktreeBindingSelectorRow } from "@cic/protocol/host";
+import type { WorktreeIntent } from "@cic/protocol/host/worktree-schemas";
 import type { CommandContext, CommandItem } from "@/lib/commands/types";
 import type { KeybindingRouter } from "@/lib/keybindings/dispatch";
 import type { OpenTileIntoTargetGroupArgs } from "@/lib/commands/actions/open-into-target";
@@ -25,7 +25,7 @@ const latestConversationWorkspaceSeedMock = vi.hoisted(() => ({
       {
         kind: "local",
         workspacePath: "/repo-seeded",
-        repoIdentifier: { owner: "traycerai", repo: "seeded" },
+        repoIdentifier: { owner: "cicai", repo: "seeded" },
         isPrimary: true,
       },
     ],
@@ -44,12 +44,12 @@ const terminalBindingsMock = vi.hoisted(() => ({
   rows: [
     {
       hostId: "host-2",
-      runningDir: "/work/traycer-wt/feature-x",
-      workspacePath: "/work/traycer",
-      worktreePath: "/work/traycer-wt/feature-x",
+      runningDir: "/work/cic-wt/feature-x",
+      workspacePath: "/work/cic",
+      worktreePath: "/work/cic-wt/feature-x",
       mode: "worktree",
       isGitRepo: true,
-      repoIdentifier: { owner: "traycer", repo: "traycer" },
+      repoIdentifier: { owner: "cic", repo: "cic" },
       branch: "feature-x",
       isPrimary: false,
       isImported: false,
@@ -174,7 +174,7 @@ vi.mock("@/hooks/harnesses/use-gui-harness-catalog", () => ({
         models: [{ harnessId: "claude", slug: "sonnet", label: "Sonnet" }],
       },
       // GUI-only provider must be filtered out of the TUI harness picker.
-      { id: "traycer", label: "Traycer", available: true, models: [] },
+      { id: "cic", label: "CIC", available: true, models: [] },
     ],
   }),
 }));
@@ -295,14 +295,14 @@ describe("Terminals opener sub-page", () => {
     const folderItems = renderSubpageItems(newTerminal);
     runById(
       folderItems,
-      "open:terminals:new:host-2:%2Fwork%2Ftraycer-wt%2Ffeature-x",
+      "open:terminals:new:host-2:%2Fwork%2Fcic-wt%2Ffeature-x",
     );
     const created = lastTileOpen();
     expect(created.groupId).toBe("group-1");
     expect(created.ref.type).toBe("terminal");
     if (created.ref.type !== "terminal") throw new Error("expected terminal");
     expect(created.ref.hostId).toBe("host-2");
-    expect(created.ref.cwd).toBe("/work/traycer-wt/feature-x");
+    expect(created.ref.cwd).toBe("/work/cic-wt/feature-x");
     expect(created.ref.name).toBe("New Terminal");
     expect(created.navigateNestedFocus).toBe(navigateNestedFocusSpy);
     runById(items, "open:terminals:term-1");

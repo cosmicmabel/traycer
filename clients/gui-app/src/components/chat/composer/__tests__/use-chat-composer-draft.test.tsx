@@ -2,7 +2,7 @@ import "../../../../../__tests__/test-browser-apis";
 import { useState } from "react";
 import { act, cleanup, render, renderHook } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { JsonContent } from "@traycer/protocol/common/registry";
+import type { JsonContent } from "@cic/protocol/common/registry";
 
 import { useComposerDraftStore } from "@/stores/composer/composer-draft-store";
 import {

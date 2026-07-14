@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { getRecordSchema } from "@traycer/protocol/framework/index";
-import { commonRecordRegistry } from "@traycer/protocol/common/registry";
+import { getRecordSchema } from "@cic/protocol/framework/index";
+import { commonRecordRegistry } from "@cic/protocol/common/registry";
 
 /**
  * Public sub-schemas and inferred types for the room-metadata record.
@@ -37,7 +37,7 @@ export const roomVersionMetadataSchema = z.object({
 export type RoomVersionMetadata = z.infer<typeof roomVersionMetadataSchema>;
 
 export const roomDeletionAttributionSchema = z.object({
-  traycerUserId: z.string(),
+  cicUserId: z.string(),
   displayName: z.string(),
 });
 export type RoomDeletionAttribution = z.infer<

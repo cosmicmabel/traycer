@@ -1,12 +1,12 @@
-import { commonRecordRegistry } from "@traycer/protocol/common/registry";
-import { getRecordSchema } from "@traycer/protocol/framework/versioned-record";
-import { contentBlockSchema } from "@traycer/protocol/persistence/epic/content-blocks";
-import { tokenUsageSchema } from "@traycer/protocol/persistence/epic/foundation";
+import { commonRecordRegistry } from "@cic/protocol/common/registry";
+import { getRecordSchema } from "@cic/protocol/framework/versioned-record";
+import { contentBlockSchema } from "@cic/protocol/persistence/epic/content-blocks";
+import { tokenUsageSchema } from "@cic/protocol/persistence/epic/foundation";
 import {
   agentSenderSchema,
   chatSessionAnchorSchema,
   userMessageSenderSchema,
-} from "@traycer/protocol/persistence/epic/senders";
+} from "@cic/protocol/persistence/epic/senders";
 import { z } from "zod";
 
 /**

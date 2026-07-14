@@ -1,4 +1,4 @@
-import { type EpicArtifactKind } from "@traycer/protocol/common/registry";
+import { type EpicArtifactKind } from "@cic/protocol/common/registry";
 import { basenameOfPath } from "@/lib/path";
 
 // Set membership beats `epicArtifactKindSchema.safeParse(value).success`

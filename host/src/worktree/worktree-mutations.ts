@@ -8,7 +8,7 @@ import {
   type WorktreeBranchSelection,
   type WorktreeFolderIntent,
   type WorktreePerEntryResult,
-} from "@traycer/protocol/host/worktree-schemas";
+} from "@cic/protocol/host/worktree-schemas";
 import { runGit } from "../git/git-exec";
 import { hostHomeDir } from "../pid-file";
 import type { TerminalStore } from "../terminal/terminal-store";
@@ -54,9 +54,7 @@ export function resolveOsScript(script: OsScript): string {
 
 async function readScriptsFile(root: string): Promise<WorkspaceScripts | null> {
   try {
-    const raw = await Bun.file(
-      join(root, ".traycer", "environment.json"),
-    ).text();
+    const raw = await Bun.file(join(root, ".cic", "environment.json")).text();
     const parsed = workspaceScriptsSchema.safeParse(JSON.parse(raw));
     return parsed.success ? parsed.data : null;
   } catch {
@@ -69,9 +67,9 @@ export async function writeScriptsFile(
   scripts: { readonly setup: OsScript; readonly teardown: OsScript },
 ): Promise<boolean> {
   try {
-    await mkdir(join(root, ".traycer"), { recursive: true });
+    await mkdir(join(root, ".cic"), { recursive: true });
     await writeFile(
-      join(root, ".traycer", "environment.json"),
+      join(root, ".cic", "environment.json"),
       JSON.stringify(
         {
           setup: scripts.setup,

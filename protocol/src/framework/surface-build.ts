@@ -1,6 +1,6 @@
 import { z } from "zod";
-import type { UncheckedVersionedRpcRegistry } from "@traycer/protocol/framework/versioned-rpc-types";
-import type { UncheckedVersionedStreamRpcRegistry } from "@traycer/protocol/framework/versioned-stream-rpc";
+import type { UncheckedVersionedRpcRegistry } from "@cic/protocol/framework/versioned-rpc-types";
+import type { UncheckedVersionedStreamRpcRegistry } from "@cic/protocol/framework/versioned-stream-rpc";
 
 /**
  * Protocol-surface serialization for the released-peer compatibility gate.

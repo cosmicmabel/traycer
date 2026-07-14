@@ -1,7 +1,7 @@
 import "../../../../__tests__/test-browser-apis";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { cleanup, renderHook } from "@testing-library/react";
-import { DEFAULT_ACCOUNT_CONTEXT } from "@traycer/protocol/common/schemas";
+import { DEFAULT_ACCOUNT_CONTEXT } from "@cic/protocol/common/schemas";
 import type { RateLimitProviderId } from "@/lib/rate-limit-providers";
 
 vi.mock("@/lib/rate-limits/ephemeral-fetch-queue", () => ({

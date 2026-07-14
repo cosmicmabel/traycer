@@ -2,7 +2,7 @@ import {
   defineDowngradePath,
   defineRpcContract,
   defineUpgradePath,
-} from "@traycer/protocol/framework/index";
+} from "@cic/protocol/framework/index";
 import {
   getGuiAgentPlanRequestSchema,
   getGuiAgentPlanResponseSchema,
@@ -18,13 +18,13 @@ import {
   guiHarnessOptionSchemaV10,
   guiHarnessOptionSchemaV20,
   guiHarnessOptionSchemaV30,
-} from "@traycer/protocol/host/agent/gui/unary-schemas";
+} from "@cic/protocol/host/agent/gui/unary-schemas";
 import {
   chatSubscribeV10,
   chatSubscribeV11,
   chatSubscribeV12,
   chatSubscribeV13,
-} from "@traycer/protocol/host/agent/gui/subscribe";
+} from "@cic/protocol/host/agent/gui/subscribe";
 
 // ─── GUI-surface catalog (`agent.gui.*`) ──────────────────────────────────
 

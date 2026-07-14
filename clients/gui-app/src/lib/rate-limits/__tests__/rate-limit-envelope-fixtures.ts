@@ -1,4 +1,4 @@
-import type { ProviderRateLimits } from "@traycer/protocol/host";
+import type { ProviderRateLimits } from "@cic/protocol/host";
 import type { ProviderRateLimitEnvelope } from "@/lib/rate-limits/rate-limit-envelope";
 
 /**

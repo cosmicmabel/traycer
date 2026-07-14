@@ -5,11 +5,11 @@ import type {
   OwnerResourceSnapshotWire,
   ResourceProcessSnapshotWire,
   ResourceOwnerKindWire,
-} from "@traycer/protocol/host/resources/subscribe";
+} from "@cic/protocol/host/resources/subscribe";
 import type {
   ResourcesProjectionPayload,
   ResourcesStreamCallbacks,
-} from "@traycer-clients/shared/host-transport/resources-stream-client";
+} from "@cic/shared/host-transport/resources-stream-client";
 import {
   createResourcesStore,
   resourceOwnerKey,
@@ -74,8 +74,8 @@ function makeApp(
     process: makeProcess({
       pid: 10,
       rootPid: 10,
-      name: "traycer-host",
-      command: "traycer-host",
+      name: "cic-host",
+      command: "cic-host",
       cpuPercent: 2,
       rssBytes: 500,
     }),
@@ -247,7 +247,7 @@ describe("createResourcesStore", () => {
       }),
     );
 
-    expect(handle.store.getState().app?.process?.name).toBe("traycer-host");
+    expect(handle.store.getState().app?.process?.name).toBe("cic-host");
     expect(handle.store.getState().taskSummary).toMatchObject({
       cpuPercent: 12,
       rssBytes: 600,

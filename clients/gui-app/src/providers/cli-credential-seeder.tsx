@@ -10,7 +10,7 @@ import type { AuthSessionSnapshot } from "@/lib/auth/auth-service";
  * A desktop persistence-boundary consumer of the raw bearer, like
  * `WindowsBridgeAuthSessionBridge`: it reads the token through
  * `AuthService.onSessionSnapshotChange` - never `useAuthStore`, which holds no
- * bearer - and pushes it to `traycer login --token` (`useRunnerCliLogin`) so
+ * bearer - and pushes it to `cic login --token` (`useRunnerCliLogin`) so
  * the CLI keeps using it for host comms. Re-seeds on every rotation so the
  * CLI's stored bundle stays fresh and rarely needs to self-refresh, which
  * minimises refresh-token contention between the renderer and the CLI.
@@ -21,7 +21,7 @@ import type { AuthSessionSnapshot } from "@/lib/auth/auth-service";
  * connection until the credentials file exists - so first-login seeding cannot
  * be left to this post-sign-in, best-effort reaction.
  *
- * Renders nothing and no-ops on shells without a local CLI (`traycerCli ===
+ * Renders nothing and no-ops on shells without a local CLI (`cicCli ===
  * null`: mobile, web, tests).
  */
 export function CliCredentialSeeder(): null {
@@ -36,7 +36,7 @@ export function CliCredentialSeeder(): null {
   const lastSeededRef = useRef<string | null>(null);
 
   useEffect(() => {
-    if (runnerHost.traycerCli === null) {
+    if (runnerHost.cicCli === null) {
       return;
     }
     const handle = (snapshot: AuthSessionSnapshot): void => {

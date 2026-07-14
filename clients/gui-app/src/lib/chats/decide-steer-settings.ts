@@ -1,7 +1,7 @@
 import type {
   ChatActiveTurn,
   ChatRunSettings,
-} from "@traycer/protocol/host/agent/gui/subscribe";
+} from "@cic/protocol/host/agent/gui/subscribe";
 
 /**
  * Decides whether steering a queued prompt into the running turn can fold in

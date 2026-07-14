@@ -13,12 +13,12 @@ import {
   type ProviderCliCandidate,
   type ProviderCliState,
   type ProviderSelection,
-} from "@traycer/protocol/host/provider-schemas";
+} from "@cic/protocol/host/provider-schemas";
 import type {
   HostRpcError,
   ResponseOfMethod,
-} from "@traycer-clients/shared/host-transport/host-messenger";
-import type { HostDirectoryEntry } from "@traycer-clients/shared/host-client/host-directory";
+} from "@cic/shared/host-transport/host-messenger";
+import type { HostDirectoryEntry } from "@cic/shared/host-client/host-directory";
 import { SettingsPanelShell } from "@/components/settings/settings-panel-shell";
 import { RefreshIconButton } from "@/components/refresh-icon-button";
 import { MutedAgentSpinner } from "@/components/ui/agent-spinning-dots";
@@ -319,7 +319,7 @@ function ProvidersSettingsPanelInner({
   return (
     <SettingsPanelShell
       title="Providers"
-      description="Choose the CLI binary Traycer runs for each agent. Pick the bundled binary, one found on your PATH, or a custom install. Disable a provider to hide it from new chats."
+      description="Choose the CLI binary CIC runs for each agent. Pick the bundled binary, one found on your PATH, or a custom install. Disable a provider to hide it from new chats."
       fillHeight
       bodyClassName="max-h-[min(85vh,52rem)]"
       headerAction={
@@ -482,7 +482,7 @@ function ProviderDetail({
   readonly providers: readonly ProviderCliState[];
 }) {
   const providerId = state.providerId;
-  // Traycer/OpenRouter share the OpenCode binary path set: their tables show
+  // CIC/OpenRouter share the OpenCode binary path set: their tables show
   // the OpenCode candidates (or their own when present) while selection /
   // custom-path mutations target the focused provider id.
   const cliConfig = candidateConfigForProvider(state, providers);
@@ -707,7 +707,7 @@ function ProviderEnvOverridesSection({
             Environment variables
           </div>
           <p className="text-ui-xs text-muted-foreground">
-            Applied when Traycer spawns the {providerName} harness. Use Unset to
+            Applied when CIC spawns the {providerName} harness. Use Unset to
             drop a variable inherited from your shell.
           </p>
         </div>

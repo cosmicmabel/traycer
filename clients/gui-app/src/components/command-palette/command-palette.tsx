@@ -5,7 +5,7 @@
  * instead so they skip React sources.
  *
  * Pathname is read non-reactively from the router adapter: the
- * palette mounts above `RouterProvider` in `traycer-app.tsx`, so
+ * palette mounts above `RouterProvider` in `cic-app.tsx`, so
  * `useRouterState` isn't available here. Selections that navigate
  * also close the palette, so a stale pathname can't surface.
  */

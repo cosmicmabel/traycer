@@ -22,7 +22,7 @@
  *   bun run protocol/scripts/snapshot-chat-schema-surface.ts > \
  *     protocol/src/persistence/epic/__tests__/__fixtures__/chat-schema-surface.ts
  */
-import { chatSchema } from "@traycer/protocol/persistence/epic/chat";
+import { chatSchema } from "@cic/protocol/persistence/epic/chat";
 import { z } from "zod";
 
 const header =

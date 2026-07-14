@@ -14,7 +14,7 @@ import {
   type HarnessOption,
   type ModelOption,
 } from "@/components/home/data/landing-options";
-import { ALL_PERMISSION_MODES } from "@traycer/protocol/persistence/epic/foundation";
+import { ALL_PERMISSION_MODES } from "@cic/protocol/persistence/epic/foundation";
 
 const CODEX_HARNESS: HarnessOption = {
   id: "codex",

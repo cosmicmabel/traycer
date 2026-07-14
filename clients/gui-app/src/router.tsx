@@ -13,7 +13,7 @@ import { warmRouteChunks } from "@/lib/warm-route-chunks";
 import { routeTree } from "@/routeTree.gen";
 import type { QueryClient } from "@tanstack/react-query";
 import { useAuthStore, type AuthState } from "@/stores/auth/auth-store";
-import type { HostClient } from "@traycer-clients/shared/host-client/host-client";
+import type { HostClient } from "@cic/shared/host-client/host-client";
 import type { HostRpcRegistry } from "@/lib/host";
 
 export interface AppRouterContext {

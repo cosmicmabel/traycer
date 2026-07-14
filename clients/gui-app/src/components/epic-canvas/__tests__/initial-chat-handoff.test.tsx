@@ -4,11 +4,11 @@ import { act, cleanup, render, waitFor } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import * as Y from "yjs";
 import type { ReactNode } from "react";
-import type { JsonContent } from "@traycer/protocol/common/registry";
-import type { SnapshotMetaEpic } from "@traycer/protocol/host/epic/snapshot-meta";
-import type { PermissionRole } from "@traycer/protocol/host/epic/unary-schemas";
-import type { ChatRunSettings } from "@traycer/protocol/host/agent/gui/subscribe";
-import type { EpicStreamCallbacks } from "@traycer-clients/shared/host-transport/epic-stream-client";
+import type { JsonContent } from "@cic/protocol/common/registry";
+import type { SnapshotMetaEpic } from "@cic/protocol/host/epic/snapshot-meta";
+import type { PermissionRole } from "@cic/protocol/host/epic/unary-schemas";
+import type { ChatRunSettings } from "@cic/protocol/host/agent/gui/subscribe";
+import type { EpicStreamCallbacks } from "@cic/shared/host-transport/epic-stream-client";
 import { EpicSessionProvider } from "@/providers/epic-session-provider";
 import { EpicSessionGate } from "@/providers/epic-session-gate";
 import {

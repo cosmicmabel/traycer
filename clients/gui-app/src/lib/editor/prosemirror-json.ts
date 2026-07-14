@@ -1,5 +1,5 @@
 import type { Slice } from "@tiptap/pm/model";
-import type { JsonContent } from "@traycer/protocol/common/registry";
+import type { JsonContent } from "@cic/protocol/common/registry";
 
 /**
  * Wrap a copied ProseMirror slice into a `doc`-shaped JSON tree so a block-aware

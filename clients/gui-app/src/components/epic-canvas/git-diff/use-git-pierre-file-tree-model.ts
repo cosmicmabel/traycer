@@ -7,7 +7,7 @@ import type {
   FileTreeRowDecorationRenderer,
   GitStatusEntry,
 } from "@pierre/trees";
-import type { GitChangedFile } from "@traycer/protocol/host";
+import type { GitChangedFile } from "@cic/protocol/host";
 import {
   buildGitFileRowMetadata,
   buildGitTreeDirectoryPaths,

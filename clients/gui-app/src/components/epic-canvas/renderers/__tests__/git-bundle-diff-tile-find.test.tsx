@@ -6,7 +6,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type {
   GitChangedFile,
   GitGetFileDiffResponse,
-} from "@traycer/protocol/host";
+} from "@cic/protocol/host";
 import { TileFindScope } from "@/components/epic-canvas/tile-find/tile-find-scope";
 import { TabHostProvider } from "@/components/epic-canvas/tab-host-provider";
 import { makeGitBundleDiffTile } from "@/lib/git/git-diff-tile";

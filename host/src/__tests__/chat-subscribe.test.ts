@@ -1,8 +1,8 @@
 // Runs under `bun test` — the host and the mock gateway are Bun.serve servers.
 import { afterAll, beforeAll, describe, expect, it } from "bun:test";
-import { hostStreamRpcRegistry } from "@traycer/protocol/host/registry";
-import { buildStreamManifest } from "@traycer/protocol/framework/stream-compat";
-import { chatSubscribeServerFrameSchema } from "@traycer/protocol/host/agent/gui/subscribe";
+import { hostStreamRpcRegistry } from "@cic/protocol/host/registry";
+import { buildStreamManifest } from "@cic/protocol/framework/stream-compat";
+import { chatSubscribeServerFrameSchema } from "@cic/protocol/host/agent/gui/subscribe";
 import { startOpenHostServer, type RunningOpenHost } from "../server";
 import { extractTextDelta, promptTextFromContent } from "../chat/chat-session";
 

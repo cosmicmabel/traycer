@@ -1,7 +1,7 @@
 import type { OpenEpicStoreHandle } from "@/stores/epics/open-epic/store";
 import { appLogger } from "@/lib/logger";
 import { useSyncExternalStore } from "react";
-import { AGENT_WORKING_AWARENESS_FIELD } from "@traycer/protocol/host/epic/subscribe";
+import { AGENT_WORKING_AWARENESS_FIELD } from "@cic/protocol/host/epic/subscribe";
 
 /**
  * MRU registry for live Epic sessions. Keeps up to 5 open in the background

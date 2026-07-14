@@ -9,7 +9,7 @@ import {
   type GitGetFileDiffResponse,
   type GitGetFileDiffsResponse,
   type GitStage,
-} from "@traycer/protocol/host";
+} from "@cic/protocol/host";
 import { gitQueryKeys } from "@/lib/query-keys/git-query-keys";
 import { useGitGetFileDiffsBatched } from "../use-git-get-file-diffs-batched";
 

@@ -8,8 +8,8 @@ import {
   waitFor,
 } from "@testing-library/react";
 import { LazyMotion, domAnimation } from "motion/react";
-import { MockRunnerHost } from "@traycer-clients/shared/host-client/mock/mock-runner-host";
-import { traycerInfo } from "@traycer-clients/shared/platform/traycer-info";
+import { MockRunnerHost } from "@cic/shared/host-client/mock/mock-runner-host";
+import { cicInfo } from "@cic/shared/platform/cic-info";
 import { useOnboardingStore } from "@/stores/onboarding/onboarding-store";
 import { ONBOARDING_ACTS } from "@/components/onboarding/onboarding-acts";
 import type { OnboardingAgentGuideState } from "@/components/onboarding/onboarding-diorama";
@@ -135,13 +135,13 @@ function renderPage(args: { readonly replay: boolean }) {
 
 function createRunnerHost() {
   return new MockRunnerHost({
-    signInUrl: "https://auth.traycer.test/sign-in",
-    authnBaseUrl: "https://auth.traycer.test",
+    signInUrl: "https://auth.cic.test/sign-in",
+    authnBaseUrl: "https://auth.cic.test",
     localHost: null,
     hosts: [],
     workspaceFolderPickerPaths: undefined,
     hasLocalHost: undefined,
-    traycerCli: undefined,
+    cicCli: undefined,
   });
 }
 
@@ -213,7 +213,7 @@ describe("OnboardingPage", () => {
     });
   });
 
-  it("shows the continue button (not 'Enter Traycer') on the first act", () => {
+  it("shows the continue button (not 'Enter CIC') on the first act", () => {
     renderPage({ replay: false });
 
     expect(screen.getByTestId("onboarding-advance").textContent).toContain(
@@ -238,9 +238,9 @@ describe("OnboardingPage", () => {
     );
 
     const expectedLinks = [
-      ["Features", traycerInfo.mainWebsiteFeatures],
-      ["Enterprise", traycerInfo.mainWebsiteEnterprise],
-      ["Support", traycerInfo.mainWebsiteContactUs],
+      ["Source", cicInfo.sourceRepository],
+      ["Docs", cicInfo.documentation],
+      ["Support", cicInfo.issues],
     ] as const;
 
     expectedLinks.forEach(([label, url]) => {
@@ -281,14 +281,12 @@ describe("OnboardingPage", () => {
 
     await waitFor(() => {
       expect(windowOpenMock).toHaveBeenCalledWith(
-        traycerInfo.mainWebsiteContactUs,
+        cicInfo.issues,
         "_blank",
         "noopener,noreferrer",
       );
     });
-    expect(openExternalLinkMock).toHaveBeenCalledWith(
-      traycerInfo.mainWebsiteContactUs,
-    );
+    expect(openExternalLinkMock).toHaveBeenCalledWith(cicInfo.issues);
 
     windowOpenMock.mockRestore();
   });
@@ -384,7 +382,7 @@ describe("OnboardingPage", () => {
     guideQueryState = {
       data: {
         content: null,
-        generatedDefaultContent: "traycer guide",
+        generatedDefaultContent: "cic guide",
         providersSettled: false,
       },
       isError: false,

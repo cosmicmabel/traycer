@@ -9,14 +9,14 @@ import {
   type ReactNode,
 } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import type { HostDirectoryEntry } from "@traycer-clients/shared/host-client/host-directory";
+import type { HostDirectoryEntry } from "@cic/shared/host-client/host-directory";
 import type {
   BootstrapMarkerEntry,
   HostEnsureResult,
   HostProgressEvent,
   IRunnerHost,
   LocalHostSnapshot,
-} from "@traycer-clients/shared/platform/runner-host";
+} from "@cic/shared/platform/runner-host";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { AgentSpinningDots } from "@/components/ui/agent-spinning-dots";
@@ -26,7 +26,7 @@ import { useRunnerHost } from "@/providers/use-runner-host";
 import { useRunnerRequestHostRespawn } from "@/hooks/runner/use-runner-request-host-respawn-mutation";
 import { useRunnerEnsureHost } from "@/hooks/runner/use-runner-ensure-host-mutation";
 import { useRunnerHostRemovalStateQuery } from "@/hooks/runner/use-runner-host-removal-state-query";
-import { useRunnerTraycerHostStatusQuery } from "@/hooks/runner/use-runner-traycer-host-status-query";
+import { useRunnerCicHostStatusQuery } from "@/hooks/runner/use-runner-cic-host-status-query";
 import {
   describeHostCompatibilityError,
   useHostCompatibility,
@@ -42,7 +42,7 @@ import { cn } from "@/lib/utils";
  * during a wedged bootstrap is the user's escape hatch: edit the shell
  * args, restart the host, watch the bootstrap log refill.
  *
- * Consumed by `TraycerAppRouter` to compute the `bypass` prop fed to
+ * Consumed by `CicAppRouter` to compute the `bypass` prop fed to
  * every gate in the stack (LocalHostGate, MobileHostGate). A single
  * routing-aware computation drives all gates so they agree on whether
  * the current route is host-independent.
@@ -72,7 +72,7 @@ export interface LocalHostGateProps {
   readonly selectedEntry: HostDirectoryEntry | null;
   /**
    * When `true`, the gate always passes children through regardless of
-   * host state. The decision lives in the caller (TraycerAppRouter) so
+   * host state. The decision lives in the caller (CicAppRouter) so
    * one routing-aware computation drives every gate in the stack -
    * `LocalHostGate` and `MobileHostGate` need to agree, otherwise the
    * inner gate blocks settings even after the outer gate bypassed.
@@ -102,7 +102,7 @@ export interface LocalHostGateProps {
  *
  * Staged wait (Flow 5):
  *   1. "loading" - immediate signed-in waiting state. Renders `props.loading`
- *      ("Starting local Traycer Host…") with no Retry affordance. This is the
+ *      ("Starting local CIC Host…") with no Retry affordance. This is the
  *      default stage on mount and after every Ready → not-ready transition.
  *   2. "slow" - entered after `LOCAL_HOST_SLOW_START_THRESHOLD_MS` has
  *      elapsed without a usable snapshot. Renders `props.unavailable`
@@ -203,7 +203,7 @@ export function LocalHostGate(props: LocalHostGateProps) {
     return <>{provisioningLoadingNode}</>;
   }
 
-  // The user removed Traycer's background components on this device. Show the
+  // The user removed CIC's background components on this device. Show the
   // terminal removed surface instead of reinstalling or spinning; Reinstall is
   // the escape hatch.
   if (provisioning.removed) {
@@ -336,7 +336,7 @@ interface HostProvisioning {
   // the renderer's compat probe.
   readonly hostBusy: boolean;
   // True once `ensureHost` returned `action: "removed"`: the user removed
-  // Traycer's background components on this device, so the desktop refused to
+  // CIC's background components on this device, so the desktop refused to
   // reinstall. The gate shows the removed surface instead of spinning.
   readonly removed: boolean;
   readonly canManageHost: boolean;
@@ -584,7 +584,7 @@ function GateIncompatibleHost(props: GateIncompatibleBusyProps) {
               <p className="text-muted-foreground">
                 {isBusyKeep
                   ? "The running host has work in progress and is not compatible with this app update. Refresh to check again, or force update the host. Running work may be interrupted."
-                  : "This Traycer app update is not compatible with the running host. Update the local host before continuing."}
+                  : "This CIC app update is not compatible with the running host. Update the local host before continuing."}
               </p>
               <p
                 className="max-w-full break-words rounded-md bg-muted/50 px-3 py-2 text-left text-ui-xs text-muted-foreground"
@@ -689,7 +689,7 @@ interface HostRemovedSurfaceProps {
   readonly onReinstall: () => void;
 }
 
-// Terminal surface shown after the user removed Traycer's background
+// Terminal surface shown after the user removed CIC's background
 // components (Settings → General → Danger Zone) and then landed on a
 // host-backed route or relaunched. The host is intentionally gone; offer Quit
 // (the expected next step before dragging the app to the Trash) and a
@@ -703,11 +703,11 @@ function HostRemovedSurface(props: HostRemovedSurfaceProps) {
       <Card className="w-full max-w-md">
         <CardContent className="flex flex-col gap-4 py-6 text-ui-sm">
           <div className="flex flex-col gap-1 text-center">
-            <p className="font-medium">Traycer was removed</p>
+            <p className="font-medium">CIC was removed</p>
             <p className="text-muted-foreground">
-              You removed Traycer's background components from this device, so
-              the host won't start. Your chats and history are preserved. To
-              finish, quit Traycer and drag it from Applications to the Trash.
+              You removed CIC's background components from this device, so the
+              host won't start. Your chats and history are preserved. To finish,
+              quit CIC and drag it from Applications to the Trash.
             </p>
           </div>
           <div className="flex flex-wrap justify-center gap-2">
@@ -720,7 +720,7 @@ function HostRemovedSurface(props: HostRemovedSurfaceProps) {
               }}
               data-testid="local-host-removed-quit"
             >
-              Quit Traycer
+              Quit CIC
             </Button>
             <Button
               type="button"
@@ -760,7 +760,7 @@ function useLocalHostGateState(runnerHost: IRunnerHost): GateState {
         wasReadyRef.current = true;
       } else if (wasReadyRef.current) {
         // Ready → not-ready transition: restart the staged wait so the
-        // user sees "Starting local Traycer Host…" again before Retry reappears.
+        // user sees "Starting local CIC Host…" again before Retry reappears.
         wasReadyRef.current = false;
         setStage("loading");
       }
@@ -873,8 +873,8 @@ function describeOutcome(marker: BootstrapMarkerEntry): string {
  * successful respawn flips the gate to `ready` automatically - Retry just
  * triggers the shell-side spawn and never owns lifecycle state itself.
  *
- * On shells with a `traycerCli` capability, the card additionally pulls
- * `traycer host status` and renders the most recent bootstrap attempt:
+ * On shells with a `cicCli` capability, the card additionally pulls
+ * `cic host status` and renders the most recent bootstrap attempt:
  * what shell/args were tried, and what (if anything) followed - so the user
  * sees "we tried `zsh -i -l -c …` and it crashed with code 1" instead of a
  * blank "host unreachable" message.
@@ -884,7 +884,7 @@ export function LocalHostUnavailable(props: LocalHostUnavailableProps) {
   // Single read; while the user is staring at the failure card we don't
   // want to keep hammering the CLI. The Retry button drives a respawn
   // which triggers an explicit invalidate via the gate-level query.
-  const status = useRunnerTraycerHostStatusQuery({ pollIntervalMs: null });
+  const status = useRunnerCicHostStatusQuery({ pollIntervalMs: null });
 
   const summary = useMemo(
     () =>

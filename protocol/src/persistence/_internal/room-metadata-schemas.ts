@@ -2,7 +2,7 @@ import { z } from "zod";
 import {
   collaboratorRolesSchema,
   teamRolesSchema,
-} from "@traycer/protocol/persistence/epic/room-metadata-schemas";
+} from "@cic/protocol/persistence/epic/room-metadata-schemas";
 
 /**
  * Private Zod value for the `room-metadata` record.
@@ -24,7 +24,7 @@ export const roomMetadataSchema = z.object({
   schemaVersion: z.string(),
   sealed: z.boolean(),
   deleted: z.boolean(),
-  deletedByTraycerUserId: z.string().nullable(),
+  deletedByCicUserId: z.string().nullable(),
   deletedByDisplayName: z.string().nullable(),
   collaboratorRoles: collaboratorRolesSchema,
   teamRoles: teamRolesSchema,

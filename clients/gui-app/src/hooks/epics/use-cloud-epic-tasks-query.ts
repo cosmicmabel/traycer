@@ -3,7 +3,7 @@ import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 import type {
   ListTasksResponse,
   TaskLight,
-} from "@traycer/protocol/host/epic/unary-schemas";
+} from "@cic/protocol/host/epic/unary-schemas";
 import { useHostClient, type HostRpcRegistry } from "@/lib/host";
 import { useAuthStore, type AuthStatus } from "@/stores/auth/auth-store";
 import { useReactiveHostReadiness } from "@/hooks/host/use-reactive-host-readiness";

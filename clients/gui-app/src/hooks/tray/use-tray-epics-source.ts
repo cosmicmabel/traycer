@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import type { HistoryItem } from "@/components/home/data/home-page.data";
 import { useHistoryQuery } from "@/hooks/home/use-history-query";
 import { DEFAULT_HISTORY_SEARCH } from "@/lib/history-search";
-import type { TrayEpic } from "@traycer-clients/shared/platform/runner-host";
+import type { TrayEpic } from "@cic/shared/platform/runner-host";
 import { useTrayProjectionStore } from "@/stores/tray/tray-projection-store";
 
 // Upper bound on epics shipped to the tray. The native menu shows the first

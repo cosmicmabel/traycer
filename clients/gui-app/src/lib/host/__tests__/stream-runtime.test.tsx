@@ -1,15 +1,15 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { cleanup, renderHook, act } from "@testing-library/react";
 import { StrictMode, type ReactNode } from "react";
-import { HostClient } from "@traycer-clients/shared/host-client/host-client";
-import { MockHostMessenger } from "@traycer-clients/shared/host-client/mock/mock-host-messenger";
-import { mockLocalHostEntry } from "@traycer-clients/shared/host-client/mock/mock-host-directory";
-import { createRequestContextFixture } from "@traycer-clients/shared/test-fixtures/request-context";
-import { WsStreamClient } from "@traycer-clients/shared/host-transport/ws-stream-client";
+import { HostClient } from "@cic/shared/host-client/host-client";
+import { MockHostMessenger } from "@cic/shared/host-client/mock/mock-host-messenger";
+import { mockLocalHostEntry } from "@cic/shared/host-client/mock/mock-host-directory";
+import { createRequestContextFixture } from "@cic/shared/test-fixtures/request-context";
+import { WsStreamClient } from "@cic/shared/host-transport/ws-stream-client";
 import {
   hostRpcRegistry,
   type HostRpcRegistry,
-} from "@traycer/protocol/host/index";
+} from "@cic/protocol/host/index";
 
 const bindingRef = vi.hoisted(() => ({
   value: null as {

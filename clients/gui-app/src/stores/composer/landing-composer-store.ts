@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { JsonContent } from "@traycer/protocol/common/registry";
+import type { JsonContent } from "@cic/protocol/common/registry";
 // Import the empty-content constant from the dependency-free leaf (NOT from
 // `landing-draft-store`) so this module's eval-time read at `EMPTY_CONTENT` below
 // can't hit a temporal-dead-zone error in the store import cycle.

@@ -7,7 +7,7 @@ import {
   type ReactNode,
 } from "react";
 import { Check } from "lucide-react";
-import type { WorktreeEntryScripts } from "@traycer/protocol/host/worktree-schemas";
+import type { WorktreeEntryScripts } from "@cic/protocol/host/worktree-schemas";
 import {
   Dialog,
   DialogContent,

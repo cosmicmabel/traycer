@@ -11,7 +11,7 @@ import { Analytics, AnalyticsEvent } from "@/lib/analytics";
 const WINDOW_ID = "history-nav-action-test-window";
 
 function storageKey(windowId: string): string {
-  return `traycer-gui-app:last-route:${windowId}`;
+  return `cic-gui-app:last-route:${windowId}`;
 }
 
 // Seed a multi-entry persistent (branded) stack via localStorage so the history

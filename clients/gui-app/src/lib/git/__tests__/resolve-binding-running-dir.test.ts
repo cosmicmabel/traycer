@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { WorktreeBindingEntry } from "@traycer/protocol/host";
+import type { WorktreeBindingEntry } from "@cic/protocol/host";
 import { resolveBindingRunningDir } from "../resolve-binding-running-dir";
 
 describe("resolveBindingRunningDir", () => {

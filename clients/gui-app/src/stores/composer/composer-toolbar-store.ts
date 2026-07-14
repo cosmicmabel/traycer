@@ -1,5 +1,5 @@
 import { createStore, type StoreApi } from "zustand/vanilla";
-import type { ChatRunSettings } from "@traycer/protocol/host/agent/gui/subscribe";
+import type { ChatRunSettings } from "@cic/protocol/host/agent/gui/subscribe";
 
 import {
   findDefaultModel,
@@ -76,7 +76,7 @@ export interface ComposerToolbarCatalog {
   /**
    * True when the consuming surface is the terminal launcher. A selection
    * carried over from a chat surface that isn't TUI-capable - GUI-only
-   * `traycer`, or a schema-TUI harness like `cursor` whose adapter currently
+   * `cic`, or a schema-TUI harness like `cursor` whose adapter currently
    * advertises only `gui` - is then rerouted to the first available TUI-capable
    * harness, the same single clamp site that reroutes off an unavailable
    * harness. Chat surfaces push `false` and the selection is never narrowed by

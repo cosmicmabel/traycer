@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { contentBlockSchema } from "@traycer/protocol/persistence/epic/content-blocks";
-import { userMessageSchema } from "@traycer/protocol/persistence/epic/messages";
+import { contentBlockSchema } from "@cic/protocol/persistence/epic/content-blocks";
+import { userMessageSchema } from "@cic/protocol/persistence/epic/messages";
 
 describe("epic message schemas", () => {
   it("defaults omitted tool-call agent message metadata to null", () => {

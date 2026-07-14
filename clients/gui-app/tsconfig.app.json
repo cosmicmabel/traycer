@@ -21,9 +21,9 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
-      "@traycer-clients/shared/*": ["../shared/*"],
-      "@traycer/protocol/utils/*": ["../../protocol/utils/*"],
-      "@traycer/protocol/*": ["../../protocol/src/*"]
+      "@cic/shared/*": ["../shared/*"],
+      "@cic/protocol/utils/*": ["../../protocol/utils/*"],
+      "@cic/protocol/*": ["../../protocol/src/*"]
     },
     "noUnusedLocals": true,
     "noUnusedParameters": true,

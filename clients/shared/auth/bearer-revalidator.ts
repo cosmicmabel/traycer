@@ -149,7 +149,7 @@ export function createBearerRevalidator(args: {
         const current = args.lease.getBearerToken();
         // Adopt a concurrently-written token only when it belongs to the SAME
         // user as this lease. The shared credentials file can be rewritten by a
-        // different account (a sibling `traycer login`), and blind-adopting that
+        // different account (a sibling `cic login`), and blind-adopting that
         // would rotate this process into a foreign session.
         const leaseUserId = args.lease.identity.userId;
 

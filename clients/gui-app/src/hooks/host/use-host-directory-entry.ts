@@ -1,5 +1,5 @@
 import { useCallback, useRef, useSyncExternalStore } from "react";
-import type { HostDirectoryEntry } from "@traycer-clients/shared/host-client/host-directory";
+import type { HostDirectoryEntry } from "@cic/shared/host-client/host-directory";
 import { useHostDirectory } from "@/lib/host";
 
 /**

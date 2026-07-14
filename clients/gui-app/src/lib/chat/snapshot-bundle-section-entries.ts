@@ -1,4 +1,4 @@
-import type { ChatAccumulatedFileChange } from "@traycer/protocol/host/agent/gui/subscribe";
+import type { ChatAccumulatedFileChange } from "@cic/protocol/host/agent/gui/subscribe";
 import type { ResolvedSnapshotDiff } from "@/lib/chat/resolve-snapshot-diff-content";
 import type { SnapshotUnifiedPatchEntry } from "@/lib/diff/snapshot-diff-patch";
 

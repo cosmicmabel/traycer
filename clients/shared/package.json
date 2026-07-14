@@ -1,5 +1,5 @@
 {
-  "name": "@traycer-clients/shared",
+  "name": "@cic/shared",
   "license": "Apache-2.0",
   "type": "module",
   "private": true,

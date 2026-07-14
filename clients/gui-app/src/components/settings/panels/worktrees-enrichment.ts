@@ -11,9 +11,9 @@ import {
   type QueryClient,
   type QueryKey,
 } from "@tanstack/react-query";
-import type { HostClient } from "@traycer-clients/shared/host-client/host-client";
-import type { WorktreeHostEntryV11 } from "@traycer/protocol/host/index";
-import type { WorktreeListAllForHostResponseV11 } from "@traycer/protocol/host/worktree-schemas";
+import type { HostClient } from "@cic/shared/host-client/host-client";
+import type { WorktreeHostEntryV11 } from "@cic/protocol/host/index";
+import type { WorktreeListAllForHostResponseV11 } from "@cic/protocol/host/worktree-schemas";
 import { type HostRpcRegistry } from "@/lib/host";
 import { hostQueryKeys } from "@/lib/query-keys";
 import { useHostQueries } from "@/hooks/host/use-host-queries";

@@ -1,10 +1,10 @@
-# Gitleaks configuration — Traycer open-source repo.
+# Gitleaks configuration — CIC repo.
 #
 # Extends the upstream default ruleset and suppresses known-safe false
 # positives. Every entry here is a PUBLIC test fixture, never a real
 # credential. Keep this list tight and document why each item is safe.
 
-title = "Traycer gitleaks config"
+title = "CIC gitleaks config"
 
 [extend]
 useDefault = true

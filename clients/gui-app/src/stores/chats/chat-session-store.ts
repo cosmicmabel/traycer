@@ -27,23 +27,23 @@ import { transientLiveAssistantMessageId } from "@/lib/chat/transient-live-assis
 import type {
   ChatStreamCallbacks,
   ChatStreamClient,
-} from "@traycer-clients/shared/host-transport/chat-stream-client";
+} from "@cic/shared/host-transport/chat-stream-client";
 import type {
   StreamCloseReason,
   StreamConnectionStatus,
-} from "@traycer-clients/shared/host-transport/i-stream-session";
-import type { JsonContent } from "@traycer/protocol/common/registry";
+} from "@cic/shared/host-transport/i-stream-session";
+import type { JsonContent } from "@cic/protocol/common/registry";
 import type {
   RuntimeApprovalDecision,
   RuntimeEvent,
-} from "@traycer/protocol/host/agent/gui/agent-runtime";
-import { AUTH_ERROR_CODE } from "@traycer/protocol/host/agent/gui/agent-runtime";
+} from "@cic/protocol/host/agent/gui/agent-runtime";
+import { AUTH_ERROR_CODE } from "@cic/protocol/host/agent/gui/agent-runtime";
 import {
   accumulateTurnContent,
   finalizeStreamingActionBlocks,
   reopenStreamingSubagentBlocks,
   type FinalizedActionStatus,
-} from "@traycer/protocol/host/agent/gui/agent-runtime-accumulator";
+} from "@cic/protocol/host/agent/gui/agent-runtime-accumulator";
 import type {
   BackgroundItem,
   ChatAccess,
@@ -58,14 +58,14 @@ import type {
   ChatRunSettings,
   ChatRunStatus,
   ChatSubscribeClientFrame,
-} from "@traycer/protocol/host/agent/gui/subscribe";
-import type { WorktreeBinding } from "@traycer/protocol/host/worktree-schemas";
-import type { FatalErrorDetails } from "@traycer/protocol/framework/ws-protocol";
-import type { RestoreResultEntry } from "@traycer/protocol/persistence/epic/checkpoint-manifests";
+} from "@cic/protocol/host/agent/gui/subscribe";
+import type { WorktreeBinding } from "@cic/protocol/host/worktree-schemas";
+import type { FatalErrorDetails } from "@cic/protocol/framework/ws-protocol";
+import type { RestoreResultEntry } from "@cic/protocol/persistence/epic/checkpoint-manifests";
 import type {
   PermissionMode,
   TokenUsage,
-} from "@traycer/protocol/persistence/epic/foundation";
+} from "@cic/protocol/persistence/epic/foundation";
 import type {
   Chat,
   ChatEvent,
@@ -73,7 +73,7 @@ import type {
   InterviewAnswer,
   Message,
   UserMessageSender,
-} from "@traycer/protocol/persistence/epic/schemas";
+} from "@cic/protocol/persistence/epic/schemas";
 import { v4 as uuidv4 } from "uuid";
 import { create, type StoreApi, type UseBoundStore } from "zustand";
 
@@ -485,7 +485,7 @@ export interface ChatSessionStoreOptions {
    * composer's re-auth gate refetches and reads the host's poisoned
    * `unauthenticated` (the host→renderer error frame is the only live push;
    * `providers.list` has no subscription). Distinct from `onAuthError`, which is
-   * the Traycer *session* auth (an unauthorized stream close).
+   * the CIC *session* auth (an unauthorized stream close).
    */
   readonly onProviderAuthError: (() => void) | null;
 }

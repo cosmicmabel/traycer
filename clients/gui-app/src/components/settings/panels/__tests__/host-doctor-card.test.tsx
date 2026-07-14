@@ -16,8 +16,8 @@ import type {
   FreePortAndRestartInput,
   IHostManagement,
   IRunnerHost,
-} from "@traycer-clients/shared/platform/runner-host";
-import { MockRunnerHost } from "@traycer-clients/shared/host-client/mock/mock-runner-host";
+} from "@cic/shared/platform/runner-host";
+import { MockRunnerHost } from "@cic/shared/host-client/mock/mock-runner-host";
 
 vi.mock("sonner", () => ({
   toast: {
@@ -43,7 +43,7 @@ function makeManagement(overrides: ManagementOverrides): IHostManagement {
     updateHost: vi.fn(notImplemented("updateHost")),
     uninstallHost: vi.fn(notImplemented("uninstallHost")),
     restartHost: overrides.restartHost ?? vi.fn(() => Promise.resolve()),
-    uninstallTraycer: vi.fn(notImplemented("uninstallTraycer")),
+    uninstallCic: vi.fn(notImplemented("uninstallCic")),
     getRemovalState: vi.fn(() => Promise.resolve({ removedByUser: false })),
     clearRemoval: vi.fn(() => Promise.resolve()),
     getHostLogs: vi.fn(() => Promise.resolve({ path: null, tail: "" })),
@@ -85,7 +85,7 @@ function makeHostWithManagement(management: IHostManagement): IRunnerHost {
     hosts: [],
     workspaceFolderPickerPaths: undefined,
     hasLocalHost: undefined,
-    traycerCli: undefined,
+    cicCli: undefined,
   });
   const proto = Object.getPrototypeOf(host) as object;
   return Object.assign(Object.create(proto) as IRunnerHost, host, {
@@ -100,16 +100,16 @@ function pendingUpgradeIssue(): HostDoctorIssue {
     severity: "warning",
     title: "CLI upgrade pending (2.0.0)",
     message:
-      "cli upgrade staged 2.0.0 at /tmp/traycer-2.0.0; live binary is locked. Restart the host service to finalise the swap.",
+      "cli upgrade staged 2.0.0 at /tmp/cic-2.0.0; live binary is locked. Restart the host service to finalise the swap.",
     fixAction: "host-restart",
-    terminalCommand: "traycer host restart --channel prod",
+    terminalCommand: "cic host restart --channel prod",
     details: {
       stagedVersion: "2.0.0",
-      stagedBinaryPath: "/tmp/traycer-2.0.0",
+      stagedBinaryPath: "/tmp/cic-2.0.0",
       stagedAt: "2026-05-15T00:00:00Z",
       reason: "binary-locked",
       currentVersion: "1.9.0",
-      binaryPath: "/usr/local/bin/traycer",
+      binaryPath: "/usr/local/bin/cic",
     },
   };
 }
@@ -163,7 +163,7 @@ describe("HostDoctorCard pending CLI upgrade", () => {
         "Port 7300 (ws://127.0.0.1:7300) is held by node (pid=4321), not the host (pid=1234).",
       fixAction: "host-free-port-and-restart",
       terminalCommand:
-        "traycer host free-port-and-restart --pid 4321 --port 7300 --channel prod",
+        "cic host free-port-and-restart --pid 4321 --port 7300 --channel prod",
       details: {
         pid: 1234,
         websocketUrl: "ws://127.0.0.1:7300",
@@ -225,7 +225,7 @@ describe("HostDoctorCard pending CLI upgrade", () => {
       message: "Port 7300 is held by an unknown process.",
       fixAction: "host-free-port-and-restart",
       terminalCommand:
-        "traycer host free-port-and-restart --port 7300 --channel prod",
+        "cic host free-port-and-restart --port 7300 --channel prod",
       details: {
         port: 7300,
         conflictingPid: null,
@@ -275,7 +275,7 @@ describe("HostDoctorCard pending CLI upgrade", () => {
       title: "Host endpoint unreachable",
       message: "endpoint unreachable; unsafe to kill",
       fixAction: "host-free-port-and-restart",
-      terminalCommand: "traycer host restart --channel prod",
+      terminalCommand: "cic host restart --channel prod",
       details: {
         port: 0,
         conflictingPid: null,
@@ -314,7 +314,7 @@ describe("HostDoctorCard pending CLI upgrade", () => {
       message:
         "Host is running but its endpoint did not accept a TCP connection.",
       fixAction: "host-restart",
-      terminalCommand: "traycer host restart --channel prod",
+      terminalCommand: "cic host restart --channel prod",
       details: {
         pid: 1234,
         websocketUrl: "ws://127.0.0.1:7300",

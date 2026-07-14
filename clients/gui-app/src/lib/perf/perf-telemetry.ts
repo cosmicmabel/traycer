@@ -2,22 +2,22 @@
  * Structured performance-telemetry emitter for the renderer.
  *
  * Unlike `logger.ts` (human-readable diagnostics that land in
- * `traycer-desktop.log`), perf events are machine-parseable and routed to a
+ * `cic-desktop.log`), perf events are machine-parseable and routed to a
  * DEDICATED file so they can be mined for data-driven perf work without
  * grepping the human log.
  *
  * Wiring: `logPerfEvent` prints a single `console.warn` line prefixed
- * `[traycer-perf]` carrying `{ name, tsMs, fields }` JSON. The desktop shell
+ * `[cic-perf]` carrying `{ name, tsMs, fields }` JSON. The desktop shell
  * recognizes that prefix in its `console-message` handler
  * (`windows/window-factory.ts`) and appends the event to
- * `<userData>/traycer-perf.ndjson` (one JSON object per line) via
+ * `<userData>/cic-perf.ndjson` (one JSON object per line) via
  * `perf/perf-telemetry-writer.ts` INSTEAD of electron-log. `console.warn` (not
  * `console.log`) is required because production only forwards renderer
  * warning/error console messages.
  *
  * Enable + where to read:
- *   - Flag:  localStorage["traycer:perf:telemetry"] = "1" (opt-in) / "0" (off)
- *   - File:  <Electron userData>/traycer-perf.ndjson (rotates to `.ndjson.1`)
+ *   - Flag:  localStorage["cic:perf:telemetry"] = "1" (opt-in) / "0" (off)
+ *   - File:  <Electron userData>/cic-perf.ndjson (rotates to `.ndjson.1`)
  * Gating mirrors the existing probes (`main-thread-block-probe.ts`,
  * `terminal-load-perf.ts`): on by default in dev, off under test, opt-in for
  * production via the localStorage flag. An explicit flag ("1"/"0") always wins,
@@ -27,8 +27,8 @@
  * (no secrets), so no sanitization is applied here.
  */
 
-const TELEMETRY_LOG_PREFIX = "[traycer-perf]";
-const TELEMETRY_FLAG_KEY = "traycer:perf:telemetry";
+const TELEMETRY_LOG_PREFIX = "[cic-perf]";
+const TELEMETRY_FLAG_KEY = "cic:perf:telemetry";
 
 export type PerfFieldValue = number | string | boolean | null;
 

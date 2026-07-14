@@ -4,7 +4,7 @@ import {
   formatSource,
 } from "@/components/settings/panels/host-settings-panel-model";
 import { cn } from "@/lib/utils";
-import type { HostInstalledRecord } from "@traycer-clients/shared/platform/runner-host";
+import type { HostInstalledRecord } from "@cic/shared/platform/runner-host";
 
 interface InstallationDetailsDisclosureProps {
   readonly record: HostInstalledRecord | null;

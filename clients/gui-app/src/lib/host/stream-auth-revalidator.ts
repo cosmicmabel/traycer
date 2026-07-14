@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import type {
   RevalidateOutcome,
   StreamAuthRevalidator,
-} from "@traycer-clients/shared/auth/bearer-revalidator";
+} from "@cic/shared/auth/bearer-revalidator";
 import { useAuthService } from "@/lib/host";
 import { appLogger } from "@/lib/logger";
 

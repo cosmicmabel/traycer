@@ -20,10 +20,10 @@ import type { ReactNode } from "react";
 import {
   HostRpcError,
   type IHostMessenger,
-} from "@traycer-clients/shared/host-transport/host-messenger";
-import { MockHostMessenger } from "@traycer-clients/shared/host-client/mock/mock-host-messenger";
-import { MockRunnerHost } from "@traycer-clients/shared/host-client/mock/mock-runner-host";
-import type { LocalHostSnapshot } from "@traycer-clients/shared/platform/runner-host";
+} from "@cic/shared/host-transport/host-messenger";
+import { MockHostMessenger } from "@cic/shared/host-client/mock/mock-host-messenger";
+import { MockRunnerHost } from "@cic/shared/host-client/mock/mock-runner-host";
+import type { LocalHostSnapshot } from "@cic/shared/platform/runner-host";
 import {
   hostRpcRegistry,
   HostRuntimeProvider,
@@ -39,11 +39,11 @@ import { useAuthStore, type AuthStatus } from "@/stores/auth/auth-store";
 import type {
   ListTasksRequest,
   ListTasksResponse,
-} from "@traycer/protocol/host/epic/unary-schemas";
+} from "@cic/protocol/host/epic/unary-schemas";
 import {
   CURRENT_EPIC_VERSION,
   CURRENT_PHASE_VERSION,
-} from "@traycer-clients/shared/epic/epic-version";
+} from "@cic/shared/epic/epic-version";
 import { toast } from "sonner";
 
 vi.mock("sonner", () => ({
@@ -109,13 +109,13 @@ function buildMessengerFactory(
 
 function mountEpicsList(opts: MountOptions): MountResult {
   const host = new MockRunnerHost({
-    signInUrl: "https://auth.traycer.invalid/sign-in",
+    signInUrl: "https://auth.cic.invalid/sign-in",
     authnBaseUrl: "http://localhost:5005",
     localHost: localSnapshot,
     hosts: [],
     workspaceFolderPickerPaths: undefined,
     hasLocalHost: undefined,
-    traycerCli: undefined,
+    cicCli: undefined,
   });
   if (opts.storedToken !== null) {
     void host.tokenStore.set({
@@ -618,7 +618,7 @@ describe("<EpicsList />", () => {
 
     const errorBlock = await screen.findByTestId("epics-list-error");
     expect(errorBlock).not.toBeNull();
-    expect(screen.getByText("Couldn't reach Traycer Cloud")).not.toBeNull();
+    expect(screen.getByText("Couldn't reach CIC Cloud")).not.toBeNull();
     expect(screen.getByTestId("epics-list-error-retry")).not.toBeNull();
     const toggle = screen.getByTestId("epics-list-error-toggle-details");
     fireEvent.click(toggle);

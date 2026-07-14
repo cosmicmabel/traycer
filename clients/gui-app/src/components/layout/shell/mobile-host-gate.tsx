@@ -20,7 +20,7 @@ export interface MobileHostGateProps {
   readonly noHost: ReactNode;
   /**
    * When `true`, pass children through regardless of directory state.
-   * Set by `TraycerAppRouter` for host-independent routes (e.g.
+   * Set by `CicAppRouter` for host-independent routes (e.g.
    * `/settings/*`) so the user can edit shell config / env overrides
    * before any host binds. Default behaviour (mobile zero/many UX)
    * resumes once the user navigates back to a host-needing route.
@@ -30,7 +30,7 @@ export interface MobileHostGateProps {
 
 /**
  * Surfaces the Flow 6 mobile zero / one / many host UX inside the mounted
- * `<TraycerApp />` tree.
+ * `<CicApp />` tree.
  *
  * The gate only acts when the merged directory contains no `kind: "local"`
  * entry - that discriminates the mobile path from desktop, which always

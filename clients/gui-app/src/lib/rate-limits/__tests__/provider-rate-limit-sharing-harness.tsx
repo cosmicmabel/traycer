@@ -14,10 +14,10 @@
 import type { ReactNode } from "react";
 import type { QueryClient } from "@tanstack/react-query";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { HostClient } from "@traycer-clients/shared/host-client/host-client";
-import { mockLocalHostEntry } from "@traycer-clients/shared/host-client/mock/mock-host-directory";
-import { MockHostMessenger } from "@traycer-clients/shared/host-client/mock/mock-host-messenger";
-import { createRequestContextFixture } from "@traycer-clients/shared/test-fixtures/request-context";
+import { HostClient } from "@cic/shared/host-client/host-client";
+import { mockLocalHostEntry } from "@cic/shared/host-client/mock/mock-host-directory";
+import { MockHostMessenger } from "@cic/shared/host-client/mock/mock-host-messenger";
+import { createRequestContextFixture } from "@cic/shared/test-fixtures/request-context";
 import { hostRpcRegistry, type HostRpcRegistry } from "@/lib/host";
 import { createHostQueryInvalidator } from "@/lib/host/query-invalidator";
 import { createAppQueryClient } from "@/lib/query-client";

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { hostRpcRegistry } from "@traycer/protocol/host/index";
+import { hostRpcRegistry } from "@cic/protocol/host/index";
 import { releasedMethodNames } from "./__fixtures__/released-method-names";
 
 /**

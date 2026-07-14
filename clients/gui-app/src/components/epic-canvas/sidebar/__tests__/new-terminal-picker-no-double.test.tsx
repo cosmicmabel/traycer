@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import type { ComponentProps } from "react";
-import type { WorktreeBindingSelectorRow } from "@traycer/protocol/host";
+import type { WorktreeBindingSelectorRow } from "@cic/protocol/host";
 import { useEpicCanvasStore } from "@/stores/epics/canvas/store";
 import { paneTabRefs } from "@/stores/epics/canvas/actions";
 import { collectPanes } from "@/stores/epics/canvas/tile-tree";
@@ -13,12 +13,12 @@ import type { EpicCanvasTileRef } from "@/stores/epics/canvas/types";
 
 const ROW: WorktreeBindingSelectorRow = {
   hostId: "host-1",
-  runningDir: "/work/traycer",
-  workspacePath: "/work/traycer",
-  worktreePath: "/work/traycer",
+  runningDir: "/work/cic",
+  workspacePath: "/work/cic",
+  worktreePath: "/work/cic",
   mode: "worktree",
   isGitRepo: true,
-  repoIdentifier: { owner: "traycer", repo: "traycer" },
+  repoIdentifier: { owner: "cic", repo: "cic" },
   branch: "main",
   isPrimary: true,
   isImported: false,

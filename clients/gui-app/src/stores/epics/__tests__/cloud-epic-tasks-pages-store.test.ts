@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import type { ListTasksResponse } from "@traycer/protocol/host/epic/unary-schemas";
+import type { ListTasksResponse } from "@cic/protocol/host/epic/unary-schemas";
 import {
   useCloudEpicTasksPagesStore,
   cloudEpicTasksPageGeneration,

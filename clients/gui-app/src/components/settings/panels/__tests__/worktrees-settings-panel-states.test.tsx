@@ -3,8 +3,8 @@ import { cleanup, render, screen } from "@testing-library/react";
 import type { ReactNode } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import type { WorktreeHostEntryV11 } from "@traycer/protocol/host/index";
-import type { HostDirectoryEntry } from "@traycer-clients/shared/host-client/host-directory";
+import type { WorktreeHostEntryV11 } from "@cic/protocol/host/index";
+import type { HostDirectoryEntry } from "@cic/shared/host-client/host-directory";
 
 // `WorktreesSettingsPanel` sits above `WorktreesList` (covered exhaustively by
 // `worktrees-settings-panel.test.tsx`) and owns the host-scoped states from

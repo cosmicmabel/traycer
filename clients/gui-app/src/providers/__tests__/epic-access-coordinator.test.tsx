@@ -13,7 +13,7 @@ import {
 import type {
   ListTasksResponse,
   TaskLight,
-} from "@traycer/protocol/host/epic/unary-schemas";
+} from "@cic/protocol/host/epic/unary-schemas";
 import { EpicAccessCoordinator } from "@/providers/epic-access-coordinator";
 import {
   LIST_CLOUD_TASKS_REQUEST,
@@ -29,7 +29,7 @@ import {
   type EpicStreamClientFactory,
   type OpenEpicStoreHandle,
 } from "@/stores/epics/open-epic/store";
-import type { ChatRunSettings } from "@traycer/protocol/host/agent/gui/subscribe";
+import type { ChatRunSettings } from "@cic/protocol/host/agent/gui/subscribe";
 import { useComposerRunSettingsStore } from "@/stores/composer/composer-run-settings-store";
 import { useAuthStore } from "@/stores/auth/auth-store";
 import { useEpicCanvasStore } from "@/stores/epics/canvas/store";
@@ -173,7 +173,7 @@ describe("EpicAccessCoordinator", () => {
     handle.store.setState({
       epicDeleted: {
         deletedByDisplayName: "Alice",
-        deletedByTraycerUserId: "user-alice",
+        deletedByCicUserId: "user-alice",
       },
     });
 
@@ -236,7 +236,7 @@ describe("EpicAccessCoordinator", () => {
     );
 
     background.store.setState({
-      epicDeleted: { deletedByDisplayName: null, deletedByTraycerUserId: null },
+      epicDeleted: { deletedByDisplayName: null, deletedByCicUserId: null },
     });
 
     await waitFor(() =>
@@ -328,17 +328,17 @@ describe("EpicAccessCoordinator", () => {
     );
     queryClient.setQueryData<ListTasksResponse>(queryKey, {
       tasks: [
-        taskLight("epic-1", "Epic One", "traycer/gui-app"),
-        taskLight("epic-2", "Epic Two", "traycer/server"),
+        taskLight("epic-1", "Epic One", "cic/gui-app"),
+        taskLight("epic-2", "Epic Two", "cic/server"),
       ],
       hasMore: false,
       facets: {
         repos: [
           {
-            repoIdentifier: { owner: "traycer", repo: "gui-app" },
+            repoIdentifier: { owner: "cic", repo: "gui-app" },
             count: 1,
           },
-          { repoIdentifier: { owner: "traycer", repo: "server" }, count: 1 },
+          { repoIdentifier: { owner: "cic", repo: "server" }, count: 1 },
         ],
         workspaces: [],
         ownershipScopes: [{ value: "mine", count: 2 }],
@@ -364,7 +364,7 @@ describe("EpicAccessCoordinator", () => {
       "epic-2",
     ]);
     expect(response?.facets?.repos).toEqual([
-      { repoIdentifier: { owner: "traycer", repo: "server" }, count: 1 },
+      { repoIdentifier: { owner: "cic", repo: "server" }, count: 1 },
     ]);
     expect(response?.facets?.ownershipScopes).toEqual([
       { value: "mine", count: 1 },

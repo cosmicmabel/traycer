@@ -1,7 +1,7 @@
-// Source of truth: `VITE_TRAYCER_OSS_REPO` baked at build time. Keep the
+// Source of truth: `VITE_CIC_OSS_REPO` baked at build time. Keep the
 // fallback empty so a missing build var fails loudly (broken link) instead of
 // silently routing user reports at a placeholder repo.
-const TRAYCER_OSS_REPO: string = import.meta.env.VITE_TRAYCER_OSS_REPO ?? "";
+const CIC_OSS_REPO: string = import.meta.env.VITE_CIC_OSS_REPO ?? "";
 
 export interface IssueReportInfo {
   readonly appVersion: string;
@@ -26,7 +26,7 @@ export function buildGitHubIssueUrl(info: IssueReportInfo): string {
     title: info.title,
     body: buildIssueBody(info),
   });
-  return `${TRAYCER_OSS_REPO}/issues/new?${params.toString()}`;
+  return `${CIC_OSS_REPO}/issues/new?${params.toString()}`;
 }
 
 export function buildIssueBody(info: IssueReportInfo): string {

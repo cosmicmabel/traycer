@@ -1,4 +1,4 @@
-import type { AuthIdentityValidationResult } from "@traycer-clients/shared/auth/auth-validation-types";
+import type { AuthIdentityValidationResult } from "@cic/shared/auth/auth-validation-types";
 import type {
   AuthTokenRefreshResult,
   AuthTokenValidationResult,
@@ -16,8 +16,8 @@ import type {
   MicrophoneAccessStatus,
   TrayEpic,
   TrayIndicatorState,
-} from "@traycer-clients/shared/platform/runner-host";
-import type { Disposable } from "@traycer-clients/shared/platform/uri-callback";
+} from "@cic/shared/platform/runner-host";
+import type { Disposable } from "@cic/shared/platform/uri-callback";
 import { BrowserSecureStorage, BrowserTokenStore } from "./browser-token-store";
 import {
   LOCAL_BEARER_TOKEN,
@@ -39,7 +39,7 @@ export interface BrowserRunnerHostOptions {
 }
 
 /**
- * `IRunnerHost` for the browser shell served by `traycer-web serve`
+ * `IRunnerHost` for the browser shell served by `cic-web serve`
  * (src/server/serve.ts).
  *
  * Capability posture (see the interface docs in
@@ -52,7 +52,7 @@ export interface BrowserRunnerHostOptions {
  *  - `hasLocalHost: true`: the serve process fronts a real local host; the
  *    snapshot stream polls `/api/runtime-config` and advertises the
  *    same-origin `/host/rpc` WebSocket proxy as the dial URL.
- *  - Native-only surfaces (`zoom`, `service`, `traycerCli`, `migration`,
+ *  - Native-only surfaces (`zoom`, `service`, `cicCli`, `migration`,
  *    `hostManagement`, `hostTray`) are `null`; always-present surfaces with no
  *    browser backing (tray, folder picker, file drops, system-resume) install
  *    the documented no-ops.
@@ -108,7 +108,7 @@ export class BrowserRunnerHost implements IRunnerHost {
 
   readonly zoom: null = null;
   readonly service: null = null;
-  readonly traycerCli: null = null;
+  readonly cicCli: null = null;
   readonly migration: null = null;
   readonly hostManagement: null = null;
   readonly hostTray: null = null;

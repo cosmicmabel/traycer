@@ -1,5 +1,5 @@
-const FIND_HIGHLIGHT_NAME = "traycer-find-match";
-const FIND_HIGHLIGHT_ACTIVE_NAME = "traycer-find-match-active";
+const FIND_HIGHLIGHT_NAME = "cic-find-match";
+const FIND_HIGHLIGHT_ACTIVE_NAME = "cic-find-match-active";
 
 const FIND_SKIP_ATTR = "data-find-skip";
 

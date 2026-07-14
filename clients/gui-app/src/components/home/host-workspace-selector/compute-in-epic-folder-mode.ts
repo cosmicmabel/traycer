@@ -1,4 +1,4 @@
-import type { WorktreeBindingEntryMode } from "@traycer/protocol/host/worktree-schemas";
+import type { WorktreeBindingEntryMode } from "@cic/protocol/host/worktree-schemas";
 
 /**
  * In-Epic chip mode + label for a single folder row.

@@ -21,11 +21,11 @@ import {
   upgradeRequestToVersion,
   upgradeResponseToVersion,
   validateVersionedRpcRegistry,
-} from "@traycer/protocol/framework/index";
+} from "@cic/protocol/framework/index";
 import {
   hostRpcRegistry,
   hostStreamRpcRegistry,
-} from "@traycer/protocol/host/index";
+} from "@cic/protocol/host/index";
 import {
   gitChangedFileV10Schema,
   gitChangedFileV11Schema,
@@ -38,7 +38,7 @@ import {
   type GitChangedFileV10,
   type GitListChangedFilesRequest,
   type GitListChangedFilesResponse,
-} from "@traycer/protocol/host/git-schemas";
+} from "@cic/protocol/host/git-schemas";
 
 const V10 = { major: 1, minor: 0 } as const;
 const V11 = { major: 1, minor: 1 } as const;
@@ -73,8 +73,8 @@ const gitlinkDescriptor = {
 // A working-tree-only v1.1 submodule section: WT files + the minimal pointer
 // (no commits-ahead expansion).
 const submoduleChangeset = {
-  repoRoot: "/repo/traycer",
-  parentPath: "traycer",
+  repoRoot: "/repo/cic",
+  parentPath: "cic",
   branch: null,
   repoState: { kind: "clean" as const },
   files: [{ ...v10File, path: "clients/gui-app/src/app.tsx", gitlink: null }],
@@ -169,7 +169,7 @@ describe("transport skew - old GUI (v1.0) against new host (v1.1)", () => {
       ...v10Response,
       files: [
         { ...v10File, gitlink: null },
-        { ...v10File, path: "traycer", gitlink: gitlinkDescriptor },
+        { ...v10File, path: "cic", gitlink: gitlinkDescriptor },
       ],
       submodules: [submoduleChangeset],
     };
@@ -311,7 +311,7 @@ describe("v1.1 simplified schema shapes", () => {
     expect(submoduleChangesetSchema.parse(parsed)).toEqual(parsed);
     expect("relation" in parsed).toBe(false);
     expect(parsed.pointer.kind).toBe("normal");
-    expect(parsed.parentPath).toBe("traycer");
+    expect(parsed.parentPath).toBe("cic");
   });
 
   it("models availability as ok | unavailable{reason} and defaults to ok", () => {
@@ -371,7 +371,7 @@ describe("v1.1 simplified schema shapes", () => {
       ...v10Response,
       files: [
         { ...v10File, gitlink: null },
-        { ...v10File, path: "traycer", gitlink: gitlinkDescriptor },
+        { ...v10File, path: "cic", gitlink: gitlinkDescriptor },
       ],
       submodules: [submoduleChangeset],
     };
@@ -379,7 +379,7 @@ describe("v1.1 simplified schema shapes", () => {
     const parsed = gitListChangedFilesResponseSchemaV11.parse(response);
     const reparsed = gitListChangedFilesResponseSchemaV11.parse(parsed);
     expect(reparsed).toEqual(parsed);
-    expect(parsed.submodules[0].parentPath).toBe("traycer");
+    expect(parsed.submodules[0].parentPath).toBe("cic");
     expect(parsed.submodules[0].pointer.kind).toBe("normal");
   });
 });

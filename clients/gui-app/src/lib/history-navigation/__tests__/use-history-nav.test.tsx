@@ -22,7 +22,7 @@ import { useHistoryNavState } from "@/lib/history-navigation/use-history-nav-sta
 const WINDOW_ID = "history-nav-test-window";
 
 function storageKey(windowId: string): string {
-  return `traycer-gui-app:last-route:${windowId}`;
+  return `cic-gui-app:last-route:${windowId}`;
 }
 
 function makeRouter(history: RouterHistory): AppRouter {

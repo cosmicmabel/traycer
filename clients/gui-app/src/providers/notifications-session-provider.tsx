@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, type ReactNode } from "react";
-import { NotificationsStreamClient } from "@traycer-clients/shared/host-transport/notifications-stream-client";
+import { NotificationsStreamClient } from "@cic/shared/host-transport/notifications-stream-client";
 import { useWsStreamClient } from "@/lib/host/stream-runtime-context";
 import {
   openNotificationsStream,

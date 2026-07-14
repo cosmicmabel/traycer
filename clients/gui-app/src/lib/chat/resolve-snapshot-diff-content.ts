@@ -1,8 +1,8 @@
-import type { ChatAccumulatedFileChange } from "@traycer/protocol/host/agent/gui/subscribe";
+import type { ChatAccumulatedFileChange } from "@cic/protocol/host/agent/gui/subscribe";
 import type {
   ContentBlock,
   Message,
-} from "@traycer/protocol/persistence/epic/schemas";
+} from "@cic/protocol/persistence/epic/schemas";
 import type {
   SnapshotCumulativeBundleDiffTilePayload,
   SnapshotCumulativeDiffTilePayload,

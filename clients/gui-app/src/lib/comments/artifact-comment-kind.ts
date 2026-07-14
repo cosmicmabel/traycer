@@ -1,4 +1,4 @@
-import type { EpicArtifactKind } from "@traycer/protocol/common/registry";
+import type { EpicArtifactKind } from "@cic/protocol/common/registry";
 import type { EpicNodeKind } from "@/lib/artifacts/node-display";
 
 /**

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { downgradeRequestAcrossMajors } from "@traycer/protocol/framework/index";
-import { agentListHarnessModelsDowngradeV2ToV1 } from "@traycer/protocol/host/agent/contracts";
+import { downgradeRequestAcrossMajors } from "@cic/protocol/framework/index";
+import { agentListHarnessModelsDowngradeV2ToV1 } from "@cic/protocol/host/agent/contracts";
 import {
   agentSelectionGuideResponseSchema,
   createAgentRequestSchema,
@@ -13,7 +13,7 @@ import {
   listAgentsResponseSchema,
   listGuiAgentCommandsRequestSchema,
   listGuiAgentCommandsResponseSchema,
-} from "@traycer/protocol/host/index";
+} from "@cic/protocol/host/index";
 
 describe("agent host schemas", () => {
   it("accepts the agent.gui.listCommands request and response shapes", () => {
@@ -242,7 +242,7 @@ describe("agent host schemas", () => {
         workspace: {
           entries: [
             {
-              path: "/Users/example/.traycer/worktrees/traycerai__traycer/feature-a2a-child",
+              path: "/Users/example/.cic/worktrees/cicai__cic/feature-a2a-child",
               workspacePath: "/repo",
             },
             // `workspacePath` defaults to null when omitted (an existing folder
@@ -260,7 +260,7 @@ describe("agent host schemas", () => {
       workspace: {
         entries: [
           {
-            path: "/Users/example/.traycer/worktrees/traycerai__traycer/feature-a2a-child",
+            path: "/Users/example/.cic/worktrees/cicai__cic/feature-a2a-child",
             workspacePath: "/repo",
           },
           { path: "/repo/packages/app", workspacePath: null },
@@ -311,13 +311,13 @@ describe("agent host schemas", () => {
           {
             kind: "workspace",
             workspacePath: "/repo",
-            path: "/repo/.traycer/agent-selection-guide.md",
+            path: "/repo/.cic/agent-selection-guide.md",
             priority: 2,
             content: "Use review agents for review work.",
           },
           {
             kind: "global",
-            path: "/home/.traycer/agent-selection-guide.md",
+            path: "/home/.cic/agent-selection-guide.md",
             priority: 1,
             content: "Use implementation agents for implementation work.",
           },

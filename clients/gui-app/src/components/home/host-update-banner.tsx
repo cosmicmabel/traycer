@@ -21,7 +21,7 @@ import type {
   HostOperationStatus,
   HostRegistryUpdateState,
   IHostManagement,
-} from "@traycer-clients/shared/platform/runner-host";
+} from "@cic/shared/platform/runner-host";
 import {
   HOST_UPDATE_BANNER_SNOOZE_MS,
   isHostUpdateBannerSnoozed,
@@ -37,7 +37,7 @@ interface HostUpdateBannerProps {
  * registry state via the same TanStack Query the Settings panel uses,
  * so the launch-time probe (`refreshRegistryUpdateState({ force:
  * false })`) feeds both the banner and Settings without an extra
- * probe. Clicking `Install` runs `traycer host update` through the
+ * probe. Clicking `Install` runs `cic host update` through the
  * existing CLI-backed mutation. The banner hides itself when:
  *
  *   - no update is available
@@ -161,7 +161,7 @@ function HostUpdateBannerInner(props: HostUpdateBannerInnerProps) {
 
   return (
     <output
-      aria-label={`Traycer host update available: ${latestVersion}`}
+      aria-label={`CIC host update available: ${latestVersion}`}
       data-testid="host-update-banner"
       className={cn(
         "flex items-center gap-2 rounded-md border border-sky-500/30 bg-sky-500/10 px-3 py-2 text-ui-sm text-sky-950 dark:text-sky-100",
@@ -170,7 +170,7 @@ function HostUpdateBannerInner(props: HostUpdateBannerInnerProps) {
     >
       <ArrowDownToLine className="size-3.5 shrink-0" aria-hidden />
       <span className="min-w-0 flex-1">
-        A new Traycer host is available:{" "}
+        A new CIC host is available:{" "}
         <span className="font-mono">{latestVersion}</span>
         {registryState.installedVersion !== null ? (
           <>

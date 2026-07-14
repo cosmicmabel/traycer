@@ -67,7 +67,7 @@ must be added in BOTH places - the route file under `src/routes/` AND the modal
     scales the root font-size and breaks layout above that); `codeFontSize`
     and `terminalFontSize` are clamped 10-24. `theme-provider.tsx` applies
     `uiFontFamily`/`codeFontFamily` as inline overrides of
-    `--traycer-font-ui`/`--traycer-font-mono` (chosen font + the default
+    `--cic-font-ui`/`--cic-font-mono` (chosen font + the default
     stack as fallback), removing the override when `null`. The terminal host
     (`terminal-tile-xterm.tsx`) resolves its own effective font
     (`terminalFontFamily ?? codeFontFamily`) and size
@@ -131,7 +131,7 @@ codeFontSize` in muted styling while `null`; any tick/type pins an
     `useRunnerInstalledFontsQuery` (`staleTime: Infinity`; resolves `[]` on
     shells without the bridge instead of erroring).
 - `Providers` Per-provider CLI binary selection (Codex / Claude Code / OpenCode
-  / Traycer / Cursor). Left rail picks the provider (brand icons via
+  / CIC / Cursor). Left rail picks the provider (brand icons via
   `HarnessIcon`); the
   right pane shows an enable/disable `Switch` and a radio table of CLI
   candidates - the host-bundled binary, the binary auto-detected on PATH
@@ -154,7 +154,7 @@ codeFontSize` in muted styling while `null`; any tick/type pins an
   by re-providing the runtime client for the panel subtree (transient
   `useHostClientFor`, the Worktrees pattern); the default is the active
   host. Selection + custom paths + enabled flag + per-provider env persist
-  host-side in `~/.traycer/host/config/provider-overrides.json` (per-device
+  host-side in `~/.cic/host/config/provider-overrides.json` (per-device
   == per-host). Disabling a provider marks it unavailable in the new-chat
   picker. `providers.list` is cached for 15 min
   (no auto-refetch on remount/focus) to avoid re-running `--version` probes; a
@@ -197,7 +197,7 @@ codeFontSize` in muted styling while `null`; any tick/type pins an
     falls back to `CURSOR_API_KEY` from the user's login shell. Cursor's account
     line is probed from that API key with `@cursor/sdk`'s
     `Cursor.me({ apiKey })` for the user email. The token and key-identifying
-    metadata are never returned over RPC. Traycer does not run
+    metadata are never returned over RPC. CIC does not run
     `cursor-agent about` for provider auth because GUI chats use `@cursor/sdk`,
     not the CLI login session. Backed by `providers.setApiKey` /
     `providers.clearApiKey` (`useProvidersSetApiKey` /
@@ -206,8 +206,8 @@ codeFontSize` in muted styling while `null`; any tick/type pins an
     (the adapter advertises only the `gui` mode via `listGuiHarnesses`'s
     `modes`) - so the Cursor row hides the CLI candidates table and shows only
     the API-key section; the key drives the `@cursor/sdk` GUI chat surface.
-  - **Traycer subscription + credits.** The Traycer provider detail leads with a
-    `TraycerSubscriptionSection` card (always visible, not gated by the
+  - **CIC subscription + credits.** The CIC provider detail leads with a
+    `CicSubscriptionSection` card (always visible, not gated by the
     enable/disable toggle since it is account- not binary-level) showing the
     signed-in user's plan: tier badge (`subscriptionStatus`), a Trial badge when
     `isInTrial`, and a **Credit breakdown** with `N% used` plus a consumed/total
@@ -231,18 +231,18 @@ codeFontSize` in muted styling while `null`; any tick/type pins an
     (TanStack Query against `AuthService.fetchAuthenticatedUser` →
     `/api/v3/user`, `refetchOnWindowFocus`); they live only in the query cache,
     never the auth store.
-  - **Traycer OpenCode binary selection.** Traycer's built-in harness runs
+  - **CIC OpenCode binary selection.** CIC's built-in harness runs
     through OpenCode, so its row renders the same available OpenCode CLI paths
-    and lets users choose the binary for Traycer separately from the standalone
-    OpenCode provider. The table shows Traycer's own candidate list, falling
-    back to OpenCode's displayed candidates when Traycer's is empty, while
+    and lets users choose the binary for CIC separately from the standalone
+    OpenCode provider. The table shows CIC's own candidate list, falling
+    back to OpenCode's displayed candidates when CIC's is empty, while
     `providers.setSelection` / `providers.addCustomPath` /
-    `providers.removeCustomPath` still target `providerId: "traycer"`.
-    Traycer has no API key field. The enable toggle remains a real gate:
-    disabling it hides the Traycer harness from the new-chat picker and blocks
+    `providers.removeCustomPath` still target `providerId: "cic"`.
+    CIC has no API key field. The enable toggle remains a real gate:
+    disabling it hides the CIC harness from the new-chat picker and blocks
     runs like any other provider.
 - `Agents` Editor for the **global** agent selection guide
-  (`~/.traycer/agent-selection-guide.md`) - the instructions Traycer agents read
+  (`~/.cic/agent-selection-guide.md`) - the instructions CIC agents read
   to decide which child agents to spawn (harness / model / reasoning effort) for
   a task. A monospace `Textarea` debounce-auto-saves (and flushes on blur) via
   `agent.selectionGuide.setGlobal`; a quiet "Saving… / Saved" status sits in the
@@ -254,7 +254,7 @@ codeFontSize` in muted styling while `null`; any tick/type pins an
   (returns `{ content, generatedDefaultContent }`), `agent.selectionGuide.setGlobal`,
   and `agent.selectionGuide.resetGlobalToDefault` through the agent selection
   guide hooks. Settings only edits the global scope; the panel hint points users
-  at per-workspace `.traycer/agent-selection-guide.md` files, which layer on top
+  at per-workspace `.cic/agent-selection-guide.md` files, which layer on top
   of the global guide (see the agent selection guide hierarchy in the host).
 - `Keybindings` Keyboard shortcut customization.
 - `Shell` Shell binary + args used for every terminal PTY
@@ -264,9 +264,9 @@ codeFontSize` in muted styling while `null`; any tick/type pins an
   executable, `host-start.ts` spawns it with `args: []`), NOT through the
   user's shell - so shell path/args do **not** affect the host bootstrap.
   Environment-variable overrides ARE merged into the host process env at
-  `traycer host start` and therefore take effect on the host's next restart.
-  Backed by the `traycer config shell` / `traycer config env` CLI through
-  `IRunnerHost.traycerCli`. Hidden on shells without a CLI (mobile, web).
+  `cic host start` and therefore take effect on the host's next restart.
+  Backed by the `cic config shell` / `cic config env` CLI through
+  `IRunnerHost.cicCli`. Hidden on shells without a CLI (mobile, web).
   - **UI (Direction B - live-preview cards).** Two cards under
     `panels/shell/`: a _Shell_ card with an `EffectiveCommandPreview`
     (terminal-styled `❯ <path> <args>`, reusing `--term-ansi-*`), a
@@ -279,16 +279,16 @@ codeFontSize` in muted styling while `null`; any tick/type pins an
     Other controls auto-save on commit (combobox select/Enter, chip add/remove)
     and a quiet "Saving… / ✓ Saved" status sits in each card.
     Reset is a low-emphasis footer button, disabled while `synthesised`.
-  - **Detected shells** come from `traycer config shell list` →
+  - **Detected shells** come from `cic config shell list` →
     `protocol/config` `detectShells()` (POSIX `/etc/shells` + probe set +
     `$SHELL`, `X_OK`-filtered; Windows probes PowerShell/cmd), surfaced via
-    `ITraycerCli.shellListDetected()` and the `useRunnerTraycerShellListQuery`
+    `ICicCli.shellListDetected()` and the `useRunnerCicShellListQuery`
     hook (cached for the session). Best-effort - an empty list is fine since the
     combobox always accepts a typed custom path. Env **rename** is
     client-sequenced (`envOverrideSet` new → `envOverrideDelete` old) with an
     inline unique-key + `/^[A-Za-z_][A-Za-z0-9_]*$/` guard.
-- `Worktrees` Host-wide management of the git worktrees Traycer creates under
-  `~/.traycer/worktrees/`, presented as a calm inspection-and-cleanup list, not
+- `Worktrees` Host-wide management of the git worktrees CIC creates under
+  `~/.cic/worktrees/`, presented as a calm inspection-and-cleanup list, not
   a delete console. A host selector (default = active host, gated on
   `useHostReachability`, demoted to quiet toolbar chrome rather than a
   dominant control) drives a disk-truth list - so orphaned worktrees whose
@@ -300,10 +300,10 @@ codeFontSize` in muted styling while `null`; any tick/type pins an
   `worktree.listAllForHost` / `worktree.deleteByPath` RPCs through
   `useHostQuery` / `useHostMutation`. Setup/teardown script editing is NOT
   here - the create-worktree flow owns it, and scripts otherwise live in the
-  committed `.traycer/environment.json`.
+  committed `.cic/environment.json`.
   - **Evidence tiers, not a safety verdict.** Each row leads with exactly one
     loud status pill (`WorktreeTierPill`, classification shared with the
-    Task-delete dialog and the `traycer-housekeeping` skill via
+    Task-delete dialog and the `cic-housekeeping` skill via
     `classify-worktree.ts`) naming a PROVEN fact, never a generic "Safe"
     label. **Merged**, **At base commit**, and **Unreferenced** are the three
     green tiers - each requires positive, host-validated proof (a merged PR at
@@ -389,7 +389,7 @@ codeFontSize` in muted styling while `null`; any tick/type pins an
   registry error message (from `registryState.errorMessage` or the
   `availableVersions()` rejection) with a Retry button rather than the generic
   "Couldn't reach the registry" copy. Backed by the CLI-backed
-  `hostManagement` runner-host facet. Hidden on shells without the Traycer
+  `hostManagement` runner-host facet. Hidden on shells without the CIC
   CLI. The legacy `/settings/service` route now redirects here so any bookmark,
   remembered tab path, or tray command lands on the same pane as the primary
   sidebar entry.

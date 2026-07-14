@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { logPerfEvent } from "@/lib/perf/perf-telemetry";
 
-const FLAG_KEY = "traycer:perf:telemetry";
+const FLAG_KEY = "cic:perf:telemetry";
 
 interface PerfLine {
   readonly name: string;
@@ -15,7 +15,7 @@ afterEach(() => {
 });
 
 describe("logPerfEvent", () => {
-  it("emits a single [traycer-perf] console.warn line with name/tsMs/fields", () => {
+  it("emits a single [cic-perf] console.warn line with name/tsMs/fields", () => {
     window.localStorage.setItem(FLAG_KEY, "1");
     const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
 
@@ -28,11 +28,9 @@ describe("logPerfEvent", () => {
 
     expect(warn).toHaveBeenCalledTimes(1);
     const line = String(warn.mock.calls[0][0]);
-    expect(line.startsWith("[traycer-perf] ")).toBe(true);
+    expect(line.startsWith("[cic-perf] ")).toBe(true);
 
-    const payload = JSON.parse(
-      line.slice("[traycer-perf] ".length),
-    ) as PerfLine;
+    const payload = JSON.parse(line.slice("[cic-perf] ".length)) as PerfLine;
     expect(payload.name).toBe("worktree.list_query");
     expect(typeof payload.tsMs).toBe("number");
     expect(payload.fields).toEqual({

@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import type { LogLevel } from "@traycer/protocol/config/log-level";
+import type { LogLevel } from "@cic/protocol/config/log-level";
 import {
   runnerMutationKeys,
   runnerQueryKeys,

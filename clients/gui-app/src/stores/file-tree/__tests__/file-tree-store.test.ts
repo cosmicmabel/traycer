@@ -2,7 +2,7 @@ import "../../../../__tests__/test-browser-apis";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { useFileTreeStore } from "../file-tree-store";
 
-const PERSIST_KEY = "traycer-gui-app:file-tree";
+const PERSIST_KEY = "cic-gui-app:file-tree";
 
 interface PersistedFileTreeState {
   readonly state: {

@@ -7,8 +7,8 @@ import {
   type ReactNode,
 } from "react";
 import { useStore } from "zustand";
-import type { JsonContent } from "@traycer/protocol/common/registry";
-import type { ChatRunSettings } from "@traycer/protocol/host/agent/gui/subscribe";
+import type { JsonContent } from "@cic/protocol/common/registry";
+import type { ChatRunSettings } from "@cic/protocol/host/agent/gui/subscribe";
 
 import { AttachmentStrip } from "@/components/chat/composer/attachments/attachment-strip";
 import { useLandingImageFetcher } from "@/hooks/composer/use-landing-image-fetcher";

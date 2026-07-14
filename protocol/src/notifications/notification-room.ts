@@ -1,6 +1,6 @@
 import * as Y from "yjs";
-import { createTypedMap } from "@traycer/protocol/utils/yjs-utils";
-import type { TypedYMap, YCreateInput } from "@traycer/protocol/utils/yjs-utils";
+import { createTypedMap } from "@cic/protocol/utils/yjs-utils";
+import type { TypedYMap, YCreateInput } from "@cic/protocol/utils/yjs-utils";
 import {
   NOTIFICATION_EVENT_TYPES,
   type NotificationEntry,

@@ -8,7 +8,7 @@
 // guarantee is the hand-transcribed non-circular test in
 // `__tests__/keys.test.ts`.
 
-export const PERSIST_PREFIX = "traycer-gui-app";
+export const PERSIST_PREFIX = "cic-gui-app";
 
 // Six stores bucket their key by the signed-in identity; an absent/empty
 // identity collapses to the shared anonymous bucket. Preserved verbatim from
@@ -53,15 +53,15 @@ export const openEpicKey = (identity: string | null, epicId: string): string =>
 
 // ── Catalog ────────────────────────────────────────────────────────────────
 // `kind` tells enumeration the shape of each persisted surface:
-//   - "static"  : plain `traycer-gui-app:<leaf>` localStorage key.
-//   - "scoped"  : `traycer-gui-app:<leaf>:<bucket>[…]` localStorage key.
+//   - "static"  : plain `cic-gui-app:<leaf>` localStorage key.
+//   - "scoped"  : `cic-gui-app:<leaf>:<bucket>[…]` localStorage key.
 //   - "session" : sessionStorage key (not localStorage).
 //   - "channel" : a BroadcastChannel NAME, not a storage key.
 //
 // The `leaf` is the DIVERGENCE-CORRECT key leaf, not the store/file name (six
-// stores diverge — see the literals below). Non-zustand `traycer-gui-app:` keys
+// stores diverge — see the literals below). Non-zustand `cic-gui-app:` keys
 // are cataloged for enumeration only; their builders are NOT refactored here.
-// Auth (`traycer.*`) keys are intentionally excluded.
+// Auth (`cic.*`) keys are intentionally excluded.
 export type PersistStoreKind = "static" | "scoped" | "session" | "channel";
 
 export interface PersistStoreEntry {

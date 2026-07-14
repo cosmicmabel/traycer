@@ -1,5 +1,5 @@
 import { Check, FilePenLine, X } from "lucide-react";
-import type { ChatFileEditApprovalState } from "@traycer/protocol/host/agent/gui/subscribe";
+import type { ChatFileEditApprovalState } from "@cic/protocol/host/agent/gui/subscribe";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";

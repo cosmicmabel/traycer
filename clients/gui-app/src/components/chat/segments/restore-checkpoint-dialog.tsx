@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from "react";
-import { isNoOpCheckpointEntry } from "@traycer/protocol/persistence/epic/checkpoint-manifests";
+import { isNoOpCheckpointEntry } from "@cic/protocol/persistence/epic/checkpoint-manifests";
 import type {
   CheckpointArtifactTag,
   CheckpointFileOperation,
   TurnCheckpointManifest,
   TurnCheckpointManifestEntry,
-} from "@traycer/protocol/persistence/epic/checkpoint-manifests";
+} from "@cic/protocol/persistence/epic/checkpoint-manifests";
 import { FilePathTooltip } from "@/components/file-path-tooltip";
 import { AgentSpinningDots } from "@/components/ui/agent-spinning-dots";
 import { Button } from "@/components/ui/button";

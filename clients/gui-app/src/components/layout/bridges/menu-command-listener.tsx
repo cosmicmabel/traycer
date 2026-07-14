@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import type {
   HostInstallResult,
   IRunnerHost,
-} from "@traycer-clients/shared/platform/runner-host";
+} from "@cic/shared/platform/runner-host";
 import type { AuthService } from "@/lib/auth/auth-service";
 import { useCloseTabFlow } from "@/components/layout/dialogs/use-close-tab-flow";
 import { useAuthService } from "@/lib/host";
@@ -85,7 +85,7 @@ export function MenuCommandListener() {
   );
   const management = runnerHost.hostManagement;
   const service = runnerHost.service;
-  const traycerCli = runnerHost.traycerCli;
+  const cicCli = runnerHost.cicCli;
   const [pendingHostRestart, setPendingHostRestart] = useState<boolean>(false);
 
   const restartHostMutation = useMutation<void>({
@@ -94,9 +94,9 @@ export function MenuCommandListener() {
     onSuccess: () => {
       toast.success("Host restart requested");
       setPendingHostRestart(false);
-      if (traycerCli !== null) {
+      if (cicCli !== null) {
         void queryClient.invalidateQueries({
-          queryKey: runnerQueryKeys.traycerHostStatus(traycerCli),
+          queryKey: runnerQueryKeys.cicHostStatus(cicCli),
         });
       }
     },

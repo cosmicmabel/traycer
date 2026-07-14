@@ -5,7 +5,7 @@ import {
   type WorktreeEntryScripts,
   type WorktreeFolderIntent,
   type WorktreeIntent,
-} from "@traycer/protocol/host/worktree-schemas";
+} from "@cic/protocol/host/worktree-schemas";
 import {
   mergeWorktreeIntentEntry,
   removeWorktreeIntentEntry,

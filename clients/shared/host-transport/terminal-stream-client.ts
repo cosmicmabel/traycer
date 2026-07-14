@@ -2,8 +2,8 @@ import {
   terminalSubscribeServerFrameSchema,
   type TerminalSubscribeClientFrame,
   type TerminalSubscribeServerFrame,
-} from "@traycer/protocol/host/terminal/subscribe";
-import type { HostStreamRpcRegistry } from "@traycer/protocol/host/registry";
+} from "@cic/protocol/host/terminal/subscribe";
+import type { HostStreamRpcRegistry } from "@cic/protocol/host/registry";
 import type {
   IStreamSession,
   StreamCloseReason,

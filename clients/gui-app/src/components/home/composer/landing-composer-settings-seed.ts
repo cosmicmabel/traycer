@@ -1,4 +1,4 @@
-import type { ChatRunSettings } from "@traycer/protocol/host/agent/gui/subscribe";
+import type { ChatRunSettings } from "@cic/protocol/host/agent/gui/subscribe";
 
 export function landingComposerSettingsSeedForDraft(
   draftId: string | null,

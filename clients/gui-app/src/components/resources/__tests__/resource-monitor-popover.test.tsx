@@ -30,11 +30,11 @@ import type {
   AppResourceSnapshotWire,
   OwnerResourceSnapshotWire,
   ResourceProcessSnapshotWire,
-} from "@traycer/protocol/host/resources/subscribe";
+} from "@cic/protocol/host/resources/subscribe";
 import type {
   ResourcesProjectionPayload,
   ResourcesStreamCallbacks,
-} from "@traycer-clients/shared/host-transport/resources-stream-client";
+} from "@cic/shared/host-transport/resources-stream-client";
 import { ResourceMonitorPopover } from "@/components/resources/resource-monitor-popover";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ResourcesStreamMount } from "@/providers/resources-stream-mount";
@@ -199,8 +199,8 @@ function resourceProcess(
     pid: 10,
     parentPid: null,
     rootPid: 10,
-    name: "traycer-host",
-    command: "traycer-host",
+    name: "cic-host",
+    command: "cic-host",
     cpuPercent: 1,
     rssBytes: 20 * 1024 * 1024,
     ...over,
@@ -420,10 +420,10 @@ describe("ResourceMonitorPopover", () => {
     fireEvent.click(screen.getByRole("button", { name: "Resources" }));
 
     expect(screen.getByText("Resources")).not.toBeNull();
-    expect(await screen.findByText("Traycer Desktop")).not.toBeNull();
+    expect(await screen.findByText("CIC Desktop")).not.toBeNull();
     expect(screen.getByText("Renderer")).not.toBeNull();
     expect(getDesktopMetrics).toHaveBeenCalled();
-    expect(screen.getByText("Traycer Host")).not.toBeNull();
+    expect(screen.getByText("CIC Host")).not.toBeNull();
     expect(screen.getByText("Resource Task")).not.toBeNull();
     expect(screen.getByText("Background Task")).not.toBeNull();
     expect(screen.getByText("Terminal Alpha")).not.toBeNull();
@@ -673,9 +673,9 @@ describe("ResourceMonitorPopover", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Resources" }));
 
-    // The section root ("Traycer Host") header sticks so it stays visible as its
+    // The section root ("CIC Host") header sticks so it stays visible as its
     // rows scroll under it; the current header swaps per section (not stacked).
-    const hostHeader = screen.getByText("Traycer Host").closest(".sticky");
+    const hostHeader = screen.getByText("CIC Host").closest(".sticky");
     expect(hostHeader).not.toBeNull();
     expect(hostHeader?.className).toContain("top-0");
   });
@@ -784,7 +784,7 @@ describe("ResourceMonitorPopover", () => {
     });
 
     fireEvent.click(screen.getByRole("button", { name: "Resources" }));
-    expect(await screen.findByText("Traycer Host")).not.toBeNull();
+    expect(await screen.findByText("CIC Host")).not.toBeNull();
 
     fireEvent.pointerDown(
       screen.getByRole("button", { name: "Sort resource rows" }),
@@ -796,20 +796,20 @@ describe("ResourceMonitorPopover", () => {
     );
     expect(screen.getByRole("menuitemradio", { name: "CPU" })).not.toBeNull();
 
-    fireEvent.pointerDown(screen.getByText("Traycer Host"), {
+    fireEvent.pointerDown(screen.getByText("CIC Host"), {
       button: 0,
       pointerType: "mouse",
     });
-    fireEvent.mouseDown(screen.getByText("Traycer Host"), { button: 0 });
-    fireEvent.pointerUp(screen.getByText("Traycer Host"), {
+    fireEvent.mouseDown(screen.getByText("CIC Host"), { button: 0 });
+    fireEvent.pointerUp(screen.getByText("CIC Host"), {
       button: 0,
       pointerType: "mouse",
     });
-    fireEvent.click(screen.getByText("Traycer Host"));
+    fireEvent.click(screen.getByText("CIC Host"));
 
     expect(screen.queryByRole("menuitemradio", { name: "CPU" })).toBeNull();
     expect(screen.getByRole("dialog", { name: "Resources" })).not.toBeNull();
-    expect(screen.getByText("Traycer Host")).not.toBeNull();
+    expect(screen.getByText("CIC Host")).not.toBeNull();
 
     fireEvent.pointerDown(
       screen.getByRole("button", { name: "Sort resource rows" }),
@@ -855,7 +855,7 @@ describe("ResourceMonitorPopover", () => {
     });
 
     fireEvent.click(screen.getByRole("button", { name: "Resources" }));
-    expect(await screen.findByText("Traycer Host")).not.toBeNull();
+    expect(await screen.findByText("CIC Host")).not.toBeNull();
 
     fireEvent.pointerDown(
       screen.getByRole("button", { name: "Sort resource rows" }),
@@ -869,7 +869,7 @@ describe("ResourceMonitorPopover", () => {
 
     expect(screen.queryByRole("menuitemradio", { name: "CPU" })).toBeNull();
     expect(screen.getByRole("dialog", { name: "Resources" })).not.toBeNull();
-    expect(screen.getByText("Traycer Host")).not.toBeNull();
+    expect(screen.getByText("CIC Host")).not.toBeNull();
     expect(
       screen.getByRole("button", { name: "Sort resource rows" }).textContent,
     ).toContain("CPU");
@@ -897,7 +897,7 @@ describe("ResourceMonitorPopover", () => {
     });
 
     fireEvent.click(screen.getByRole("button", { name: "Resources" }));
-    expect(await screen.findByText("Traycer Host")).not.toBeNull();
+    expect(await screen.findByText("CIC Host")).not.toBeNull();
 
     // A task finishing load autofocuses its content: focus lands on an element
     // outside the popover, which Radix reports as a focus-outside dismissal.
@@ -907,7 +907,7 @@ describe("ResourceMonitorPopover", () => {
     });
 
     expect(screen.getByRole("dialog", { name: "Resources" })).not.toBeNull();
-    expect(screen.getByText("Traycer Host")).not.toBeNull();
+    expect(screen.getByText("CIC Host")).not.toBeNull();
 
     outside.remove();
   });

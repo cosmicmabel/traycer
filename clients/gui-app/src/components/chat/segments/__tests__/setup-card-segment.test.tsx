@@ -136,7 +136,7 @@ describe("<SetupCardSegment /> worktree location", () => {
         workspace({
           state: "ready",
           branch: "my-feature",
-          worktreePath: "/home/me/.traycer/worktrees/app/my-feature",
+          worktreePath: "/home/me/.cic/worktrees/app/my-feature",
         }),
       ]),
     );
@@ -145,7 +145,7 @@ describe("<SetupCardSegment /> worktree location", () => {
       "my-feature",
     );
     const path = screen.getByTestId("setup-card-worktree-path");
-    expect(path.textContent).toBe("/home/me/.traycer/worktrees/app/my-feature");
+    expect(path.textContent).toBe("/home/me/.cic/worktrees/app/my-feature");
     // The path truncates from the START (leaf stays visible); the full path is
     // on hover via FilePathTooltip (a portal), so there is no `title` attr.
     expect(path.getAttribute("title")).toBeNull();

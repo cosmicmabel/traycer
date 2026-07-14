@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { WorktreeBindingSelectorRow } from "@traycer/protocol/host";
+import type { WorktreeBindingSelectorRow } from "@cic/protocol/host";
 import type { GitSubmoduleSummary } from "@/lib/git/git-repo-tree";
 import {
   buildGitDiffRepoSwitcherModel,
@@ -17,7 +17,7 @@ function row(
     worktreePath: null,
     mode: "local",
     isGitRepo: true,
-    repoIdentifier: { owner: "acme", repo: "traycer-internal" },
+    repoIdentifier: { owner: "acme", repo: "cic-internal" },
     branch: "development",
     isPrimary: true,
     isImported: false,
@@ -32,9 +32,9 @@ function submoduleNode(
   overrides: Partial<GitSubmoduleSummary>,
 ): GitSubmoduleSummary {
   return {
-    repoRoot: "/repo/vendor/traycer",
-    parentPath: "vendor/traycer",
-    label: "vendor/traycer",
+    repoRoot: "/repo/vendor/cic",
+    parentPath: "vendor/cic",
+    label: "vendor/cic",
     headLabel: "feature/submodule-ui",
     changeCount: 2,
     hasChanges: true,
@@ -96,7 +96,7 @@ describe("buildGitDiffRepoSwitcherModel", () => {
 
     expect(model.rows.map((item) => item.kind)).toEqual(["root", "root"]);
     expect(model.rows[0]).toMatchObject({
-      label: "traycer-internal",
+      label: "cic-internal",
       selected: true,
       fileChangeCount: 7,
       moduleChangeCount: 1,
@@ -110,7 +110,7 @@ describe("buildGitDiffRepoSwitcherModel", () => {
       moduleChangeCount: null,
     });
     expect(model.trigger).toMatchObject({
-      label: "traycer-internal",
+      label: "cic-internal",
       secondaryLabel: "/repo",
       fileChangeCount: 7,
       moduleChangeCount: 1,
@@ -183,19 +183,19 @@ describe("buildGitDiffRepoSwitcherModel", () => {
         rootInput({ row: row({}), fileChangeCount: 4, moduleChangeCount: 1 }),
       ],
       activeRootSubmodules: [submoduleNode({ changeCount: 2 })],
-      selected: selection({ repoRoot: "/repo/vendor/traycer" }),
+      selected: selection({ repoRoot: "/repo/vendor/cic" }),
       searchQuery: "",
     });
 
     expect(model.rows).toHaveLength(1);
     expect(model.rows[0]).toMatchObject({
-      label: "traycer-internal",
+      label: "cic-internal",
       selected: true,
       fileChangeCount: 6,
       moduleChangeCount: 1,
     });
     expect(model.trigger).toMatchObject({
-      label: "traycer-internal",
+      label: "cic-internal",
       secondaryLabel: "/repo",
       fileChangeCount: 6,
       moduleChangeCount: 1,
@@ -307,7 +307,7 @@ describe("buildGitDiffRepoSwitcherModel", () => {
       clean: false,
     });
     expect(model.trigger).toMatchObject({
-      label: "traycer-internal",
+      label: "cic-internal",
       fileChangeCount: 0,
       moduleChangeCount: 1,
     });
@@ -357,7 +357,7 @@ describe("buildGitDiffRepoSwitcherModel", () => {
       searchQuery: "feature/submodule",
     });
     expect(modelByHead.visibleRows.map((item) => item.label)).toEqual([
-      "traycer-internal",
+      "cic-internal",
     ]);
 
     const modelByPath = buildGitDiffRepoSwitcherModel({
@@ -366,10 +366,10 @@ describe("buildGitDiffRepoSwitcherModel", () => {
       ],
       activeRootSubmodules: [submoduleNode({})],
       selected: selection({}),
-      searchQuery: "vendor/traycer",
+      searchQuery: "vendor/cic",
     });
     expect(modelByPath.visibleRows.map((item) => item.label)).toEqual([
-      "traycer-internal",
+      "cic-internal",
     ]);
 
     const modelByStatus = buildGitDiffRepoSwitcherModel({
@@ -391,7 +391,7 @@ describe("buildGitDiffRepoSwitcherModel", () => {
       searchQuery: "unavailable",
     });
     expect(modelByStatus.visibleRows.map((item) => item.label)).toEqual([
-      "traycer-internal",
+      "cic-internal",
     ]);
   });
 

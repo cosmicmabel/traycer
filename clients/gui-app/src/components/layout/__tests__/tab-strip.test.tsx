@@ -12,7 +12,7 @@ import {
   ensureHistoryTab,
   ensureSettingsTab,
 } from "@/lib/commands/actions/open-system-tab";
-import { AGENT_WORKING_AWARENESS_FIELD } from "@traycer/protocol/host/epic/subscribe";
+import { AGENT_WORKING_AWARENESS_FIELD } from "@cic/protocol/host/epic/subscribe";
 import { __getOpenEpicRegistryForTests } from "@/lib/registries/epic-session-registry";
 import { __getChatSessionRegistryForTests } from "@/lib/registries/chat-session-registry";
 import type { PermissionRole } from "@/lib/epic-collaborator-roles";

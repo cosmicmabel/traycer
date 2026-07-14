@@ -53,10 +53,10 @@ import {
   type ChatUserMinimapItem,
 } from "@/components/chat/chat-user-message-minimap-items";
 import type { ChatMessage as ChatMessageModel } from "@/stores/composer/chat-store";
-import type { JsonContent } from "@traycer/protocol/common/registry";
+import type { JsonContent } from "@cic/protocol/common/registry";
 import { useTileFindStore, type TileFindAdapter } from "@/stores/tile-find";
 import { useSettingsStore } from "@/stores/settings/settings-store";
-import type { BackgroundItem } from "@traycer/protocol/host/agent/gui/subscribe";
+import type { BackgroundItem } from "@cic/protocol/host/agent/gui/subscribe";
 
 import {
   makeAssistantMessage,

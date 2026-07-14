@@ -3,7 +3,7 @@ import {
   DEFAULT_AGENT_MODE,
   agentModeSchema,
   type AgentMode,
-} from "@traycer/protocol/common/schemas";
+} from "@cic/protocol/common/schemas";
 
 export { DEFAULT_AGENT_MODE, agentModeSchema, type AgentMode };
 

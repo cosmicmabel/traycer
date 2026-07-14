@@ -654,7 +654,7 @@
 /*
  * `@user` mention chip rendered by `@tiptap/extension-mention`. We wrap the
  * default span in muted-on-accent pill styling matching the rest of the
- * Traycer chip vocabulary so a mention reads as a named entity rather than
+ * Cic chip vocabulary so a mention reads as a named entity rather than
  * inline prose.
  */
 .comment-mention {

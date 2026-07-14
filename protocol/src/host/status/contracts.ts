@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { defineRpcContract } from "@traycer/protocol/framework/index";
+import { defineRpcContract } from "@cic/protocol/framework/index";
 
 export const hostStatusV10 = defineRpcContract({
   method: "host.status",

@@ -1,9 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   MockRunnerHost,
-  MockTraycerCli,
-} from "@traycer-clients/shared/host-client/mock/mock-runner-host";
-import type { StoredAuthTokens } from "@traycer-clients/shared/platform/runner-host";
+  MockCicCli,
+} from "@cic/shared/host-client/mock/mock-runner-host";
+import type { StoredAuthTokens } from "@cic/shared/platform/runner-host";
 import {
   AuthService,
   type AuthSessionSnapshot,
@@ -38,7 +38,7 @@ const REFRESH_URL = "http://localhost:5005/api/v3/auth/refresh";
 // and the pre-filled verification URL the controller asks the shell to open.
 const MOCK_DEVICE_USER_CODE = "ABCDE-FGHIJ";
 const MOCK_DEVICE_VERIFICATION_URI_COMPLETE =
-  "https://app.traycer.ai/device?user_code=ABCDE-FGHIJ";
+  "https://device.example.invalid/device?user_code=ABCDE-FGHIJ";
 
 // Collapse consecutive identical entries so an ordered validate -> refresh
 // assertion tolerates the auth boundary's bounded retry (a transient 5xx /
@@ -55,13 +55,13 @@ const trackedServices: AuthService[] = [];
 function makeService(): { service: AuthService; host: MockRunnerHost } {
   const host = new MockRunnerHost({
     signInUrl:
-      "https://auth.traycer.ai/sign-in?redirect_uri=traycer%3A%2F%2Fauth",
+      "https://sign-in.example.invalid/sign-in?redirect_uri=cic%3A%2F%2Fauth",
     authnBaseUrl: "http://localhost:5005",
     localHost: null,
     hosts: [],
     workspaceFolderPickerPaths: undefined,
     hasLocalHost: undefined,
-    traycerCli: undefined,
+    cicCli: undefined,
   });
   const service = trackService(new AuthService({ runnerHost: host }));
   return { service, host };
@@ -841,13 +841,13 @@ describe("AuthService", () => {
 
   it("installs the onAuthCallback subscription before awaiting tokenStore.load()", async () => {
     const host = new MockRunnerHost({
-      signInUrl: "https://auth.traycer.ai/sign-in",
+      signInUrl: "https://sign-in.example.invalid/sign-in",
       authnBaseUrl: "http://localhost:5005",
       localHost: null,
       hosts: [],
       workspaceFolderPickerPaths: undefined,
       hasLocalHost: undefined,
-      traycerCli: undefined,
+      cicCli: undefined,
     });
     let authSubscribed = false;
     let resolveLoad: (value: StoredAuthTokens | null) => void = () => undefined;
@@ -1267,16 +1267,16 @@ describe("AuthService", () => {
       // Pins that provisioning runs while the store is still "signing-in"
       // (i.e. seeded BEFORE the signed-in projection enables host RPCs), and
       // that the minted token/refresh pair is what gets seeded.
-      const cli = new MockTraycerCli();
+      const cli = new MockCicCli();
       const host = new MockRunnerHost({
         signInUrl:
-          "https://auth.traycer.ai/sign-in?redirect_uri=traycer%3A%2F%2Fauth",
+          "https://sign-in.example.invalid/sign-in?redirect_uri=cic%3A%2F%2Fauth",
         authnBaseUrl: "http://localhost:5005",
         localHost: null,
         hosts: [],
         workspaceFolderPickerPaths: undefined,
         hasLocalHost: undefined,
-        traycerCli: cli,
+        cicCli: cli,
       });
       const statusAtProvision: string[] = [];
       const originalLogin = cli.cliLogin.bind(cli);
@@ -1348,16 +1348,16 @@ describe("AuthService", () => {
     });
 
     it("re-provisions the FULL pair to the local CLI on a reactive refresh", async () => {
-      const cli = new MockTraycerCli();
+      const cli = new MockCicCli();
       const host = new MockRunnerHost({
         signInUrl:
-          "https://auth.traycer.ai/sign-in?redirect_uri=traycer%3A%2F%2Fauth",
+          "https://sign-in.example.invalid/sign-in?redirect_uri=cic%3A%2F%2Fauth",
         authnBaseUrl: "http://localhost:5005",
         localHost: null,
         hosts: [],
         workspaceFolderPickerPaths: undefined,
         hasLocalHost: undefined,
-        traycerCli: cli,
+        cicCli: cli,
       });
       const service = trackService(new AuthService({ runnerHost: host }));
       await service.start();
@@ -1411,16 +1411,16 @@ describe("AuthService", () => {
     });
 
     it("still provisions the FULL pair to the local CLI on a proactive refresh", async () => {
-      const cli = new MockTraycerCli();
+      const cli = new MockCicCli();
       const host = new MockRunnerHost({
         signInUrl:
-          "https://auth.traycer.ai/sign-in?redirect_uri=traycer%3A%2F%2Fauth",
+          "https://sign-in.example.invalid/sign-in?redirect_uri=cic%3A%2F%2Fauth",
         authnBaseUrl: "http://localhost:5005",
         localHost: null,
         hosts: [],
         workspaceFolderPickerPaths: undefined,
         hasLocalHost: undefined,
-        traycerCli: cli,
+        cicCli: cli,
       });
       // 5m of life left → inside the proactive lead window, so an OS resume
       // drives an immediate force-refresh against `/api/v3/auth/refresh`.

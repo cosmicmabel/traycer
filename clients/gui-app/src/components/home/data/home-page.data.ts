@@ -3,7 +3,7 @@ import type {
   TaskLight,
   TaskOwnershipScope,
   TaskWorkspaceIdentifier,
-} from "@traycer/protocol/host/epic/unary-schemas";
+} from "@cic/protocol/host/epic/unary-schemas";
 import { formatDistanceToNow } from "date-fns";
 import { displayTitle } from "@/lib/display-title";
 import { isEditableRole } from "@/lib/epic-permissions";

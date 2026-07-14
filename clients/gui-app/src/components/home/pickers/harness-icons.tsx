@@ -71,8 +71,8 @@ export const OpenClawIcon: HarnessIcon = (props) => (
   </svg>
 );
 
-// Traycer does not have a lobehub entry — hand-rolled from the brand mark.
-export const TraycerIcon: HarnessIcon = (props) => (
+// CIC does not have a lobehub entry — hand-rolled from the brand mark.
+export const CicIcon: HarnessIcon = (props) => (
   <svg {...props} viewBox="0 0 211 218" fill="currentColor">
     <path
       fillRule="evenodd"

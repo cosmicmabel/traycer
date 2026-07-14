@@ -1,4 +1,4 @@
-import type { InterviewQuestion } from "@traycer/protocol/persistence/epic/schemas";
+import type { InterviewQuestion } from "@cic/protocol/persistence/epic/schemas";
 
 export interface PendingInterviewView {
   readonly blockId: string;

@@ -118,7 +118,7 @@ const windowsBridgeMock = vi.hoisted(
 );
 
 interface TestRunnerHost {
-  hostManagement: { uninstallTraycer: Mock } | null;
+  hostManagement: { uninstallCic: Mock } | null;
 }
 
 const runnerHostMock = vi.hoisted((): { current: TestRunnerHost } => ({
@@ -538,29 +538,29 @@ describe("GeneralSettingsPanel", () => {
     expect(screen.getByTestId("settings-danger-zone")).toBeTruthy();
     expect(screen.getByText("File Edit Snapshots")).toBeTruthy();
     expect(screen.getByText("Local app state")).toBeTruthy();
-    expect(screen.queryByRole("button", { name: "Remove Traycer" })).toBeNull();
+    expect(screen.queryByRole("button", { name: "Remove CIC" })).toBeNull();
   });
 
-  it("removes Traycer from the Danger Zone after confirmation", async () => {
-    const uninstallTraycer = vi.fn(() =>
+  it("removes CIC from the Danger Zone after confirmation", async () => {
+    const uninstallCic = vi.fn(() =>
       Promise.resolve({
         removedHost: true,
         deregisteredService: true,
         removedLoginItem: true,
       }),
     );
-    runnerHostMock.current = { hostManagement: { uninstallTraycer } };
+    runnerHostMock.current = { hostManagement: { uninstallCic } };
     renderPanel();
 
-    fireEvent.click(screen.getByRole("button", { name: "Remove Traycer" }));
-    fireEvent.click(getDialogButton("Remove Traycer"));
+    fireEvent.click(screen.getByRole("button", { name: "Remove CIC" }));
+    fireEvent.click(getDialogButton("Remove CIC"));
 
     await waitFor(() => {
-      expect(uninstallTraycer).toHaveBeenCalledTimes(1);
+      expect(uninstallCic).toHaveBeenCalledTimes(1);
     });
     // The remove row switches to the success/quit state.
-    await screen.findByText("Traycer removed");
-    expect(screen.getByRole("button", { name: "Quit Traycer" })).toBeTruthy();
+    await screen.findByText("CIC removed");
+    expect(screen.getByRole("button", { name: "Quit CIC" })).toBeTruthy();
   });
 });
 

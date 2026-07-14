@@ -1,7 +1,7 @@
 import "../../../../__tests__/test-browser-apis";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, cleanup, render } from "@testing-library/react";
-import { MockRunnerHost } from "@traycer-clients/shared/host-client/mock/mock-runner-host";
+import { MockRunnerHost } from "@cic/shared/host-client/mock/mock-runner-host";
 
 interface CapturedCompletion {
   readonly epicId: string;
@@ -52,7 +52,7 @@ function makeHost(): MockRunnerHost {
     hosts: [],
     workspaceFolderPickerPaths: undefined,
     hasLocalHost: undefined,
-    traycerCli: undefined,
+    cicCli: undefined,
   });
 }
 
@@ -166,7 +166,7 @@ describe("ChatTurnNotificationController", () => {
 
     expect(host.notificationsSent).toEqual([
       {
-        title: "Traycer",
+        title: "CIC",
         body: "New chat • Done",
         payload: { kind: "chat", epicId: "epic-x", chatId: "chat-9" },
       },

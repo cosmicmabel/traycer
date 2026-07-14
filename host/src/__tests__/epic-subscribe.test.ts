@@ -1,9 +1,9 @@
 // Runs under `bun test` — the server under test is built on Bun.serve.
 import { afterAll, beforeAll, describe, expect, it } from "bun:test";
 import * as Y from "yjs";
-import { hostStreamRpcRegistry } from "@traycer/protocol/host/registry";
-import { buildStreamManifest } from "@traycer/protocol/framework/stream-compat";
-import { epicSubscribeServerFrameSchema } from "@traycer/protocol/host/epic/subscribe";
+import { hostStreamRpcRegistry } from "@cic/protocol/host/registry";
+import { buildStreamManifest } from "@cic/protocol/framework/stream-compat";
+import { epicSubscribeServerFrameSchema } from "@cic/protocol/host/epic/subscribe";
 import { startOpenHostServer, type RunningOpenHost } from "../server";
 
 /**

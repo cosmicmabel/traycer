@@ -4,10 +4,10 @@ import { tmpdir } from "node:os";
 import {
   hostRpcRegistry,
   hostStreamRpcRegistry,
-} from "@traycer/protocol/host/registry";
-import { buildStreamManifest } from "@traycer/protocol/framework/stream-compat";
-import { hostFrameSchema } from "@traycer/protocol/framework/ws-protocol";
-import { terminalSubscribeServerFrameSchema } from "@traycer/protocol/host/terminal/subscribe";
+} from "@cic/protocol/host/registry";
+import { buildStreamManifest } from "@cic/protocol/framework/stream-compat";
+import { hostFrameSchema } from "@cic/protocol/framework/ws-protocol";
+import { terminalSubscribeServerFrameSchema } from "@cic/protocol/host/terminal/subscribe";
 import { startOpenHostServer, type RunningOpenHost } from "../server";
 import { RegistryRuntime } from "../registry-runtime";
 

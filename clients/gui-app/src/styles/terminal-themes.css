@@ -73,8 +73,8 @@
   --term-ansi-bright-blue: var(--primary);
 }
 
-/* Traycer Green */
-[data-theme="traycer-green"] {
+/* Cic Green */
+[data-theme="cic-green"] {
   --term-ansi-black: #1a2421;
   --term-ansi-red: #c92a2a;
   --term-ansi-green: #2b8a3e;
@@ -93,7 +93,7 @@
   --term-ansi-bright-white: #1a2421;
 }
 
-.dark[data-theme="traycer-green"] {
+.dark[data-theme="cic-green"] {
   --term-ansi-black: #1a2421;
   --term-ansi-red: #ff6b6b;
   --term-ansi-green: #51cf66;

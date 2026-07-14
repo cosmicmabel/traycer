@@ -4,7 +4,7 @@ import {
   commonIgnores,
   linterOptionsConfig,
 } from "../eslint/flat-base.mjs";
-import { traycerTypeSafetyRestrictions } from "../eslint/traycer-type-safety-rules.mjs";
+import { cicTypeSafetyRestrictions } from "../eslint/cic-type-safety-rules.mjs";
 
 export default tseslint.config(
   {
@@ -21,7 +21,7 @@ export default tseslint.config(
     },
     plugins: { "@typescript-eslint": tseslint.plugin },
     rules: {
-      "no-restricted-syntax": ["error", ...traycerTypeSafetyRestrictions],
+      "no-restricted-syntax": ["error", ...cicTypeSafetyRestrictions],
     },
   },
 );

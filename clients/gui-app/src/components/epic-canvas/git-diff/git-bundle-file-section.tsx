@@ -8,7 +8,7 @@ import {
 import {
   DEFAULT_GIT_FILE_DIFF_BYTE_BUDGET,
   type GitChangedFile,
-} from "@traycer/protocol/host";
+} from "@cic/protocol/host";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { StartTruncatedText } from "@/components/ui/start-truncated-text";

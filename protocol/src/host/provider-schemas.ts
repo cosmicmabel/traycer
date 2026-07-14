@@ -1,16 +1,16 @@
 /**
  * Schemas for the `providers.*` host RPC surface. Manages the CLI binary
- * Traycer runs for each provider (Codex / Claude Code / OpenCode).
+ * CIC runs for each provider (Codex / Claude Code / OpenCode).
  *
  * Each provider exposes a set of candidates - the host-bundled binary, the
  * binary auto-discovered on PATH (resolved to its real absolute path), and
  * any custom paths the user added. The user selects one via a radio in
  * Settings → Providers; the selection + custom paths + enabled flag persist
  * per-device (== per-host) in
- * `~/.traycer/host/config/provider-overrides.json`.
+ * `~/.cic/host/config/provider-overrides.json`.
  */
 import { z } from "zod";
-import type { TuiHarnessId } from "@traycer/protocol/host/agent/shared";
+import type { TuiHarnessId } from "@cic/protocol/host/agent/shared";
 
 export const providerIdSchema = z.enum([
   "claude-code",
@@ -284,7 +284,7 @@ const providerCliStateBaseShape = {
   // provider's harness. Sorted by key for stable rendering; `[]` when unset.
   envOverrides: z.array(providerEnvOverrideSchema).catch([]),
   // Login/re-auth options for this provider. Null for providers that have no
-  // supported login flow (cursor, traycer) or where login capability is not
+  // supported login flow (cursor, cic) or where login capability is not
   // yet modelled. `.catch(null)` tolerates old host builds that omit the field.
   loginCapability: providerLoginCapabilitySchema.nullable().catch(null),
   // True while the host's shell-env probe for this provider is still running

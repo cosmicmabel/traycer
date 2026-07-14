@@ -6,13 +6,13 @@ import {
 } from "@/components/chat/chat-activity-groups";
 import type { ChatActivityTimelineItem } from "@/components/chat/chat-activity-groups";
 import type { MessageSegment } from "@/stores/composer/chat-store";
-import type { AgentMessageSend } from "@traycer/protocol/persistence/epic/content-blocks";
-import { deriveToolInputDetail } from "@traycer/protocol/host/agent/gui/tool-input-detail";
-import { deriveToolInputSummary } from "@traycer/protocol/host/agent/gui/tool-input-summary";
+import type { AgentMessageSend } from "@cic/protocol/persistence/epic/content-blocks";
+import { deriveToolInputDetail } from "@cic/protocol/host/agent/gui/tool-input-detail";
+import { deriveToolInputSummary } from "@cic/protocol/host/agent/gui/tool-input-summary";
 import {
   isTaskTodoToolName,
   parseTaskTodoToolPayloads,
-} from "@traycer/protocol/host/agent/gui/task-todo-tools";
+} from "@cic/protocol/host/agent/gui/task-todo-tools";
 
 const EMPTY_PROMOTED_TOOL_BLOCK_IDS: ReadonlySet<string> = new Set();
 
@@ -503,7 +503,7 @@ describe("chat activity grouping", () => {
   it("promotes A2A send-message tools out of generic activity groups", () => {
     const timeline = buildCompleteTimeline([
       toolSegment("tool-1", "read_file", { path: "/repo/a.ts" }),
-      a2aToolSegment("tool-2", "traycer_a2a/traycer_send_message", {
+      a2aToolSegment("tool-2", "cic_a2a/cic_send_message", {
         receiverAgentId: "agent-receiver-1",
         message: "Please inspect the failure.",
         responseId: "response-1",
@@ -525,9 +525,7 @@ describe("chat activity grouping", () => {
     if (timeline[1].segment.kind !== "tool") {
       throw new Error("Expected tool segment");
     }
-    expect(timeline[1].segment.toolName).toBe(
-      "traycer_a2a/traycer_send_message",
-    );
+    expect(timeline[1].segment.toolName).toBe("cic_a2a/cic_send_message");
   });
 
   it("renders matched interviews as answered-question items and suppresses the raw question tool", () => {
@@ -688,7 +686,7 @@ describe("chat activity grouping", () => {
   it("groups web_fetch alongside web_search in the search bucket", () => {
     expect(
       activityGroupSummary([
-        toolSegment("tool-1", "web_search", { query: "traycer" }),
+        toolSegment("tool-1", "web_search", { query: "cic" }),
         toolSegment("tool-2", "web_fetch", { url: "https://example.com" }),
       ]),
     ).toBe("Searched 2 places");

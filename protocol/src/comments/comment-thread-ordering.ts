@@ -1,4 +1,4 @@
-import type { CommentThreadWire } from "@traycer/protocol/host";
+import type { CommentThreadWire } from "@cic/protocol/host";
 
 export interface AnchorPositionMap {
   /** Document position of the first character of each thread's anchor mark. */

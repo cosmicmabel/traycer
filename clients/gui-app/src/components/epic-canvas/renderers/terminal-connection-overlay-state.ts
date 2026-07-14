@@ -1,4 +1,4 @@
-import type { StreamConnectionStatus } from "@traycer-clients/shared/host-transport/i-stream-session";
+import type { StreamConnectionStatus } from "@cic/shared/host-transport/i-stream-session";
 import type { TerminalLifecycleStatus } from "@/stores/terminals/terminal-session-store";
 
 export type TerminalConnectionOverlayState =

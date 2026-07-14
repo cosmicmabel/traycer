@@ -8,7 +8,7 @@ import type { ReactNode } from "react";
 import type {
   ProviderRateLimits,
   ProviderRateLimitWindow,
-} from "@traycer/protocol/host";
+} from "@cic/protocol/host";
 import type { ProviderRateLimitEnvelope } from "@/lib/rate-limits/rate-limit-envelope";
 import { Badge } from "@/components/ui/badge";
 import { MutedAgentSpinner } from "@/components/ui/agent-spinning-dots";
@@ -42,9 +42,7 @@ import { cn } from "@/lib/utils";
  *   the single-provider tab.
  */
 export type RateLimitViewVariant =
-  | "settings"
-  | "popover-detail"
-  | "popover-overview";
+  "settings" | "popover-detail" | "popover-overview";
 
 /**
  * The condensed Overview surface. Fields the single-provider detail keeps but
@@ -211,7 +209,7 @@ function WindowMeterDetail({
 /**
  * A single window row, shared identically by the Settings card and both
  * popover surfaces so they can never visually drift - delegates to the
- * shared `MeterRow` shell (`traycer-subscription-views.tsx`), passing
+ * shared `MeterRow` shell (`cic-subscription-views.tsx`), passing
  * `WindowMeterDetail` as its `detail` slot. Renders nothing for a `null`
  * window so call sites can pass optional windows directly.
  */

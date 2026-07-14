@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   EDITORS,
   openPathsRequestSchema,
-} from "@traycer/protocol/host/editor/unary-schemas";
+} from "@cic/protocol/host/editor/unary-schemas";
 
 describe("EDITORS catalog", () => {
   it("IDs are unique", () => {

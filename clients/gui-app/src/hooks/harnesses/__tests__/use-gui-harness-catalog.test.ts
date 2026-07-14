@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { ListGuiHarnessesResponse } from "@traycer/protocol/host/index";
+import type { ListGuiHarnessesResponse } from "@cic/protocol/host/index";
 import {
   nextHarnessAvailabilityRefetchInterval,
   nextHarnessModelRefetchInterval,

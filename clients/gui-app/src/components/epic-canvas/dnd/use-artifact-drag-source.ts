@@ -4,7 +4,7 @@ import {
   type DraggableSyntheticListeners,
 } from "@dnd-kit/core";
 import { useId, useMemo } from "react";
-import type { EpicArtifactKind } from "@traycer/protocol/common/registry";
+import type { EpicArtifactKind } from "@cic/protocol/common/registry";
 import {
   resolveTabIdForEpic,
   useEpicCanvasStore,

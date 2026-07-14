@@ -11,7 +11,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type {
   ProviderCliState,
   ProviderLoginCapability,
-} from "@traycer/protocol/host/provider-schemas";
+} from "@cic/protocol/host/provider-schemas";
 
 // The banner shows only for web-login providers; it receives live provider
 // `state` as a prop (from the composer's re-auth gate). Reconnect methods are

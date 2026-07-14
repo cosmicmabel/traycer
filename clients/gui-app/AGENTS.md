@@ -5,7 +5,7 @@ together with the repo-root `AGENTS.md`.
 
 ## Workspace Purpose
 
-`gui-app` is the standalone Traycer application shell. It is separate from the
+`gui-app` is the standalone CIC application shell. It is separate from the
 older `clients/gui/` webview work and should be treated as a normal
 browser-run React application unless the user explicitly asks for native or
 desktop-specific integration.
@@ -140,18 +140,18 @@ backend calls, no ad-hoc try/catch + `toast.error` orchestration in components.
 
 - Prefer configured import aliases over long relative imports whenever an alias
   exists. In this workspace, use `@/*` for app code and workspace aliases like
-  `@core/*`, `@traycer-clients/shared/*`, and `@traycer/protocol/*` instead of
+  `@core/*`, `@cic/shared/*`, and `@cic/protocol/*` instead of
   manual `../../..` paths.
 
 - Structured perf telemetry (separate from the human log) goes through
   `src/lib/perf/perf-telemetry.ts` `logPerfEvent(name, fields)`. It prints a
-  `[traycer-perf]` console line the desktop shell appends to a dedicated
-  machine-parseable file, `<Electron userData>/traycer-perf.ndjson` (rotates to
-  `.ndjson.1` at ~5 MB), instead of `traycer-desktop.log`. Enable with
-  `localStorage["traycer:perf:telemetry"] = "1"` (on by default in dev, off in
+  `[cic-perf]` console line the desktop shell appends to a dedicated
+  machine-parseable file, `<Electron userData>/cic-perf.ndjson` (rotates to
+  `.ndjson.1` at ~5 MB), instead of `cic-desktop.log`. Enable with
+  `localStorage["cic:perf:telemetry"] = "1"` (on by default in dev, off in
   tests, opt-in in prod). Sibling gated probes: `main-thread-block-probe.ts`
-  (`traycer:perf:mainthread`) and `terminal-load-perf.ts`
-  (`traycer:perf:terminal`).
+  (`cic:perf:mainthread`) and `terminal-load-perf.ts`
+  (`cic:perf:terminal`).
 
 - Keep query-key management centralized. Define durable query-key builders in a
   dedicated `src/lib/query-keys/` area and expose them through a barrel export,
@@ -337,7 +337,7 @@ adding a new preset only needs a CSS block.
   the settings store: `terminalFontSize ?? codeFontSize` and
   `terminalFontFamily ?? codeFontFamily` prepended to the shared default mono
   stack (`src/lib/default-font-stacks.ts`). The font-family string is built
-  from store values rather than read from `--traycer-font-mono`, because xterm
+  from store values rather than read from `--cic-font-mono`, because xterm
   can't resolve CSS variables in its canvas measurement pass and a
   `getComputedStyle` read would race the `ThemeProvider` effect that writes
   the variable's inline override. Live size or family changes trigger a

@@ -1,4 +1,4 @@
-import type { AccountContext } from "@traycer/protocol/common/schemas";
+import type { AccountContext } from "@cic/protocol/common/schemas";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
@@ -7,15 +7,15 @@ import { createJSONStorage, persist } from "zustand/middleware";
  * `AccountContext` pattern from the VS Code extension (PERSONAL / ORG / TEAM),
  * minus ORG - this app only exposes the signed-in user and the teams they
  * belong to (`teamSubscriptions`). Drives which subscription the Settings →
- * Providers → Traycer panel shows AND, stamped onto `chatRunSettings`, which
- * account a Traycer run bills.
+ * Providers → CIC panel shows AND, stamped onto `chatRunSettings`, which
+ * account a CIC run bills.
  *
- * The shape is the canonical `AccountContext` from `@traycer/protocol`, so the
+ * The shape is the canonical `AccountContext` from `@cic/protocol`, so the
  * UI selector and the run-billing wire field can never drift.
  */
-export type { AccountContext } from "@traycer/protocol/common/schemas";
+export type { AccountContext } from "@cic/protocol/common/schemas";
 
-const ACCOUNT_CONTEXT_PERSIST_KEY = "traycer-gui-app:account-context:v1";
+const ACCOUNT_CONTEXT_PERSIST_KEY = "cic-gui-app:account-context:v1";
 
 interface AccountContextStoreState {
   readonly accountContext: AccountContext;

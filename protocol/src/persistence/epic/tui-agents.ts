@@ -76,7 +76,7 @@ export const codexTuiAgentSchema = z.object({
   // the first run of the CLI hands the host a thread id; reattach then
   // starts a fresh app-server and launches `codex resume <harnessSessionId>
   // --remote`. The renderer keys per-tab adapter state off `id` (the
-  // artifact id), so no separate Traycer-side stable key is needed.
+  // artifact id), so no separate CIC-side stable key is needed.
   harnessSessionId: z.string().nullable().catch(null),
 });
 export type CodexTuiAgent = z.infer<typeof codexTuiAgentSchema>;

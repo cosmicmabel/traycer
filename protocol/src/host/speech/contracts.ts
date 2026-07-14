@@ -7,8 +7,8 @@
  * downloaded" trigger. Schemas live in `./schemas.ts`.
  */
 import { z } from "zod";
-import { defineRpcContract } from "@traycer/protocol/framework/index";
-import { speechModelStatusSchema } from "@traycer/protocol/host/speech/schemas";
+import { defineRpcContract } from "@cic/protocol/framework/index";
+import { speechModelStatusSchema } from "@cic/protocol/host/speech/schemas";
 
 // `speech.getModelStatus@1.0` - reports whether the dictation model is present
 // on disk and, while downloading, how far along. `modelId: null` selects the

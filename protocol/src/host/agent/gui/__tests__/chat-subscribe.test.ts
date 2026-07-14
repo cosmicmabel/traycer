@@ -1,4 +1,4 @@
-import { commonRecordRegistry } from "@traycer/protocol/common/registry";
+import { commonRecordRegistry } from "@cic/protocol/common/registry";
 import {
   chatQueuedItemSchema,
   chatSubscribeClientFrameSchema,
@@ -7,14 +7,14 @@ import {
   chatSubscribeV11,
   chatSubscribeV12,
   chatSubscribeV13,
-} from "@traycer/protocol/host/agent/gui/subscribe";
-import { getRecordSchema } from "@traycer/protocol/framework/index";
-import { autonomousResumeTriggerSchema } from "@traycer/protocol/persistence/epic/content-blocks";
+} from "@cic/protocol/host/agent/gui/subscribe";
+import { getRecordSchema } from "@cic/protocol/framework/index";
+import { autonomousResumeTriggerSchema } from "@cic/protocol/persistence/epic/content-blocks";
 import type {
   Chat,
   ChatEvent,
   UserMessage,
-} from "@traycer/protocol/persistence/epic/schemas";
+} from "@cic/protocol/persistence/epic/schemas";
 import { describe, expect, it } from "vitest";
 
 const attachmentMentionNodeSchema = getRecordSchema(

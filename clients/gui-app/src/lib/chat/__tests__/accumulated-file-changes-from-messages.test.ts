@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { ChatAccumulatedFileChange } from "@traycer/protocol/host/agent/gui/subscribe";
+import type { ChatAccumulatedFileChange } from "@cic/protocol/host/agent/gui/subscribe";
 import { accumulatedFileChangesFromMessages } from "@/lib/chat/accumulated-file-changes-from-messages";
 import type {
   ChatMessage,

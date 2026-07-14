@@ -1,10 +1,10 @@
 import { useMemo } from "react";
-import type { HostClient } from "@traycer-clients/shared/host-client/host-client";
+import type { HostClient } from "@cic/shared/host-client/host-client";
 import type {
   WorktreeBinding,
   WorktreeBindingOwnerKind,
   WorktreeIntent,
-} from "@traycer/protocol/host/worktree-schemas";
+} from "@cic/protocol/host/worktree-schemas";
 import type { HostRpcRegistry } from "@/lib/host";
 import { buildOwnerWorkspaceInheritanceSeed } from "@/lib/worktree/owner-workspace-inheritance-seed";
 import type { ForkWorkspaceSeed } from "@/lib/worktree/fork-workspace-seed";

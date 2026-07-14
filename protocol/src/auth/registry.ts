@@ -2,7 +2,7 @@ import {
   defineRecordContract,
   defineVersionedRecordRegistry,
   type RecordValue,
-} from "@traycer/protocol/framework/index";
+} from "@cic/protocol/framework/index";
 import {
   authenticatedUserSchema,
   bundleSummarySchema,
@@ -29,7 +29,7 @@ import {
   updateMcpServerResponseSchema,
   userSchema,
   validateCouponResponseSchema,
-} from "@traycer/protocol/auth/_internal/schemas";
+} from "@cic/protocol/auth/_internal/schemas";
 
 /**
  * Auth wire DTO registry.

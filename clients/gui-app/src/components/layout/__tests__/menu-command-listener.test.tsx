@@ -22,7 +22,7 @@ import type {
   HostInstallResult,
   IHostManagement,
   IRunnerHost,
-} from "@traycer-clients/shared/platform/runner-host";
+} from "@cic/shared/platform/runner-host";
 import { MenuCommandListener } from "@/components/layout/bridges/menu-command-listener";
 import { RunnerHostProvider } from "@/providers/runner-host-provider";
 import { useDesktopDialogStore } from "@/stores/dialogs/desktop-dialog-store";
@@ -186,7 +186,7 @@ function createRunnerHost(menu: FakeDesktopMenu): FakeRunnerHost {
       onSystemResumed: () => ({ dispose: () => undefined }),
       requestHostRespawn: vi.fn(() => Promise.resolve()),
       service: null,
-      traycerCli: null,
+      cicCli: null,
       migration: null,
       hostManagement: null,
       hostTray: null,
@@ -529,7 +529,7 @@ describe("<MenuCommandListener />", () => {
     const installResult: HostInstallResult = {
       version: "1.2.3",
       installedAt: "2026-05-15T00:00:00Z",
-      executablePath: "/tmp/fake/traycerd",
+      executablePath: "/tmp/fake/cicd",
       source: { kind: "registry", value: "1.2.3" },
       archiveSha256: "",
       signatureKeyId: "",
@@ -548,7 +548,7 @@ describe("<MenuCommandListener />", () => {
       updateHost,
       uninstallHost: vi.fn(() => Promise.reject(new Error("not used"))),
       restartHost: vi.fn(() => Promise.resolve()),
-      uninstallTraycer: vi.fn(() => Promise.reject(new Error("not used"))),
+      uninstallCic: vi.fn(() => Promise.reject(new Error("not used"))),
       getRemovalState: vi.fn(() => Promise.resolve({ removedByUser: false })),
       clearRemoval: vi.fn(() => Promise.resolve()),
       getHostLogs: vi.fn(() => Promise.reject(new Error("not used"))),

@@ -17,21 +17,21 @@ interface NodeProcessLike {
   on(event: string, listener: (value: unknown) => void): void;
   listeners(event: string): ReadonlyArray<{ readonly name: string }>;
 }
-function traycerTestUnhandledRejection(reason: unknown): void {
+function cicTestUnhandledRejection(reason: unknown): void {
   console.error("[test] ignored unhandledRejection after teardown:", reason);
 }
-function traycerTestUncaughtException(error: unknown): void {
+function cicTestUncaughtException(error: unknown): void {
   console.error("[test] ignored uncaughtException after teardown:", error);
 }
 const nodeProcess = (globalThis as { process?: NodeProcessLike }).process;
 if (nodeProcess !== undefined) {
   const isRegistered = (event: string, name: string): boolean =>
     nodeProcess.listeners(event).some((listener) => listener.name === name);
-  if (!isRegistered("unhandledRejection", traycerTestUnhandledRejection.name)) {
-    nodeProcess.on("unhandledRejection", traycerTestUnhandledRejection);
+  if (!isRegistered("unhandledRejection", cicTestUnhandledRejection.name)) {
+    nodeProcess.on("unhandledRejection", cicTestUnhandledRejection);
   }
-  if (!isRegistered("uncaughtException", traycerTestUncaughtException.name)) {
-    nodeProcess.on("uncaughtException", traycerTestUncaughtException);
+  if (!isRegistered("uncaughtException", cicTestUncaughtException.name)) {
+    nodeProcess.on("uncaughtException", cicTestUncaughtException);
   }
 }
 

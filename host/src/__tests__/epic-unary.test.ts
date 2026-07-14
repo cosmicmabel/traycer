@@ -4,9 +4,9 @@ import * as Y from "yjs";
 import {
   hostRpcRegistry,
   hostStreamRpcRegistry,
-} from "@traycer/protocol/host/registry";
-import { buildStreamManifest } from "@traycer/protocol/framework/stream-compat";
-import { hostFrameSchema } from "@traycer/protocol/framework/ws-protocol";
+} from "@cic/protocol/host/registry";
+import { buildStreamManifest } from "@cic/protocol/framework/stream-compat";
+import { hostFrameSchema } from "@cic/protocol/framework/ws-protocol";
 import { startOpenHostServer, type RunningOpenHost } from "../server";
 import { RegistryRuntime } from "../registry-runtime";
 
@@ -453,8 +453,8 @@ describe("epic unary surface", () => {
   it("stamps repo/workspace associations and batch-deletes epics", async () => {
     const create = await callRpc("epic.create", {
       epic: epicLight("epic-u4", "Associated epic"),
-      repoIdentifiers: [{ owner: "cosmicmabel", repo: "traycer" }],
-      workspaces: [{ workspacePath: "/home/user/traycer" }],
+      repoIdentifiers: [{ owner: "cosmicmabel", repo: "cic" }],
+      workspaces: [{ workspacePath: "/home/user/cic" }],
       chat: null,
     });
     expect(create.error).toBeNull();
@@ -464,11 +464,11 @@ describe("epic unary surface", () => {
           repos: [
             {
               task: { taskId: "epic-u4", taskType: "epic" },
-              repoIdentifier: { owner: "cosmicmabel", repo: "traycer" },
+              repoIdentifier: { owner: "cosmicmabel", repo: "cic" },
             },
           ],
           workspaces: [
-            { workspacePath: "/home/user/traycer", hostId: "open-host" },
+            { workspacePath: "/home/user/cic", hostId: "open-host" },
           ],
         },
       },

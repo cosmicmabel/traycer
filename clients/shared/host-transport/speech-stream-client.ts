@@ -2,8 +2,8 @@ import {
   speechDictateServerFrameSchema,
   type SpeechDictateClientFrame,
   type SpeechDictateServerFrame,
-} from "@traycer/protocol/host/speech/subscribe";
-import type { HostStreamRpcRegistry } from "@traycer/protocol/host/registry";
+} from "@cic/protocol/host/speech/subscribe";
+import type { HostStreamRpcRegistry } from "@cic/protocol/host/registry";
 import type {
   IStreamSession,
   StreamCloseReason,

@@ -1,9 +1,9 @@
-import type { WsStreamClient } from "@traycer-clients/shared/host-transport/ws-stream-client";
-import type { HostStreamRpcRegistry } from "@traycer/protocol/host/registry";
-import type { BearerSourceProvider } from "@traycer-clients/shared/auth/bearer-source";
-import type { HostEndpointProvider } from "@traycer-clients/shared/host-transport/ws-rpc-client";
-import type { StreamAuthRevalidator } from "@traycer-clients/shared/auth/bearer-revalidator";
-import type { IRunnerHost } from "@traycer-clients/shared/platform/runner-host";
+import type { WsStreamClient } from "@cic/shared/host-transport/ws-stream-client";
+import type { HostStreamRpcRegistry } from "@cic/protocol/host/registry";
+import type { BearerSourceProvider } from "@cic/shared/auth/bearer-source";
+import type { HostEndpointProvider } from "@cic/shared/host-transport/ws-rpc-client";
+import type { StreamAuthRevalidator } from "@cic/shared/auth/bearer-revalidator";
+import type { IRunnerHost } from "@cic/shared/platform/runner-host";
 import { buildHostStreamClient } from "@/hooks/host/use-host-stream-client-for";
 import { subscribeStreamWakeReconnect } from "@/lib/host/stream-wake-reconnect";
 import { appLogger } from "@/lib/logger";

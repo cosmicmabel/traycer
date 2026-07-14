@@ -1,5 +1,5 @@
-import type { ChatEvent } from "@traycer/protocol/persistence/epic/schemas";
-import type { WorktreeBindingOwnerKind } from "@traycer/protocol/host/worktree-schemas";
+import type { ChatEvent } from "@cic/protocol/persistence/epic/schemas";
+import type { WorktreeBindingOwnerKind } from "@cic/protocol/host/worktree-schemas";
 import {
   readMetadataNumber,
   readMetadataString,

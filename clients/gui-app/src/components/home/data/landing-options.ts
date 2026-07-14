@@ -9,8 +9,8 @@ import {
   type AgentReasoningEffortOption,
   type AgentServiceTierOption,
   type AgentMode as ProtocolAgentMode,
-} from "@traycer/protocol/host/index";
-import type { TuiHarnessId } from "@traycer/protocol/persistence/epic/schemas";
+} from "@cic/protocol/host/index";
+import type { TuiHarnessId } from "@cic/protocol/persistence/epic/schemas";
 import {
   Code2,
   FileCheck2,
@@ -175,7 +175,7 @@ const REGULAR_AGENT_MODE_OPTION = {
   id: "regular",
   label: "Regular Mode",
   shortLabel: "Regular",
-  description: "Native coding agent experience with Traycer flavour.",
+  description: "Native coding agent experience with CIC flavour.",
   icon: Code2,
 } satisfies AgentModeOption;
 
@@ -183,7 +183,7 @@ const EPIC_AGENT_MODE_OPTION = {
   id: "epic",
   label: "Epic Mode",
   shortLabel: "Epic",
-  description: "Traycer Planning experience",
+  description: "CIC Planning experience",
   icon: Layers,
 } satisfies AgentModeOption;
 

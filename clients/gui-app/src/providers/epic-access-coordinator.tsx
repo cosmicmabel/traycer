@@ -1,7 +1,7 @@
 import { use, useEffect, useRef } from "react";
 import { useNavigate, useRouterState } from "@tanstack/react-router";
 import { QueryClientContext } from "@tanstack/react-query";
-import type { EpicDeletedAttribution } from "@traycer-clients/shared/host-transport/epic-stream-client";
+import type { EpicDeletedAttribution } from "@cic/shared/host-transport/epic-stream-client";
 import { removeDeletedEpicsFromCloudTaskCaches } from "@/lib/cloud-epic-tasks-query/cache";
 import { epicAccessToast } from "@/lib/toast/channels";
 import { subscribeDeletedEpicNotifications } from "@/lib/epics/deleted-epic-events";

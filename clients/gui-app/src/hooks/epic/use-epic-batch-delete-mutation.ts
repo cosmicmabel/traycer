@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import type {
   HostRpcError,
   ResponseOfMethod,
-} from "@traycer-clients/shared/host-transport/host-messenger";
+} from "@cic/shared/host-transport/host-messenger";
 import { useHostClient, type HostRpcRegistry } from "@/lib/host";
 import { useHostMutation } from "@/hooks/host/use-host-query";
 import { hostQueryKeys, epicMutationKeys } from "@/lib/query-keys";

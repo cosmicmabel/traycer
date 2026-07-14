@@ -1,5 +1,5 @@
-import type { WsStreamClient } from "@traycer-clients/shared/host-transport/ws-stream-client";
-import type { HostStreamRpcRegistry } from "@traycer/protocol/host/registry";
+import type { WsStreamClient } from "@cic/shared/host-transport/ws-stream-client";
+import type { HostStreamRpcRegistry } from "@cic/protocol/host/registry";
 import type { DurableStreamTransport } from "@/lib/host/durable-stream-transport";
 import { appLogger } from "@/lib/logger";
 

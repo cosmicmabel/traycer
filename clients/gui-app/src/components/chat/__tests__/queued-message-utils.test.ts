@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { ChatQueuedItem } from "@traycer/protocol/host/agent/gui/subscribe";
+import type { ChatQueuedItem } from "@cic/protocol/host/agent/gui/subscribe";
 import { queueItemCanPauseFromQueueHeader } from "@/components/chat/queued-message-utils";
 
 const TEST_SETTINGS = {

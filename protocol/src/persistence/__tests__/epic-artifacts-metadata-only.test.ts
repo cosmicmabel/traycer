@@ -16,7 +16,7 @@ import {
   specArtifactSchema,
   storyArtifactSchema,
   ticketArtifactSchema,
-} from "@traycer/protocol/persistence/epic/artifacts";
+} from "@cic/protocol/persistence/epic/artifacts";
 
 const BASE_ARTIFACT_FIELDS = {
   id: "art-1",

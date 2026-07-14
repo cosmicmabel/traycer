@@ -3,8 +3,8 @@ import type {
   EpicMentionSuggestion,
   WorkspaceMentionGitType,
   WorkspaceMentionSuggestion,
-} from "@traycer/protocol/host/index";
-import type { EpicArtifactKind } from "@traycer/protocol/common/registry";
+} from "@cic/protocol/host/index";
+import type { EpicArtifactKind } from "@cic/protocol/common/registry";
 import type { MentionPathTree } from "@/lib/path";
 
 export type PathKind = "file" | "folder";

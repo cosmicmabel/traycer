@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { AgentSender } from "@traycer/protocol/persistence/epic/schemas";
+import type { AgentSender } from "@cic/protocol/persistence/epic/schemas";
 import {
   agentModelKey,
   resolveAgentReasoningLabel,

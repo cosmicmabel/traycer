@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { toast } from "sonner";
-import type { ChatErrorNotice } from "@traycer/protocol/host/agent/gui/subscribe";
+import type { ChatErrorNotice } from "@cic/protocol/host/agent/gui/subscribe";
 import { addWithFifoEviction } from "@/lib/bounded-set";
 import { useActivePaneEffect } from "@/components/epic-tabs/pane-visibility-context";
 import {

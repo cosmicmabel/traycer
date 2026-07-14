@@ -16,8 +16,8 @@ describe("formatAgentMessage", () => {
       }),
     ).toBe(
       [
-        "[traycer:agent-message] from Review Agent (agent agent-1) [codex]",
-        '[traycer:agent-message] A reply is expected. Use the traycer_send_message tool to reply with responseId="response-1".',
+        "[cic:agent-message] from Review Agent (agent agent-1) [codex]",
+        '[cic:agent-message] A reply is expected. Use the cic_send_message tool to reply with responseId="response-1".',
         "",
         "Please review this.",
       ].join("\n"),
@@ -38,8 +38,8 @@ describe("formatAgentMessage", () => {
       }),
     ).toBe(
       [
-        "[traycer:agent-message] from agent agent-1",
-        '[traycer:agent-message] A reply is expected. Use the traycer_send_message tool to reply with responseId="response-1".',
+        "[cic:agent-message] from agent agent-1",
+        '[cic:agent-message] A reply is expected. Use the cic_send_message tool to reply with responseId="response-1".',
         "",
         "Please review this.",
       ].join("\n"),
@@ -61,11 +61,11 @@ describe("formatAgentMessage", () => {
     ).toBe(
       [
         "",
-        "[traycer inbox] message from Review Agent (agent agent-1) [claude]",
+        "[cic inbox] message from Review Agent (agent agent-1) [claude]",
         "",
         "Context only.",
-        "[traycer inbox] ─── end of message ───",
-        "[traycer inbox] if the message above looks cut off, read it in full with: traycer agent inbox",
+        "[cic inbox] ─── end of message ───",
+        "[cic inbox] if the message above looks cut off, read it in full with: cic agent inbox",
       ].join("\n"),
     );
   });
@@ -85,12 +85,12 @@ describe("formatAgentMessage", () => {
     ).toBe(
       [
         "",
-        "[traycer inbox] message from agent agent-1 — responseId response-1",
-        '[traycer inbox] a reply is expected — reply with: traycer agent send --to agent-1 --response-id response-1 --message "<your reply>"',
+        "[cic inbox] message from agent agent-1 — responseId response-1",
+        '[cic inbox] a reply is expected — reply with: cic agent send --to agent-1 --response-id response-1 --message "<your reply>"',
         "",
         "Please review this.",
-        "[traycer inbox] ─── end of message ───",
-        "[traycer inbox] if the message above looks cut off, read it in full with: traycer agent inbox",
+        "[cic inbox] ─── end of message ───",
+        "[cic inbox] if the message above looks cut off, read it in full with: cic agent inbox",
       ].join("\n"),
     );
   });

@@ -1,7 +1,7 @@
 import "../../../../../__tests__/test-browser-apis";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
-import type { WorktreeFolderIntent } from "@traycer/protocol/host/worktree-schemas";
+import type { WorktreeFolderIntent } from "@cic/protocol/host/worktree-schemas";
 import { WorkspaceFolderHoverList } from "../workspace-folder-hover-list";
 
 const NOOP = (): void => undefined;
@@ -27,7 +27,7 @@ function folder(over: {
     hoverLabel: over.displayPath,
     summary: null,
     currentIntent: over.currentIntent,
-    defaultNewBranchName: "traycer/swift-otter",
+    defaultNewBranchName: "cic/swift-otter",
     repoIdentifier: null,
     isPrimary: true,
     hostClient: null,
@@ -52,9 +52,9 @@ describe("WorkspaceFolderHoverList", () => {
         items={[
           folder({
             key: "/a",
-            displayName: "traycer",
+            displayName: "cic",
             branchLabel: "main",
-            displayPath: "/Users/me/Work/traycer",
+            displayPath: "/Users/me/Work/cic",
             mode: "local",
             currentIntent: null,
           }),
@@ -69,17 +69,17 @@ describe("WorkspaceFolderHoverList", () => {
               workspacePath: "/Users/me/Work/infra",
               repoIdentifier: null,
               isPrimary: true,
-              worktreePath: "/Users/me/.traycer/worktrees/infra/feat-login",
+              worktreePath: "/Users/me/.cic/worktrees/infra/feat-login",
             },
           }),
         ]}
       />,
     );
     // Local → the source folder path.
-    expect(screen.getByText("/Users/me/Work/traycer")).toBeTruthy();
+    expect(screen.getByText("/Users/me/Work/cic")).toBeTruthy();
     // Worktree (adopted) → the worktree path, NOT the source folder.
     expect(
-      screen.getByText("/Users/me/.traycer/worktrees/infra/feat-login"),
+      screen.getByText("/Users/me/.cic/worktrees/infra/feat-login"),
     ).toBeTruthy();
     expect(screen.queryByText("/Users/me/Work/infra")).toBeNull();
     expect(screen.getAllByLabelText("Copy folder path")).toHaveLength(2);
@@ -91,9 +91,9 @@ describe("WorkspaceFolderHoverList", () => {
         items={[
           folder({
             key: "/a",
-            displayName: "traycer",
-            branchLabel: "traycer/new-thing",
-            displayPath: "/Users/me/Work/traycer",
+            displayName: "cic",
+            branchLabel: "cic/new-thing",
+            displayPath: "/Users/me/Work/cic",
             mode: "worktree",
             currentIntent: null,
           }),
@@ -102,7 +102,7 @@ describe("WorkspaceFolderHoverList", () => {
     );
     expect(screen.getByText(/New worktree/)).toBeTruthy();
     // The source folder path and a copy button are not shown — there's no path yet.
-    expect(screen.queryByText("/Users/me/Work/traycer")).toBeNull();
+    expect(screen.queryByText("/Users/me/Work/cic")).toBeNull();
     expect(screen.queryByLabelText("Copy folder path")).toBeNull();
   });
 
@@ -117,9 +117,9 @@ describe("WorkspaceFolderHoverList", () => {
         items={[
           folder({
             key: "/a",
-            displayName: "traycer",
+            displayName: "cic",
             branchLabel: "main",
-            displayPath: "/Users/me/Work/traycer",
+            displayPath: "/Users/me/Work/cic",
             mode: "local",
             currentIntent: null,
           }),
@@ -127,6 +127,6 @@ describe("WorkspaceFolderHoverList", () => {
       />,
     );
     fireEvent.click(screen.getByLabelText("Copy folder path"));
-    expect(writeText).toHaveBeenCalledWith("/Users/me/Work/traycer");
+    expect(writeText).toHaveBeenCalledWith("/Users/me/Work/cic");
   });
 });

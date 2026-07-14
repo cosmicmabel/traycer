@@ -14,7 +14,7 @@ export interface RouterWithHistory {
 
 /**
  * Reactive subscription to the router's pathname. Used by the gate-bypass
- * decision in `TraycerAppRouter` so all gates re-evaluate on every
+ * decision in `CicAppRouter` so all gates re-evaluate on every
  * navigation, including programmatic `router.navigate(...)` (which
  * `popstate` does not fire on).
  */

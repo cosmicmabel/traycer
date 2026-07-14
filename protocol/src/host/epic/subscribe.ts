@@ -53,7 +53,7 @@
 import { z } from "zod";
 import {
   defineStreamRpcContract,
-} from "@traycer/protocol/framework/versioned-stream-rpc";
+} from "@cic/protocol/framework/versioned-stream-rpc";
 
 /**
  * Awareness state field under which each host publishes the ids of its
@@ -64,8 +64,8 @@ import {
  * here so writer and reader cannot drift.
  */
 export const AGENT_WORKING_AWARENESS_FIELD = "agentWorking";
-import { getRecordSchema } from "@traycer/protocol/framework/index";
-import { commonRecordRegistry } from "@traycer/protocol/common/registry";
+import { getRecordSchema } from "@cic/protocol/framework/index";
+import { commonRecordRegistry } from "@cic/protocol/common/registry";
 
 const permissionRoleSchema = getRecordSchema(
   commonRecordRegistry,
@@ -73,7 +73,7 @@ const permissionRoleSchema = getRecordSchema(
 import {
   earlyMetaEpicSchema,
   snapshotMetaEpicSchema,
-} from "@traycer/protocol/host/epic/snapshot-meta";
+} from "@cic/protocol/host/epic/snapshot-meta";
 
 export const epicSubscribeOpenRequestSchema = z.object({
   epicId: z.string(),
@@ -281,7 +281,7 @@ export const epicSubscribeServerFrameSchema = z.discriminatedUnion("kind", [
     kind: z.literal("epicDeleted"),
     epicId: z.string(),
     deletedByDisplayName: z.string().nullable(),
-    deletedByTraycerUserId: z.string().nullable(),
+    deletedByCicUserId: z.string().nullable(),
     hasBinaryPayload: z.literal(false),
   }),
 ]);

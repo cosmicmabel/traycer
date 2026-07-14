@@ -16,13 +16,13 @@
  * NOT reach into the Y.Doc directly except through
  * `OpenEpicState.getArtifactFragment(id)` - the editor escape hatch.
  */
-import type { EpicArtifactKind } from "@traycer/protocol/common/registry";
+import type { EpicArtifactKind } from "@cic/protocol/common/registry";
 import type {
   AgentMode,
   ChatRunSettings,
   TuiHarnessId,
-} from "@traycer/protocol/persistence/epic/schemas";
-import type { WorktreeBindingWorkspaceMode } from "@traycer/protocol/host/worktree-schemas";
+} from "@cic/protocol/persistence/epic/schemas";
+import type { WorktreeBindingWorkspaceMode } from "@cic/protocol/host/worktree-schemas";
 
 export type EpicTreeNodeType = "chat" | "terminal-agent" | EpicArtifactKind;
 

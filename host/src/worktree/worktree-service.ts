@@ -11,7 +11,7 @@ import {
   type WorktreeListByWorkspacePathsResponseV11,
   type WorktreeScriptsAtRef,
   type WorktreeWorkspaceSummary,
-} from "@traycer/protocol/host/worktree-schemas";
+} from "@cic/protocol/host/worktree-schemas";
 import { runGit } from "../git/git-exec";
 import { hostHomeDir } from "../pid-file";
 import { parseRepoIdentifierFromRemoteUrl } from "../workspace/workspace-service";
@@ -92,12 +92,12 @@ async function readScriptsAt(
 ): Promise<WorkspaceScripts | null> {
   const raw =
     ref === null
-      ? await readFile(join(workspacePath, ".traycer", "environment.json"), {
+      ? await readFile(join(workspacePath, ".cic", "environment.json"), {
           encoding: "utf8",
         }).catch(() => null)
       : await runGit(
           workspacePath,
-          ["show", `${ref}:.traycer/environment.json`],
+          ["show", `${ref}:.cic/environment.json`],
           OK,
         );
   if (raw === null) {

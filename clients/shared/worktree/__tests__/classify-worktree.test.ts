@@ -3,7 +3,7 @@ import type {
   WorktreeBranchStatus,
   WorktreeHostEntryV11,
   WorktreeSubmoduleMergeFact,
-} from "@traycer/protocol/host/index";
+} from "@cic/protocol/host/index";
 import {
   WORKTREE_TIER_ORDER,
   classifyWorktree,
@@ -11,7 +11,7 @@ import {
   provenRemovable,
   worktreeTierRank,
   type WorktreeTier,
-} from "@traycer-clients/shared/worktree/classify-worktree";
+} from "@cic/shared/worktree/classify-worktree";
 
 function status(over: Partial<WorktreeBranchStatus>): WorktreeBranchStatus {
   return { ahead: 0, behind: 0, mergedIntoDefault: false, ...over };

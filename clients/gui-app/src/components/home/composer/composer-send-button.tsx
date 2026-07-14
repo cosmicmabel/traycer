@@ -2,7 +2,7 @@ import { ArrowUp, Square } from "lucide-react";
 import { memo, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";
-import type { ChatActiveTurn } from "@traycer/protocol/host/agent/gui/subscribe";
+import type { ChatActiveTurn } from "@cic/protocol/host/agent/gui/subscribe";
 import { cn } from "@/lib/utils";
 
 interface ComposerSendButtonProps {

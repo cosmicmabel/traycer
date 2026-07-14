@@ -31,7 +31,7 @@
  * - `ping` - heartbeat. No application client frames.
  */
 import { z } from "zod";
-import { defineStreamRpcContract } from "@traycer/protocol/framework/versioned-stream-rpc";
+import { defineStreamRpcContract } from "@cic/protocol/framework/versioned-stream-rpc";
 
 export const migrationRunOpenRequestSchema = z.object({});
 export type MigrationRunOpenRequest = z.infer<

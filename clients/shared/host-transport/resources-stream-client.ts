@@ -5,8 +5,8 @@ import {
   type OwnerResourceSnapshotWire,
   type ResourcesSubscribeOpenRequestV11,
   type ResourcesSubscribeServerFrame,
-} from "@traycer/protocol/host/resources/subscribe";
-import type { HostStreamRpcRegistry } from "@traycer/protocol/host/registry";
+} from "@cic/protocol/host/resources/subscribe";
+import type { HostStreamRpcRegistry } from "@cic/protocol/host/registry";
 import type {
   IStreamSession,
   StreamCloseReason,

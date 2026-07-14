@@ -3,7 +3,7 @@ import {
   DEFAULT_GIT_FILE_DIFF_BYTE_BUDGET,
   type GitGetFileDiffResponse,
   type GitStage,
-} from "@traycer/protocol/host";
+} from "@cic/protocol/host";
 import { gitQueryKeys } from "@/lib/query-keys/git-query-keys";
 
 interface BatchedDiffRequestFile {

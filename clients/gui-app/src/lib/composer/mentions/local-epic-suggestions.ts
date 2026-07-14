@@ -1,9 +1,9 @@
 import type {
   EpicMentionEpicSuggestion,
   TaskLight,
-} from "@traycer/protocol/host/epic/unary-schemas";
-import type { EpicLight } from "@traycer/protocol/host/epic/unary-schemas";
-import { isSubsequence } from "@traycer/protocol/utils/text/fuzzy";
+} from "@cic/protocol/host/epic/unary-schemas";
+import type { EpicLight } from "@cic/protocol/host/epic/unary-schemas";
+import { isSubsequence } from "@cic/protocol/utils/text/fuzzy";
 import {
   isTaskMentionAliasQuery,
   taskMentionDisplayTitle,

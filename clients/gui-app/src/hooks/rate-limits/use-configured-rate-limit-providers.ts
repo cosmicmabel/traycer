@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import type { ProviderCliState } from "@traycer/protocol/host/provider-schemas";
+import type { ProviderCliState } from "@cic/protocol/host/provider-schemas";
 import { useHostQueriesWithResponseMap } from "@/hooks/host/use-host-queries";
 import {
   providerRateLimitQueryOptions,

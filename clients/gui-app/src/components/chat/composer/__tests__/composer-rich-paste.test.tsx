@@ -2,7 +2,7 @@ import "../../../../../__tests__/test-browser-apis";
 import { fireEvent } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
 import { Editor } from "@tiptap/core";
-import type { JsonContent } from "@traycer/protocol/common/registry";
+import type { JsonContent } from "@cic/protocol/common/registry";
 
 import {
   buildComposerClipboardHtml,
@@ -65,7 +65,7 @@ afterEach(() => {
 });
 
 describe("composer rich clipboard paste", () => {
-  it("pastes Traycer composer clipboard HTML as structured editor content", () => {
+  it("pastes CIC composer clipboard HTML as structured editor content", () => {
     const editor = makeEditor(KNOWN_SLASH_NAMES);
     const html = buildComposerClipboardHtml(
       STRUCTURED_CONTENT,

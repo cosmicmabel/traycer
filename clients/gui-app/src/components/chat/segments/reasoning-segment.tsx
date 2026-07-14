@@ -2,7 +2,7 @@ import { Shimmer } from "@/components/ui/shimmer";
 import { useChatMeasuredBooleanToggle } from "@/components/chat/chat-measured-item-change-context";
 import { formatClockDuration } from "@/lib/format-duration";
 import { cn } from "@/lib/utils";
-import { TraycerMarkdown } from "@/markdown";
+import { CicMarkdown } from "@/markdown";
 import { Brain, ChevronRight } from "lucide-react";
 import {
   useCallback,
@@ -43,7 +43,7 @@ function ReasoningContent(props: ReasoningContentProps) {
   const { className, markdown, isStreaming } = props;
   return (
     <div className={className}>
-      <TraycerMarkdown
+      <CicMarkdown
         className={MUTED_PROSE}
         proseSize="compact"
         components={null}
@@ -53,7 +53,7 @@ function ReasoningContent(props: ReasoningContentProps) {
         isStreaming={isStreaming}
       >
         {markdown}
-      </TraycerMarkdown>
+      </CicMarkdown>
     </div>
   );
 }

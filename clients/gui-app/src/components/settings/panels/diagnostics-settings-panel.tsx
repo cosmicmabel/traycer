@@ -23,7 +23,7 @@ import type {
 
 const LOG_TAIL_LINES = 100;
 const PANEL_DESCRIPTION =
-  "Log verbosity for each Traycer component on this machine, plus recent log output. All default to Info — raise a level to Debug when capturing a problem for support, then set it back.";
+  "Log verbosity for each CIC component on this machine, plus recent log output. All default to Info — raise a level to Debug when capturing a problem for support, then set it back.";
 
 export function DiagnosticsSettingsPanel() {
   // Every part of this panel (config + log files) is desktop-only; on the web
@@ -48,7 +48,7 @@ export function DiagnosticsSettingsPanel() {
       <LogLevelRow
         scope="cli"
         label="CLI log level"
-        description="Verbosity of the bundled Traycer CLI's logs."
+        description="Verbosity of the bundled CIC CLI's logs."
       />
       <LogLevelRow
         scope="host"

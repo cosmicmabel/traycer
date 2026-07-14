@@ -15,9 +15,9 @@ import {
 } from "@floating-ui/dom";
 import type { Editor } from "@tiptap/core";
 import type { Transaction } from "@tiptap/pm/state";
-import type { JsonContent } from "@traycer/protocol/common/registry";
-import { type EpicArtifactKind } from "@traycer/protocol/common/registry";
-import type { CreateCommentThreadResponse } from "@traycer/protocol/host/epic/unary-schemas";
+import type { JsonContent } from "@cic/protocol/common/registry";
+import { type EpicArtifactKind } from "@cic/protocol/common/registry";
+import type { CreateCommentThreadResponse } from "@cic/protocol/host/epic/unary-schemas";
 import { cn } from "@/lib/utils";
 import {
   useCommentThreadsStore,

@@ -10,8 +10,8 @@ import {
 } from "vitest";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import type { ProviderRateLimits } from "@traycer/protocol/host";
-import type { AuthenticatedUser } from "@traycer/protocol/auth";
+import type { ProviderRateLimits } from "@cic/protocol/host";
+import type { AuthenticatedUser } from "@cic/protocol/auth";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Popover, PopoverTrigger } from "@/components/ui/popover";
 import { useAccountContextStore } from "@/stores/auth/account-context-store";

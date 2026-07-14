@@ -8,7 +8,7 @@ import type {
   HarnessOption,
   ProviderId,
 } from "@/components/home/data/landing-options";
-import type { GuiHarnessId } from "@traycer/protocol/host/index";
+import type { GuiHarnessId } from "@cic/protocol/host/index";
 import type { GuiHarnessCatalogEntry } from "@/hooks/harnesses/use-gui-harness-catalog";
 import type { HarnessModelRow } from "@/components/home/data/harness-model-search";
 import type { VirtuosoHandle } from "react-virtuoso";

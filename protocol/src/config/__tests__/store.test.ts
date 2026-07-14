@@ -3,7 +3,7 @@ import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-// Redirect `~/.traycer/cli/config.json` to a per-test temp home by mocking
+// Redirect `~/.cic/cli/config.json` to a per-test temp home by mocking
 // `os.homedir()` (paths.ts derives the config path from it). `os.platform()`
 // stays real so the OS-default shell logic is exercised honestly.
 const h = vi.hoisted(() => ({ home: "" }));
@@ -32,7 +32,7 @@ import {
 import { CLI_CONFIG_VERSION } from "../schema";
 
 beforeEach(async () => {
-  h.home = await mkdtemp(join(tmpdir(), "traycer-cli-config-"));
+  h.home = await mkdtemp(join(tmpdir(), "cic-cli-config-"));
 });
 
 async function writeRaw(contents: string): Promise<void> {

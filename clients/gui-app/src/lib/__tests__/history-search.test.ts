@@ -10,7 +10,7 @@ describe("history search params", () => {
   it("parses typed history params and defaults active search to relevance", () => {
     const search = parseHistorySearch({
       historyQuery: "  api  ",
-      historyRepos: ["traycer/server", " traycer/gui-app "],
+      historyRepos: ["cic/server", " cic/gui-app "],
       historyRepoMode: "all",
       historyWorkspaces: [
         "host-1:%2FUsers%2Fme%2Fgui-app",
@@ -22,7 +22,7 @@ describe("history search params", () => {
 
     expect(search).toEqual({
       query: "  api  ",
-      repos: ["traycer/gui-app", "traycer/server"],
+      repos: ["cic/gui-app", "cic/server"],
       repoMode: "all",
       workspaces: [{ hostId: "host-1", workspacePath: "/Users/me/gui-app" }],
       workspaceMode: "all",
@@ -50,7 +50,7 @@ describe("history search params", () => {
       clearHistorySearchParams({
         focusedAt: 1,
         historyQuery: "api",
-        historyRepos: ["traycer/gui-app"],
+        historyRepos: ["cic/gui-app"],
         historyRepoMode: "all",
         historyWorkspaces: ["host-1:%2FUsers%2Fme%2Fgui-app"],
         historyWorkspaceMode: "all",

@@ -1,6 +1,6 @@
 import { keepPreviousData } from "@tanstack/react-query";
-import type { HostRpcError } from "@traycer-clients/shared/host-transport/host-messenger";
-import type { EpicMentionSuggestion } from "@traycer/protocol/host/index";
+import type { HostRpcError } from "@cic/shared/host-transport/host-messenger";
+import type { EpicMentionSuggestion } from "@cic/protocol/host/index";
 import type { HostRpcRegistry } from "@/lib/host";
 import { useHostBinding } from "@/lib/host";
 import { useHostQueries } from "@/hooks/host/use-host-queries";

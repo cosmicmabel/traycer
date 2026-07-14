@@ -1,5 +1,5 @@
 name: Bug report
-description: Report a problem with the CLI, desktop/mobile app, or protocol
+description: Report a problem with the web app, host server, or protocol
 labels: ["bug", "triage"]
 body:
   - type: markdown
@@ -10,25 +10,18 @@ body:
     attributes:
       label: Component
       options:
-        - CLI (@traycerai/cli)
-        - Desktop app
-        - Protocol (@traycer/protocol)
+        - Web app (clients/web)
+        - Host server (host/)
+        - GUI (clients/gui-app)
+        - Protocol (protocol/)
         - Other / not sure
-    validations:
-      required: true
-  - type: input
-    id: version
-    attributes:
-      label: Version
-      description: "Output of `traycer --version` (or the app version)"
-      placeholder: "e.g. 1.2.3"
     validations:
       required: true
   - type: input
     id: os
     attributes:
       label: OS / platform
-      placeholder: "e.g. macOS 15 (arm64), Windows 11, Ubuntu 24.04"
+      placeholder: "e.g. Ubuntu 24.04, macOS 15 (arm64)"
     validations:
       required: true
   - type: textarea
@@ -43,7 +36,7 @@ body:
     attributes:
       label: Steps to reproduce
       placeholder: |
-        1. Run `traycer ...`
+        1. Start the host with `bun host/src/index.ts ...`
         2. ...
     validations:
       required: true

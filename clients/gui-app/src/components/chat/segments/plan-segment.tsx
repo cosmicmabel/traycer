@@ -16,8 +16,8 @@ import type { UseQueryResult } from "@tanstack/react-query";
 import type {
   HostRpcError,
   ResponseOfMethod,
-} from "@traycer-clients/shared/host-transport/host-messenger";
-import { guiHarnessIdSchema } from "@traycer/protocol/host/index";
+} from "@cic/shared/host-transport/host-messenger";
+import { guiHarnessIdSchema } from "@cic/protocol/host/index";
 import { HarnessIcon } from "@/components/home/pickers/harness-icon";
 import { AgentSpinningDots } from "@/components/ui/agent-spinning-dots";
 import { Button } from "@/components/ui/button";
@@ -35,7 +35,7 @@ import {
 import type { HostRpcRegistry } from "@/lib/host";
 import { useAgentPlanQuery } from "@/hooks/agent/use-agent-plan-query";
 import { useClipboardCopy } from "@/hooks/ui/use-clipboard-copy";
-import { TraycerMarkdown } from "@/markdown";
+import { CicMarkdown } from "@/markdown";
 import { useResolvedTheme } from "@/providers/use-resolved-theme";
 import type { PlanSegmentModel } from "@/stores/composer/chat-store";
 import {
@@ -272,7 +272,7 @@ function PlanModal(props: {
               Full plan content is unavailable. Showing the saved preview.
             </div>
           ) : null}
-          <TraycerMarkdown
+          <CicMarkdown
             className={null}
             proseSize="normal"
             components={null}
@@ -282,7 +282,7 @@ function PlanModal(props: {
             isStreaming={false}
           >
             {modalBody}
-          </TraycerMarkdown>
+          </CicMarkdown>
         </div>
         <DialogFooter className="sticky bottom-0 mx-0 mb-0 flex-col gap-2 rounded-none border-t border-border/40 bg-popover/95 px-5 py-3 backdrop-blur supports-backdrop-filter:bg-popover/80 sm:flex-row sm:items-center sm:justify-between">
           <PlanCopyButton markdown={modalMarkdown} />

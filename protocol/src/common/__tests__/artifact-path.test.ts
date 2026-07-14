@@ -8,7 +8,7 @@ import {
 /**
  * The single home for the `epics/<epicId>/artifacts/<chain>/index.md`
  * root-agnostic scanner (TKT-03). Previously copy-pasted in the host (the
- * external Traycer Host) and the gui-app's `artifact-link-path.ts`; both
+ * external CIC Host) and the gui-app's `artifact-link-path.ts`; both
  * now consume this, so resolution semantics MUST stay identical across the host
  * RPC resolver and the client pre-check.
  */
@@ -19,7 +19,7 @@ describe("deriveArtifactPathLayoutRootAgnostic - pinned epicId (host RPC)", () =
   it("derives a top-level artifact regardless of leading root", () => {
     expect(
       deriveArtifactPathLayoutRootAgnostic(
-        `/home/tgill/.traycer/epics/${EPIC}/artifacts/my-spec/index.md`,
+        `/home/tgill/.cic/epics/${EPIC}/artifacts/my-spec/index.md`,
         EPIC,
       ),
     ).toEqual({ epicId: EPIC, folderName: "my-spec", parentSegments: [] });
@@ -53,7 +53,7 @@ describe("deriveArtifactPathLayoutRootAgnostic - pinned epicId (host RPC)", () =
   it("splits Windows separators so a Windows path resolves on POSIX", () => {
     expect(
       deriveArtifactPathLayoutRootAgnostic(
-        `C:\\Users\\them\\.traycer\\epics\\${EPIC}\\artifacts\\my-spec\\index.md`,
+        `C:\\Users\\them\\.cic\\epics\\${EPIC}\\artifacts\\my-spec\\index.md`,
         EPIC,
       ),
     ).toEqual({ epicId: EPIC, folderName: "my-spec", parentSegments: [] });
@@ -100,7 +100,7 @@ describe("deriveArtifactPathLayoutRootAgnostic - unpinned (client pre-check)", (
   it("lifts the epicId from a foreign-root path the local host never wrote (C1)", () => {
     expect(
       deriveArtifactPathLayoutRootAgnostic(
-        `/Users/them/.traycer/epics/${EPIC}/artifacts/spec/index.md`,
+        `/Users/them/.cic/epics/${EPIC}/artifacts/spec/index.md`,
         null,
       ),
     ).toEqual({ epicId: EPIC, folderName: "spec", parentSegments: [] });

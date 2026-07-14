@@ -7,18 +7,18 @@
  * marker and lift the `epicId`.
  *
  * Both the structural shape and the ROOT-PREFIX-AGNOSTIC matching (C1) now live
- * in the shared browser-safe scanner `@traycer/protocol/common/artifact-path`,
+ * in the shared browser-safe scanner `@cic/protocol/common/artifact-path`,
  * which the host's RPC resolver consumes too - so the client pre-check and the
  * server resolver can no longer drift on what counts as an artifact path. An
  * agent-authored link carries an absolute path produced wherever the agent ran,
  * which frequently differs from the viewer's local host root (collaborators on
  * a shared epic, the same user on a second device, a foreign
- * `/Users/them/.traycer/...` home); the shared scanner therefore locates the
+ * `/Users/them/.cic/...` home); the shared scanner therefore locates the
  * `epics/<epicId>/artifacts/<chain>/index.md` SUBSEQUENCE anywhere inside the
  * path rather than gating on a local prefix.
  */
 
-import { deriveArtifactPathLayoutRootAgnostic } from "@traycer/protocol/common/artifact-path";
+import { deriveArtifactPathLayoutRootAgnostic } from "@cic/protocol/common/artifact-path";
 
 /**
  * Returns the `epicId` when `filePath` is structurally an artifact `index.md`

@@ -1,7 +1,7 @@
 import { Check, ShieldAlert, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { deriveToolInputSummary } from "@/lib/segment-summary";
-import type { ChatApprovalState } from "@traycer/protocol/host/agent/gui/subscribe";
+import type { ChatApprovalState } from "@cic/protocol/host/agent/gui/subscribe";
 
 interface ComposerSlotApprovalQueueProps {
   readonly approvals: ReadonlyArray<ChatApprovalState>;

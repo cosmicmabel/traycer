@@ -11,7 +11,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import type { IHostManagement } from "@traycer-clients/shared/platform/runner-host";
+import type { IHostManagement } from "@cic/shared/platform/runner-host";
 
 interface DoctorSheetProps {
   readonly open: boolean;

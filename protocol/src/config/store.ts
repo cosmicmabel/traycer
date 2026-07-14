@@ -24,8 +24,8 @@ import {
 import { DEFAULT_LOG_LEVEL, type LogLevel } from "./log-level";
 
 /**
- * Filesystem-backed config store for `~/.traycer/cli/config.json`, shared
- * by the CLI (`traycer config …` CRUD) and the host (per-spawn shell
+ * Filesystem-backed config store for `~/.cic/cli/config.json`, shared
+ * by the CLI (`cic config …` CRUD) and the host (per-spawn shell
  * lookup, provider-CLI PATH discovery). Every read and write goes through
  * `cliConfigSchema`, so neither side can corrupt the file or drift from
  * the other's expectations.
@@ -221,13 +221,13 @@ export async function readCliConfig(): Promise<CliConfig> {
     parsed = JSON.parse(raw);
   } catch {
     throw new Error(
-      "~/.traycer/cli/config.json is not valid JSON; refusing to overwrite. Fix or delete it.",
+      "~/.cic/cli/config.json is not valid JSON; refusing to overwrite. Fix or delete it.",
     );
   }
   const result = cliConfigSchema.safeParse(migrateCliConfig(parsed));
   if (!result.success) {
     throw new Error(
-      `~/.traycer/cli/config.json does not match the expected schema: ${result.error.message}`,
+      `~/.cic/cli/config.json does not match the expected schema: ${result.error.message}`,
     );
   }
   return result.data;
@@ -243,7 +243,7 @@ export async function writeCliConfig(next: CliConfig): Promise<void> {
   await mkdir(cliConfigDir(), { recursive: true, mode: 0o700 });
   const target = cliConfigPath();
   // Per-write unique tmp name: two processes writing concurrently (e.g. two
-  // `traycer config …` invocations) must not share the same tmp file, or
+  // `cic config …` invocations) must not share the same tmp file, or
   // their bytes interleave and the rename yields a corrupt config.json. Each
   // writer renames a fully-written file of its own, so the rename stays atomic
   // (last writer wins - acceptable; partial corruption is not).

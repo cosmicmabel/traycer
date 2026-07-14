@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { renderHook } from "@testing-library/react";
-import type { ListEpicCollaboratorsResponse } from "@traycer/protocol/host/epic/unary-schemas";
+import type { ListEpicCollaboratorsResponse } from "@cic/protocol/host/epic/unary-schemas";
 import {
   EPIC_COLLABORATORS_CLOSED_STALE_TIME_MS,
   EPIC_COLLABORATORS_OPEN_REFRESH_MS,

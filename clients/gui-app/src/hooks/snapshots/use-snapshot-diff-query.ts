@@ -1,6 +1,6 @@
 import type { UseQueryResult } from "@tanstack/react-query";
-import type { HostRpcError } from "@traycer-clients/shared/host-transport/host-messenger";
-import type { FileEditReason } from "@traycer/protocol/persistence/epic/content-blocks";
+import type { HostRpcError } from "@cic/shared/host-transport/host-messenger";
+import type { FileEditReason } from "@cic/protocol/persistence/epic/content-blocks";
 import { useHostClient, type HostRpcRegistry } from "@/lib/host";
 import { useHostQuery } from "@/hooks/host/use-host-query";
 

@@ -36,7 +36,7 @@ import { OnboardingClaudeTui } from "@/components/onboarding/onboarding-claude-t
 import { OnboardingOpencodeTui } from "@/components/onboarding/onboarding-opencode-tui";
 import { ProviderList } from "@/components/providers/provider-list";
 import { AgentSpinningDots } from "@/components/ui/agent-spinning-dots";
-import type { GuiHarnessId } from "@traycer/protocol/host/agent/shared";
+import type { GuiHarnessId } from "@cic/protocol/host/agent/shared";
 import { ORDERED_PROVIDERS } from "@/lib/provider-ordering";
 import { cn } from "@/lib/utils";
 
@@ -314,7 +314,7 @@ const PALETTE_ROWS = [
 ] as const;
 
 const THEME_DOCK_SWATCHES = [
-  ["#1A2421", "#257174", "Traycer Green"],
+  ["#1A2421", "#257174", "CIC Green"],
   ["oklch(0.205 0 0)", "oklch(0.546 0.245 262.881)", "Blue"],
   ["oklch(0.205 0 0)", "oklch(0.606 0.25 292.717)", "Violet"],
   ["#0b0e14", "#e6b450", "Ayu"],
@@ -999,7 +999,7 @@ function CanvasToolbar() {
       aria-hidden="true"
       className="flex h-8 shrink-0 items-center gap-2 border-b border-canvas-border/70 bg-canvas px-2.5 text-muted-foreground"
     >
-      <CanvasToolbarChip icon={Monitor} label="traycer" />
+      <CanvasToolbarChip icon={Monitor} label="cic" />
       <CanvasToolbarChip icon={Folder} label="billing-service" />
       <span className="ml-1 flex items-center gap-1 px-1 text-code-xs text-muted-foreground/90">
         <GitBranch className="size-3" />

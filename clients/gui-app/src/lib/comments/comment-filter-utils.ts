@@ -1,10 +1,10 @@
-import type { CommentThreadWire } from "@traycer/protocol/host/epic/unary-schemas";
+import type { CommentThreadWire } from "@cic/protocol/host/epic/unary-schemas";
 export {
   scanThreadAnchorsFromDoc,
   sortThreadsByDocumentOrder,
   type AnchorPositionMap,
   type AnchorPosResolvedThread as SortedThread,
-} from "@traycer/protocol/comments/comment-thread-ordering";
+} from "@cic/protocol/comments/comment-thread-ordering";
 
 export type CommentThreadStatusFilter = "open" | "resolved" | "all";
 

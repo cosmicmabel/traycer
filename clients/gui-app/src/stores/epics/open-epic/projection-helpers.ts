@@ -23,17 +23,17 @@
  *     }>>,
  *   }
  */
-import type { EpicArtifactKind } from "@traycer/protocol/common/registry";
+import type { EpicArtifactKind } from "@cic/protocol/common/registry";
 import type {
   AgentMode,
   ChatRunSettings,
   Message,
   TuiHarnessId,
-} from "@traycer/protocol/persistence/epic/schemas";
+} from "@cic/protocol/persistence/epic/schemas";
 import {
   agentModeSchema,
   chatRunSettingsSchema,
-} from "@traycer/protocol/persistence/epic/schemas";
+} from "@cic/protocol/persistence/epic/schemas";
 import * as Y from "yjs";
 import type {
   ArtifactProjection,

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { JsonContent } from "@traycer/protocol/common/registry";
+import type { JsonContent } from "@cic/protocol/common/registry";
 
 import { extractPlainTextFromComposerJSONContent } from "@/lib/composer/tiptap-json-content";
 

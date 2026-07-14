@@ -26,7 +26,7 @@ import type {
   RepoState,
   SubmoduleChangeset,
   SubmodulePointer,
-} from "@traycer/protocol/host";
+} from "@cic/protocol/host";
 
 const SHORT_SHA_LENGTH = 7;
 

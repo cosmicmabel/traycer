@@ -3,8 +3,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { act, cleanup, renderHook, waitFor } from "@testing-library/react";
 import type { ReactNode } from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { WorktreeIntent } from "@traycer/protocol/host/worktree-schemas";
-import type { TuiHarnessId } from "@traycer/protocol/persistence/epic/schemas";
+import type { WorktreeIntent } from "@cic/protocol/host/worktree-schemas";
+import type { TuiHarnessId } from "@cic/protocol/persistence/epic/schemas";
 
 const hookMocks = vi.hoisted(() => ({
   request: vi.fn<(method: string, payload: unknown) => Promise<unknown>>(),
@@ -158,11 +158,11 @@ describe("useCreateTuiAgent", () => {
           kind: "worktree",
           scripts: null,
           workspacePath: WORKSPACE_PATH,
-          repoIdentifier: { owner: "traycerai", repo: "traycer" },
+          repoIdentifier: { owner: "cicai", repo: "cic" },
           isPrimary: true,
           branch: {
             type: "new",
-            name: "traycer/fix-x",
+            name: "cic/fix-x",
             source: "main",
             carryUncommittedChanges: false,
           },
@@ -235,7 +235,7 @@ describe("useCreateTuiAgent", () => {
           isPrimary: true,
           branch: {
             type: "new",
-            name: "traycer/args-x",
+            name: "cic/args-x",
             source: "main",
             carryUncommittedChanges: false,
           },
@@ -462,7 +462,7 @@ describe("useCreateTuiAgent", () => {
           isPrimary: true,
           branch: {
             type: "new",
-            name: "traycer/fix-x",
+            name: "cic/fix-x",
             source: "main",
             carryUncommittedChanges: false,
           },
@@ -546,7 +546,7 @@ describe("useCreateTuiAgent", () => {
         {
           kind: "import",
           workspacePath: WORKSPACE_PATH,
-          repoIdentifier: { owner: "traycerai", repo: "traycer" },
+          repoIdentifier: { owner: "cicai", repo: "cic" },
           isPrimary: true,
           worktreePath: "/tmp/worktrees/feature-x",
         },
@@ -622,7 +622,7 @@ describe("useCreateTuiAgent", () => {
           isPrimary: true,
           branch: {
             type: "new",
-            name: "traycer/fix-x",
+            name: "cic/fix-x",
             source: "main",
             carryUncommittedChanges: false,
           },
@@ -712,7 +712,7 @@ describe("useCreateTuiAgent", () => {
           isPrimary: true,
           branch: {
             type: "new",
-            name: "traycer/fix-x",
+            name: "cic/fix-x",
             source: "main",
             carryUncommittedChanges: false,
           },
@@ -909,11 +909,11 @@ describe("useCreateTuiAgent", () => {
           kind: "worktree",
           scripts: null,
           workspacePath: "/workspace/app",
-          repoIdentifier: { owner: "traycerai", repo: "traycer" },
+          repoIdentifier: { owner: "cicai", repo: "cic" },
           isPrimary: true,
           branch: {
             type: "new",
-            name: "traycer/mixed-x",
+            name: "cic/mixed-x",
             source: "main",
             carryUncommittedChanges: false,
           },
@@ -927,7 +927,7 @@ describe("useCreateTuiAgent", () => {
         {
           kind: "import",
           workspacePath: "/workspace/lib",
-          repoIdentifier: { owner: "traycerai", repo: "lib" },
+          repoIdentifier: { owner: "cicai", repo: "lib" },
           isPrimary: false,
           worktreePath: "/tmp/worktrees/lib-x",
         },
@@ -1072,7 +1072,7 @@ describe("useCreateTuiAgent", () => {
           isPrimary: true,
           branch: {
             type: "new",
-            name: "traycer/launch-x",
+            name: "cic/launch-x",
             source: "main",
             carryUncommittedChanges: false,
           },

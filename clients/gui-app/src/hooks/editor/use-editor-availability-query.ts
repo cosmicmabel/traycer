@@ -3,8 +3,8 @@ import {
   useQuery,
   type UseQueryResult,
 } from "@tanstack/react-query";
-import { EDITORS, type EditorId } from "@traycer/protocol/host";
-import type { IRunnerHost } from "@traycer-clients/shared/platform/runner-host";
+import { EDITORS, type EditorId } from "@cic/protocol/host";
+import type { IRunnerHost } from "@cic/shared/platform/runner-host";
 import { useRunnerHost } from "@/providers/use-runner-host";
 import { editorQueryKeys } from "@/lib/query-keys";
 

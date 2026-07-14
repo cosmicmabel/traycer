@@ -3,7 +3,7 @@ import type {
   ProviderAuthStatus,
   ProviderCliState,
   ProviderId,
-} from "@traycer/protocol/host/provider-schemas";
+} from "@cic/protocol/host/provider-schemas";
 import {
   isRateLimitCapableProvider,
   isRateLimitProviderConfigured,

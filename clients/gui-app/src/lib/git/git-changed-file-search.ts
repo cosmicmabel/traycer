@@ -1,5 +1,5 @@
 import Fuse, { type IFuseOptions } from "fuse.js";
-import type { GitChangedFile } from "@traycer/protocol/host";
+import type { GitChangedFile } from "@cic/protocol/host";
 import { NO_HIGHLIGHT, type HighlightRanges } from "@/lib/git/path-highlight";
 
 export interface GitChangedFileMatch {

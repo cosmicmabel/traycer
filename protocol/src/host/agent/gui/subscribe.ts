@@ -12,9 +12,9 @@
  * carry typed snapshots, action acknowledgements, live turn deltas, queue
  * state, approval state, durable event appends, and concise error notices.
  */
-import { commonRecordRegistry } from "@traycer/protocol/common/registry";
-import { getRecordSchema } from "@traycer/protocol/framework/index";
-import { defineStreamRpcContract } from "@traycer/protocol/framework/versioned-stream-rpc";
+import { commonRecordRegistry } from "@cic/protocol/common/registry";
+import { getRecordSchema } from "@cic/protocol/framework/index";
+import { defineStreamRpcContract } from "@cic/protocol/framework/versioned-stream-rpc";
 import {
   chatEventSchema,
   chatRunSettingsSchema,
@@ -23,25 +23,25 @@ import {
   userMessageSchema,
   userMessageSenderSchema,
   type ChatRunSettings,
-} from "@traycer/protocol/persistence/epic/schemas";
+} from "@cic/protocol/persistence/epic/schemas";
 import {
   agentModeSchema,
   permissionModeSchema,
-} from "@traycer/protocol/persistence/epic/foundation";
+} from "@cic/protocol/persistence/epic/foundation";
 import {
   DEFAULT_ACCOUNT_CONTEXT,
   accountContextSchema,
-} from "@traycer/protocol/common/schemas";
+} from "@cic/protocol/common/schemas";
 import {
   checkpointArtifactTagSchema,
   checkpointFileOperationSchema,
   restoreResultEntrySchema,
   restoreStartedManifestSchema,
-} from "@traycer/protocol/persistence/epic/checkpoint-manifests";
+} from "@cic/protocol/persistence/epic/checkpoint-manifests";
 import {
   diffSourceSchema,
   fileEditReasonSchema,
-} from "@traycer/protocol/persistence/epic/content-blocks";
+} from "@cic/protocol/persistence/epic/content-blocks";
 import {
   chatQueueSteerModeSchema,
   runtimeApprovalDecisionSchema,
@@ -49,18 +49,18 @@ import {
   runtimeEventSchemaV12,
   runtimeInterviewAnswerSchema,
   runtimePlanActionSchema,
-} from "@traycer/protocol/host/agent/gui/agent-runtime";
+} from "@cic/protocol/host/agent/gui/agent-runtime";
 
 export {
   chatQueueSteerModeSchema,
   type ChatQueueSteerMode,
-} from "@traycer/protocol/host/agent/gui/agent-runtime";
+} from "@cic/protocol/host/agent/gui/agent-runtime";
 import { z } from "zod";
-import { guiHarnessIdSchema } from "@traycer/protocol/host/agent/shared";
+import { guiHarnessIdSchema } from "@cic/protocol/host/agent/shared";
 import {
   worktreeBindingSchema,
   worktreeIntentSchema,
-} from "@traycer/protocol/host/worktree-schemas";
+} from "@cic/protocol/host/worktree-schemas";
 
 const jsonContentSchema = getRecordSchema(
   commonRecordRegistry,
@@ -138,7 +138,7 @@ export const chatAccumulatedFileChangeSchema = z.object({
   afterContent: z.string().nullable(),
   reason: fileEditReasonSchema,
   undoable: z.boolean(),
-  // Present + non-null ⇒ this accumulated change is a Traycer artifact
+  // Present + non-null ⇒ this accumulated change is a CIC artifact
   // `index.md`. The panel renders it as a titled artifact row (click → diff,
   // per-row undo) rather than a raw file path. Carried through from the manifest
   // entry's tag. Optional for the same reasons as the manifest entry's tag.

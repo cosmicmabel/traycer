@@ -10,7 +10,7 @@ import {
   type ChatFindRow,
 } from "@/components/chat/chat-find";
 import { derivePromotedSubagentRenderId } from "@/components/chat/chat-collapsible-key";
-import type { JsonContent } from "@traycer/protocol/common/registry";
+import type { JsonContent } from "@cic/protocol/common/registry";
 import type {
   ChatMessage as ChatMessageModel,
   MessageSegment,
@@ -23,7 +23,7 @@ describe("chat find projection", () => {
   it("projects markdown links and code as rendered text, not markdown syntax", () => {
     const text = markdownToChatSearchText(
       [
-        "Read [Traycer docs](https://example.test/docs) and `inlineCode`.",
+        "Read [CIC docs](https://example.test/docs) and `inlineCode`.",
         "",
         "```ts",
         "const answer = 42;",
@@ -31,12 +31,12 @@ describe("chat find projection", () => {
       ].join("\n"),
     );
 
-    expect(text).toContain("Traycer docs");
+    expect(text).toContain("CIC docs");
     expect(text).toContain("inlineCode");
     expect(text).toContain("const answer = 42;");
     expect(text).not.toContain("https://example.test/docs");
     expect(text).not.toContain("```");
-    expect(text).not.toContain("[Traycer docs]");
+    expect(text).not.toContain("[CIC docs]");
   });
 
   it("indexes user structured text, assistant prose, and excludes next-step controls", () => {
@@ -66,11 +66,11 @@ describe("chat find projection", () => {
           markdown: [
             "Visible assistant answer.",
             "",
-            "<TRAYCER_NEXT_STEPS>",
+            "<CIC_NEXT_STEPS>",
             "Choose one of these next steps.",
             "",
             "- [] : Hidden button prompt",
-            "</TRAYCER_NEXT_STEPS>",
+            "</CIC_NEXT_STEPS>",
           ].join("\n"),
           isStreaming: false,
         },

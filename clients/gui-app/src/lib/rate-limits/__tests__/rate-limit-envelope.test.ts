@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import type {
   ProviderRateLimits,
   RateLimitUnavailableReason,
-} from "@traycer/protocol/host";
+} from "@cic/protocol/host";
 import {
   buildProviderRateLimitEnvelope,
   envelopeDegradedReason,

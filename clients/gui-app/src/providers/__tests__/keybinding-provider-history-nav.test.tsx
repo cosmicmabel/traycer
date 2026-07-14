@@ -18,7 +18,7 @@ import { KeybindingProvider } from "@/providers/keybinding-provider";
 const WINDOW_ID = "history-nav-input-window";
 
 function storageKey(windowId: string): string {
-  return `traycer-gui-app:last-route:${windowId}`;
+  return `cic-gui-app:last-route:${windowId}`;
 }
 
 function makeRouter(history: RouterHistory): AppRouter {

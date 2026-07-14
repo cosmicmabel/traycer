@@ -10,7 +10,7 @@ import { useLandingDraftStore } from "@/stores/home/landing-draft-store";
 
 export interface HistoryPruneProviderProps {
   /**
-   * The LIVE app router (the one `TraycerApp` builds with the real desktop
+   * The LIVE app router (the one `CicApp` builds with the real desktop
    * `windowId` and hands to `<RouterProvider>`), NOT the module-level
    * `@/router` type-registration singleton. The scheduler reads its `history`
    * (for the branded persistent-history controller) and its `state` (for the

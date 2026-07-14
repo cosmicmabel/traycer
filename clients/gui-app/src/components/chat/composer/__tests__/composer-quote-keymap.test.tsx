@@ -1,7 +1,7 @@
 import "../../../../../__tests__/test-browser-apis";
 import { afterEach, describe, expect, it } from "vitest";
 import { Editor } from "@tiptap/core";
-import type { JsonContent } from "@traycer/protocol/common/registry";
+import type { JsonContent } from "@cic/protocol/common/registry";
 
 import { buildComposerExtensions } from "../editor/editor-config";
 import { createComposerPickerStore } from "../picker/composer-picker-store";

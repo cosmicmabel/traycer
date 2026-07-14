@@ -3,7 +3,7 @@ import { cleanup, renderHook } from "@testing-library/react";
 import type {
   ProviderAuthStatus,
   ProviderCliState,
-} from "@traycer/protocol/host/provider-schemas";
+} from "@cic/protocol/host/provider-schemas";
 import type {
   AvailableProviderRateLimits,
   ProviderRateLimitEnvelope,

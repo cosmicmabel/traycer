@@ -29,7 +29,7 @@ import { appLogger } from "@/lib/logger";
  * the browser Performance panel.
  *
  * Gating: on by default in dev, off under test, and opt-in for production
- * builds via `localStorage["traycer:perf:terminal"] = "1"`.
+ * builds via `localStorage["cic:perf:terminal"] = "1"`.
  */
 
 // Ordered so the summary table and the adjacent-span measures read top-to-bottom
@@ -65,7 +65,7 @@ function instrumentationEnabled(): boolean {
   if (import.meta.env.MODE === "test") return false;
   if (import.meta.env.DEV) return true;
   try {
-    return window.localStorage.getItem("traycer:perf:terminal") === "1";
+    return window.localStorage.getItem("cic:perf:terminal") === "1";
   } catch {
     return false;
   }

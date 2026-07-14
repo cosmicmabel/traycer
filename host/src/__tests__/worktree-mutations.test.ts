@@ -6,10 +6,10 @@ import { join } from "node:path";
 import {
   hostRpcRegistry,
   hostStreamRpcRegistry,
-} from "@traycer/protocol/host/registry";
-import { buildStreamManifest } from "@traycer/protocol/framework/stream-compat";
-import { hostFrameSchema } from "@traycer/protocol/framework/ws-protocol";
-import { worktreeDeleteByPathServerFrameSchema } from "@traycer/protocol/host/worktree-delete-stream";
+} from "@cic/protocol/host/registry";
+import { buildStreamManifest } from "@cic/protocol/framework/stream-compat";
+import { hostFrameSchema } from "@cic/protocol/framework/ws-protocol";
+import { worktreeDeleteByPathServerFrameSchema } from "@cic/protocol/host/worktree-delete-stream";
 import { startOpenHostServer, type RunningOpenHost } from "../server";
 import { RegistryRuntime } from "../registry-runtime";
 
@@ -261,7 +261,7 @@ describe("worktree mutations", () => {
     });
     expect(scripts.result).toEqual({ updated: true });
     const written = await readFile(
-      join(workspacePath, ".traycer", "environment.json"),
+      join(workspacePath, ".cic", "environment.json"),
       "utf8",
     );
     expect(written).toContain("make dev");

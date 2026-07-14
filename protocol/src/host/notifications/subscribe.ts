@@ -21,7 +21,7 @@
  * - `ping`        - heartbeat. Text-only.
  */
 import { z } from "zod";
-import { defineStreamRpcContract } from "@traycer/protocol/framework/versioned-stream-rpc";
+import { defineStreamRpcContract } from "@cic/protocol/framework/versioned-stream-rpc";
 
 export const notificationsSubscribeOpenRequestSchema = z.object({});
 export type NotificationsSubscribeOpenRequest = z.infer<

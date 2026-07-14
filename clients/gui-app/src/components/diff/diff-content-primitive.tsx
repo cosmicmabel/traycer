@@ -10,10 +10,10 @@ import { DIFF_PANEL_UNSAFE_CSS } from "@/lib/git/diff-tokens-css";
 import { cn } from "@/lib/utils";
 
 const DIFF_FIND_UNSAFE_CSS = `
-  [data-traycer-diff-find-match] {
+  [data-cic-diff-find-match] {
     --diffs-line-bg: color-mix(in srgb, var(--primary) 22%, var(--diffs-computed-diff-line-bg));
   }
-  [data-traycer-diff-find-active] {
+  [data-cic-diff-find-active] {
     --diffs-line-bg: color-mix(in srgb, var(--primary) 52%, var(--diffs-computed-diff-line-bg));
     outline: 1px solid color-mix(in srgb, var(--primary) 70%, transparent);
     outline-offset: -1px;

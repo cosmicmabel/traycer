@@ -1,9 +1,9 @@
 import { create, type StoreApi } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { basePersistOptions, persistKey, STORE_KEYS } from "@/lib/persist";
-import type { JsonContent } from "@traycer/protocol/common/registry";
-import type { ChatRunSettings } from "@traycer/protocol/host/agent/gui/subscribe";
-import type { WorktreeIntent } from "@traycer/protocol/host/worktree-schemas";
+import type { JsonContent } from "@cic/protocol/common/registry";
+import type { ChatRunSettings } from "@cic/protocol/host/agent/gui/subscribe";
+import type { WorktreeIntent } from "@cic/protocol/host/worktree-schemas";
 import type { ConversationTilePlacement } from "@/lib/canvas/conversation-tile-placement";
 
 export type InitialChatHandoffStatus =

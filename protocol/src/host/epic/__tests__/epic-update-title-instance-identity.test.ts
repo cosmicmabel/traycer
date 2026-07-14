@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { hostRpcRegistry } from "@traycer/protocol/host/registry";
+import { hostRpcRegistry } from "@cic/protocol/host/registry";
 import {
   updateEpicRequestSchema,
   updateEpicResponseSchema,
-} from "@traycer/protocol/host/epic/unary-schemas";
+} from "@cic/protocol/host/epic/unary-schemas";
 
 /**
  * Hard invariant: the `epic.updateTitle` host RPC contract must wire the
@@ -14,7 +14,7 @@ import {
  *
  * The cloud-side (`cloudDataRpcRegistry["epic.update"]`) reuse of these same
  * instances is guaranteed by construction - the cloud registry imports them
- * directly from `@traycer/protocol/host/epic/unary-schemas` - and is
+ * directly from `@cic/protocol/host/epic/unary-schemas` - and is
  * covered on the consumer side, so protocol's own tests stay within the
  * protocol package.
  */

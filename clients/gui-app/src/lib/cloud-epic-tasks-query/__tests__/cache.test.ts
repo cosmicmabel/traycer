@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import type {
   ListTasksResponse,
   TaskLight,
-} from "@traycer/protocol/host/epic/unary-schemas";
+} from "@cic/protocol/host/epic/unary-schemas";
 import {
   LIST_CLOUD_TASKS_REQUEST,
   cloudEpicTasksQueryKey,
@@ -29,17 +29,17 @@ describe("removeDeletedEpicsFromCloudTaskCaches", () => {
     );
     queryClient.setQueryData<ListTasksResponse>(matchingKey, {
       tasks: [
-        taskLight("epic-a", "Alpha", "traycer/gui-app", "user-1"),
-        taskLight("epic-b", "Beta", "traycer/server", "user-1"),
+        taskLight("epic-a", "Alpha", "cic/gui-app", "user-1"),
+        taskLight("epic-b", "Beta", "cic/server", "user-1"),
       ],
       hasMore: false,
       facets: {
         repos: [
           {
-            repoIdentifier: { owner: "traycer", repo: "gui-app" },
+            repoIdentifier: { owner: "cic", repo: "gui-app" },
             count: 1,
           },
-          { repoIdentifier: { owner: "traycer", repo: "server" }, count: 1 },
+          { repoIdentifier: { owner: "cic", repo: "server" }, count: 1 },
         ],
         workspaces: [
           {
@@ -61,7 +61,7 @@ describe("removeDeletedEpicsFromCloudTaskCaches", () => {
       },
     });
     queryClient.setQueryData<ListTasksResponse>(otherUserKey, {
-      tasks: [taskLight("epic-a", "Alpha", "traycer/gui-app", "user-1")],
+      tasks: [taskLight("epic-a", "Alpha", "cic/gui-app", "user-1")],
       hasMore: false,
     });
 
@@ -76,9 +76,7 @@ describe("removeDeletedEpicsFromCloudTaskCaches", () => {
       "epic-b",
     ]);
     expect(matching?.facets).toEqual({
-      repos: [
-        { repoIdentifier: { owner: "traycer", repo: "server" }, count: 1 },
-      ],
+      repos: [{ repoIdentifier: { owner: "cic", repo: "server" }, count: 1 }],
       workspaces: [
         {
           workspaceIdentifier: {
@@ -111,13 +109,13 @@ describe("readEpicTitlesFromCloudTaskCaches", () => {
     );
     queryClient.setQueryData<ListTasksResponse>(matchingKey, {
       tasks: [
-        taskLight("epic-a", " Alpha ", "traycer/gui-app", "user-1"),
-        taskLight("epic-b", "Beta", "traycer/server", "user-1"),
+        taskLight("epic-a", " Alpha ", "cic/gui-app", "user-1"),
+        taskLight("epic-b", "Beta", "cic/server", "user-1"),
       ],
       hasMore: false,
     });
     queryClient.setQueryData<ListTasksResponse>(otherUserKey, {
-      tasks: [taskLight("epic-c", "Wrong user", "traycer/gui-app", "user-2")],
+      tasks: [taskLight("epic-c", "Wrong user", "cic/gui-app", "user-2")],
       hasMore: false,
     });
 
@@ -146,13 +144,13 @@ describe("updateEpicTitleInCloudTaskCaches", () => {
     );
     queryClient.setQueryData<ListTasksResponse>(matchingKey, {
       tasks: [
-        taskLight("epic-a", "Alpha", "traycer/gui-app", "user-1"),
-        taskLight("epic-b", "Beta", "traycer/server", "user-1"),
+        taskLight("epic-a", "Alpha", "cic/gui-app", "user-1"),
+        taskLight("epic-b", "Beta", "cic/server", "user-1"),
       ],
       hasMore: false,
     });
     queryClient.setQueryData<ListTasksResponse>(otherUserKey, {
-      tasks: [taskLight("epic-a", "Alpha", "traycer/gui-app", "user-2")],
+      tasks: [taskLight("epic-a", "Alpha", "cic/gui-app", "user-2")],
       hasMore: false,
     });
 

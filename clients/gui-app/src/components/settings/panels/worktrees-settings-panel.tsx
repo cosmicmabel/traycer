@@ -39,7 +39,7 @@ import {
 import type {
   WorktreeHostEntry,
   WorktreeHostEntryV11,
-} from "@traycer/protocol/host/index";
+} from "@cic/protocol/host/index";
 import {
   WORKTREE_TIER_LABEL,
   WORKTREE_TIER_ORDER,
@@ -47,15 +47,15 @@ import {
   classifyWorktree,
   classifyWorktreeTier,
   type WorktreeTier,
-} from "@traycer-clients/shared/worktree/classify-worktree";
+} from "@cic/shared/worktree/classify-worktree";
 import {
   buildTaskMergeRollups,
   taskMergeRollupLabel,
   type TaskMergeRollup,
 } from "@/lib/worktree/task-merge-rollup";
-import type { WorktreeEntryScripts } from "@traycer/protocol/host/worktree-schemas";
-import type { HostClient } from "@traycer-clients/shared/host-client/host-client";
-import type { HostDirectoryEntry } from "@traycer-clients/shared/host-client/host-directory";
+import type { WorktreeEntryScripts } from "@cic/protocol/host/worktree-schemas";
+import type { HostClient } from "@cic/shared/host-client/host-client";
+import type { HostDirectoryEntry } from "@cic/shared/host-client/host-directory";
 import { cn } from "@/lib/utils";
 import {
   withMemberAdded,
@@ -197,7 +197,7 @@ function useObservedHeight(): {
 
 /**
  * Host-wide worktree management. Lists every git worktree under the selected
- * host's `~/.traycer/worktrees/` creation path (disk-truth, so orphans whose
+ * host's `~/.cic/worktrees/` creation path (disk-truth, so orphans whose
  * owning chat/agent was deleted still appear) and lets the user delete ones
  * they no longer need.
  *
@@ -231,7 +231,7 @@ export function WorktreesSettingsPanel(): ReactNode {
   return (
     <SettingsPanelShell
       title="Worktrees"
-      description="Git worktrees Traycer created under ~/.traycer/worktrees on the selected host. Remove ones you no longer need - including orphans whose chat or agent was deleted."
+      description="Git worktrees CIC created under ~/.cic/worktrees on the selected host. Remove ones you no longer need - including orphans whose chat or agent was deleted."
       fillHeight
       bodyClassName="relative max-h-[min(85vh,52rem)]"
     >
@@ -1788,8 +1788,8 @@ function WorktreeBulkDeleteDialog(props: {
                   {summary.title}
                 </DialogTitle>
                 <DialogDescription className="text-ui-sm leading-relaxed text-muted-foreground wrap-anywhere">
-                  Deleting {summary.classSummary}. Traycer runs each repo's
-                  teardown script, then removes the worktree.
+                  Deleting {summary.classSummary}. CIC runs each repo's teardown
+                  script, then removes the worktree.
                 </DialogDescription>
                 {summary.dirtyLoss !== null ? (
                   <p
@@ -2201,7 +2201,7 @@ function WorktreeSecondaryFacts(props: {
  * whose title is unknown (deleted / not cached / other user) is DEMOTED to muted
  * "Owner unresolved" text rather than a prominent chip - but it is still a
  * reference, so the classifier keeps such a row out of the green tiers. No owners
- * at all means nothing in Traycer references this worktree - deliberately NOT the
+ * at all means nothing in CIC references this worktree - deliberately NOT the
  * "Orphaned" tier, which means `gitRemovable: false`.
  */
 function WorktreeTaskAssociation(props: {
@@ -2660,7 +2660,7 @@ function deleteDialogCopy(entry: WorktreeHostEntryV11): {
     const plural = count === 1 ? "" : "s";
     return {
       title: `Discard ${count} uncommitted change${plural}?`,
-      description: `${branch} has ${count} uncommitted change${plural} that will be permanently lost. Traycer runs the repo's teardown script, then force-removes ${entry.worktreePath}.`,
+      description: `${branch} has ${count} uncommitted change${plural} that will be permanently lost. CIC runs the repo's teardown script, then force-removes ${entry.worktreePath}.`,
       actionLabel: "Delete and discard",
     };
   }
@@ -2675,7 +2675,7 @@ function deleteDialogCopy(entry: WorktreeHostEntryV11): {
     const plural = count === 1 ? "" : "s";
     return {
       title: `Delete worktree with ${count} unpushed commit${plural}?`,
-      description: `${branch} has ${count} commit${plural} not on the default branch. Removing the worktree keeps the branch ref, but that work exists only here. Traycer runs the repo's teardown script, then removes ${entry.worktreePath}.`,
+      description: `${branch} has ${count} commit${plural} not on the default branch. Removing the worktree keeps the branch ref, but that work exists only here. CIC runs the repo's teardown script, then removes ${entry.worktreePath}.`,
       actionLabel: "Delete worktree",
     };
   }
@@ -2686,13 +2686,13 @@ function deleteDialogCopy(entry: WorktreeHostEntryV11): {
   if (status !== null && status.ahead === null && !status.mergedIntoDefault) {
     return {
       title: "Delete worktree with unpushed local commits?",
-      description: `${branch} has local-only commits not on the default branch and was never pushed. Removing the worktree keeps the branch ref, so the commits survive on the branch — but this machine is their only copy. Traycer runs the repo's teardown script, then removes ${entry.worktreePath}.`,
+      description: `${branch} has local-only commits not on the default branch and was never pushed. Removing the worktree keeps the branch ref, so the commits survive on the branch — but this machine is their only copy. CIC runs the repo's teardown script, then removes ${entry.worktreePath}.`,
       actionLabel: "Delete worktree",
     };
   }
   return {
     title: "Delete worktree?",
-    description: `Traycer runs the repo's teardown script, then removes ${branch} (${entry.worktreePath}).`,
+    description: `CIC runs the repo's teardown script, then removes ${branch} (${entry.worktreePath}).`,
     actionLabel: "Delete worktree",
   };
 }
@@ -2717,13 +2717,13 @@ function unknownRiskDeleteDialogCopy(entry: WorktreeHostEntryV11): {
     const plural = count === 1 ? "" : "s";
     return {
       title: `Discard ${count} uncommitted change${plural}?`,
-      description: `${branch} has ${count} uncommitted change${plural} that will be permanently lost. Its branch and activity status also could not be verified, so Traycer cannot confirm the rest of this worktree is safe to remove either. Traycer runs the repo's teardown script, then force-removes ${entry.worktreePath}.`,
+      description: `${branch} has ${count} uncommitted change${plural} that will be permanently lost. Its branch and activity status also could not be verified, so CIC cannot confirm the rest of this worktree is safe to remove either. CIC runs the repo's teardown script, then force-removes ${entry.worktreePath}.`,
       actionLabel: "Delete and discard",
     };
   }
   return {
     title: "Delete worktree with unknown status?",
-    description: `${branch}'s branch and activity status could not be verified, so Traycer cannot confirm this worktree is safe to remove or free of unpushed work. Traycer runs the repo's teardown script, then removes ${entry.worktreePath}.`,
+    description: `${branch}'s branch and activity status could not be verified, so CIC cannot confirm this worktree is safe to remove or free of unpushed work. CIC runs the repo's teardown script, then removes ${entry.worktreePath}.`,
     actionLabel: "Delete anyway",
   };
 }
@@ -2940,7 +2940,7 @@ function summarizeBulkWorktreeDelete(
       ? null
       : `Activity status for ${unknownTargets.length} worktree${
           unknownTargets.length === 1 ? "" : "s"
-        } could not be checked. Traycer cannot confirm those are safe to remove or free of unpushed work. Commit, stash, or push anything you want to keep first.`;
+        } could not be checked. CIC cannot confirm those are safe to remove or free of unpushed work. Commit, stash, or push anything you want to keep first.`;
   const excluded = visible.filter(
     (entry) => !targetPaths.has(entry.worktreePath),
   );

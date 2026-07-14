@@ -1,6 +1,6 @@
-import type { AuthRevalidator } from "@traycer-clients/shared/auth/bearer-revalidator";
-import type { OpenFrameBearerSource } from "@traycer-clients/shared/auth/bearer-source";
-import type { VersionedRpcRegistry } from "@traycer/protocol/framework/index";
+import type { AuthRevalidator } from "@cic/shared/auth/bearer-revalidator";
+import type { OpenFrameBearerSource } from "@cic/shared/auth/bearer-source";
+import type { VersionedRpcRegistry } from "@cic/protocol/framework/index";
 import {
   HostRpcError,
   type IHostMessenger,

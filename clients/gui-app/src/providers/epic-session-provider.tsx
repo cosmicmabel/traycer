@@ -12,7 +12,7 @@ import {
   type EpicStreamClientFactory,
   type OpenEpicStoreHandle,
 } from "@/stores/epics/open-epic/store";
-import { EpicStreamClient } from "@traycer-clients/shared/host-transport/epic-stream-client";
+import { EpicStreamClient } from "@cic/shared/host-transport/epic-stream-client";
 import { useDurableStreamTransportFactory } from "@/lib/host/use-durable-stream-transport";
 import { openOwnedDurableStreamClient } from "@/lib/host/owned-durable-stream-client";
 import { useAuthStore } from "@/stores/auth/auth-store";

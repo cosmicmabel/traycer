@@ -3,9 +3,9 @@ import {
   type ConnectionManifest,
   type FatalErrorDetails,
   type HostFrame,
-} from "@traycer/protocol/framework/ws-protocol";
-import { check as checkCompatibility } from "@traycer/protocol/framework/compatibility-checker";
-import type { VersionedRpcRegistry } from "@traycer/protocol/framework/index";
+} from "@cic/protocol/framework/ws-protocol";
+import { check as checkCompatibility } from "@cic/protocol/framework/compatibility-checker";
+import type { VersionedRpcRegistry } from "@cic/protocol/framework/index";
 import type { BearerVerifier } from "./auth";
 import type { HandlerContext, UnaryHandler } from "./handlers";
 import type { RegistryRuntime } from "./registry-runtime";
@@ -201,7 +201,7 @@ export class RpcConnection {
     if (handler === undefined) {
       respond(null, {
         code: "RPC_ERROR",
-        message: `method not implemented in @traycer/open-host: ${frame.method}`,
+        message: `method not implemented in @cic/open-host: ${frame.method}`,
       });
       return;
     }

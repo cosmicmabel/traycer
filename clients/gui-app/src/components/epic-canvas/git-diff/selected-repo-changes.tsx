@@ -11,7 +11,7 @@ import {
   type ReactNode,
 } from "react";
 import type Fuse from "fuse.js";
-import type { HostRpcError } from "@traycer-clients/shared/host-transport/host-messenger";
+import type { HostRpcError } from "@cic/shared/host-transport/host-messenger";
 import { ChevronDown, Search, TriangleAlert, X } from "lucide-react";
 import type {
   GitChangedFile,
@@ -19,7 +19,7 @@ import type {
   GitListChangedFilesResponseV11,
   RepoMode,
   RepoState,
-} from "@traycer/protocol/host";
+} from "@cic/protocol/host";
 import type { GitListChangedFilesSubscriptionResult } from "@/hooks/git/use-git-list-changed-files-subscription";
 import type { GitListChangedFilesWithSubmodulesResult } from "@/hooks/git/use-git-list-changed-files-with-submodules";
 import type { GitPanelSelectedRepo } from "@/stores/epics/git-panel-store";

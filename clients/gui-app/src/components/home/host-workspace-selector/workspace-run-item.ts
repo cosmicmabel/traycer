@@ -1,8 +1,8 @@
 import type {
   WorktreeFolderIntent,
   WorktreeWorkspaceSummary,
-} from "@traycer/protocol/host/worktree-schemas";
-import type { HostClient } from "@traycer-clients/shared/host-client/host-client";
+} from "@cic/protocol/host/worktree-schemas";
+import type { HostClient } from "@cic/shared/host-client/host-client";
 import type { HostRpcRegistry } from "@/lib/host";
 import { workspaceFolderName } from "@/lib/worktree/workspace-folder-name";
 

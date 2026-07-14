@@ -43,7 +43,7 @@ import { displayTitle } from "@/lib/display-title";
 import { isEditableRole } from "@/lib/epic-permissions";
 import { getOpenEpicRegistry } from "@/lib/registries/epic-session-registry";
 import { getHostBindingSnapshot } from "@/lib/host/runtime";
-import { HostRpcError } from "@traycer-clients/shared/host-transport/host-messenger";
+import { HostRpcError } from "@cic/shared/host-transport/host-messenger";
 import { toastFromHostError } from "@/lib/host-error-toast";
 import { toast } from "sonner";
 import { useInlineRename } from "@/hooks/ui/use-inline-rename";

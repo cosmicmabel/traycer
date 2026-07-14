@@ -5,9 +5,9 @@
  * here for the segment headers. Unrelated to composer prompt parsing; see
  * src/lib/composer/segments.ts for mention tokenization.
  */
-import type { ToolInputDetail } from "@traycer/protocol/host/agent/gui/tool-input-detail";
+import type { ToolInputDetail } from "@cic/protocol/host/agent/gui/tool-input-detail";
 
-export { deriveToolInputSummary } from "@traycer/protocol/host/agent/gui/tool-input-summary";
+export { deriveToolInputSummary } from "@cic/protocol/host/agent/gui/tool-input-summary";
 
 // File-path keys edit/write tools carry across harnesses, in priority order.
 // Claude's Edit/Write/NotebookEdit use snake_case (`file_path`,

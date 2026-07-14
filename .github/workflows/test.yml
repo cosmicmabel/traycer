@@ -20,7 +20,7 @@ concurrency:
 jobs:
   test:
     name: test (${{ matrix.project }})
-    runs-on: ${{ matrix.project == 'traycer-clients-gui-app' && 'ubuntu-latest-8-cores' || 'ubuntu-latest' }}
+    runs-on: ${{ matrix.project == 'cic-clients-gui-app' && 'ubuntu-latest-8-cores' || 'ubuntu-latest' }}
     strategy:
       # Run every project even if one fails, so a single red project doesn't
       # mask the others.
@@ -30,10 +30,10 @@ jobs:
         # names (gui-app's differs from its package scope). Keep in sync with
         # `nx show projects --with-target test`.
         project:
-          - "@traycer/protocol"
-          - traycer-clients-gui-app
-          - "@traycer-clients/shared"
-          - "@traycer-clients/web"
+          - "@cic/protocol"
+          - cic-clients-gui-app
+          - "@cic/shared"
+          - "@cic/web"
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
       - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2

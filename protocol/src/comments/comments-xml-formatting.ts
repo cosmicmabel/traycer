@@ -2,9 +2,9 @@ import type {
   CommentThreadStatusFilter,
   CommentsListThreadsResponse,
   CommentsSetThreadStatusResponse,
-} from "@traycer/protocol/host/comments";
-import type { CommentThreadWire } from "@traycer/protocol/host/epic/unary-schemas";
-import { jsonContentToMarkdown } from "@traycer/protocol/common/json-content-serializer";
+} from "@cic/protocol/host/comments";
+import type { CommentThreadWire } from "@cic/protocol/host/epic/unary-schemas";
+import { jsonContentToMarkdown } from "@cic/protocol/common/json-content-serializer";
 
 type FormatCommentsListThreadsXmlInput = {
   readonly response: CommentsListThreadsResponse;
@@ -24,7 +24,7 @@ type XmlThread = {
 export function formatCommentsListThreadsXml(
   input: FormatCommentsListThreadsXmlInput,
 ): string {
-  const lines = ["<traycer_comments>"];
+  const lines = ["<cic_comments>"];
   const matchingThreadCount = input.response.artifacts.reduce(
     (count, artifact) => count + artifact.threads.length,
     0,
@@ -55,7 +55,7 @@ export function formatCommentsListThreadsXml(
     lines.push("", "</artifact>");
   }
 
-  lines.push("", "</traycer_comments>", "");
+  lines.push("", "</cic_comments>", "");
   return lines.join("\n");
 }
 

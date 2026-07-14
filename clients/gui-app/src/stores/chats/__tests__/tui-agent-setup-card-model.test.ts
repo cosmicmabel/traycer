@@ -3,7 +3,7 @@ import type {
   WorktreeBinding,
   WorktreeBindingEntry,
   WorktreeSetupState,
-} from "@traycer/protocol/host/worktree-schemas";
+} from "@cic/protocol/host/worktree-schemas";
 import { buildTuiAgentSetupCardModel } from "../tui-agent-setup-card-model";
 
 const OWNER = { epicId: "epic-1", ownerId: "agent-1" };

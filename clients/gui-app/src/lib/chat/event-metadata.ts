@@ -1,4 +1,4 @@
-import type { ChatEvent } from "@traycer/protocol/persistence/epic/schemas";
+import type { ChatEvent } from "@cic/protocol/persistence/epic/schemas";
 
 export function readMetadataString(
   event: ChatEvent,

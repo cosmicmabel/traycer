@@ -16,8 +16,8 @@
  * placeholder and the per-chat worktree binding stays `null` until the user
  * resolves it at send time via the chat tile's create / import picker.
  */
-import type { CreateChatResponse } from "@traycer/protocol/host/epic/unary-schemas";
-import type { WorktreeIntent } from "@traycer/protocol/host/worktree-schemas";
+import type { CreateChatResponse } from "@cic/protocol/host/epic/unary-schemas";
+import type { WorktreeIntent } from "@cic/protocol/host/worktree-schemas";
 import { v4 as uuidv4 } from "uuid";
 import { displayTitle } from "@/lib/display-title";
 import type { CreateChatMutationInput } from "@/hooks/epic/use-epic-chat-mutations";

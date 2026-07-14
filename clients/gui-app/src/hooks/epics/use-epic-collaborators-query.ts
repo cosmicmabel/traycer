@@ -4,8 +4,8 @@ import type {
   CollaboratorEntry,
   ListEpicCollaboratorsResponse,
   PermissionRole,
-} from "@traycer/protocol/host/epic/unary-schemas";
-import type { HostRpcError } from "@traycer-clients/shared/host-transport/host-messenger";
+} from "@cic/protocol/host/epic/unary-schemas";
+import type { HostRpcError } from "@cic/shared/host-transport/host-messenger";
 import { useHostClient } from "@/lib/host";
 import { useHostQuery } from "@/hooks/host/use-host-query";
 import { normalizeAvatarUrl } from "@/lib/avatar-url";

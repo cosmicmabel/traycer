@@ -2,8 +2,8 @@ import {
   chatSubscribeServerFrameSchema,
   type ChatSubscribeClientFrame,
   type ChatSubscribeServerFrame,
-} from "@traycer/protocol/host/agent/gui/subscribe";
-import type { HostStreamRpcRegistry } from "@traycer/protocol/host/registry";
+} from "@cic/protocol/host/agent/gui/subscribe";
+import type { HostStreamRpcRegistry } from "@cic/protocol/host/registry";
 import type {
   IStreamSession,
   StreamCloseReason,

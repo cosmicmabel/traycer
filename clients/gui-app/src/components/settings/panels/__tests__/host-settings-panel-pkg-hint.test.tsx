@@ -9,8 +9,8 @@ import type {
   IHostManagement,
   IRunnerHost,
   LocalHostSnapshot,
-} from "@traycer-clients/shared/platform/runner-host";
-import { MockRunnerHost } from "@traycer-clients/shared/host-client/mock/mock-runner-host";
+} from "@cic/shared/platform/runner-host";
+import { MockRunnerHost } from "@cic/shared/host-client/mock/mock-runner-host";
 
 vi.mock("sonner", () => ({
   toast: {
@@ -38,7 +38,7 @@ function makeManagement(
     updateHost: vi.fn(notImplemented("updateHost")),
     uninstallHost: vi.fn(notImplemented("uninstallHost")),
     restartHost: vi.fn(() => Promise.resolve()),
-    uninstallTraycer: vi.fn(notImplemented("uninstallTraycer")),
+    uninstallCic: vi.fn(notImplemented("uninstallCic")),
     getRemovalState: vi.fn(() => Promise.resolve({ removedByUser: false })),
     clearRemoval: vi.fn(() => Promise.resolve()),
     getHostLogs: vi.fn(() => Promise.resolve({ path: null, tail: "" })),
@@ -100,7 +100,7 @@ function makeHost(
     hosts: [],
     workspaceFolderPickerPaths: undefined,
     hasLocalHost: undefined,
-    traycerCli: undefined,
+    cicCli: undefined,
   });
   const proto = Object.getPrototypeOf(host) as object;
   return Object.assign(Object.create(proto) as IRunnerHost, host, {
@@ -132,14 +132,14 @@ describe("<HostSettingsPanel /> - package-manager upgrade hint", () => {
     const manifest: CliInstallManifestSnapshot = {
       version: "1.0.0",
       installedAt: "2026-04-01T00:00:00Z",
-      binaryPath: "/usr/local/Cellar/traycer/1.0.0/bin/traycer",
+      binaryPath: "/usr/local/Cellar/cic/1.0.0/bin/cic",
       source: "homebrew",
       pendingUpgrade: null,
       packageManagerUpgrade: {
         source: "homebrew",
         installedVersion: "1.0.0",
         bundledVersion: "1.4.2",
-        upgradeCommand: "brew upgrade traycer",
+        upgradeCommand: "brew upgrade cic",
         recordedAt: "2026-05-15T00:00:00Z",
       },
     };
@@ -158,21 +158,21 @@ describe("<HostSettingsPanel /> - package-manager upgrade hint", () => {
     const command = await screen.findByTestId(
       "settings-host-package-manager-upgrade-command",
     );
-    expect(command.textContent).toBe("brew upgrade traycer");
+    expect(command.textContent).toBe("brew upgrade cic");
   });
 
   it("renders npm package-manager upgrade hints", async () => {
     const manifest: CliInstallManifestSnapshot = {
       version: "1.0.0",
       installedAt: "2026-04-01T00:00:00Z",
-      binaryPath: "/usr/local/bin/traycer",
+      binaryPath: "/usr/local/bin/cic",
       source: "npm",
       pendingUpgrade: null,
       packageManagerUpgrade: {
         source: "npm",
         installedVersion: "1.0.0",
         bundledVersion: "1.4.2",
-        upgradeCommand: "npm install -g @traycerai/cli@latest",
+        upgradeCommand: "npm install -g @cicai/cli@latest",
         recordedAt: "2026-05-15T00:00:00Z",
       },
     };
@@ -188,14 +188,14 @@ describe("<HostSettingsPanel /> - package-manager upgrade hint", () => {
     const command = await screen.findByTestId(
       "settings-host-package-manager-upgrade-command",
     );
-    expect(command.textContent).toBe("npm install -g @traycerai/cli@latest");
+    expect(command.textContent).toBe("npm install -g @cicai/cli@latest");
   });
 
   it("does not render the hint when packageManagerUpgrade is null", async () => {
     const manifest: CliInstallManifestSnapshot = {
       version: "1.4.2",
       installedAt: "2026-05-01T00:00:00Z",
-      binaryPath: "/home/me/.traycer/cli/bin/traycer",
+      binaryPath: "/home/me/.cic/cli/bin/cic",
       source: "desktop",
       pendingUpgrade: null,
       packageManagerUpgrade: null,

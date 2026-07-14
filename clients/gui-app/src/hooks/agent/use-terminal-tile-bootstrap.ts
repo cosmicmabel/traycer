@@ -32,7 +32,7 @@ import type {
   TerminalReattachMode,
   TerminalSessionStoreHandle,
 } from "@/stores/terminals/terminal-session-store";
-import type { TuiHarnessId } from "@traycer/protocol/host/agent/shared";
+import type { TuiHarnessId } from "@cic/protocol/host/agent/shared";
 const TERMINAL_DEFAULT_COLS = 80;
 const TERMINAL_DEFAULT_ROWS = 24;
 

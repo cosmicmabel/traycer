@@ -13,7 +13,7 @@ import { logPerfEvent } from "@/lib/perf/perf-telemetry";
  * task explains the RPCs it actually delayed.
  *
  * Gating mirrors `terminal-load-perf`: on in dev, off under test, opt-in for
- * prod via `localStorage["traycer:perf:mainthread"] = "1"`.
+ * prod via `localStorage["cic:perf:mainthread"] = "1"`.
  */
 
 // Only surface tasks at/above this to keep the console signal-rich. The
@@ -27,7 +27,7 @@ function probeEnabled(): boolean {
   if (import.meta.env.MODE === "test") return false;
   if (import.meta.env.DEV) return true;
   try {
-    return window.localStorage.getItem("traycer:perf:mainthread") === "1";
+    return window.localStorage.getItem("cic:perf:mainthread") === "1";
   } catch {
     return false;
   }

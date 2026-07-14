@@ -1,7 +1,7 @@
 import { visit } from "unist-util-visit";
 import type { Element, Root } from "hast";
 import { extractTextContent, isElement } from "./hast-utils";
-import { TRAYCER_MERMAID_TAG } from "./const";
+import { CIC_MERMAID_TAG } from "./const";
 
 function hasMermaidLanguageClass(value: unknown): boolean {
   if (Array.isArray(value)) {
@@ -43,7 +43,7 @@ export function rehypeCustomMermaid() {
       const code = extractTextContent(codeChild.children);
       const replacement: Element = {
         type: "element",
-        tagName: TRAYCER_MERMAID_TAG,
+        tagName: CIC_MERMAID_TAG,
         properties: { "data-code": encodeURIComponent(code) },
         children: [],
       };

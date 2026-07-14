@@ -15,13 +15,13 @@ import type {
   InterviewAnswer,
   Message,
   UserMessageSender,
-} from "@traycer/protocol/persistence/epic/schemas";
-import type { TokenUsage } from "@traycer/protocol/persistence/epic/foundation";
+} from "@cic/protocol/persistence/epic/schemas";
+import type { TokenUsage } from "@cic/protocol/persistence/epic/foundation";
 import type {
   BackgroundItem,
   ChatRunSettings,
-} from "@traycer/protocol/host/agent/gui/subscribe";
-import type { WorktreeBinding } from "@traycer/protocol/host/worktree-schemas";
+} from "@cic/protocol/host/agent/gui/subscribe";
+import type { WorktreeBinding } from "@cic/protocol/host/worktree-schemas";
 import {
   ChatMessages,
   type ChatMessageScrollRequest,
@@ -154,8 +154,8 @@ import {
 } from "@/stores/settings/local-snapshot-clear-store";
 import { ChatTileErrorNoticeToasts } from "./chat-tile-error-notice-toasts";
 import { HostWorkspaceSelector } from "@/components/home/host-workspace-selector/host-workspace-selector";
-import type { FatalErrorDetails } from "@traycer/protocol/framework/ws-protocol";
-import type { TraycerNextStepOption } from "@/markdown/traycer-next-steps";
+import type { FatalErrorDetails } from "@cic/protocol/framework/ws-protocol";
+import type { CicNextStepOption } from "@/markdown/cic-next-steps";
 import {
   ChatLowerInteractionSurfaces,
   InertChatComposer,
@@ -1328,7 +1328,7 @@ function useChatTileSessionViewModel(props: ChatTileSessionViewProps) {
       state.pendingFileEditApprovals.length,
     );
   const sendNextStep = useCallback(
-    (option: TraycerNextStepOption): boolean => {
+    (option: CicNextStepOption): boolean => {
       if (!canSendNextStep) return false;
       const sender = userMessageSenderForProfile(profile);
       if (sender === null) return false;

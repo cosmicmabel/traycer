@@ -3,7 +3,7 @@ import {
   notificationsSubscribeClientFrameSchema,
   notificationsSubscribeServerFrameSchema,
   notificationsSubscribeV10,
-} from "@traycer/protocol/host/notifications/subscribe";
+} from "@cic/protocol/host/notifications/subscribe";
 
 /**
  * `notifications.subscribe@1.0` frame fixtures.

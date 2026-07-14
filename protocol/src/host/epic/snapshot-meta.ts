@@ -12,14 +12,14 @@
  * must stay browser-safe.
  */
 import { z } from "zod";
-import { getRecordSchema } from "@traycer/protocol/framework/index";
-import { commonRecordRegistry } from "@traycer/protocol/common/registry";
+import { getRecordSchema } from "@cic/protocol/framework/index";
+import { commonRecordRegistry } from "@cic/protocol/common/registry";
 import {
   epicLightSchema,
   taskRepoIdentifierSchema,
   taskRepoAssociationSchema,
   userTaskWorkspaceSchema,
-} from "@traycer/protocol/host/epic/unary-schemas";
+} from "@cic/protocol/host/epic/unary-schemas";
 
 const permissionRoleSchema = getRecordSchema(
   commonRecordRegistry,

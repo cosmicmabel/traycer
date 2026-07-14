@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import type { JsonContent } from "@traycer/protocol/common/registry";
-import type { Message } from "@traycer/protocol/persistence/epic/schemas";
-import type { ChatQueueState } from "@traycer/protocol/host/agent/gui/subscribe";
+import type { JsonContent } from "@cic/protocol/common/registry";
+import type { Message } from "@cic/protocol/persistence/epic/schemas";
+import type { ChatQueueState } from "@cic/protocol/host/agent/gui/subscribe";
 import {
   reconcileQueueChange,
   reconcileSnapshotChange,

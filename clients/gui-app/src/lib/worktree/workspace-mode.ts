@@ -1,7 +1,7 @@
 import type {
   WorktreeBindingWorkspaceMode,
   WorktreeIntent,
-} from "@traycer/protocol/host/worktree-schemas";
+} from "@cic/protocol/host/worktree-schemas";
 
 export function deriveWorkspaceMode(
   workspaceFolderCount: number,

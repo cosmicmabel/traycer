@@ -1,8 +1,8 @@
-import type { AccountContext } from "@traycer/protocol/common/schemas";
-import type { RequestOfMethod } from "@traycer-clients/shared/host-transport/host-messenger";
-import type { ResolveArtifactByPathRequest } from "@traycer/protocol/host/epic/unary-schemas";
-import type { HostRpcRegistry } from "@traycer/protocol/host/index";
-import type { VersionedRpcRegistry } from "@traycer/protocol/framework";
+import type { AccountContext } from "@cic/protocol/common/schemas";
+import type { RequestOfMethod } from "@cic/shared/host-transport/host-messenger";
+import type { ResolveArtifactByPathRequest } from "@cic/protocol/host/epic/unary-schemas";
+import type { HostRpcRegistry } from "@cic/protocol/host/index";
+import type { VersionedRpcRegistry } from "@cic/protocol/framework";
 
 export const hostQueryKeys = {
   base: () => ["host"] as const,
@@ -38,15 +38,12 @@ export const hostQueryKeys = {
       params,
     ),
   /**
-   * Named alias for the Traycer-sourced `host.getRateLimitUsage` aperture
+   * Named alias for the CIC-sourced `host.getRateLimitUsage` aperture
    * call (`{ accountContext }`, no `providerId`) - distinct from the
    * per-provider pull's `{ accountContext, providerId }` key. Centralized so
    * the header popover and its tests can't drift on this key's shape.
    */
-  traycerRateLimitUsage: (
-    hostId: string | null,
-    accountContext: AccountContext,
-  ) =>
+  cicRateLimitUsage: (hostId: string | null, accountContext: AccountContext) =>
     hostQueryKeys.method<HostRpcRegistry, "host.getRateLimitUsage">(
       hostId,
       "host.getRateLimitUsage",

@@ -4,7 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, cleanup, render, waitFor } from "@testing-library/react";
 import { create } from "zustand";
 import type { StoreApi, UseBoundStore } from "zustand";
-import type { ChatAccumulatedFileChange } from "@traycer/protocol/host/agent/gui/subscribe";
+import type { ChatAccumulatedFileChange } from "@cic/protocol/host/agent/gui/subscribe";
 import { makeSnapshotCumulativeDiffTile } from "@/lib/chat/snapshot-diff-tile";
 import { TileFindScope } from "@/components/epic-canvas/tile-find/tile-find-scope";
 import {

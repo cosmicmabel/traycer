@@ -7,7 +7,7 @@ import type {
   GitListChangedFilesResponseV11,
   SubmoduleChangeset,
   SubmodulePointer,
-} from "@traycer/protocol/host";
+} from "@cic/protocol/host";
 import {
   hasDirtySubmodulesForRefresh,
   useGitListChangedFilesWithSubmodules,

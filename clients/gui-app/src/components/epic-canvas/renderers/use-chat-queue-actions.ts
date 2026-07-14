@@ -2,8 +2,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type {
   ChatQueuedItem,
   ChatRunSettings,
-} from "@traycer/protocol/host/agent/gui/subscribe";
-import type { JsonContent } from "@traycer/protocol/common/registry";
+} from "@cic/protocol/host/agent/gui/subscribe";
+import type { JsonContent } from "@cic/protocol/common/registry";
 import type { ChatSessionStoreHandle } from "@/stores/chats/chat-session-store";
 import {
   decideSteerSettings,

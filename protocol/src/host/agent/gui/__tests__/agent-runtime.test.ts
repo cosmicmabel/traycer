@@ -5,7 +5,7 @@ import {
   runtimeEventSchema,
   runtimeEventSchemaV12,
   runtimePermissionModeSchema,
-} from "@traycer/protocol/host/agent/gui/agent-runtime";
+} from "@cic/protocol/host/agent/gui/agent-runtime";
 
 describe("agent runtime stream schema", () => {
   it("accepts the three runtime permission modes", () => {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { ProviderRateLimits } from "@traycer/protocol/host";
+import type { ProviderRateLimits } from "@cic/protocol/host";
 import { envelopeFromRateLimits } from "@/lib/rate-limits/__tests__/rate-limit-envelope-fixtures";
 import {
   formatUnavailableReason,

@@ -31,7 +31,7 @@ import type {
   HostDoctorReport,
   FreePortAndRestartInput,
   IHostManagement,
-} from "@traycer-clients/shared/platform/runner-host";
+} from "@cic/shared/platform/runner-host";
 
 export interface HostDoctorCardProps {
   readonly recurrenceState?: RecurrenceState;

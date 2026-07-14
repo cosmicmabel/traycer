@@ -18,7 +18,7 @@ export interface WireframeAttrs {
 /**
  * Atom block that renders a sandboxed HTML preview. Persisted as a
  * ` ```wireframe ` fence in markdown, matching the convention used by
- * the legacy Traycer views editor. HTML output uses a `<div
+ * the legacy CIC views editor. HTML output uses a `<div
  * data-type="ui-preview-block">` wrapper so cross-editor paste round-
  * trips.
  */
@@ -78,7 +78,7 @@ export const WireframeNode = Node.create({
           return { "data-html": codeEl.textContent };
         },
       },
-      { tag: "traycer-ui-preview" },
+      { tag: "cic-ui-preview" },
     ];
   },
 

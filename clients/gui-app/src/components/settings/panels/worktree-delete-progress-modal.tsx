@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Check, ChevronDown, ChevronUp, X } from "lucide-react";
-import type { WorktreeDeletePhase } from "@traycer/protocol/host/worktree-delete-stream";
-import type { WorktreeHostEntry } from "@traycer/protocol/host/index";
+import type { WorktreeDeletePhase } from "@cic/protocol/host/worktree-delete-stream";
+import type { WorktreeHostEntry } from "@cic/protocol/host/index";
 import { AgentSpinningDots } from "@/components/ui/agent-spinning-dots";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";

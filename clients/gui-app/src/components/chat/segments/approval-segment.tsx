@@ -1,7 +1,7 @@
 import { Check, X } from "lucide-react";
 import { useState } from "react";
-import type { ApprovalDecision } from "@traycer/protocol/persistence/epic/schemas";
-import type { ToolInputDetail } from "@traycer/protocol/host/agent/gui/tool-input-detail";
+import type { ApprovalDecision } from "@cic/protocol/persistence/epic/schemas";
+import type { ToolInputDetail } from "@cic/protocol/host/agent/gui/tool-input-detail";
 import { cn } from "@/lib/utils";
 import { SegmentCard } from "./segment-card";
 import { SegmentRow } from "./segment-row";

@@ -1,4 +1,4 @@
-import type { TaskRepoIdentifier } from "@traycer/protocol/host/epic/unary-schemas";
+import type { TaskRepoIdentifier } from "@cic/protocol/host/epic/unary-schemas";
 
 /**
  * `resolved`: the bound host knows this repo at `path`. The chip uses

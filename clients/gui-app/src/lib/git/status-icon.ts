@@ -3,7 +3,7 @@
  * Includes exhaustiveness check to ensure all status values are handled.
  */
 
-import type { GitFileStatus } from "@traycer/protocol/host";
+import type { GitFileStatus } from "@cic/protocol/host";
 
 export interface StatusBadgeStyle {
   readonly letter: string;

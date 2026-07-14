@@ -5,15 +5,15 @@ export default defineConfig({
   resolve: {
     alias: [
       {
-        find: "@traycer-clients/shared",
+        find: "@cic/shared",
         replacement: path.resolve(__dirname, "."),
       },
       {
-        find: /^@traycer\/protocol\/utils\/(.*)$/,
+        find: /^@cic\/protocol\/utils\/(.*)$/,
         replacement: path.resolve(__dirname, "../../protocol/utils/$1"),
       },
       {
-        find: /^@traycer\/protocol\/(.*)$/,
+        find: /^@cic\/protocol\/(.*)$/,
         replacement: path.resolve(__dirname, "../../protocol/src/$1"),
       },
     ],
@@ -22,7 +22,7 @@ export default defineConfig({
     include: ["**/__tests__/**/*.test.ts"],
     globals: false,
     env: {
-      VITE_TRAYCER_OSS_REPO: "https://github.com/traycerai/traycer",
+      VITE_CIC_OSS_REPO: "https://github.com/cosmicmabel/traycer",
     },
   },
 });

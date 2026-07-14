@@ -15,7 +15,7 @@ import {
   adjacentDedupedProgressItems,
   cleanSubagentNotificationText,
 } from "@/components/chat/segments/subagent-display";
-import { parseTraycerNextStepsMarkdown } from "@/markdown/traycer-next-steps";
+import { parseCicNextStepsMarkdown } from "@/markdown/cic-next-steps";
 import { composerClipboardPlainText } from "@/lib/composer/composer-clipboard";
 import { artifactOperationVerb } from "@/lib/chat/artifact-operation-verb";
 import { segmentStepLabel } from "@/lib/chat/todo-status-tones";
@@ -321,7 +321,7 @@ function segmentSearchUnits(
 function segmentSearchText(segment: MessageSegment): ReadonlyArray<string> {
   switch (segment.kind) {
     case "text":
-      return parseTraycerNextStepsMarkdown(
+      return parseCicNextStepsMarkdown(
         segment.markdown,
         segment.isStreaming,
       ).flatMap((part) => {

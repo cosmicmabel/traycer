@@ -17,7 +17,7 @@ import {
   listCloudTasksRequestForHistorySearch,
   type ListCloudTasksRequest,
 } from "@/lib/cloud-epic-tasks-query";
-import type { ListTasksResponse } from "@traycer/protocol/host/epic/unary-schemas";
+import type { ListTasksResponse } from "@cic/protocol/host/epic/unary-schemas";
 import type { HistorySearchState } from "@/lib/history-search";
 import { patchHistorySearch } from "@/lib/history-search";
 import Fuse, { type IFuseOptions } from "fuse.js";

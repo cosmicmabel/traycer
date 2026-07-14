@@ -3,7 +3,7 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { nestedFocusBoundaryMock } from "@/__tests__/nested-focus-boundary-mock";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { useEpicCanvasStore } from "@/stores/epics/canvas/store";
-import type { GitChangedFileV11 } from "@traycer/protocol/host";
+import type { GitChangedFileV11 } from "@cic/protocol/host";
 import { FileRow } from "../file-row";
 
 vi.mock("@dnd-kit/core", () => ({

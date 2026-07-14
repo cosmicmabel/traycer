@@ -2,8 +2,8 @@ import type { z } from "zod";
 import type {
   SchemaVersion,
   VersionedRpcRegistry,
-} from "@traycer/protocol/framework/index";
-import type { ConnectionManifest } from "@traycer/protocol/framework/ws-protocol";
+} from "@cic/protocol/framework/index";
+import type { ConnectionManifest } from "@cic/protocol/framework/ws-protocol";
 
 /**
  * Runtime accessors over the validated `hostRpcRegistry` /

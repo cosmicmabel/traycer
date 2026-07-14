@@ -1,6 +1,6 @@
 import "../../../../__tests__/test-browser-apis";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import type { WorktreeFolderIntent } from "@traycer/protocol/host/worktree-schemas";
+import type { WorktreeFolderIntent } from "@cic/protocol/host/worktree-schemas";
 import {
   newConversationModalStagingKey,
   pendingChildTerminalAgentStagingKey,

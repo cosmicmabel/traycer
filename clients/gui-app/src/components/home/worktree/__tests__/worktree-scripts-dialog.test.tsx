@@ -13,7 +13,7 @@ import type {
   WorktreeEntryScripts,
   WorktreeIntent,
   WorktreeWorkspaceSummary,
-} from "@traycer/protocol/host/worktree-schemas";
+} from "@cic/protocol/host/worktree-schemas";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import {
   useWorktreeIntentStagingStore,

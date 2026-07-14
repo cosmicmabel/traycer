@@ -1,4 +1,4 @@
-export { TraycerApp, type TraycerAppProps } from "@/traycer-app";
+export { CicApp, type CicAppProps } from "@/cic-app";
 export {
   hostRpcRegistry,
   type HostRpcRegistry,

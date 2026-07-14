@@ -1,5 +1,5 @@
-export { TraycerMarkdown } from "./traycer-markdown";
-export type { TraycerMarkdownProps } from "./traycer-markdown";
+export { CicMarkdown } from "./cic-markdown";
+export type { CicMarkdownProps } from "./cic-markdown";
 
 export { MarkdownBlock } from "./markdown-block";
 export { useMarkdownBlocks } from "./use-markdown-blocks";
@@ -16,7 +16,7 @@ export {
 } from "./shiki-highlighter";
 export { useThrottledCodeHighlight } from "./use-throttled-code-highlight";
 // The raw context object stays module-private: external code opts into
-// streaming via `TraycerMarkdown`'s `isStreaming` prop, never by mounting
+// streaming via `CicMarkdown`'s `isStreaming` prop, never by mounting
 // the provider directly.
 export { useIsMarkdownStreaming } from "./shiki-streaming-context";
 

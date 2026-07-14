@@ -40,7 +40,7 @@ export function InstallGuidanceDialog(props: InstallGuidanceDialogProps) {
           <div className="min-w-0 flex-1 space-y-3">
             <div className="space-y-1.5">
               <DialogTitle className="text-ui font-semibold leading-snug">
-                Finish updating Traycer
+                Finish updating CIC
               </DialogTitle>
               <DialogDescription className="text-ui-sm leading-relaxed text-muted-foreground">
                 {guidance.summary}

@@ -8,7 +8,7 @@ import {
   Search,
   Split,
 } from "lucide-react";
-import type { WorktreeFolderIntent } from "@traycer/protocol/host/worktree-schemas";
+import type { WorktreeFolderIntent } from "@cic/protocol/host/worktree-schemas";
 import {
   DropdownMenu,
   DropdownMenuContent,

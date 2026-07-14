@@ -5,8 +5,8 @@ import {
   fatalErrorDetailsSchema,
   type ConnectionManifest,
   type FatalErrorDetails,
-} from "@traycer/protocol/framework/ws-protocol";
-import type { SchemaVersion } from "@traycer/protocol/framework/index";
+} from "@cic/protocol/framework/ws-protocol";
+import type { SchemaVersion } from "@cic/protocol/framework/index";
 
 /**
  * Control frames exchanged on the `/stream` WS before (and alongside) the

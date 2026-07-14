@@ -1,4 +1,4 @@
-import type { GuiHarnessId } from "@traycer/protocol/host/index";
+import type { GuiHarnessId } from "@cic/protocol/host/index";
 import {
   isChatSessionSettled,
   type ChatSessionState,
@@ -21,7 +21,7 @@ export interface ChatTurnCompletion {
   readonly chatTitle: string | null;
   // Harness the just-completed turn ran on, latched while it was active (the
   // `activeTurn` is null by the settled edge). Lets consumers act only on
-  // turns of a given harness - e.g. credit refresh only for `"traycer"`.
+  // turns of a given harness - e.g. credit refresh only for `"cic"`.
   // Null if no running turn was observed (e.g. seeded mid-settle).
   readonly harnessId: GuiHarnessId | null;
 }

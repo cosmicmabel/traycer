@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { DEFAULT_ACCOUNT_CONTEXT } from "@traycer/protocol/common/schemas";
+import { DEFAULT_ACCOUNT_CONTEXT } from "@cic/protocol/common/schemas";
 import {
   rateLimitFetchLane,
   type RateLimitProviderId,

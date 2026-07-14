@@ -1,15 +1,15 @@
-import type { AuthenticatedUser } from "@traycer/protocol/auth";
+import type { AuthenticatedUser } from "@cic/protocol/auth";
 import type {
   AuthValidationProfile,
   ITokenStore,
   StoredAuthTokens,
-} from "@traycer-clients/shared/platform/runner-host";
+} from "@cic/shared/platform/runner-host";
 
 /**
  * The synthetic local session used when the serve process reports
  * `localMode: true` (fronting the open host, or forced with `--local`).
  *
- * There is no Traycer account in this mode. The shell seeds a constant
+ * There is no CIC account in this mode. The shell seeds a constant
  * bearer before the app boots so `AuthService.start()` finds stored tokens,
  * and `BrowserRunnerHost` answers every validate/refresh call with the
  * synthetic identity below instead of calling authn. The bearer's VALUE is
@@ -18,8 +18,8 @@ import type {
  * host's verdict so chat ownership (`access.ownerUserId`) lines up.
  */
 
-export const LOCAL_BEARER_TOKEN = "traycer-local";
-export const LOCAL_REFRESH_TOKEN = "traycer-local-refresh";
+export const LOCAL_BEARER_TOKEN = "cic-local";
+export const LOCAL_REFRESH_TOKEN = "cic-local-refresh";
 
 /** Mirror of the open host's local-user verdict (host/src/auth.ts). */
 export const LOCAL_USER_ID = "local-user";
@@ -60,7 +60,7 @@ export function localAuthenticatedUser(): AuthenticatedUser {
       isLearningEnabled: false,
     },
     // "PRO" keeps every plan-gated surface open; nothing is billed - the
-    // open host never consults Traycer subscription state.
+    // open host never consults CIC subscription state.
     userSubscription: {
       id: "local-subscription",
       userID: LOCAL_USER_ID,

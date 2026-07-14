@@ -1,6 +1,6 @@
 /**
  * Automatic recovery for a terminal/TUI tile whose live session dies while the
- * app is disconnected (e.g. the Traycer Host reaps an idle TUI agent after the
+ * app is disconnected (e.g. the CIC Host reaps an idle TUI agent after the
  * overnight WS heartbeat times out). The renderer's transport auto-reconnects,
  * but re-subscribing to the reaped session id dead-ends at `status: "lost"` with
  * no path back - the only recovery used to be a full app refresh.

@@ -1,11 +1,11 @@
 import type { QueryClient } from "@tanstack/react-query";
-import type { HostClient } from "@traycer-clients/shared/host-client/host-client";
+import type { HostClient } from "@cic/shared/host-client/host-client";
 import type {
   ResolveArtifactByPathRequest,
   ResolveArtifactByPathResponse,
   ResolveArtifactByPathResult,
-} from "@traycer/protocol/host/epic/unary-schemas";
-import type { HostRpcRegistry } from "@traycer/protocol/host/index";
+} from "@cic/protocol/host/epic/unary-schemas";
+import type { HostRpcRegistry } from "@cic/protocol/host/index";
 import { hostQueryKeys } from "@/lib/query-keys";
 
 export interface FetchResolveArtifactByPathArgs {

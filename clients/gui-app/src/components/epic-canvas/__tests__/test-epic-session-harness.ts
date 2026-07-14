@@ -6,9 +6,9 @@ import {
 import type {
   EpicStreamCallbacks,
   EpicStreamClient,
-} from "@traycer-clients/shared/host-transport/epic-stream-client";
-import type { SnapshotMetaEpic } from "@traycer/protocol/host/epic/snapshot-meta";
-import type { PermissionRole } from "@traycer/protocol/host/epic/unary-schemas";
+} from "@cic/shared/host-transport/epic-stream-client";
+import type { SnapshotMetaEpic } from "@cic/protocol/host/epic/snapshot-meta";
+import type { PermissionRole } from "@cic/protocol/host/epic/unary-schemas";
 
 interface FakeStream {
   callbacks: EpicStreamCallbacks;

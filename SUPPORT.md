@@ -1,8 +1,8 @@
 # Support
 
-- **Questions & ideas** → [Discord](https://traycer.ai/discord)
-- **Bugs & feature requests** → [open an issue](../../issues/new/choose)
-- **Security** → see [SECURITY.md](SECURITY.md) (please don't use public issues)
-- **Product help & account** → <https://traycer.ai>
+- **Questions & ideas** → [GitHub Discussions](https://github.com/cosmicmabel/traycer/discussions)
+- **Bugs & feature requests** → [GitHub Issues](https://github.com/cosmicmabel/traycer/issues)
+- **Security vulnerabilities** → see [SECURITY.md](SECURITY.md) (please do not open public issues)
 
-Please search existing issues and discussions before opening a new one.
+CIC is local-only software with no accounts or hosted service — all support
+happens in the open, in this repository.

@@ -35,9 +35,9 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { FileRow } from "@/components/epic-canvas/git-diff/file-row";
 import { useFocusEpicTerminalSession } from "@/components/epic-canvas/renderers/chat-tile-focus-terminal";
 import { ArtifactChildIndex } from "@/components/epic-canvas/renderers/artifact-child-index";
-import { useTraycerReferenceOpenHandler } from "@/markdown/components/use-traycer-reference-open";
+import { useCicReferenceOpenHandler } from "@/markdown/components/use-cic-reference-open";
 import { useEpicCanvasStore } from "@/stores/epics/canvas/store";
-import type { GitChangedFileV11 } from "@traycer/protocol/host";
+import type { GitChangedFileV11 } from "@cic/protocol/host";
 import type { EpicNodeRef } from "@/stores/epics/canvas/types";
 
 const epicSelectors = vi.hoisted<{
@@ -115,7 +115,7 @@ function ReferenceChip(props: {
   readonly epicId: string;
   readonly nodeId: string;
 }) {
-  const { onOpen } = useTraycerReferenceOpenHandler({
+  const { onOpen } = useCicReferenceOpenHandler({
     epicId: props.epicId,
     nodeId: props.nodeId,
     requiresNode: true,

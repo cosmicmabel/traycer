@@ -1,4 +1,4 @@
-import type { HostClient } from "@traycer-clients/shared/host-client/host-client";
+import type { HostClient } from "@cic/shared/host-client/host-client";
 import type { HostRpcRegistry } from "@/lib/host";
 
 export type HostWorkspaceControlsHostScope =

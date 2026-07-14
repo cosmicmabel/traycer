@@ -34,7 +34,7 @@ interface BrandMarkProps {
 export function BrandMark(props: BrandMarkProps) {
   // Unique per instance so multiple BrandMarks in one document can't collide
   // on the SVG mask id.
-  const maskId = `auth-traycer-mark-mask-${useId().replace(/:/g, "")}`;
+  const maskId = `auth-cic-mark-mask-${useId().replace(/:/g, "")}`;
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

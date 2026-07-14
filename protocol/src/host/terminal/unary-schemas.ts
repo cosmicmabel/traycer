@@ -10,7 +10,7 @@
  * must stay browser-safe.
  */
 import { z } from "zod";
-import { tuiHarnessIdSchema } from "@traycer/protocol/host/agent/shared";
+import { tuiHarnessIdSchema } from "@cic/protocol/host/agent/shared";
 
 export const terminalSessionStatusSchema = z.enum(["running", "exited"]);
 export type TerminalSessionStatus = z.infer<typeof terminalSessionStatusSchema>;

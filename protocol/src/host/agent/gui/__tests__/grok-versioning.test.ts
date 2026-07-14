@@ -7,13 +7,13 @@ import {
   agentListDowngradeV4ToV1,
   agentListDowngradeV4ToV2,
   agentListDowngradeV4ToV3,
-} from "@traycer/protocol/host/agent/contracts";
+} from "@cic/protocol/host/agent/contracts";
 import {
   listAgentsResponseSchema,
   listAgentsResponseSchemaV10,
   listAgentsResponseSchemaV20,
   listAgentsResponseSchemaV30,
-} from "@traycer/protocol/host/agent/shared";
+} from "@cic/protocol/host/agent/shared";
 import {
   agentGuiListHarnessesDowngradeV2ToV1,
   agentGuiListHarnessesDowngradeV3ToV1,
@@ -21,14 +21,14 @@ import {
   agentGuiListHarnessesDowngradeV4ToV1,
   agentGuiListHarnessesDowngradeV4ToV2,
   agentGuiListHarnessesDowngradeV4ToV3,
-} from "@traycer/protocol/host/agent/gui/contracts";
+} from "@cic/protocol/host/agent/gui/contracts";
 import {
   guiHarnessOptionSchema,
   listGuiHarnessesResponseSchema,
   listGuiHarnessesResponseSchemaV10,
   listGuiHarnessesResponseSchemaV20,
   listGuiHarnessesResponseSchemaV30,
-} from "@traycer/protocol/host/agent/gui/unary-schemas";
+} from "@cic/protocol/host/agent/gui/unary-schemas";
 import {
   PROVIDER_AUTH_STATUS_SCHEMA,
   PROVIDER_AUTH_STATUS_SCHEMA_V10,
@@ -38,7 +38,7 @@ import {
   providersListResponseSchemaV20,
   providersListResponseSchemaV30,
   providersSetApiKeyResponseSchemaV10,
-} from "@traycer/protocol/host/provider-schemas";
+} from "@cic/protocol/host/provider-schemas";
 // Importing from the registry runs `defineVersionedRpcRegistry` (full structural
 // + schema-compatibility validation) at module load, so this import alone
 // asserts the new v2.0/v3.0/v4.0 lines and their upgrade/downgrade bridges are
@@ -52,7 +52,7 @@ import {
   providersListDowngradeV4ToV2,
   providersListDowngradeV4ToV3,
   providersSetApiKeyDowngradeV2ToV1,
-} from "@traycer/protocol/host/registry";
+} from "@cic/protocol/host/registry";
 
 function harnessOption(id: string) {
   return guiHarnessOptionSchema.parse({

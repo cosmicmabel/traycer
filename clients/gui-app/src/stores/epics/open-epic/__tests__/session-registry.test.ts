@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { AGENT_WORKING_AWARENESS_FIELD } from "@traycer/protocol/host/epic/subscribe";
+import { AGENT_WORKING_AWARENESS_FIELD } from "@cic/protocol/host/epic/subscribe";
 import { OpenEpicSessionRegistry } from "@/stores/epics/open-epic/session-registry";
 import {
   createOpenEpicStore,

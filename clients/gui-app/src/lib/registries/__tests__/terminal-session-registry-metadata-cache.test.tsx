@@ -4,11 +4,11 @@ import { cleanup, renderHook, waitFor, act } from "@testing-library/react";
 import type { ReactNode } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { vi } from "vitest";
-import type { TerminalStreamCallbacks } from "@traycer-clients/shared/host-transport/terminal-stream-client";
+import type { TerminalStreamCallbacks } from "@cic/shared/host-transport/terminal-stream-client";
 import type {
   ListTerminalsResponse,
   TerminalSessionInfo,
-} from "@traycer/protocol/host/terminal/unary-schemas";
+} from "@cic/protocol/host/terminal/unary-schemas";
 import { hostQueryKeys } from "@/lib/query-keys";
 
 // Regression coverage for the terminal reattach loop: stream-pushed metadata

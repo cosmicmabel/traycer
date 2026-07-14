@@ -6,10 +6,10 @@ import {
   useSyncExternalStore,
   type ReactNode,
 } from "react";
-import type { HostClient } from "@traycer-clients/shared/host-client/host-client";
-import type { WsStreamClient } from "@traycer-clients/shared/host-transport/ws-stream-client";
-import type { VersionedRpcRegistry } from "@traycer/protocol/framework/index";
-import type { HostStreamRpcRegistry } from "@traycer/protocol/host/registry";
+import type { HostClient } from "@cic/shared/host-client/host-client";
+import type { WsStreamClient } from "@cic/shared/host-transport/ws-stream-client";
+import type { VersionedRpcRegistry } from "@cic/protocol/framework/index";
+import type { HostStreamRpcRegistry } from "@cic/protocol/host/registry";
 import { useHostBinding } from "@/lib/host/runtime";
 import { hostTransportKey } from "@/lib/host/transport-key";
 import { buildHostStreamClient } from "@/hooks/host/use-host-stream-client-for";

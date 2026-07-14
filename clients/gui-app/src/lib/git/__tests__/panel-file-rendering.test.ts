@@ -8,7 +8,7 @@ import type {
   GitChangedFile,
   GitFileStatus,
   GitStage,
-} from "@traycer/protocol/host";
+} from "@cic/protocol/host";
 import {
   buildGitFileRowMetadata,
   buildGitPanelFileSections,
@@ -62,7 +62,7 @@ function isDirectoryHandle(
 }
 
 describe("git panel file rendering helpers", () => {
-  it("maps Traycer Git statuses into Pierre's supported status set", () => {
+  it("maps CIC Git statuses into Pierre's supported status set", () => {
     expect(
       gitChangedFileToPierreStatus(
         makeFile({

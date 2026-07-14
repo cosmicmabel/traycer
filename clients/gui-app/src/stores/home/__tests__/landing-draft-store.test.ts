@@ -9,8 +9,8 @@ import {
   useLandingDraftStore,
   type LandingDraftTab,
 } from "@/stores/home/landing-draft-store";
-import type { ChatRunSettings } from "@traycer/protocol/host/agent/gui/subscribe";
-import type { JsonContent } from "@traycer/protocol/common/registry";
+import type { ChatRunSettings } from "@cic/protocol/host/agent/gui/subscribe";
+import type { JsonContent } from "@cic/protocol/common/registry";
 
 function textContent(text: string): JsonContent {
   if (text.length === 0) return EMPTY_LANDING_DRAFT_CONTENT;
@@ -86,17 +86,17 @@ const SONNET_SETTINGS: ChatRunSettings = {
 const WORKSPACE_A = {
   path: "/tmp/workspace-a",
   name: "workspace-a",
-  repoIdentifier: { owner: "traycerai", repo: "workspace-a" },
+  repoIdentifier: { owner: "cicai", repo: "workspace-a" },
 };
 const WORKSPACE_B = {
   path: "/tmp/workspace-b",
   name: "workspace-b",
-  repoIdentifier: { owner: "traycerai", repo: "workspace-b" },
+  repoIdentifier: { owner: "cicai", repo: "workspace-b" },
 };
 const WORKSPACE_C = {
   path: "/tmp/workspace-c",
   name: "workspace-c",
-  repoIdentifier: { owner: "traycerai", repo: "workspace-c" },
+  repoIdentifier: { owner: "cicai", repo: "workspace-c" },
 };
 function resetStore(): void {
   useLandingDraftStore.setState({

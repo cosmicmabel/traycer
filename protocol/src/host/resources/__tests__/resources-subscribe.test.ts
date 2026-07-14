@@ -1,12 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { hostStreamRpcRegistry } from "@traycer/protocol/host/registry";
+import { hostStreamRpcRegistry } from "@cic/protocol/host/registry";
 import {
   resourcesSubscribeClientFrameSchema,
   resourcesSubscribeOpenRequestV11Schema,
   resourcesSubscribeServerFrameSchema,
   resourcesSubscribeV10,
   resourcesSubscribeV11,
-} from "@traycer/protocol/host/resources/subscribe";
+} from "@cic/protocol/host/resources/subscribe";
 
 /**
  * `resources.subscribe@1.0` contract fixtures + registry membership.
@@ -55,7 +55,7 @@ const EPIC_FIXTURE = {
 const APP_FIXTURE = {
   sampledAt: 1_000,
   hostTotalMemoryBytes: 16 * 1024 * 1024 * 1024,
-  process: { ...PROCESS_FIXTURE, pid: 10, rootPid: 10, name: "traycer-host" },
+  process: { ...PROCESS_FIXTURE, pid: 10, rootPid: 10, name: "cic-host" },
   processCount: 1,
   cpuPercent: 1.5,
   rssBytes: 256 * 1024 * 1024,
@@ -109,7 +109,7 @@ describe("resources.subscribe@1.0 server frames", () => {
     });
     expect(parsed.kind).toBe("snapshot");
     if (parsed.kind === "snapshot") {
-      expect(parsed.app?.process?.name).toBe("traycer-host");
+      expect(parsed.app?.process?.name).toBe("cic-host");
       expect(parsed.owners).toHaveLength(1);
       expect(parsed.owners[0].processes[0].name).toBe("bash");
       expect(parsed.epic?.epicId).toBe("epic-1");

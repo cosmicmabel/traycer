@@ -1,7 +1,7 @@
 import type {
   ProviderRateLimits,
   ProviderRateLimitWindow,
-} from "@traycer/protocol/host";
+} from "@cic/protocol/host";
 import { useHostQueriesWithResponseMap } from "@/hooks/host/use-host-queries";
 import {
   providerRateLimitQueryOptions,

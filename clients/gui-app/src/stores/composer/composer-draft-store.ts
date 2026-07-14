@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { JsonContent } from "@traycer/protocol/common/registry";
+import type { JsonContent } from "@cic/protocol/common/registry";
 import { basePersistOptions, persistKey, STORE_KEYS } from "@/lib/persist";
 
 export interface DraftSelection {

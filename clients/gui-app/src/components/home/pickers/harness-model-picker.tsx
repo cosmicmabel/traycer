@@ -56,8 +56,8 @@ import { useRegisterActiveModelPicker } from "@/hooks/command-palette/use-regist
 import { useBindingForAction } from "@/stores/settings/keybinding-store";
 import { formatChordForDisplay } from "@/lib/keybindings/chord";
 import { useProvidersList } from "@/hooks/providers/use-providers-list-query";
-import type { GuiHarnessId } from "@traycer/protocol/host/index";
-import type { ProviderCliState } from "@traycer/protocol/host/provider-schemas";
+import type { GuiHarnessId } from "@cic/protocol/host/index";
+import type { ProviderCliState } from "@cic/protocol/host/provider-schemas";
 import {
   providerIdToGuiHarnessId,
   sortGuiHarnessesByProviderOrder,
@@ -80,7 +80,7 @@ interface HarnessModelPickerProps {
   /**
    * When true, the provider rail and model rows are restricted to TUI-capable
    * harnesses (the terminal-launch surface), hiding GUI-only providers like
-   * `traycer`. `false` shows every GUI harness (chat surfaces).
+   * `cic`. `false` shows every GUI harness (chat surfaces).
    */
   tuiOnly: boolean;
   lockedHarnessId: ProviderId | null;
@@ -217,7 +217,7 @@ function HarnessModelPickerImpl(props: HarnessModelPickerProps) {
     subscribed: catalogActive,
   });
   // In terminal mode the rail/rows only offer TUI-capable harnesses; GUI-only
-  // providers (e.g. `traycer`) are filtered out of the catalog up front so every
+  // providers (e.g. `cic`) are filtered out of the catalog up front so every
   // derived structure (active provider, rows, rail) inherits the restriction.
   const catalogHarnesses = useMemo(
     () =>

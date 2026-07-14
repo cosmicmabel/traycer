@@ -53,8 +53,8 @@ vi.mock("sonner", () => ({
 import type {
   ChatEvent,
   Message,
-} from "@traycer/protocol/persistence/epic/schemas";
-import type { ChatStreamCallbacks } from "@traycer-clients/shared/host-transport/chat-stream-client";
+} from "@cic/protocol/persistence/epic/schemas";
+import type { ChatStreamCallbacks } from "@cic/shared/host-transport/chat-stream-client";
 import {
   createChatSessionStore,
   type ChatSessionStoreHandle,

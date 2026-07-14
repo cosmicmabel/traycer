@@ -10,7 +10,7 @@ import {
 } from "../persistent-history";
 
 function storageKey(windowId: string): string {
-  return `traycer-gui-app:last-route:${windowId}`;
+  return `cic-gui-app:last-route:${windowId}`;
 }
 
 function controllerOf(history: RouterHistory): PersistentHistoryController {
@@ -112,7 +112,7 @@ describe("createPersistentMemoryHistory", () => {
 
   it("does not read global remembered history when the window id is unavailable", () => {
     window.localStorage.setItem(
-      "traycer-gui-app:last-route",
+      "cic-gui-app:last-route",
       JSON.stringify({ entries: ["/epics/epic-a/tab-a"], index: 0 }),
     );
 

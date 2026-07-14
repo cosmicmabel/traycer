@@ -2,7 +2,7 @@ import type {
   WorktreeHostEntryV11,
   WorktreePrState,
   WorktreeSubmoduleMergeFact,
-} from "@traycer/protocol/host/index";
+} from "@cic/protocol/host/index";
 
 /**
  * True-AND Task merge rollup (merge-provenance plan § Task rollup).

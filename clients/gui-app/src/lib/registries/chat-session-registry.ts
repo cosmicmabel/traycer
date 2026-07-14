@@ -6,7 +6,7 @@ import {
   useSyncExternalStore,
 } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { ChatStreamClient } from "@traycer-clients/shared/host-transport/chat-stream-client";
+import { ChatStreamClient } from "@cic/shared/host-transport/chat-stream-client";
 import { useAuthService, useHostClient } from "@/lib/host";
 import { hostQueryKeys } from "@/lib/query-keys";
 import { useHostDirectoryEntry } from "@/hooks/host/use-host-directory-entry";

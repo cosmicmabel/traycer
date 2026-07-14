@@ -1,7 +1,7 @@
 import { useCallback, useId, useMemo, useState } from "react";
 import { useStore } from "zustand";
-import type { ChatRunSettings } from "@traycer/protocol/host/agent/gui/subscribe";
-import type { HostClient } from "@traycer-clients/shared/host-client/host-client";
+import type { ChatRunSettings } from "@cic/protocol/host/agent/gui/subscribe";
+import type { HostClient } from "@cic/shared/host-client/host-client";
 import type { HostRpcRegistry } from "@/lib/host";
 import type { TuiAgentProjection } from "@/stores/epics/open-epic/types";
 import type { ForkWorkspaceSeed } from "@/lib/worktree/fork-workspace-seed";

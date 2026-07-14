@@ -301,7 +301,7 @@ describe("useSystemTabModalRefreshGuard", () => {
     });
     const windowId = "cold-boot-overlay-ahead";
     window.localStorage.setItem(
-      `traycer-gui-app:last-route:${windowId}`,
+      `cic-gui-app:last-route:${windowId}`,
       JSON.stringify({
         entries: [
           "/epics/epic-1/tab-1",
@@ -339,7 +339,7 @@ describe("canPopOverlayEntry", () => {
     index: number,
   ) {
     window.localStorage.setItem(
-      `traycer-gui-app:last-route:${windowId}`,
+      `cic-gui-app:last-route:${windowId}`,
       JSON.stringify({ entries, index }),
     );
     return createPersistentMemoryHistory(null, windowId);

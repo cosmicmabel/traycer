@@ -4,7 +4,7 @@
  * value - older persisted tiles carried a random uuid, so recomputing on
  * rehydrate makes dedup self-healing with no migration step.
  */
-import type { GitStage } from "@traycer/protocol/host";
+import type { GitStage } from "@cic/protocol/host";
 import type { DesktopJsonValue } from "@/lib/windows/types";
 import { gitDiffTileId } from "@/lib/git/git-diff-tile";
 import { TILE_KIND_GIT_DIFF } from "../tile-kinds";

@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from "react";
 import type { ReactNode } from "react";
 import { useDraggable } from "@dnd-kit/core";
-import type { GitChangedFile } from "@traycer/protocol/host";
+import type { GitChangedFile } from "@cic/protocol/host";
 import { useEpicCanvasStore } from "@/stores/epics/canvas/store";
 import { useEpicNestedFocusNavigation } from "@/hooks/epic/use-epic-nested-focus-navigation";
 import { makeGitFileDiffTileForFile } from "@/lib/git/git-diff-tile";

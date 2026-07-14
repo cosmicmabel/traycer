@@ -1,11 +1,11 @@
-import type { WorktreeWorkspaceSummary } from "@traycer/protocol/host/worktree-schemas";
+import type { WorktreeWorkspaceSummary } from "@cic/protocol/host/worktree-schemas";
 import { workspaceFolderName } from "@/lib/worktree/workspace-folder-name";
 import { pickFriendlyBranchSuffix } from "@/lib/worktree/random-friendly-name";
 import { slugifyBranchSeed } from "@/lib/worktree/slugify-branch-seed";
 
 /**
  * Default new-branch names for the unified worktree picker, keyed by workspace
- * path. Each name is a fresh random friendly slug (e.g. `traycer/swift-otter`);
+ * path. Each name is a fresh random friendly slug (e.g. `cic/swift-otter`);
  * the host owns final collision-suffixing at create time. The repo prefix is
  * only added when several git workspaces are configured at once, so multi-repo
  * worktrees branched together stay distinguishable.
@@ -32,8 +32,8 @@ function composeDefaultNewBranch(
   const tail = pickFriendlyBranchSuffix();
   const composed =
     shouldPrefix && branchPrefix.length > 0
-      ? `traycer/${branchPrefix}-${tail}`
-      : `traycer/${tail}`;
+      ? `cic/${branchPrefix}-${tail}`
+      : `cic/${tail}`;
   return composed.slice(0, 80);
 }
 

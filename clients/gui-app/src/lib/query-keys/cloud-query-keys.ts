@@ -1,4 +1,4 @@
-import type { ListTasksRequest } from "@traycer/protocol/host/epic/unary-schemas";
+import type { ListTasksRequest } from "@cic/protocol/host/epic/unary-schemas";
 import { hostQueryKeys } from "@/lib/query-keys/host-query-keys";
 
 const CLOUD_EPIC_TASKS_DISCRIMINATOR = "cloud.listTasks";

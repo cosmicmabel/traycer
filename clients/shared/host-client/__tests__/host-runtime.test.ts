@@ -1,11 +1,11 @@
 import { describe, expect, it, vi } from "vitest";
 import { z } from "zod";
-import type { AuthenticatedUser } from "@traycer/protocol/auth";
+import type { AuthenticatedUser } from "@cic/protocol/auth";
 import type { Disposable } from "../../platform/uri-callback";
 import {
   defineRpcContract,
   defineVersionedRpcRegistry,
-} from "@traycer/protocol/framework/index";
+} from "@cic/protocol/framework/index";
 import { DefaultRequestContextProvider } from "../../auth/request-context-provider";
 import type {
   HostQueryInvalidationOptions,
@@ -13,7 +13,7 @@ import type {
 } from "../host-client";
 import type { HostDirectoryEntry } from "../host-directory";
 import { HostRuntime, type IHostDirectoryService } from "../host-runtime";
-import { CredentialLeaseReleasedError } from "@traycer/protocol/auth/request-context";
+import { CredentialLeaseReleasedError } from "@cic/protocol/auth/request-context";
 import {
   mockLocalHostEntry,
   mockRemoteHostEntry,
@@ -124,13 +124,13 @@ function buildRuntime(options: {
   directory.selected = options.initialSelected;
   const invalidator = new RecordingInvalidator();
   const runnerHost = new MockRunnerHost({
-    signInUrl: "https://auth.traycer.invalid/sign-in",
+    signInUrl: "https://auth.cic.invalid/sign-in",
     authnBaseUrl: "http://localhost:5005",
     localHost: null,
     hosts: directory.entries,
     workspaceFolderPickerPaths: undefined,
     hasLocalHost: undefined,
-    traycerCli: undefined,
+    cicCli: undefined,
   });
   const messenger = new MockHostMessenger<typeof registry>({
     registry,

@@ -1,5 +1,5 @@
 /**
- * Default font stacks mirrored from `--traycer-font-ui` / `--traycer-font-mono`
+ * Default font stacks mirrored from `--cic-font-ui` / `--cic-font-mono`
  * in `index.css`. A user-chosen font override is prepended ahead of these so a
  * missing or misdetected font still degrades to the same defaults the
  * stylesheet ships with. Keep these in sync with `index.css` if those

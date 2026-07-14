@@ -1,7 +1,7 @@
 import { SettingsRow } from "@/components/settings/settings-row";
 import { AgentSpinningDots } from "@/components/ui/agent-spinning-dots";
 import { Button } from "@/components/ui/button";
-import type { ServiceStatusSnapshot } from "@traycer-clients/shared/platform/runner-host";
+import type { ServiceStatusSnapshot } from "@cic/shared/platform/runner-host";
 
 interface ActionsRowProps {
   readonly status: ServiceStatusSnapshot | undefined;

@@ -6,7 +6,7 @@ describe("listCloudTasksRequestForHistorySearch", () => {
   it("builds a type-safe server request from typed history search state", () => {
     const search = parseHistorySearch({
       historyQuery: "api",
-      historyRepos: ["traycer/gui-app", "invalid/repo/label"],
+      historyRepos: ["cic/gui-app", "invalid/repo/label"],
       historyRepoMode: "all",
       historyWorkspaces: ["host-1:%2FUsers%2Fme%2Fgui-app"],
       historyWorkspaceMode: "all",
@@ -19,7 +19,7 @@ describe("listCloudTasksRequestForHistorySearch", () => {
       sort: "title-asc",
       filters: {
         query: "api",
-        repoIdentifiers: [{ owner: "traycer", repo: "gui-app" }],
+        repoIdentifiers: [{ owner: "cic", repo: "gui-app" }],
         repoMatchMode: "all",
         workspaceIdentifiers: [
           {

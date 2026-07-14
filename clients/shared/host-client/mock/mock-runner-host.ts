@@ -13,15 +13,15 @@ import type {
   ISecureStorage,
   ITokenStore,
   ITrayState,
-  ITraycerCli,
+  ICicCli,
   IWorkspaceFoldersHost,
   LocalHostSnapshot,
   StoredAuthTokens,
-  TraycerHostStatusSnapshot,
-  TraycerDetectedShell,
-  TraycerEnvOverride,
-  TraycerShellConfig,
-  TraycerShellConfigSetInput,
+  CicHostStatusSnapshot,
+  CicDetectedShell,
+  CicEnvOverride,
+  CicShellConfig,
+  CicShellConfigSetInput,
   TrayEpic,
   TrayIndicatorState,
 } from "../../platform/runner-host";
@@ -46,23 +46,23 @@ export interface MockRunnerHostOptions {
    */
   readonly hasLocalHost: boolean | undefined;
   /**
-   * In-memory `traycerCli` surface. Pass `null` to match mobile/web shells
+   * In-memory `cicCli` surface. Pass `null` to match mobile/web shells
    * that do not bundle the CLI; pass `undefined` for the same effect to keep
    * call sites terse. Tests that exercise the bootstrap-status failure card
    * or the Shell & environment settings page pass an instance preloaded with
    * deterministic state.
    */
-  readonly traycerCli: ITraycerCli | null | undefined;
+  readonly cicCli: ICicCli | null | undefined;
   readonly hostManagement?: IHostManagement | null;
 }
 
-const MOCK_TOKEN_STORE_KEY = "traycer.token";
+const MOCK_TOKEN_STORE_KEY = "cic.token";
 
 /**
  * In-memory `IRunnerHost` used by `gui-app` dev/preview and shared tests.
  *
  * Mirrors the composite surface real desktop and mobile runners hand to
- * `<TraycerApp />` so shared tests and dev shells can exercise the full
+ * `<CicApp />` so shared tests and dev shells can exercise the full
  * runtime without a native host attached. All capabilities are always
  * present; capabilities the concrete shell would not implement (tray on
  * mobile, notifications on web preview) install no-op handlers that never
@@ -114,7 +114,7 @@ export class MockRunnerHost implements IRunnerHost {
     },
   };
   readonly service: null = null;
-  readonly traycerCli: ITraycerCli | null;
+  readonly cicCli: ICicCli | null;
   readonly migration: null = null;
   readonly hostManagement: IHostManagement | null;
   readonly hostTray: null = null;
@@ -146,8 +146,7 @@ export class MockRunnerHost implements IRunnerHost {
         : options.workspaceFolderPickerPaths;
     this.hasLocalHost =
       options.hasLocalHost === undefined ? true : options.hasLocalHost;
-    this.traycerCli =
-      options.traycerCli === undefined ? null : options.traycerCli;
+    this.cicCli = options.cicCli === undefined ? null : options.cicCli;
     this.hostManagement =
       options.hostManagement === undefined ? null : options.hostManagement;
   }
@@ -282,7 +281,7 @@ export class MockRunnerHost implements IRunnerHost {
 
   /**
    * Fires the payload-free browser-return signal to every `onAuthCallback`
-   * subscriber, modelling the shell delivering the `traycer://` deep link when
+   * subscriber, modelling the shell delivering the `cic://` deep link when
    * the user comes back from the device-approval tab.
    */
   emitAuthCallback(): void {
@@ -358,27 +357,27 @@ export class MockTrayState implements ITrayState {
 }
 
 /**
- * In-memory `ITraycerCli` for tests and dev shells. Mirrors what the real
+ * In-memory `ICicCli` for tests and dev shells. Mirrors what the real
  * desktop CLI surfaces: a host-status snapshot, an effective shell config,
  * and a flat env-override map. Mutations replace the in-memory state in-place
  * - no subprocess, no SQLite - so tests can preload deterministic responses
  * and assert renderer behaviour without standing up a host.
  */
-export class MockTraycerCli implements ITraycerCli {
-  hostStatusSnapshot: TraycerHostStatusSnapshot = {
+export class MockCicCli implements ICicCli {
+  hostStatusSnapshot: CicHostStatusSnapshot = {
     running: false,
     pidMetadata: null,
     bootstrapMarkers: [],
     bootstrapLogPath: "/mock/bootstrap.log",
     bootstrapLogTail: "",
   };
-  shellConfig: TraycerShellConfig = {
+  shellConfig: CicShellConfig = {
     path: "/bin/zsh",
     args: ["-i", "-l"],
     synthesised: true,
   };
-  envOverrides: TraycerEnvOverride[] = [];
-  detectedShells: readonly TraycerDetectedShell[] = [
+  envOverrides: CicEnvOverride[] = [];
+  detectedShells: readonly CicDetectedShell[] = [
     { name: "zsh", path: "/bin/zsh", isDefault: true },
     { name: "bash", path: "/bin/bash", isDefault: false },
   ];
@@ -387,15 +386,15 @@ export class MockTraycerCli implements ITraycerCli {
   /** Last refresh token seeded via `cliLogin`, so tests can assert it too. */
   lastLoginRefreshToken: string | null = null;
 
-  async hostStatus(): Promise<TraycerHostStatusSnapshot> {
+  async hostStatus(): Promise<CicHostStatusSnapshot> {
     return this.hostStatusSnapshot;
   }
 
-  async shellConfigGet(): Promise<TraycerShellConfig> {
+  async shellConfigGet(): Promise<CicShellConfig> {
     return this.shellConfig;
   }
 
-  async shellConfigSet(input: TraycerShellConfigSetInput): Promise<void> {
+  async shellConfigSet(input: CicShellConfigSetInput): Promise<void> {
     this.shellConfig = {
       path: input.path ?? this.shellConfig.path,
       args: input.args !== null ? input.args : this.shellConfig.args,
@@ -411,11 +410,11 @@ export class MockTraycerCli implements ITraycerCli {
     };
   }
 
-  async shellListDetected(): Promise<readonly TraycerDetectedShell[]> {
+  async shellListDetected(): Promise<readonly CicDetectedShell[]> {
     return this.detectedShells;
   }
 
-  async envOverrideList(): Promise<readonly TraycerEnvOverride[]> {
+  async envOverrideList(): Promise<readonly CicEnvOverride[]> {
     return this.envOverrides;
   }
 
@@ -455,9 +454,9 @@ export class MockTraycerCli implements ITraycerCli {
  */
 const MOCK_DEVICE_AUTHORIZATION: DeviceFlowAuthorization = {
   userCode: "ABCDE-FGHIJ",
-  verificationUri: "https://app.traycer.ai/device",
+  verificationUri: "https://device.example.invalid/device",
   verificationUriComplete:
-    "https://app.traycer.ai/device?user_code=ABCDE-FGHIJ",
+    "https://device.example.invalid/device?user_code=ABCDE-FGHIJ",
   expiresInSeconds: 600,
   intervalSeconds: 5,
 };

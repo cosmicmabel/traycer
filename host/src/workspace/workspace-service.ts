@@ -4,7 +4,7 @@ import type {
   PreparedWorkspaceFolder,
   PrepareWorkspaceFoldersResponse,
   TaskRepoIdentifier,
-} from "@traycer/protocol/host/epic/unary-schemas";
+} from "@cic/protocol/host/epic/unary-schemas";
 import type {
   WorkspaceDirectoryEntry,
   WorkspaceFileMentionSuggestion,
@@ -19,7 +19,7 @@ import type {
   WorkspaceListFileTreeResponse,
   WorkspaceReadFileResponse,
   WorkspaceWorktreeMentionSuggestion,
-} from "@traycer/protocol/host/workspace/unary-schemas";
+} from "@cic/protocol/host/workspace/unary-schemas";
 import { runGit as runGitExpectingExitCodes } from "../git/git-exec";
 
 /**

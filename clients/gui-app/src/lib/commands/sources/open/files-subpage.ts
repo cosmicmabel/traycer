@@ -10,7 +10,7 @@
  */
 import { useMemo } from "react";
 import { getBasename } from "@/lib/path/cross-platform-path";
-import type { WorktreeBindingSelectorRow } from "@traycer/protocol/host";
+import type { WorktreeBindingSelectorRow } from "@cic/protocol/host";
 import { useWorkspaceListFileTree } from "@/hooks/workspace/use-list-file-tree-query";
 import { useWorktreeListBindingsForEpic } from "@/hooks/worktree/use-worktree-list-bindings-for-epic-query";
 import { workspaceFileRefFromTreePath } from "@/components/epic-canvas/workspace-file/workspace-file-ref";

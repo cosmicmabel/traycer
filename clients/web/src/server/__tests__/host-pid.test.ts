@@ -48,7 +48,7 @@ describe("upstreamHostUrl", () => {
 describe("webRuntimeConfigSchema", () => {
   it("round-trips the serve process's runtime-config payload", () => {
     const parsed = webRuntimeConfigSchema.parse({
-      signInUrl: "https://platform.traycer.ai",
+      signInUrl: "https://sign-in.example.invalid",
       systemHostName: "buildbox",
       host: {
         hostId: metadata.hostId,
@@ -62,7 +62,7 @@ describe("webRuntimeConfigSchema", () => {
 
   it("accepts a hostless payload (no pid.json yet)", () => {
     const parsed = webRuntimeConfigSchema.parse({
-      signInUrl: "https://platform.traycer.ai",
+      signInUrl: "https://sign-in.example.invalid",
       systemHostName: "buildbox",
       host: null,
     });
@@ -72,7 +72,7 @@ describe("webRuntimeConfigSchema", () => {
   it("rejects a malformed host row", () => {
     expect(
       webRuntimeConfigSchema.safeParse({
-        signInUrl: "https://platform.traycer.ai",
+        signInUrl: "https://sign-in.example.invalid",
         systemHostName: "buildbox",
         host: { hostId: "" },
       }).success,

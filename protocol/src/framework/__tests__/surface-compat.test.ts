@@ -5,25 +5,25 @@ import {
   defineRpcContract,
   defineUpgradePath,
   defineVersionedRpcRegistry,
-} from "@traycer/protocol/framework/index";
-import { check } from "@traycer/protocol/framework/compatibility-checker";
+} from "@cic/protocol/framework/index";
+import { check } from "@cic/protocol/framework/compatibility-checker";
 import {
   defineStreamRpcContract,
   defineVersionedStreamRpcRegistry,
-} from "@traycer/protocol/framework/versioned-stream-rpc";
-import { checkStreamCompatibility } from "@traycer/protocol/framework/stream-compat";
+} from "@cic/protocol/framework/versioned-stream-rpc";
+import { checkStreamCompatibility } from "@cic/protocol/framework/stream-compat";
 import {
   hostRpcRegistry,
   hostStreamRpcRegistry,
-} from "@traycer/protocol/host/index";
-import { buildProtocolSurface } from "@traycer/protocol/framework/surface-build";
+} from "@cic/protocol/host/index";
+import { buildProtocolSurface } from "@cic/protocol/framework/surface-build";
 import {
   checkSurfaceCompatibility,
   manifestFromSurface,
   type CompatException,
-} from "@traycer/protocol/framework/surface-compat";
-import type { UncheckedVersionedRpcRegistry } from "@traycer/protocol/framework/versioned-rpc-types";
-import type { UncheckedVersionedStreamRpcRegistry } from "@traycer/protocol/framework/versioned-stream-rpc";
+} from "@cic/protocol/framework/surface-compat";
+import type { UncheckedVersionedRpcRegistry } from "@cic/protocol/framework/versioned-rpc-types";
+import type { UncheckedVersionedStreamRpcRegistry } from "@cic/protocol/framework/versioned-stream-rpc";
 
 const EMPTY_STREAM: UncheckedVersionedStreamRpcRegistry = {};
 

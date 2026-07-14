@@ -1,6 +1,6 @@
 import type { Disposable } from "../platform/uri-callback";
 import type { IRunnerHost } from "../platform/runner-host";
-import type { VersionedRpcRegistry } from "@traycer/protocol/framework/index";
+import type { VersionedRpcRegistry } from "@cic/protocol/framework/index";
 import type { RequestContextProvider } from "../auth/request-context-provider";
 import type { IHostMessenger } from "../host-transport/host-messenger";
 import { HostClient, type IHostQueryInvalidator } from "./host-client";

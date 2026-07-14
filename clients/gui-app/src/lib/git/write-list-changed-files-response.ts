@@ -1,5 +1,5 @@
 import type { QueryClient } from "@tanstack/react-query";
-import type { GitListChangedFilesResponse } from "@traycer/protocol/host";
+import type { GitListChangedFilesResponse } from "@cic/protocol/host";
 import { gitQueryKeys } from "@/lib/query-keys/git-query-keys";
 
 export function writeGitListChangedFilesResponse(

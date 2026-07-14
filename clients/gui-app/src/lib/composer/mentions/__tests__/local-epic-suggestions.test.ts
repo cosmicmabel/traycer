@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import type {
   EpicLight,
   TaskLight,
-} from "@traycer/protocol/host/epic/unary-schemas";
+} from "@cic/protocol/host/epic/unary-schemas";
 
 import { buildEpicMentionSuggestionsFromTasks } from "../local-epic-suggestions";
 

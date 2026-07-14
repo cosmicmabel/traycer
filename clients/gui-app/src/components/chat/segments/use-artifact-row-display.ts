@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
-import type { EpicArtifactKind } from "@traycer/protocol/common/registry";
-import type { CheckpointFileOperation } from "@traycer/protocol/persistence/epic/checkpoint-manifests";
+import type { EpicArtifactKind } from "@cic/protocol/common/registry";
+import type { CheckpointFileOperation } from "@cic/protocol/persistence/epic/checkpoint-manifests";
 import { useReactiveActiveHostId } from "@/hooks/host/use-reactive-active-host-id";
 import { useEpicTileNavigation } from "@/hooks/epic/use-epic-tile-navigation";
 import { EPIC_NODE_LABELS } from "@/lib/artifacts/node-display";

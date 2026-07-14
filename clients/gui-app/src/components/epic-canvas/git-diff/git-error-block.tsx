@@ -1,5 +1,5 @@
 import { AlertTriangleIcon } from "lucide-react";
-import type { HostRpcError } from "@traycer-clients/shared/host-transport/host-messenger";
+import type { HostRpcError } from "@cic/shared/host-transport/host-messenger";
 
 interface GitErrorBlockProps {
   readonly error: HostRpcError;

@@ -9,7 +9,7 @@ import {
   within,
 } from "@testing-library/react";
 import type { ReactNode } from "react";
-import type { WorktreeWorkspaceSummary } from "@traycer/protocol/host/worktree-schemas";
+import type { WorktreeWorkspaceSummary } from "@cic/protocol/host/worktree-schemas";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
 // The host-wide uncommitted query (used only for the import-row annotation).
@@ -108,7 +108,7 @@ function item(over: Partial<WorkspaceRunItem>): WorkspaceRunItem {
     hoverLabel: "repo · worktree · feat/x",
     summary: GIT_SUMMARY,
     currentIntent: null,
-    defaultNewBranchName: "traycer/swift-otter",
+    defaultNewBranchName: "cic/swift-otter",
     repoIdentifier: { owner: "acme", repo: "app" },
     isPrimary: true,
     hostClient: null,

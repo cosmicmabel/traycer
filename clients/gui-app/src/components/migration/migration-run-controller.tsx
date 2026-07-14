@@ -9,7 +9,7 @@ import {
   type MigrationStartedPayload,
   type ReplayProgressPayload,
   type TaskChainProgressPayload,
-} from "@traycer-clients/shared/host-transport/migration-stream-client";
+} from "@cic/shared/host-transport/migration-stream-client";
 import { useHostClient } from "@/lib/host";
 import { useWsStreamClient } from "@/lib/host/stream-runtime-context";
 import { hostQueryKeys } from "@/lib/query-keys";

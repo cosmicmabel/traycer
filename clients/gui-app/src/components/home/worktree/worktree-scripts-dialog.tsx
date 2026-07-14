@@ -6,8 +6,8 @@ import type {
   WorktreeEntryScripts,
   WorktreeFolderIntent,
   WorktreeWorkspaceSummary,
-} from "@traycer/protocol/host/worktree-schemas";
-import type { HostClient } from "@traycer-clients/shared/host-client/host-client";
+} from "@cic/protocol/host/worktree-schemas";
+import type { HostClient } from "@cic/shared/host-client/host-client";
 import type { HostRpcRegistry } from "@/lib/host";
 import { useHostQuery } from "@/hooks/host/use-host-query";
 import { useWorktreeSetRepoScriptsFor } from "@/hooks/worktree/use-worktree-set-repo-scripts-mutation";
@@ -25,7 +25,7 @@ import {
  * `ownerId: null`, `binding: null` - the edit can only ride the staged intent or
  * write the repo's own file (Local). In-epic surfaces pass the real owner + live
  * binding so an edit can target a bound worktree's own
- * `.traycer/environment.json`.
+ * `.cic/environment.json`.
  */
 export interface WorktreeScriptsContext {
   readonly epicId: string;
@@ -114,7 +114,7 @@ function WorktreeScriptsDialogBody(props: {
   }, [hostWorktreesQuery.data, resolved]);
 
   // A new/checkout worktree forks from a SOURCE ref, so it inherits that ref's
-  // committed `.traycer/environment.json` - NOT the primary checkout's on-disk
+  // committed `.cic/environment.json` - NOT the primary checkout's on-disk
   // file (`summary.scripts`). Preview the source branch's scripts by reading
   // them at the ref. `null` for non-worktree targets disables the read.
   const sourceRef = sourceRefForStagedEntry(stagedEntry);
@@ -275,7 +275,7 @@ function resolveScriptsTarget(input: {
 
 /**
  * The git ref a new/checkout worktree forks from - the source whose committed
- * `.traycer/environment.json` the worktree inherits. `new` forks from
+ * `.cic/environment.json` the worktree inherits. `new` forks from
  * `branch.source`; `existing` checks out `branch.name`. `null` for non-worktree
  * targets (local / import), which have no fork source to read.
  */

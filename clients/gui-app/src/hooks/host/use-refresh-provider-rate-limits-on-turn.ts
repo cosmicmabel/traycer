@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { DEFAULT_ACCOUNT_CONTEXT } from "@traycer/protocol/common/schemas";
-import type { HostRpcRegistry } from "@traycer/protocol/host/index";
+import { DEFAULT_ACCOUNT_CONTEXT } from "@cic/protocol/common/schemas";
+import type { HostRpcRegistry } from "@cic/protocol/host/index";
 import { subscribeChatTurnCompletions } from "@/lib/notifications/chat-turn-completion";
 import { providerIdToGuiHarnessId } from "@/lib/provider-ordering";
 import { queryKeys } from "@/lib/query-keys";
@@ -15,7 +15,7 @@ import { enqueueRateLimitFetch } from "@/lib/rate-limits/ephemeral-fetch-queue";
 /**
  * While mounted, refreshes `host.getRateLimitUsage` for `hostId` whenever a
  * chat turn on `providerId`'s harness completes - the provider-pull analog of
- * `useRefreshRateLimitUsageOnTraycerTurn`. Branches on the provider's fetch
+ * `useRefreshRateLimitUsageOnCicTurn`. Branches on the provider's fetch
  * lane:
  *
  * - `ephemeralProcess` (codex, claude-code): enqueues onto the shared serial
@@ -28,7 +28,7 @@ import { enqueueRateLimitFetch } from "@/lib/rate-limits/ephemeral-fetch-queue";
  *   subprocess to bound), exactly as before.
  *
  * Unlike the aperture refresh hook (always default-host scoped, mounted only
- * by the Traycer-only `RateLimitView`), `hostId` is a caller-supplied
+ * by the CIC-only `RateLimitView`), `hostId` is a caller-supplied
  * parameter instead of a hardcoded `useReactiveActiveHostId()` read, so a
  * future tab-scoped consumer can reuse this hook without a rewrite.
  *

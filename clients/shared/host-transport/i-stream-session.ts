@@ -1,4 +1,4 @@
-import type { FatalErrorDetails } from "@traycer/protocol/framework/ws-protocol";
+import type { FatalErrorDetails } from "@cic/protocol/framework/ws-protocol";
 
 /**
  * Interface for a single open `/stream` subscription. Returned by

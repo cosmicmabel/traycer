@@ -1,5 +1,5 @@
 import { formatPackageManagerSource } from "@/components/settings/panels/host-settings-panel-model";
-import type { CliInstallManifestSnapshot } from "@traycer-clients/shared/platform/runner-host";
+import type { CliInstallManifestSnapshot } from "@cic/shared/platform/runner-host";
 
 interface PackageManagerUpgradeHintProps {
   readonly hint: NonNullable<
@@ -18,7 +18,7 @@ export function PackageManagerUpgradeHint(
     >
       <div>
         Your {formatPackageManagerSource(hint.source)} install of{" "}
-        <span className="font-mono">traycer</span> is older than the bundled CLI
+        <span className="font-mono">cic</span> is older than the bundled CLI
         (installed <span className="font-mono">v{hint.installedVersion}</span>,
         bundled <span className="font-mono">v{hint.bundledVersion}</span>). Run
         the upgrade command below to update it.

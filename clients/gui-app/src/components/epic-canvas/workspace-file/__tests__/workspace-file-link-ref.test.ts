@@ -99,8 +99,8 @@ describe("workspaceFileRefFromLinkPath", () => {
 
 describe("workspaceFileRefFromAbsoluteFilePath", () => {
   it("synthesizes a root from an out-of-root absolute file's own directory", () => {
-    const path = "/Users/me/.traycer/.codex/skills/traycer-review/SKILL.md";
-    const dir = "/Users/me/.traycer/.codex/skills/traycer-review";
+    const path = "/Users/me/.cic/.codex/skills/cic-review/SKILL.md";
+    const dir = "/Users/me/.cic/.codex/skills/cic-review";
     const ref = workspaceFileRefFromAbsoluteFilePath(HOST_ID, path);
 
     expect(ref).not.toBeNull();

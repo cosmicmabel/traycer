@@ -8,7 +8,7 @@ describe("DiffTabShell", () => {
       <DiffTabShell
         primaryTitle="test-file.tsx"
         secondaryLine="src · Working"
-        contextLabel="traycer · main"
+        contextLabel="cic · main"
         toolbar={<div>Toolbar</div>}
       >
         <div>Content</div>
@@ -17,7 +17,7 @@ describe("DiffTabShell", () => {
 
     expect(screen.getByText("test-file.tsx")).toBeTruthy();
     expect(screen.getByText("src · Working")).toBeTruthy();
-    expect(screen.getByText("traycer · main")).toBeTruthy();
+    expect(screen.getByText("cic · main")).toBeTruthy();
   });
 
   it("renders toolbar in header", () => {

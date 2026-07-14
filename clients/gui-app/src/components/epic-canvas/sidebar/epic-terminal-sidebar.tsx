@@ -25,7 +25,7 @@ import {
   Terminal as TerminalIcon,
   Trash2,
 } from "lucide-react";
-import type { TerminalSessionInfo } from "@traycer/protocol/host/terminal/unary-schemas";
+import type { TerminalSessionInfo } from "@cic/protocol/host/terminal/unary-schemas";
 import { AgentSpinningDots } from "@/components/ui/agent-spinning-dots";
 import { Button } from "@/components/ui/button";
 import {

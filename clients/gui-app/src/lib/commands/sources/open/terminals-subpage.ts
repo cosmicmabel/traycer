@@ -4,7 +4,7 @@
  */
 import { useMemo } from "react";
 import { v4 as uuidv4 } from "uuid";
-import type { WorktreeBindingSelectorRow } from "@traycer/protocol/host";
+import type { WorktreeBindingSelectorRow } from "@cic/protocol/host";
 import { useReactiveActiveHostId } from "@/hooks/host/use-reactive-active-host-id";
 import { useTerminalList } from "@/hooks/terminal/use-terminal-list-query";
 import { useWorktreeListBindingsForEpic } from "@/hooks/worktree/use-worktree-list-bindings-for-epic-query";

@@ -1,4 +1,4 @@
-import type { GitChangedFile, GitStage } from "@traycer/protocol/host";
+import type { GitChangedFile, GitStage } from "@cic/protocol/host";
 import type { GitStatusEntry } from "@pierre/trees";
 import { getBasename, getDirname } from "@/lib/path/cross-platform-path";
 import { statusBadgeStyle, type StatusBadgeStyle } from "@/lib/git/status-icon";

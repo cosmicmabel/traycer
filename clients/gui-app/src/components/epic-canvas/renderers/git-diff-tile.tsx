@@ -5,7 +5,7 @@ import {
   DEFAULT_GIT_FILE_DIFF_BYTE_BUDGET,
   type GitChangedFile,
   type GitGetFileDiffResponse,
-} from "@traycer/protocol/host";
+} from "@cic/protocol/host";
 import { useEditorOpen } from "@/hooks/editor/use-editor-open-mutation";
 import { useEditorOpenFeedback } from "@/hooks/editor/use-editor-open-feedback";
 import { useGitGetFileDiffQuery } from "@/hooks/git/use-git-get-file-diff-query";

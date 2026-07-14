@@ -6,25 +6,25 @@ import {
   applyAwarenessUpdate,
   encodeAwarenessUpdate,
 } from "y-protocols/awareness";
-import type { PermissionRole } from "@traycer/protocol/host/epic/unary-schemas";
+import type { PermissionRole } from "@cic/protocol/host/epic/unary-schemas";
 import type {
   EpicCloudSyncStatus,
   EpicMigrationPhase,
-} from "@traycer/protocol/host/epic/subscribe";
-import type { SnapshotMetaEpic } from "@traycer/protocol/host/epic/snapshot-meta";
-import type { FatalErrorDetails } from "@traycer/protocol/framework/ws-protocol";
+} from "@cic/protocol/host/epic/subscribe";
+import type { SnapshotMetaEpic } from "@cic/protocol/host/epic/snapshot-meta";
+import type { FatalErrorDetails } from "@cic/protocol/framework/ws-protocol";
 import type {
   StreamCloseReason,
   StreamConnectionStatus,
-} from "@traycer-clients/shared/host-transport/i-stream-session";
+} from "@cic/shared/host-transport/i-stream-session";
 import type {
   EpicDeletedAttribution,
   EpicStreamCallbacks,
   EpicStreamClient,
-} from "@traycer-clients/shared/host-transport/epic-stream-client";
-import { artifactBodyFragmentName } from "@traycer/protocol/persistence/epic/artifacts";
-import type { DeletedEpicArtifact } from "@traycer/protocol/persistence/epic/artifacts";
-import { createTypedMap } from "@traycer/protocol/utils/yjs-utils";
+} from "@cic/shared/host-transport/epic-stream-client";
+import { artifactBodyFragmentName } from "@cic/protocol/persistence/epic/artifacts";
+import type { DeletedEpicArtifact } from "@cic/protocol/persistence/epic/artifacts";
+import { createTypedMap } from "@cic/protocol/utils/yjs-utils";
 import { evaluateReparent, reparentRejectionError } from "@/lib/reparent-rules";
 import { isUnavailableEpicReason } from "@/lib/epics/unavailable-epic";
 import { basePersistOptions, openEpicKey } from "@/lib/persist";

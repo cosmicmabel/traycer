@@ -9,7 +9,7 @@ import type { UseNavigateResult } from "@tanstack/react-router";
 import {
   NOTIFICATION_EVENT_TYPES,
   type NotificationEvent,
-} from "@traycer/protocol/notifications/notification-entry";
+} from "@cic/protocol/notifications/notification-entry";
 import {
   navigateToTabIntent,
   openOrFocusEpicIntent,

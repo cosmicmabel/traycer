@@ -5,7 +5,7 @@
  *
  * Owns the generic mechanics every handle would otherwise duplicate:
  * primary-button + pointer-capture bookkeeping with pointerId matching, the
- * global `traycer-panel-resizing` freeze (see
+ * global `cic-panel-resizing` freeze (see
  * `lib/layout/panel-resizing-class.ts`), per-frame axis deltas,
  * commit-on-pointer-up vs restore-on-pointer-cancel, double-click reset,
  * and the axis-aware arrow-key nudge.

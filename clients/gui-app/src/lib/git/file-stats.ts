@@ -1,4 +1,4 @@
-import type { GitChangedFile } from "@traycer/protocol/host";
+import type { GitChangedFile } from "@cic/protocol/host";
 
 export interface GitFileStatsSummary {
   readonly insertions: number;

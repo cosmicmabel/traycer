@@ -1,5 +1,5 @@
 /**
- * Path-aware query matching for the file/diff openers. Traycer Host file-tree paths
+ * Path-aware query matching for the file/diff openers. CIC Host file-tree paths
  * are POSIX-relative to the workspace root (e.g. `src/components/foo.tsx`), but
  * users routinely PASTE an over-qualified path - an absolute path copied from
  * an editor/terminal, or a repo-root-relative path - which carries extra

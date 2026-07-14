@@ -6,7 +6,7 @@ import {
   useState,
   type RefObject,
 } from "react";
-import type { JsonContent } from "@traycer/protocol/common/registry";
+import type { JsonContent } from "@cic/protocol/common/registry";
 
 import {
   readComposerDraftSnapshot,

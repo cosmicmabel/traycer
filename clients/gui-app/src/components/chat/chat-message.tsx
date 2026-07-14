@@ -1,8 +1,8 @@
 import { memo, type ReactElement } from "react";
 import { cn } from "@/lib/utils";
 import type { ChatMessage as ChatMessageModel } from "@/stores/composer/chat-store";
-import type { JsonContent } from "@traycer/protocol/common/registry";
-import type { GuiHarnessId } from "@traycer/protocol/host/index";
+import type { JsonContent } from "@cic/protocol/common/registry";
+import type { GuiHarnessId } from "@cic/protocol/host/index";
 import { AssistantMessageBody } from "./chat-message-assistant-body";
 import { chatFindSegmentUnitId } from "./chat-find";
 import { UserMessageBody } from "./chat-message-user-body";

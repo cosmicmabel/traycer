@@ -1,9 +1,9 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import type { ReactNode } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { ChatAccess } from "@traycer/protocol/host/agent/gui/subscribe";
-import type { ChatActiveTurn } from "@traycer/protocol/host/agent/gui/subscribe";
-import type { TurnCheckpointManifest } from "@traycer/protocol/persistence/epic/checkpoint-manifests";
+import type { ChatAccess } from "@cic/protocol/host/agent/gui/subscribe";
+import type { ChatActiveTurn } from "@cic/protocol/host/agent/gui/subscribe";
+import type { TurnCheckpointManifest } from "@cic/protocol/persistence/epic/checkpoint-manifests";
 import { ChatRestoreProvider } from "@/components/chat/chat-restore-context";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ResolvedThemeContext } from "@/providers/use-resolved-theme";
@@ -151,7 +151,7 @@ function renderGroup(input: RenderGroupInput) {
   return render(
     <TooltipProvider delayDuration={0}>
       <ResolvedThemeContext.Provider
-        value={{ resolvedTheme: "dark", themePreset: "traycer-green" }}
+        value={{ resolvedTheme: "dark", themePreset: "cic-green" }}
       >
         <ChatRestoreProvider
           value={{

@@ -1,4 +1,4 @@
-import type { IdentifierType } from "@traycer/protocol/host/epic/unary-schemas";
+import type { IdentifierType } from "@cic/protocol/host/epic/unary-schemas";
 import type { EpicCollaboratorView } from "@/hooks/epics/use-epic-collaborators-query";
 import type { AssignableCollaboratorRole } from "@/lib/epic-collaborator-roles";
 

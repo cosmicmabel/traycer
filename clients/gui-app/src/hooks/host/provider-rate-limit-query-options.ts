@@ -1,5 +1,5 @@
-import { DEFAULT_ACCOUNT_CONTEXT } from "@traycer/protocol/common/schemas";
-import type { RequestOfMethod } from "@traycer-clients/shared/host-transport/host-messenger";
+import { DEFAULT_ACCOUNT_CONTEXT } from "@cic/protocol/common/schemas";
+import type { RequestOfMethod } from "@cic/shared/host-transport/host-messenger";
 import type { HostRpcRegistry } from "@/lib/host";
 import {
   PROVIDER_RATE_LIMITS_STALE_TIME_MS,

@@ -3,8 +3,8 @@
    need CSP `script-src` widening for `file://`); migrating to AudioWorklet is a
    follow-up. */
 import { useCallback, useEffect, useRef, useState } from "react";
-import { SPEECH_INPUT_SAMPLE_RATE } from "@traycer/protocol/host/speech/schemas";
-import { SpeechStreamClient } from "@traycer-clients/shared/host-transport/speech-stream-client";
+import { SPEECH_INPUT_SAMPLE_RATE } from "@cic/protocol/host/speech/schemas";
+import { SpeechStreamClient } from "@cic/shared/host-transport/speech-stream-client";
 import { useWsStreamClient } from "@/lib/host/stream-runtime-context";
 import { appLogger, describeLogError } from "@/lib/logger";
 import { useRunnerHost } from "@/providers/use-runner-host";
@@ -168,7 +168,7 @@ export function useVoiceDictation(
       if (generation !== startGenerationRef.current) return null;
       if (access === "denied") {
         setPermissionDenied(true);
-        fail("Microphone access is blocked for Traycer.");
+        fail("Microphone access is blocked for CIC.");
         return null;
       }
       try {
@@ -204,7 +204,7 @@ export function useVoiceDictation(
         if (denied) setPermissionDenied(true);
         fail(
           denied
-            ? "Microphone access is blocked for Traycer."
+            ? "Microphone access is blocked for CIC."
             : `Could not access the microphone: ${
                 error instanceof Error ? error.message : String(error)
               }`,

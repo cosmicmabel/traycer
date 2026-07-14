@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { MockRunnerHost } from "@traycer-clients/shared/host-client/mock/mock-runner-host";
-import type { StreamAuthRevalidator } from "@traycer-clients/shared/auth/bearer-revalidator";
+import { MockRunnerHost } from "@cic/shared/host-client/mock/mock-runner-host";
+import type { StreamAuthRevalidator } from "@cic/shared/auth/bearer-revalidator";
 
 // `openDurableStreamTransport` is the single place "durable stream = transport +
 // auth + bearer rotation + wake" is assembled. These tests pin its load-bearing
@@ -22,13 +22,13 @@ vi.mock("@/lib/host/stream-wake-reconnect", () => ({
 import { openDurableStreamTransport } from "@/lib/host/durable-stream-transport";
 
 const RUNNER_HOST = new MockRunnerHost({
-  signInUrl: "https://auth.traycer.invalid/sign-in",
+  signInUrl: "https://auth.cic.invalid/sign-in",
   authnBaseUrl: "http://localhost:5005",
   localHost: null,
   hosts: [],
   workspaceFolderPickerPaths: undefined,
   hasLocalHost: undefined,
-  traycerCli: undefined,
+  cicCli: undefined,
 });
 
 const AUTH: StreamAuthRevalidator = {

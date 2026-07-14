@@ -1,7 +1,7 @@
 import "../../../../__tests__/test-browser-apis";
 import { act, cleanup, renderHook } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { WorktreeIntent } from "@traycer/protocol/host/worktree-schemas";
+import type { WorktreeIntent } from "@cic/protocol/host/worktree-schemas";
 import type { CreateTuiAgentInput } from "@/hooks/agent/use-create-tui-agent";
 
 const gateMocks = vi.hoisted(() => ({
@@ -86,7 +86,7 @@ describe("useTerminalAgentWorktreeGate", () => {
           isPrimary: true,
           branch: {
             type: "new",
-            name: "traycer/feature",
+            name: "cic/feature",
             source: "main",
             carryUncommittedChanges: false,
           },

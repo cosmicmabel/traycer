@@ -1,7 +1,7 @@
 import { act, cleanup, renderHook } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { HostDirectoryEntry } from "@traycer-clients/shared/host-client/host-directory";
-import { mockLocalHostEntry } from "@traycer-clients/shared/host-client/mock/mock-host-directory";
+import type { HostDirectoryEntry } from "@cic/shared/host-client/host-directory";
+import { mockLocalHostEntry } from "@cic/shared/host-client/mock/mock-host-directory";
 
 /**
  * Minimal directory stub that reproduces the production churn: `findById`

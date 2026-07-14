@@ -4,15 +4,15 @@ import {
   guiHarnessIdSchemaV10,
   guiHarnessIdSchemaV20,
   guiHarnessIdSchemaV30,
-} from "@traycer/protocol/host/agent/shared";
+} from "@cic/protocol/host/agent/shared";
 import {
   ALL_PERMISSION_MODES,
   permissionModeSchema,
-} from "@traycer/protocol/persistence/epic/foundation";
+} from "@cic/protocol/persistence/epic/foundation";
 import {
   planSourceSchema,
   planStatusSchema,
-} from "@traycer/protocol/persistence/epic/content-blocks";
+} from "@cic/protocol/persistence/epic/content-blocks";
 
 // ─── Catalog rows (per-surface) ───────────────────────────────────────────
 //
@@ -113,10 +113,10 @@ export const guiAgentModelOptionSchema = z.object({
   supportedServiceTiers: z.array(agentServiceTierOptionSchema).default([]),
   // Human-readable sunset notice for a model an adapter is keeping around only
   // for backward compatibility with sessions/integrations still pinned to it
-  // (currently only the Traycer harness's catalog uses this - see
-  // SONNET_4_6_SUNSET_DATE in traycer-server's inference catalog). `.optional()`
+  // (currently only the CIC harness's catalog uses this - see
+  // SONNET_4_6_SUNSET_DATE in cic-server's inference catalog). `.optional()`
   // rather than `.default(null)` like the service-tier fields above: this is a
-  // Traycer-catalog-specific concept, so making it required would force every
+  // CIC-catalog-specific concept, so making it required would force every
   // other adapter (Claude, Codex, OpenCode, Cursor, ...) to explicitly null it
   // out for a field that will never apply to them. Absent and `null` are
   // treated identically downstream, so an older host that hasn't shipped this

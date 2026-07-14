@@ -1,111 +1,87 @@
-<img alt="Traycer" src="https://assets.traycer.ai/traycer-readme-banner.png" />
-
-<div align="center">
-
-[Download](https://traycer.ai/download) · [Docs](https://docs.traycer.ai) · [Releases](https://github.com/traycerai/traycer/releases/latest) · [Contributing](CONTRIBUTING.md)
-
-<br />
+# CIC — Command Information Center
 
 [![Apache 2.0 License](https://img.shields.io/badge/License-Apache_2.0-555555.svg?labelColor=333333&color=666666)](./LICENSE)
-[![Downloads](https://img.shields.io/github/downloads/traycerai/traycer/total?labelColor=333333&color=666666)](https://github.com/traycerai/traycer/releases)
-[![GitHub Stars](https://img.shields.io/github/stars/traycerai/traycer?labelColor=333333&color=666666&logo=github)](https://github.com/traycerai/traycer)
-[![Last Commit](https://img.shields.io/github/last-commit/traycerai/traycer?labelColor=333333&color=666666)](https://github.com/traycerai/traycer/commits/main)
-[![Commit Activity](https://img.shields.io/github/commit-activity/m/traycerai/traycer?labelColor=333333&color=666666)](https://github.com/traycerai/traycer/graphs/commit-activity)
 
-[![Discord](https://img.shields.io/badge/Discord-Join-%235462eb?labelColor=%235462eb&logo=discord&logoColor=%23f5f5f5)](https://traycer.ai/discord)
-[![Follow @TraycerAI on X](https://img.shields.io/twitter/follow/TraycerAI?logo=X&color=%23f5f5f5)](https://twitter.com/intent/follow?screen_name=traycerai)
+**CIC is local-only software for orchestrating AI coding agents from your
+browser.** It runs entirely on your own machine: no accounts, no sign-in, no
+telemetry, no cloud. Agent turns are driven through a local
+[OpenClaw Gateway](https://openclaw.ai), so even the AI side is under your
+control.
 
-</div>
+Organize work into **Epics** (boards of chats, artifacts, and terminals),
+run agents against real git worktrees with setup scripts, review diffs, and
+drive everything from a web GUI served on `127.0.0.1`.
 
-Traycer is an open-source AI orchestration app for advanced agent orchestration. Bring your existing provider subscriptions and run multiple agents in parallel without losing context, using shared memory across all models and providers. Structure your work with regular and Epic modes.
+## Quick start
 
-Switch models instantly within the same chat, orchestrate agent-to-agent communication, and collaborate in real time.
+```sh
+git clone https://github.com/cosmicmabel/traycer.git cic && cd cic
+bun install
 
-## This fork
+make host &        # the host server (loopback WebSocket, writes ~/.cic)
+make serve-web     # build + serve the GUI at http://127.0.0.1:8788
+```
 
-This fork extends upstream Traycer with three self-hosting-oriented additions:
+Open `http://127.0.0.1:8788` — no sign-in, the epic list loads immediately.
+Chat turns additionally need an OpenClaw Gateway running locally (default
+`ws://127.0.0.1:18789`); the provider row in Settings shows its status.
 
-- **OpenClaw agent harness** — [OpenClaw](https://openclaw.ai) is wired through the versioned protocol (new `openclaw` harness/provider ids with v4.0 wire bridges) and the GUI, driven by a local OpenClaw Gateway.
-- **Web hosting on Linux** — [`clients/web/`](clients/web/README.md): a browser shell plus a Bun serve process (and a [`Dockerfile`](Dockerfile)), so the GUI runs as a webapp instead of the Electron desktop. `make serve-web` → `http://127.0.0.1:8788`.
-- **`@traycer/open-host`** — [`host/`](host/README.md): an open-source host server implementing the client⇄host wire contract, so the entire stack runs with no closed-source components **and no Traycer account** (open host + web shell default to a local-only session; no sign-in) — chats (queueing, approvals), epics (artifacts, comments, collaborative sync), real PTY terminals, git worktrees with setup scripts, diffs, and more.
+Full install/configure/verify steps (written for agents and humans):
+[`docs/AGENT_SETUP.md`](docs/AGENT_SETUP.md).
 
-**Start here:** [`docs/AGENT_SETUP.md`](docs/AGENT_SETUP.md) — a step-by-step install/configure/verify guide, written to be followed by AI agents and humans alike.
+## What's inside
 
-[![Traycer Demo Video](https://github.com/user-attachments/assets/a5efda0c-16f2-453b-9f8d-50d09df25aa4)](https://youtu.be/doh2yz3ZFvU)
+| Path               | Package          | Responsibility                                                                          |
+| ------------------ | ---------------- | --------------------------------------------------------------------------------------- |
+| `protocol/`        | `@cic/protocol`  | Versioned, runtime-negotiated client⇄host wire contract.                                |
+| `clients/shared/`  | `@cic/shared`    | Transport (WebSocket/RPC) and platform contracts shared by clients.                     |
+| `clients/gui-app/` | `@cic/gui-app`   | The GUI (React + Vite + TanStack Router/Query + Zustand + shadcn/ui).                   |
+| `clients/web/`     | `@cic/web`       | Browser shell + Bun serve process — the GUI as a webapp.                                |
+| `host/`            | `@cic/open-host` | The host server: chats, epics, terminals, git, worktrees over a local OpenClaw Gateway. |
 
 ## Features
 
-- **Bring Your Own Agent (BYOA):** Connect your existing agents without paying twice, or use Traycer's own inference subscription.
-- **Unified Context:** Instantly switch to another model in the same chat. The context window is seamlessly shared across all providers.
-- **Agent-to-Agent Communication:** Create automated loops where agents talk among themselves to debate architecture or peer-review code.
-- **Regular and Epic Modes:** Run quick, one-off tasks in regular mode, or use Epic mode for structured, multi-step coding workflows.
-- **Collaboration:** Invite team members to collaborate using shareable boards, real-time editing, and ticket assignment features directly in the workspace.
-- **Cross-Device Sync:** Maintain the same chat and agent state in any device, any OS.
+- **Epics**: structured boards for multi-step work — chats, plan/spec
+  artifacts with collaborative editing, comments, and task tracking.
+- **Real terminals**: PTY-backed terminal tiles running on the host machine.
+- **Git-native**: per-epic worktrees with setup scripts, live status, and
+  staged/unstaged diff review.
+- **Agent orchestration**: queue sends during running turns, approvals for
+  tool use, agent-to-agent mentions.
+- **Local-only by design**: the host binds `127.0.0.1`; remote access goes
+  through the web server's proxy on your terms (`--bind 0.0.0.0` for a
+  trusted LAN, or your own TLS reverse proxy). The stack makes **zero**
+  outbound connections — the only network dependency is whatever your
+  OpenClaw Gateway needs for its models.
 
-## Installation
+## Docker
 
-| Platform              | Install                                                                                                                   |
-| --------------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| macOS (Apple Silicon) | [Download .dmg (arm64)](https://github.com/traycerai/traycer/releases/latest/download/traycer-desktop-macos-arm64.dmg)    |
-| macOS (Intel)         | [Download .dmg (x64)](https://github.com/traycerai/traycer/releases/latest/download/traycer-desktop-macos-x64.dmg)        |
-| Linux (AppImage)      | [Download .AppImage](https://github.com/traycerai/traycer/releases/latest/download/traycer-desktop-linux-x86_64.AppImage) |
-| Linux (Debian/Ubuntu) | [Download .deb](https://github.com/traycerai/traycer/releases/latest/download/traycer-desktop-linux-amd64.deb)            |
-| Linux (Fedora/RHEL)   | [Download .rpm](https://github.com/traycerai/traycer/releases/latest/download/traycer-desktop-linux-x86_64.rpm)           |
-| Windows               | Coming soon                                                                                                               |
+```sh
+make docker-web
+# equivalent to:
+docker build -t cic-web .
+docker run --rm -p 8788:8788 -v cic-home:/root/.cic cic-web
+```
 
-See the [latest release](https://github.com/traycerai/traycer/releases/latest) for all available builds.
-
-## Agents and Subscriptions
-
-Traycer connects seamlessly with the subscriptions you already own. We focus on providing high-quality orchestration features rather than locking you into an isolated ecosystem. Supported agents currently include:
-
-| Agent                                                 | Status                                    |
-| :---------------------------------------------------- | :---------------------------------------- |
-| [Claude Code](https://claude.com/product/claude-code) | Fully supported                           |
-| [Codex](https://openai.com/codex)                     | Fully supported                           |
-| [Cursor](https://cursor.com/)                         | Fully supported                           |
-| [OpenCode](https://opencode.ai)                       | Fully supported                           |
-| [OpenClaw](https://openclaw.ai)                       | This fork, via the local OpenClaw Gateway |
-| [Traycer](https://traycer.ai)                         | Native inference subscription             |
-
-See [Coding Agents](https://docs.traycer.ai/agents-and-models/coding-agents) for setup commands and provider-specific configurations.
-
-## Collaboration Features
-
-Traycer is built for teams. The integrated collaboration features allow multiple developers to jump into the same shared workspace. You can assign tickets to specific agents, use shareable boards to visualize your development progress, and co-edit code alongside your AI loops.
-
-See our [Sharing docs](https://docs.traycer.ai/panels/sharing) for details on team management and sharing configurations.
+One container runs the host server and the web GUI; point it at your
+gateway with `-e CIC_OPENCLAW_GATEWAY_URL=ws://host.docker.internal:18789`.
 
 ## Privacy
 
-Your code is processed in-memory and never stored or used for training. Prompts and conversations follow **Privacy Mode** (default on for Team plans, opt-in for individuals); with it off, prompts may be logged to help improve our Services.
-
-Agent requests for the CLI providers you configure go directly to that provider; Traycer's own inference is served by Traycer. Crash reporting (Sentry) and analytics (PostHog) may be enabled in release builds.
-
-See our full [Privacy Policy](https://traycer.ai/legal/privacy-policy) for details.
-
-## Documentation
-
-For setup, configuration, agent integrations, and provider-specific behavior, head over to our [**docs**](https://docs.traycer.ai).
+There is nothing to disclose: CIC stores everything under `~/.cic` on your
+machine, sends nothing anywhere, and contains no analytics or crash
+reporting. Delete `~/.cic` and it's gone.
 
 ## Contributing
 
-We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) to get started and our [Code of Conduct](CODE_OF_CONDUCT.md). Commits must be signed off under the [Developer Certificate of Origin (DCO)](CONTRIBUTING.md#developer-certificate-of-origin-dco). You can also [open an issue](https://github.com/traycerai/traycer/issues) for bugs and feature requests.
+See [CONTRIBUTING.md](CONTRIBUTING.md). Commits are signed off under the
+[Developer Certificate of Origin](CONTRIBUTING.md#developer-certificate-of-origin-dco).
+Security issues: see [SECURITY.md](SECURITY.md).
 
-> **Security:** Please don't report security vulnerabilities through public GitHub issues. Report them privately via the email **support@traycer.ai**. See the [Security Policy](SECURITY.md) for details.
+## License and provenance
 
-<a href="https://github.com/traycerai/traycer/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=traycerai/traycer" />
-</a>
-
-## Community
-
-Join the Traycer community to get help, share feedback, and connect with other users:
-
-- **[Discord](https://traycer.ai/discord)** — Chat with the team and community
-- **[X / Twitter](https://x.com/traycerai)** — Follow for updates and announcements
-- **[YouTube](https://www.youtube.com/@TraycerAI)** — Subscribe for walkthroughs and other Traycer videos.
-
-## License
-
-Licensed under the [Apache 2.0 License](LICENSE).
+Licensed under the [Apache 2.0 License](LICENSE). CIC began as a fork of
+the open-source client/protocol codebase of Traycer (see [NOTICE](NOTICE))
+and has since removed the cloud service integration to become standalone,
+local-only software. CIC is an independent project with no affiliation to,
+or endorsement by, the upstream authors.

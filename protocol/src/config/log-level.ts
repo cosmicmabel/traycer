@@ -1,7 +1,7 @@
 /**
- * Log-level vocabulary shared by every Traycer logger — the host, the CLI, the
+ * Log-level vocabulary shared by every CIC logger — the host, the CLI, the
  * desktop main process, and the GUI renderer. Kept dependency-free (no zod, no
- * `node:fs`) so the browser renderer can import it from the `@traycer/protocol`
+ * `node:fs`) so the browser renderer can import it from the `@cic/protocol`
  * root without dragging in the filesystem-backed config store. The zod schema
  * that *persists* these values lives in `./schema` (Node-only).
  */

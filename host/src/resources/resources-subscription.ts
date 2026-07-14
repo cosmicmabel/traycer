@@ -1,7 +1,7 @@
 import {
   resourcesSubscribeOpenRequestV10Schema,
   type ResourcesSubscribeServerFrame,
-} from "@traycer/protocol/host/resources/subscribe";
+} from "@cic/protocol/host/resources/subscribe";
 
 /**
  * `resources.subscribe` sessions.

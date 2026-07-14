@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
-import { rateLimitCapableProviderIdSchema } from "@traycer/protocol/host/rate-limit";
+import { rateLimitCapableProviderIdSchema } from "@cic/protocol/host/rate-limit";
 import { basePersistOptions, persistKey, STORE_KEYS } from "@/lib/persist";
 import type { RateLimitProviderId } from "@/lib/rate-limit-providers";
 

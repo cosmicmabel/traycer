@@ -2,7 +2,7 @@ import "../../../../__tests__/test-browser-apis";
 import { afterEach, describe, expect, it } from "vitest";
 import { act, renderHook } from "@testing-library/react";
 import type { ReactNode } from "react";
-import type { WorktreeBindingEntry } from "@traycer/protocol/host";
+import type { WorktreeBindingEntry } from "@cic/protocol/host";
 import { TabHostProvider } from "@/components/epic-canvas/tab-host-provider";
 import { useSetupTerminalTabRegisterDriver } from "@/hooks/chats/use-setup-terminal-tab-register-driver";
 import { createChatSessionStore } from "@/stores/chats/chat-session-store";
@@ -18,10 +18,10 @@ const USER_ID = "user-setup-title";
 const HOST_ID = "host-setup-title";
 
 const WORKTREE_ENTRY: WorktreeBindingEntry = {
-  workspacePath: "/Users/me/projects/traycer",
+  workspacePath: "/Users/me/projects/cic",
   mode: "worktree",
-  repoIdentifier: { owner: "traycerai", repo: "traycer" },
-  worktreePath: "/Users/me/.traycer/worktrees/traycerai__traycer/feature",
+  repoIdentifier: { owner: "cicai", repo: "cic" },
+  worktreePath: "/Users/me/.cic/worktrees/cicai__cic/feature",
   branch: "feature/setup-title",
   isPrimary: true,
   isImported: false,
@@ -98,7 +98,7 @@ describe("useSetupTerminalTabRegisterDriver", () => {
       id: WORKTREE_ENTRY.setupTerminalSessionId,
       instanceId: WORKTREE_ENTRY.setupTerminalSessionId,
       type: "terminal",
-      name: "Setup: traycer feature/setup-title",
+      name: "Setup: cic feature/setup-title",
       titleSource: "manual",
       hostId: HOST_ID,
       cwd: WORKTREE_ENTRY.worktreePath,
@@ -122,7 +122,7 @@ describe("useSetupTerminalTabRegisterDriver", () => {
     const apiEntry: WorktreeBindingEntry = {
       ...WORKTREE_ENTRY,
       workspacePath: "/Users/me/projects/api",
-      worktreePath: "/Users/me/.traycer/worktrees/acme__api/feature-api",
+      worktreePath: "/Users/me/.cic/worktrees/acme__api/feature-api",
       branch: "feature-api",
       isPrimary: false,
       setupTerminalSessionId: "setup-api",
@@ -130,7 +130,7 @@ describe("useSetupTerminalTabRegisterDriver", () => {
     const webEntry: WorktreeBindingEntry = {
       ...WORKTREE_ENTRY,
       workspacePath: "/Users/me/projects/web",
-      worktreePath: "/Users/me/.traycer/worktrees/acme__web/feature-web",
+      worktreePath: "/Users/me/.cic/worktrees/acme__web/feature-web",
       branch: "feature-web",
       isPrimary: false,
       setupTerminalSessionId: "setup-web",

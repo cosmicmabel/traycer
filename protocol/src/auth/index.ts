@@ -1,5 +1,5 @@
 /**
- * `@traycer/protocol/auth` - canonical home for the auth, session, and
+ * `@cic/protocol/auth` - canonical home for the auth, session, and
  * MCP-server wire DTOs that cross the open-source client/host
  * boundary.
  *

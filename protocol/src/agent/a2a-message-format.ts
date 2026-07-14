@@ -37,10 +37,10 @@ export function formatAgentMessage(input: FormatAgentMessageInput): string {
 
 function formatGuiAgentMessage(input: FormatAgentMessageInput): string {
   const replyLine = input.reply.expectsReply
-    ? `[traycer:agent-message] A reply is expected. Use the traycer_send_message tool to reply with responseId="${input.reply.responseId}".`
-    : "[traycer:agent-message] No reply is required.";
+    ? `[cic:agent-message] A reply is expected. Use the cic_send_message tool to reply with responseId="${input.reply.responseId}".`
+    : "[cic:agent-message] No reply is required.";
 
-  return `[traycer:agent-message] from ${formatAgentMessageSenderLabel(input.sender)}
+  return `[cic:agent-message] from ${formatAgentMessageSenderLabel(input.sender)}
 ${replyLine}
 
 ${input.body}`;
@@ -50,24 +50,24 @@ function formatCliAgentMessage(input: FormatAgentMessageInput): string {
   const responseHint = input.reply.expectsReply
     ? ` — responseId ${input.reply.responseId}`
     : "";
-  const header = `[traycer inbox] message from ${formatAgentMessageSenderLabel(input.sender)}${responseHint}`;
+  const header = `[cic inbox] message from ${formatAgentMessageSenderLabel(input.sender)}${responseHint}`;
 
   if (input.reply.expectsReply) {
     return `
 ${header}
-[traycer inbox] a reply is expected — reply with: traycer agent send --to ${input.sender.agentId} --response-id ${input.reply.responseId} --message "<your reply>"
+[cic inbox] a reply is expected — reply with: cic agent send --to ${input.sender.agentId} --response-id ${input.reply.responseId} --message "<your reply>"
 
 ${input.body}
-[traycer inbox] ─── end of message ───
-[traycer inbox] if the message above looks cut off, read it in full with: traycer agent inbox`;
+[cic inbox] ─── end of message ───
+[cic inbox] if the message above looks cut off, read it in full with: cic agent inbox`;
   }
 
   return `
 ${header}
 
 ${input.body}
-[traycer inbox] ─── end of message ───
-[traycer inbox] if the message above looks cut off, read it in full with: traycer agent inbox`;
+[cic inbox] ─── end of message ───
+[cic inbox] if the message above looks cut off, read it in full with: cic agent inbox`;
 }
 
 export function formatAgentMessageSenderLabel(

@@ -1,5 +1,5 @@
-import type { JsonContent } from "@traycer/protocol/common/registry";
-import type { ChatRunSettings } from "@traycer/protocol/host/agent/gui/subscribe";
+import type { JsonContent } from "@cic/protocol/common/registry";
+import type { ChatRunSettings } from "@cic/protocol/host/agent/gui/subscribe";
 import { create } from "zustand";
 
 import type { ComposerMode } from "@/components/home/data/landing-options";

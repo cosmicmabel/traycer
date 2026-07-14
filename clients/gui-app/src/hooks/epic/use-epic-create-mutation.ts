@@ -3,11 +3,11 @@ import {
   type QueryClient,
   type UseMutationResult,
 } from "@tanstack/react-query";
-import type { HostRpcError } from "@traycer-clients/shared/host-transport/host-messenger";
+import type { HostRpcError } from "@cic/shared/host-transport/host-messenger";
 import type {
   RequestOfMethod,
   ResponseOfMethod,
-} from "@traycer-clients/shared/host-transport/host-messenger";
+} from "@cic/shared/host-transport/host-messenger";
 import type {
   ListTasksFacets,
   ListTasksResponse,
@@ -15,11 +15,11 @@ import type {
   TaskLight,
   TaskRepoIdentifier,
   TaskWorkspaceIdentifier,
-} from "@traycer/protocol/host/epic/unary-schemas";
+} from "@cic/protocol/host/epic/unary-schemas";
 import {
   formatRepoIdentifier,
   listTasksRequestSchema,
-} from "@traycer/protocol/host/epic/unary-schemas";
+} from "@cic/protocol/host/epic/unary-schemas";
 import { useHostClient, type HostRpcRegistry } from "@/lib/host";
 import { useHostMutation } from "@/hooks/host/use-host-query";
 import { hostQueryKeys } from "@/lib/query-keys";

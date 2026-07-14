@@ -6,7 +6,7 @@ import {
   type DraftState,
 } from "../composer-draft-store";
 
-const STORAGE_KEY = "traycer-gui-app:composer-drafts";
+const STORAGE_KEY = "cic-gui-app:composer-drafts";
 
 const MENTION_DRAFT: DraftState = {
   content: {

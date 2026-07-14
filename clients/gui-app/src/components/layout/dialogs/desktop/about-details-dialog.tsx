@@ -49,7 +49,7 @@ function AboutDetailsDialogContent(
       <DialogHeader>
         <DialogTitle className="flex items-center gap-2">
           <Info className="size-4" />
-          About Traycer
+          About CIC
         </DialogTitle>
         <DialogDescription className="sr-only">
           Desktop runtime and diagnostics details.

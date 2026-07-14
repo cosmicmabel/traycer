@@ -1,7 +1,7 @@
 import type {
   RequestOfMethod,
   ResponseOfMethod,
-} from "@traycer-clients/shared/host-transport/host-messenger";
+} from "@cic/shared/host-transport/host-messenger";
 import { useQueryClient } from "@tanstack/react-query";
 import { useCallback } from "react";
 import { useHostClient, type HostRpcRegistry } from "@/lib/host";

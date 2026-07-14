@@ -1,5 +1,5 @@
 import { memo, useMemo, type ReactNode } from "react";
-import type { JsonContent } from "@traycer/protocol/common/registry";
+import type { JsonContent } from "@cic/protocol/common/registry";
 
 import { RenderedComposerNode } from "./render-node";
 import type { ComposerContentRenderVariant } from "./types";

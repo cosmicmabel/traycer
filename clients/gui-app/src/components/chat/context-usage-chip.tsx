@@ -7,7 +7,7 @@ import {
   useTransform,
 } from "motion/react";
 import * as m from "motion/react-m";
-import type { TokenUsage } from "@traycer/protocol/persistence/epic/foundation";
+import type { TokenUsage } from "@cic/protocol/persistence/epic/foundation";
 import { Button } from "@/components/ui/button";
 import {
   Popover,

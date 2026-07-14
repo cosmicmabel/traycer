@@ -8,7 +8,7 @@ import type {
   DesktopAppUpdatesBridge,
 } from "@/lib/windows/types";
 
-const APP_UPDATE_TOAST_ID = "traycer-app-update";
+const APP_UPDATE_TOAST_ID = "cic-app-update";
 const APP_UPDATE_TRANSIENT_TOAST_DURATION_MS = 4000;
 
 export function AppUpdateToastController(): null {
@@ -80,7 +80,7 @@ function showAppUpdateToast(
   switch (snapshot.status) {
     case "checking":
       if (snapshot.lastCheckIntent === "manual") {
-        toast.info("Checking for Traycer updates...", {
+        toast.info("Checking for CIC updates...", {
           id: APP_UPDATE_TOAST_ID,
           description: null,
           duration: APP_UPDATE_TRANSIENT_TOAST_DURATION_MS,
@@ -134,7 +134,7 @@ function showAppUpdateToast(
         snapshot.installGuidance === null ? (
           <AppUpdateActionToastContent
             title="Update ready to install"
-            description="Restart Traycer to finish updating."
+            description="Restart CIC to finish updating."
             actionLabel="Restart"
             onAction={actions.onRestart}
           />
@@ -154,7 +154,7 @@ function showAppUpdateToast(
       );
       return;
     case "error":
-      toast.error("Couldn't update Traycer", {
+      toast.error("Couldn't update CIC", {
         id: APP_UPDATE_TOAST_ID,
         description: (
           <AppUpdateErrorToastDescription
@@ -171,7 +171,7 @@ function showAppUpdateToast(
       });
       return;
     case "up-to-date":
-      toast.success("Traycer is up to date", {
+      toast.success("CIC is up to date", {
         id: APP_UPDATE_TOAST_ID,
         description:
           snapshot.currentVersion.length === 0
@@ -194,7 +194,7 @@ function showAppUpdateToast(
 
 function updateAvailableDescription(latestVersion: string | null): string {
   if (latestVersion === null) {
-    return "A new version of Traycer is ready to download.";
+    return "A new version of CIC is ready to download.";
   }
   return `Version ${latestVersion} is ready to download.`;
 }

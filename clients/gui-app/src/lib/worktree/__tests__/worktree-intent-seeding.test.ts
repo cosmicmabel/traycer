@@ -4,7 +4,7 @@ import type {
   WorktreeBranch,
   WorktreeFolderIntent,
   WorktreeWorkspaceSummary,
-} from "@traycer/protocol/host/worktree-schemas";
+} from "@cic/protocol/host/worktree-schemas";
 import {
   defaultFolderIntent,
   rememberedNeedsBranchValidation,
@@ -46,7 +46,7 @@ function folderContext(
     isPrimary: true,
     isGitRepo: true,
     currentBranch: "main",
-    defaultNewBranchName: "traycer/swift-otter",
+    defaultNewBranchName: "cic/swift-otter",
     summary: summary({}),
     ...overrides,
   };
@@ -109,7 +109,7 @@ describe("defaultFolderIntent", () => {
         isPrimary: true,
         isGitRepo: true,
         currentBranch: "main",
-        defaultNewBranchName: "traycer/swift-otter",
+        defaultNewBranchName: "cic/swift-otter",
       }),
     ).toEqual({
       kind: "worktree",
@@ -119,7 +119,7 @@ describe("defaultFolderIntent", () => {
       isPrimary: true,
       branch: {
         type: "new",
-        name: "traycer/swift-otter",
+        name: "cic/swift-otter",
         source: "main",
         carryUncommittedChanges: false,
       },
@@ -231,7 +231,7 @@ describe("resolveRememberedFolderIntent", () => {
       resolveRememberedFolderIntent({
         remembered: rememberedNew("main"),
         branches: null,
-        folder: folderContext({ defaultNewBranchName: "traycer/fresh-name" }),
+        folder: folderContext({ defaultNewBranchName: "cic/fresh-name" }),
       }),
     ).toEqual({
       kind: "worktree",
@@ -241,7 +241,7 @@ describe("resolveRememberedFolderIntent", () => {
       isPrimary: true,
       branch: {
         type: "new",
-        name: "traycer/fresh-name",
+        name: "cic/fresh-name",
         source: "main",
         carryUncommittedChanges: false,
       },
@@ -366,12 +366,12 @@ describe("seedEntryForFolder", () => {
       epicIntentEntry: rememberedExisting("gone-from-epic"),
       rememberedFolderIntent: null,
       branches: [branch("main")],
-      folder: folderContext({ defaultNewBranchName: "traycer/fallback" }),
+      folder: folderContext({ defaultNewBranchName: "cic/fallback" }),
       alreadyStaged: false,
     });
     expect(entry?.kind).toBe("worktree");
     if (entry?.kind === "worktree" && entry.branch.type === "new") {
-      expect(entry.branch.name).toBe("traycer/fallback");
+      expect(entry.branch.name).toBe("cic/fallback");
     }
   });
 
@@ -395,13 +395,13 @@ describe("seedEntryForFolder", () => {
       epicIntentEntry: null,
       rememberedFolderIntent: rememberedExisting("gone"),
       branches: [branch("main")],
-      folder: folderContext({ defaultNewBranchName: "traycer/fallback" }),
+      folder: folderContext({ defaultNewBranchName: "cic/fallback" }),
       alreadyStaged: false,
     });
     expect(entry?.kind).toBe("worktree");
     if (entry?.kind === "worktree" && entry.branch.type === "new") {
       expect(entry.branch.source).toBe("main");
-      expect(entry.branch.name).toBe("traycer/fallback");
+      expect(entry.branch.name).toBe("cic/fallback");
     }
   });
 

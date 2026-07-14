@@ -1,9 +1,9 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { QueryClient } from "@tanstack/react-query";
-import { DEFAULT_GIT_FILE_DIFF_BYTE_BUDGET } from "@traycer/protocol/host";
+import { DEFAULT_GIT_FILE_DIFF_BYTE_BUDGET } from "@cic/protocol/host";
 import { gitQueryKeys } from "@/lib/query-keys/git-query-keys";
 import { writeBatchedDiffResponses } from "@/lib/git/write-batched-diff-responses";
-import type { GitGetFileDiffResponse } from "@traycer/protocol/host/git-schemas";
+import type { GitGetFileDiffResponse } from "@cic/protocol/host/git-schemas";
 
 describe("race-resolution: Q20 invalidate-then-write race", () => {
   let queryClient: QueryClient;

@@ -46,7 +46,7 @@ export function ChatUserMessageMinimap(props: ChatUserMessageMinimapProps) {
   return (
     <div
       {...paneActivationDeferProps}
-      className="pointer-events-auto absolute right-3 top-3 z-20 flex flex-col items-end [.traycer-panel-resizing_&]:pointer-events-none [.traycer-panel-resizing_&]:opacity-0"
+      className="pointer-events-auto absolute right-3 top-3 z-20 flex flex-col items-end [.cic-panel-resizing_&]:pointer-events-none [.cic-panel-resizing_&]:opacity-0"
       onPointerEnter={() => setOverlayOpen(true)}
       onPointerLeave={() => setOverlayOpen(false)}
       onFocusCapture={() => setOverlayOpen(true)}

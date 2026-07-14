@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from "vitest";
 import { cleanup, render, screen } from "@testing-library/react";
-import type { GitChangedFile } from "@traycer/protocol/host";
+import type { GitChangedFile } from "@cic/protocol/host";
 import { GitChangedFileRow } from "@/components/epic-canvas/git-diff/git-changed-file-row";
 import { NO_HIGHLIGHT, type HighlightRanges } from "@/lib/git/path-highlight";
 

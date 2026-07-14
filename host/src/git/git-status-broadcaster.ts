@@ -1,7 +1,7 @@
 import {
   gitSubscribeStatusRequestSchema,
   type GitSubscribeStatusEvent,
-} from "@traycer/protocol/host/git-schemas";
+} from "@cic/protocol/host/git-schemas";
 import { gitStatusSnapshot } from "./git-service";
 
 /**

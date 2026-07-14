@@ -13,8 +13,8 @@ import {
 } from "react";
 import { EditorContent, useEditor } from "@tiptap/react";
 import { Selection } from "@tiptap/pm/state";
-import type { JsonContent } from "@traycer/protocol/common/registry";
-import type { GuiHarnessId } from "@traycer/protocol/host/index";
+import type { JsonContent } from "@cic/protocol/common/registry";
+import type { GuiHarnessId } from "@cic/protocol/host/index";
 
 import { cn } from "@/lib/utils";
 import { registerComposerFocus } from "@/lib/composer/composer-focus-registry";

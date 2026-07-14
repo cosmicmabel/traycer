@@ -2,20 +2,20 @@ import { create, type StoreApi, type UseBoundStore } from "zustand";
 import type {
   StreamCloseReason,
   StreamConnectionStatus,
-} from "@traycer-clients/shared/host-transport/i-stream-session";
+} from "@cic/shared/host-transport/i-stream-session";
 import type {
   ResourcesProjectionPayload,
   ResourcesStreamScope,
   ResourcesStreamCallbacks,
   ResourcesStreamClient,
-} from "@traycer-clients/shared/host-transport/resources-stream-client";
+} from "@cic/shared/host-transport/resources-stream-client";
 import type {
   AppResourceSnapshotWire,
   EpicResourceSnapshotWire,
   OwnerResourceSnapshotWire,
   ResourceProcessSnapshotWire,
   ResourceOwnerKindWire,
-} from "@traycer/protocol/host/resources/subscribe";
+} from "@cic/protocol/host/resources/subscribe";
 
 /**
  * The renderer side of `resources.subscribe@1.0`: one store per open epic that

@@ -29,7 +29,7 @@ export function ScrollToBottomChip({
       className={cn(
         "pointer-events-auto absolute bottom-4 left-1/2 z-10 -translate-x-1/2 shadow-md rounded-full",
         "transition-opacity duration-150",
-        "[.traycer-panel-resizing_&]:pointer-events-none [.traycer-panel-resizing_&]:opacity-0",
+        "[.cic-panel-resizing_&]:pointer-events-none [.cic-panel-resizing_&]:opacity-0",
         visible ? "opacity-100" : "pointer-events-none opacity-0",
       )}
     >

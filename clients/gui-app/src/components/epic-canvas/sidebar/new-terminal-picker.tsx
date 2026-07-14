@@ -13,7 +13,7 @@
 import { useCallback, useMemo, useRef, useState, type ReactNode } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { Plus } from "lucide-react";
-import type { WorktreeBindingSelectorRow } from "@traycer/protocol/host";
+import type { WorktreeBindingSelectorRow } from "@cic/protocol/host";
 import { Button } from "@/components/ui/button";
 import {
   Popover,

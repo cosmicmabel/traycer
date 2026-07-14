@@ -5,11 +5,11 @@ export default defineConfig({
   resolve: {
     alias: [
       {
-        find: /^@traycer\/protocol\/utils\/(.*)$/,
+        find: /^@cic\/protocol\/utils\/(.*)$/,
         replacement: path.resolve(__dirname, "./utils/$1"),
       },
       {
-        find: /^@traycer\/protocol\/(.*)$/,
+        find: /^@cic\/protocol\/(.*)$/,
         replacement: path.resolve(__dirname, "./src/$1"),
       },
     ],

@@ -7,13 +7,13 @@ import {
   type UseQueryOptions,
   type UseQueryResult,
 } from "@tanstack/react-query";
-import type { HostClient } from "@traycer-clients/shared/host-client/host-client";
-import type { HostRpcError } from "@traycer-clients/shared/host-transport/host-messenger";
+import type { HostClient } from "@cic/shared/host-client/host-client";
+import type { HostRpcError } from "@cic/shared/host-transport/host-messenger";
 import type {
   RequestOfMethod,
   ResponseOfMethod,
-} from "@traycer-clients/shared/host-transport/host-messenger";
-import type { VersionedRpcRegistry } from "@traycer/protocol/framework/index";
+} from "@cic/shared/host-transport/host-messenger";
+import type { VersionedRpcRegistry } from "@cic/protocol/framework/index";
 import { queryKeys } from "@/lib/query-keys";
 import { hostClientUnavailableError } from "@/hooks/host/use-host-query";
 import { useReactiveHostReadiness } from "@/hooks/host/use-reactive-host-readiness";

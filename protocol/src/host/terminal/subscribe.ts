@@ -59,8 +59,8 @@
  * process name and user title. Byte streams remain on `data`/`binaryData`.
  */
 import { z } from "zod";
-import { defineStreamRpcContract } from "@traycer/protocol/framework/versioned-stream-rpc";
-import { terminalSessionInfoSchema } from "@traycer/protocol/host/terminal/unary-schemas";
+import { defineStreamRpcContract } from "@cic/protocol/framework/versioned-stream-rpc";
+import { terminalSessionInfoSchema } from "@cic/protocol/host/terminal/unary-schemas";
 
 const textFrameFields = {
   hasBinaryPayload: z.literal(false),

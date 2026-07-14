@@ -1,4 +1,4 @@
-import type { WorktreeIntent } from "@traycer/protocol/host/worktree-schemas";
+import type { WorktreeIntent } from "@cic/protocol/host/worktree-schemas";
 import {
   readStagedWorktreeIntent,
   type WorktreeStagingKey,

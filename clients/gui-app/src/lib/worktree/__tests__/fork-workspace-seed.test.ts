@@ -3,7 +3,7 @@ import type {
   WorktreeBinding,
   WorktreeBindingEntry,
   WorktreeIntent,
-} from "@traycer/protocol/host/worktree-schemas";
+} from "@cic/protocol/host/worktree-schemas";
 import {
   buildForkWorkspaceSeed,
   buildForkWorkspaceSeedFromWorkspaceFolders,
@@ -16,7 +16,7 @@ function bindingEntry(
   return {
     workspacePath: "/repo",
     mode: "local",
-    repoIdentifier: { owner: "traycerai", repo: "traycer" },
+    repoIdentifier: { owner: "cicai", repo: "cic" },
     worktreePath: null,
     branch: "development",
     isPrimary: true,
@@ -50,7 +50,7 @@ describe("visibleWorktreeIntent", () => {
         {
           kind: "worktree",
           workspacePath: "/repo-b",
-          repoIdentifier: { owner: "traycerai", repo: "repo-b" },
+          repoIdentifier: { owner: "cicai", repo: "repo-b" },
           isPrimary: false,
           branch: {
             type: "new",
@@ -68,7 +68,7 @@ describe("visibleWorktreeIntent", () => {
         {
           kind: "local",
           workspacePath: "/repo-a",
-          repoIdentifier: { owner: "traycerai", repo: "traycer" },
+          repoIdentifier: { owner: "cicai", repo: "cic" },
           isPrimary: true,
         },
         stagedIntent.entries[0],
@@ -104,8 +104,8 @@ describe("buildForkWorkspaceSeed", () => {
       binding: {
         entries: [
           bindingEntry({
-            workspacePath: "/Users/me/traycer",
-            repoIdentifier: { owner: "traycerai", repo: "traycer" },
+            workspacePath: "/Users/me/cic",
+            repoIdentifier: { owner: "cicai", repo: "cic" },
           }),
         ],
       },
@@ -113,12 +113,12 @@ describe("buildForkWorkspaceSeed", () => {
     });
 
     expect(seed.workspace).toEqual({
-      folders: ["/Users/me/traycer"],
+      folders: ["/Users/me/cic"],
       folderInfoByPath: {
-        "/Users/me/traycer": {
-          path: "/Users/me/traycer",
-          name: "traycer",
-          repoIdentifier: { owner: "traycerai", repo: "traycer" },
+        "/Users/me/cic": {
+          path: "/Users/me/cic",
+          name: "cic",
+          repoIdentifier: { owner: "cicai", repo: "cic" },
         },
       },
     });
@@ -126,7 +126,7 @@ describe("buildForkWorkspaceSeed", () => {
 
   it("builds a local fallback seed from persisted terminal-agent folders", () => {
     const seed = buildForkWorkspaceSeedFromWorkspaceFolders([
-      "/Users/me/traycer",
+      "/Users/me/cic",
       "/Users/me/project/some-pkg",
     ]);
 
@@ -134,7 +134,7 @@ describe("buildForkWorkspaceSeed", () => {
       entries: [
         {
           kind: "local",
-          workspacePath: "/Users/me/traycer",
+          workspacePath: "/Users/me/cic",
           repoIdentifier: null,
           isPrimary: true,
         },
@@ -147,7 +147,7 @@ describe("buildForkWorkspaceSeed", () => {
       ],
     });
     expect(seed.workspace.folders).toEqual([
-      "/Users/me/traycer",
+      "/Users/me/cic",
       "/Users/me/project/some-pkg",
     ]);
   });

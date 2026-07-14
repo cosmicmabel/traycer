@@ -10,13 +10,13 @@ import {
   type UseQueryOptions,
   type UseQueryResult,
 } from "@tanstack/react-query";
-import type { HostClient } from "@traycer-clients/shared/host-client/host-client";
+import type { HostClient } from "@cic/shared/host-client/host-client";
 import {
   HostRpcError,
   type RequestOfMethod,
   type ResponseOfMethod,
-} from "@traycer-clients/shared/host-transport/host-messenger";
-import type { VersionedRpcRegistry } from "@traycer/protocol/framework/index";
+} from "@cic/shared/host-transport/host-messenger";
+import type { VersionedRpcRegistry } from "@cic/protocol/framework/index";
 import { queryKeys } from "@/lib/query-keys";
 import { useReactiveHostReadiness } from "@/hooks/host/use-reactive-host-readiness";
 

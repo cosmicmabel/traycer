@@ -2,8 +2,8 @@ import { z } from "zod";
 import {
   DEFAULT_ACCOUNT_CONTEXT,
   accountContextSchema,
-} from "@traycer/protocol/common/schemas";
-import { providerIdSchema } from "@traycer/protocol/host/provider-schemas";
+} from "@cic/protocol/common/schemas";
+import { providerIdSchema } from "@cic/protocol/host/provider-schemas";
 
 // `host.getRateLimitUsage` v1.0 request: no fields. Non-strict on purpose so a
 // v1.1 client can Zod-strip its `accountContext` away when projecting the request
@@ -29,7 +29,7 @@ export type RateLimitUsageRequestV11 = z.infer<
 >;
 
 // Mirrors the aperture rate-limit shape defined in an internal shared package
-// (not in this repo) - the aperture gRPC return shape the Traycer cloud
+// (not in this repo) - the aperture gRPC return shape the CIC cloud
 // backend maps straight onto this wire contract. Unchanged across v1.0 / v1.1.
 export const rateLimitUsageResponseSchema = z.object({
   totalTokens: z.number(),
@@ -41,7 +41,7 @@ export type RateLimitUsageResponse = z.infer<
 >;
 
 // v1.2 adds provider-account rate limits (Codex / Claude Code CLI), pulled
-// on-demand for a specific provider rather than the Traycer-inference
+// on-demand for a specific provider rather than the CIC-inference
 // aperture the v1.0/v1.1 fields describe. Added as a minor (NOT an in-place
 // edit to v1.1) so a shipped v1.1 host still negotiates: `providerId` is
 // optional, so an unset field leaves today's aperture behavior unchanged.
@@ -169,10 +169,10 @@ const claudeCodeRateLimitsSchema = z.object({
     .nullable(),
 });
 
-// Closed, Traycer-owned set of reasons a provider pull can fail to report
+// Closed, CIC-owned set of reasons a provider pull can fail to report
 // rate limits - unlike a provider's own plan/reached-type tokens (owned by
 // that provider, legitimately forward-compat as a bare string), every one of
-// these is emitted by `traycer-host` itself and ships atomically with this
+// these is emitted by `cic-host` itself and ships atomically with this
 // schema, so there's no cross-version drift risk in constraining it. Enforces
 // the host's `unavailableRateLimits` call sites and the GUI's display-label
 // map stay exhaustive at compile time instead of silently drifting.

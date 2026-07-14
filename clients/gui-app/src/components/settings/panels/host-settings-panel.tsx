@@ -46,7 +46,7 @@ import type {
   HostRegistryUpdateState,
   IHostManagement,
   IRunnerHost,
-} from "@traycer-clients/shared/platform/runner-host";
+} from "@cic/shared/platform/runner-host";
 
 export function HostSettingsPanel() {
   const runnerHost = useRunnerHost();
@@ -58,7 +58,7 @@ export function HostSettingsPanel() {
         description="Host management is only available on the desktop app."
       >
         <div className="px-5 py-6 text-ui-sm text-muted-foreground">
-          This shell doesn&apos;t bundle the Traycer CLI.
+          This shell doesn&apos;t bundle the CIC CLI.
         </div>
       </SettingsPanelShell>
     );
@@ -416,7 +416,7 @@ function HostSettingsPanelInner(props: HostSettingsPanelInnerProps) {
   return (
     <SettingsPanelShell
       title="Host"
-      description="Local background service that runs Traycer on your machine."
+      description="Local background service that runs CIC on your machine."
     >
       {progress !== null ? <HostProgressBanner progress={progress} /> : null}
       {packageManagerUpgrade !== null ? (

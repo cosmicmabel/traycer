@@ -1,6 +1,6 @@
 import type { QueryClient } from "@tanstack/react-query";
-import type { AccountContext } from "@traycer/protocol/common/schemas";
-import type { RequestOfMethod } from "@traycer-clients/shared/host-transport/host-messenger";
+import type { AccountContext } from "@cic/protocol/common/schemas";
+import type { RequestOfMethod } from "@cic/shared/host-transport/host-messenger";
 import type { HostRpcRegistry } from "@/lib/host";
 import { queryKeys } from "@/lib/query-keys";
 import {

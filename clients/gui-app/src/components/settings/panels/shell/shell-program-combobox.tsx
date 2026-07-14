@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ChevronsUpDown } from "lucide-react";
-import type { TraycerDetectedShell } from "@traycer-clients/shared/platform/runner-host";
+import type { CicDetectedShell } from "@cic/shared/platform/runner-host";
 import {
   Command,
   CommandEmpty,
@@ -29,7 +29,7 @@ function basenameOf(path: string): string {
  */
 export function ShellProgramCombobox(props: {
   readonly value: string;
-  readonly detected: readonly TraycerDetectedShell[];
+  readonly detected: readonly CicDetectedShell[];
   readonly disabled: boolean;
   readonly onSave: (path: string) => void;
 }) {

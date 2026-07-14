@@ -65,7 +65,7 @@ import type { PinnedTodoSnapshot } from "@/components/chat/chat-pinned-todos";
 import { ContextUsageChip } from "@/components/chat/context-usage-chip";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { useSettingsStore } from "@/stores/settings/settings-store";
-import type { TokenUsage } from "@traycer/protocol/persistence/epic/foundation";
+import type { TokenUsage } from "@cic/protocol/persistence/epic/foundation";
 
 const USAGE_PROBE_75: TokenUsage = {
   inputTokens: 50_000,

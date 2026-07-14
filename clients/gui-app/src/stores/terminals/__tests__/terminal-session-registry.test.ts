@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import type { TerminalStreamCallbacks } from "@traycer-clients/shared/host-transport/terminal-stream-client";
-import type { TerminalSessionKind } from "@traycer/protocol/host/terminal/unary-schemas";
+import type { TerminalStreamCallbacks } from "@cic/shared/host-transport/terminal-stream-client";
+import type { TerminalSessionKind } from "@cic/protocol/host/terminal/unary-schemas";
 import {
   createTerminalSessionStore,
   type TerminalSessionStoreHandle,

@@ -6,8 +6,8 @@ import {
 } from "@testing-library/react";
 import type { ReactNode } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { deriveToolInputDetail } from "@traycer/protocol/host/agent/gui/tool-input-detail";
-import { deriveToolInputSummary } from "@traycer/protocol/host/agent/gui/tool-input-summary";
+import { deriveToolInputDetail } from "@cic/protocol/host/agent/gui/tool-input-detail";
+import { deriveToolInputSummary } from "@cic/protocol/host/agent/gui/tool-input-summary";
 import { ChatExpansionTestProviders } from "@/components/chat/__tests__/chat-expansion-test-providers";
 import { deriveA2ASendCollapsibleKey } from "@/components/chat/chat-collapsible-key";
 import { ToolSegment } from "@/components/chat/segments/tool-segment";
@@ -104,8 +104,8 @@ describe("<ToolSegment /> A2A send-message rendering", () => {
       <ToolSegment
         headerFindUnitId={null}
         id="a2a-send-1"
-        toolName="traycer_a2a/traycer_send_message"
-        {...inputProps("traycer_a2a/traycer_send_message", {
+        toolName="cic_a2a/cic_send_message"
+        {...inputProps("cic_a2a/cic_send_message", {
           toAgentId: "agent-receiver-1",
           message: "Please inspect the failing test.",
           responseId: "response-1",
@@ -158,8 +158,8 @@ describe("<ToolSegment /> A2A send-message rendering", () => {
         <ToolSegment
           headerFindUnitId={null}
           id={segmentId}
-          toolName="traycer_a2a/traycer_send_message"
-          {...inputProps("traycer_a2a/traycer_send_message", {})}
+          toolName="cic_a2a/cic_send_message"
+          {...inputProps("cic_a2a/cic_send_message", {})}
           error={null}
           agentMessageSend={{
             receiverAgentId: "agent-receiver-1",
@@ -196,8 +196,8 @@ describe("<ToolSegment /> A2A send-message rendering", () => {
         <ToolSegment
           headerFindUnitId={null}
           id={segmentId}
-          toolName="traycer_a2a/traycer_send_message"
-          {...inputProps("traycer_a2a/traycer_send_message", {})}
+          toolName="cic_a2a/cic_send_message"
+          {...inputProps("cic_a2a/cic_send_message", {})}
           error={null}
           agentMessageSend={{
             receiverAgentId: "agent-receiver-1",
@@ -257,8 +257,8 @@ describe("<ToolSegment /> A2A send-message rendering", () => {
       <ToolSegment
         headerFindUnitId={null}
         id="a2a-send-optimistic"
-        toolName="traycer_a2a/traycer_send_message"
-        {...inputProps("traycer_a2a/traycer_send_message", {})}
+        toolName="cic_a2a/cic_send_message"
+        {...inputProps("cic_a2a/cic_send_message", {})}
         error={null}
         agentMessageSend={{
           receiverAgentId: "agent-receiver-optimistic",

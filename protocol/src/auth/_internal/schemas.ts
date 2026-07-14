@@ -9,7 +9,7 @@ import { z } from "zod";
  * so the runtime check and the compile-time shape stay in lock-step
  * automatically - there is no plain TS duplicate that could drift.
  *
- * Non-record extension shapes (e.g. `traycerUserSubscriptionSchema`)
+ * Non-record extension shapes (e.g. `cicUserSubscriptionSchema`)
  * compose against the registered base schemas using `.extend(...)`, so
  * the inferred TypeScript shape of any record that embeds them lines up
  * with the public extension types in `protocol/auth/user.ts` by
@@ -134,7 +134,7 @@ export const organizationCreditSchema = creditSchema.extend({
   orgId: z.string(),
 });
 
-export const traycerOrganizationSubscriptionSchema = subscriptionSchema.extend({
+export const cicOrganizationSubscriptionSchema = subscriptionSchema.extend({
   organization: organizationSchema.optional(),
   isInTrial: z.boolean(),
   bundleSummary: bundleSummarySchema.optional(),
@@ -144,7 +144,7 @@ export const traycerOrganizationSubscriptionSchema = subscriptionSchema.extend({
   hasActiveBundle: z.boolean().optional(),
 });
 
-export const traycerUserSubscriptionSchema = subscriptionSchema.extend({
+export const cicUserSubscriptionSchema = subscriptionSchema.extend({
   isInTrial: z.boolean(),
   bundleSummary: bundleSummarySchema.optional(),
   credit: creditSchema.optional(),
@@ -153,7 +153,7 @@ export const traycerUserSubscriptionSchema = subscriptionSchema.extend({
   hasActiveBundle: z.boolean().optional(),
 });
 
-export const traycerTeamSubscriptionSchema = subscriptionSchema.extend({
+export const cicTeamSubscriptionSchema = subscriptionSchema.extend({
   team: teamSchema,
   isInTrial: z.boolean(),
   bundleSummary: bundleSummarySchema,
@@ -165,22 +165,22 @@ export const traycerTeamSubscriptionSchema = subscriptionSchema.extend({
 
 export const authenticatedUserBaseSchema = z.object({
   user: userSchema,
-  userSubscription: traycerUserSubscriptionSchema,
+  userSubscription: cicUserSubscriptionSchema,
   payAsYouGoUsage: payAsYouGoUsageSchema,
 });
 
 // ---- Authenticated-user response records ------------------------------- //
 
 export const authenticatedUserSchema = authenticatedUserBaseSchema.extend({
-  teamSubscriptions: z.array(traycerTeamSubscriptionSchema),
+  teamSubscriptions: z.array(cicTeamSubscriptionSchema),
 });
 
 export const legacyAuthenticatedUserSchema = authenticatedUserBaseSchema.extend(
   {
-    organizationSubscription: traycerOrganizationSubscriptionSchema.optional(),
+    organizationSubscription: cicOrganizationSubscriptionSchema.optional(),
     rechargeRateSeconds: z.number(),
     organizationSubscriptions: z
-      .array(traycerOrganizationSubscriptionSchema)
+      .array(cicOrganizationSubscriptionSchema)
       .optional(),
   },
 );

@@ -2,19 +2,19 @@ import { useMemo } from "react";
 import type {
   ChatRunSettings,
   ChatActiveTurn,
-} from "@traycer/protocol/host/agent/gui/subscribe";
-import type { PermissionMode } from "@traycer/protocol/persistence/epic/foundation";
+} from "@cic/protocol/host/agent/gui/subscribe";
+import type { PermissionMode } from "@cic/protocol/persistence/epic/foundation";
 import type {
   InterviewAnswer,
   UserMessageSender,
-} from "@traycer/protocol/persistence/epic/schemas";
-import type { RuntimeApprovalDecision } from "@traycer/protocol/host/agent/gui/agent-runtime";
+} from "@cic/protocol/persistence/epic/schemas";
+import type { RuntimeApprovalDecision } from "@cic/protocol/host/agent/gui/agent-runtime";
 import type {
   ChatSessionStoreHandle,
   EditUserMessageInput,
   SentChatMessageAction,
 } from "@/stores/chats/chat-session-store";
-import type { JsonContent } from "@traycer/protocol/common/registry";
+import type { JsonContent } from "@cic/protocol/common/registry";
 import { Analytics, AnalyticsEvent } from "@/lib/analytics";
 
 /**

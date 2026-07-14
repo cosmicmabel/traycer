@@ -1,7 +1,7 @@
-import { chatEventSchema } from "@traycer/protocol/persistence/epic/chat-events";
-import { chatRunSettingsSchema } from "@traycer/protocol/persistence/epic/foundation";
-import { messageSchema } from "@traycer/protocol/persistence/epic/messages";
-import { activeSessionChainSchema } from "@traycer/protocol/persistence/epic/senders";
+import { chatEventSchema } from "@cic/protocol/persistence/epic/chat-events";
+import { chatRunSettingsSchema } from "@cic/protocol/persistence/epic/foundation";
+import { messageSchema } from "@cic/protocol/persistence/epic/messages";
+import { activeSessionChainSchema } from "@cic/protocol/persistence/epic/senders";
 import { z } from "zod";
 
 /**

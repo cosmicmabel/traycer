@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { ChatApprovalState } from "@traycer/protocol/host/agent/gui/subscribe";
+import type { ChatApprovalState } from "@cic/protocol/host/agent/gui/subscribe";
 import {
   composerHasBlockingApprovals,
   visibleComposerApprovals,

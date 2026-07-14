@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import type {
   HostInstallResult,
   HostTrayCommand,
-} from "@traycer-clients/shared/platform/runner-host";
+} from "@cic/shared/platform/runner-host";
 import { useRunnerHost } from "@/providers/use-runner-host";
 import { useDesktopDialogStore } from "@/stores/dialogs/desktop-dialog-store";
 import { runnerMutationKeys, runnerQueryKeys } from "@/lib/query-keys";

@@ -4,7 +4,7 @@ import Blockquote from "@tiptap/extension-blockquote";
 import { Markdown } from "@tiptap/markdown";
 import { Placeholder } from "@tiptap/extensions/placeholder";
 import Link from "@tiptap/extension-link";
-import type { GuiHarnessId } from "@traycer/protocol/host/index";
+import type { GuiHarnessId } from "@cic/protocol/host/index";
 
 import type { ComposerPickerStore } from "../picker/composer-picker-store";
 

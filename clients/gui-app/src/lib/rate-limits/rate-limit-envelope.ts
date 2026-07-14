@@ -2,8 +2,8 @@ import type { QueryClient, QueryKey } from "@tanstack/react-query";
 import type {
   ProviderRateLimits,
   RateLimitUnavailableReason,
-} from "@traycer/protocol/host";
-import type { ResponseOfMethod } from "@traycer-clients/shared/host-transport/host-messenger";
+} from "@cic/protocol/host";
+import type { ResponseOfMethod } from "@cic/shared/host-transport/host-messenger";
 import type { HostRpcRegistry } from "@/lib/host";
 
 /** The `available: true` arm of `ProviderRateLimits` - the only shape worth retaining. */

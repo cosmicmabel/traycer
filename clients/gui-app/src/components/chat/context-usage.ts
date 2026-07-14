@@ -1,4 +1,4 @@
-import type { TokenUsage } from "@traycer/protocol/persistence/epic/foundation";
+import type { TokenUsage } from "@cic/protocol/persistence/epic/foundation";
 
 /**
  * "Tokens occupying the window" / "window size" pair plus the derived "% left",

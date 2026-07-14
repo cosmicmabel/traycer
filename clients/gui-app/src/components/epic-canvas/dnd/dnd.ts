@@ -8,7 +8,7 @@ import {
   isGitDiffTileRef,
   isWorkspaceFileRef,
 } from "@/stores/epics/canvas/types";
-import type { EpicArtifactKind } from "@traycer/protocol/common/registry";
+import type { EpicArtifactKind } from "@cic/protocol/common/registry";
 import { isEpicArtifactKind } from "@/lib/artifacts/node-display";
 import { parseTileRef } from "@/stores/epics/canvas/tile-schema";
 import { resolveSplitDropPosition } from "@/components/epic-canvas/dnd/pane-drop-geometry";

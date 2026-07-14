@@ -2,8 +2,8 @@ import { useMemo } from "react";
 import {
   formatRepoIdentifier,
   type TaskRepoIdentifier,
-} from "@traycer/protocol/host/epic/unary-schemas";
-import type { HostClient } from "@traycer-clients/shared/host-client/host-client";
+} from "@cic/protocol/host/epic/unary-schemas";
+import type { HostClient } from "@cic/shared/host-client/host-client";
 import type { HostRpcRegistry } from "@/lib/host";
 import { useHostQuery } from "@/hooks/host/use-host-query";
 import type { ResolvedFolder } from "@/lib/workspace/resolved-folder";

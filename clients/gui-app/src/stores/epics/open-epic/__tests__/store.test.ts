@@ -1,8 +1,8 @@
 import "../../../../../__tests__/test-browser-apis";
 import { beforeEach, describe, expect, it } from "vitest";
 import * as Y from "yjs";
-import type { EpicStreamCallbacks } from "@traycer-clients/shared/host-transport/epic-stream-client";
-import type { SnapshotMetaEpic } from "@traycer/protocol/host/epic/snapshot-meta";
+import type { EpicStreamCallbacks } from "@cic/shared/host-transport/epic-stream-client";
+import type { SnapshotMetaEpic } from "@cic/protocol/host/epic/snapshot-meta";
 import {
   createOpenEpicStore,
   type EpicStreamClientFactory,
@@ -168,7 +168,7 @@ describe("createOpenEpicStore", () => {
 
     expect(window.localStorage.length).toBe(1);
     expect(window.localStorage.key(0)).toBe(
-      "traycer-gui-app:open-epic:alice@example.com:epic-a",
+      "cic-gui-app:open-epic:alice@example.com:epic-a",
     );
 
     opened.dispose();
@@ -185,13 +185,13 @@ describe("createOpenEpicStore", () => {
 
     handle().callbacks.onEpicDeleted({
       deletedByDisplayName: "Alice",
-      deletedByTraycerUserId: "user-alice",
+      deletedByCicUserId: "user-alice",
     });
 
     const state = opened.store.getState();
     expect(state.epicDeleted).toEqual({
       deletedByDisplayName: "Alice",
-      deletedByTraycerUserId: "user-alice",
+      deletedByCicUserId: "user-alice",
     });
     // A delete is not a revoke - accessLost stays its default.
     expect(state.accessLost).toBe(false);

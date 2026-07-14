@@ -9,7 +9,7 @@ import type {
 import type {
   ChatQueuedItem,
   ChatRunSettings,
-} from "@traycer/protocol/host/agent/gui/subscribe";
+} from "@cic/protocol/host/agent/gui/subscribe";
 import {
   buildQueuedMessageOrderKey,
   resolveQueuedMessageDropPreview,

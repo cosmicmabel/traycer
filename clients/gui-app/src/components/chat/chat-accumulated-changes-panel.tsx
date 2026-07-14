@@ -1,10 +1,10 @@
 import { ChevronDown, RotateCcw } from "lucide-react";
 import { useMemo, useState } from "react";
-import type { ChatAccumulatedFileChange } from "@traycer/protocol/host/agent/gui/subscribe";
+import type { ChatAccumulatedFileChange } from "@cic/protocol/host/agent/gui/subscribe";
 import type {
   CheckpointArtifactTag,
   CheckpointFileOperation,
-} from "@traycer/protocol/persistence/epic/checkpoint-manifests";
+} from "@cic/protocol/persistence/epic/checkpoint-manifests";
 import { StaticEpicNodeIcon } from "@/components/epic-canvas/epic-node-tab-icon";
 import { AgentSpinningDots } from "@/components/ui/agent-spinning-dots";
 import { Button } from "@/components/ui/button";

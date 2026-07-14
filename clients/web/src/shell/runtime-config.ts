@@ -6,7 +6,7 @@ import { z } from "zod";
  * `BrowserRunnerHost.onLocalHostChange` so the page tracks host
  * restarts/upgrades without a reload.
  *
- * `host` mirrors the host's pid.json (`~/.traycer/host[/…]/pid.json`) minus
+ * `host` mirrors the host's pid.json (`~/.cic/host[/…]/pid.json`) minus
  * the loopback `websocketUrl`: the host binds 127.0.0.1 only, so the browser
  * always dials the serve process's same-origin `/host/rpc` proxy instead. The
  * shell composes that URL from `window.location` (see

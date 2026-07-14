@@ -2,8 +2,8 @@ import "../../../../__tests__/test-browser-apis";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, cleanup, renderHook } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { DEFAULT_ACCOUNT_CONTEXT } from "@traycer/protocol/common/schemas";
-import type { GuiHarnessId } from "@traycer/protocol/host/index";
+import { DEFAULT_ACCOUNT_CONTEXT } from "@cic/protocol/common/schemas";
+import type { GuiHarnessId } from "@cic/protocol/host/index";
 import type { ReactNode } from "react";
 import type { RateLimitProviderId } from "@/lib/rate-limit-providers";
 

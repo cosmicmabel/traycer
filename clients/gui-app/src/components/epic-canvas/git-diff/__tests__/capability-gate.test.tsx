@@ -4,8 +4,8 @@ import type { ReactNode } from "react";
 import { createElement } from "react";
 import { render, screen, waitFor, within } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { HostRpcError } from "@traycer-clients/shared/host-transport/host-messenger";
-import type { GitGetCapabilitiesResponse } from "@traycer/protocol/host";
+import { HostRpcError } from "@cic/shared/host-transport/host-messenger";
+import type { GitGetCapabilitiesResponse } from "@cic/protocol/host";
 import { CapabilityGate } from "../capability-gate";
 
 const mockHostClient = {

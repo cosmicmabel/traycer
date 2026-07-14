@@ -5,12 +5,12 @@ import {
   TUI_HARNESS_ID_TO_PROVIDER_ID,
   type ProviderCliState,
   type ProviderId,
-} from "@traycer/protocol/host/provider-schemas";
-import type { GuiHarnessId } from "@traycer/protocol/host/index";
+} from "@cic/protocol/host/provider-schemas";
+import type { GuiHarnessId } from "@cic/protocol/host/index";
 import { useTabProvidersList } from "@/hooks/providers/use-tab-providers-list-query";
 
 // The harness id set is a superset of the provider-CLI id set (it also carries
-// `traycer`, which has no provider-CLI login). Only CLI harnesses gate. Grok,
+// `cic`, which has no provider-CLI login). Only CLI harnesses gate. Grok,
 // Qwen, Kiro, Kimi, Droid, Copilot, and Kilo Code are GUI-only (not in the TUI map)
 // but DO gate through their CLI login providers, mirroring the host's
 // `harnessIdToProviderId`. Exported so other harness->provider derivations

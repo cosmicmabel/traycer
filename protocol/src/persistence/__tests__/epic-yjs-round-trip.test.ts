@@ -19,8 +19,8 @@
  */
 import { describe, expect, it } from "vitest";
 import * as Y from "yjs";
-import { getRecordSchema } from "@traycer/protocol/framework/index";
-import { persistenceRecordRegistry } from "@traycer/protocol/persistence/registry";
+import { getRecordSchema } from "@cic/protocol/framework/index";
+import { persistenceRecordRegistry } from "@cic/protocol/persistence/registry";
 
 const epicSchema = getRecordSchema(persistenceRecordRegistry, "epic", "latest");
 

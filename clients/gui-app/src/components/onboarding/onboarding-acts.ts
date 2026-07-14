@@ -49,8 +49,8 @@ export const ONBOARDING_ACTS: ReadonlyArray<OnboardingAct> = [
   {
     id: "agent-guide",
     eyebrow: "ACT 05 - DELEGATION",
-    title: "Tell Traycer\nhow to choose",
-    body: "Set the rules once. Traycer follows them every time it spawns a child agent, so you're not re-deciding per task.",
+    title: "Tell CIC\nhow to choose",
+    body: "Set the rules once. CIC follows them every time it spawns a child agent, so you're not re-deciding per task.",
     addon: null,
   },
   {

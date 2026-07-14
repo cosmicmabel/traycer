@@ -3,7 +3,7 @@ import type { RefObject } from "react";
 import type {
   ChatActiveTurn,
   ChatRunSettings,
-} from "@traycer/protocol/host/agent/gui/subscribe";
+} from "@cic/protocol/host/agent/gui/subscribe";
 
 import { useChatStore } from "@/stores/composer/chat-store";
 import { useComposerDraftStore } from "@/stores/composer/composer-draft-store";
@@ -17,7 +17,7 @@ import { buildChatRunSettings } from "@/lib/composer/chat-run-settings";
 import type { ComposerPickerStore } from "@/components/chat/composer/picker/composer-picker-store";
 import type { ComposerToolbarStore } from "@/stores/composer/composer-toolbar-store";
 import type { Attachment } from "@/lib/composer/types";
-import type { JsonContent } from "@traycer/protocol/common/registry";
+import type { JsonContent } from "@cic/protocol/common/registry";
 
 import type { ComposerPromptEditorHandle } from "./composer-prompt-editor";
 

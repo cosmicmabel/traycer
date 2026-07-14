@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
-import type { WsStreamClient } from "@traycer-clients/shared/host-transport/ws-stream-client";
-import type { HostStreamRpcRegistry } from "@traycer/protocol/host/registry";
+import type { WsStreamClient } from "@cic/shared/host-transport/ws-stream-client";
+import type { HostStreamRpcRegistry } from "@cic/protocol/host/registry";
 
 /**
  * Closes a tile-OWNED `WsStreamClient` when it is replaced by a different one,

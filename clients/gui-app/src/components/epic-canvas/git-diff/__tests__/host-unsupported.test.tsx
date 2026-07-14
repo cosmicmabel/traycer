@@ -17,7 +17,7 @@ describe("HostUnsupported", () => {
   it("renders update host link with placeholder href", () => {
     render(<HostUnsupported reason="host too old (no git.* methods)" />);
 
-    const link = screen.getByRole("link", { name: /Update Traycer Host/i });
+    const link = screen.getByRole("link", { name: /Update CIC Host/i });
     expect(link).toBeDefined();
     expect(link.getAttribute("href")).toBe("#update-host");
   });

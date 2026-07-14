@@ -15,8 +15,8 @@ import {
 import { useNotificationShow } from "@/hooks/notifications/use-notifications";
 import { useNotificationsPopoverStore } from "@/stores/notifications/notifications-popover-store";
 import { buildPayloadFromEvent } from "@/lib/notifications";
-import { formatNotification } from "@traycer/protocol/notifications/notification-formatter";
-import type { NotificationEntry } from "@traycer/protocol/notifications/notification-entry";
+import { formatNotification } from "@cic/protocol/notifications/notification-formatter";
+import type { NotificationEntry } from "@cic/protocol/notifications/notification-entry";
 import { cn } from "@/lib/utils";
 
 /**
@@ -121,7 +121,7 @@ async function fireToast(
   notify: (title: string, body: string, payload: unknown) => Promise<void>,
   entry: NotificationEntry,
 ): Promise<void> {
-  const title = "Traycer";
+  const title = "CIC";
   const body = formatNotification(entry.event, undefined);
   const payload = buildPayloadFromEvent(entry.event);
   try {

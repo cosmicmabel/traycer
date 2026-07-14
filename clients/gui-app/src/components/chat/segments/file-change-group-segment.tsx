@@ -1,10 +1,10 @@
 import { FileDiff, RotateCcw } from "lucide-react";
 import { useMemo, useState } from "react";
-import { isNoOpCheckpointEntry } from "@traycer/protocol/persistence/epic/checkpoint-manifests";
+import { isNoOpCheckpointEntry } from "@cic/protocol/persistence/epic/checkpoint-manifests";
 import type {
   TurnCheckpointManifest,
   TurnCheckpointManifestEntry,
-} from "@traycer/protocol/persistence/epic/checkpoint-manifests";
+} from "@cic/protocol/persistence/epic/checkpoint-manifests";
 import { Button } from "@/components/ui/button";
 import { AgentSpinningDots } from "@/components/ui/agent-spinning-dots";
 import { TooltipWrapper } from "@/components/ui/tooltip-wrapper";

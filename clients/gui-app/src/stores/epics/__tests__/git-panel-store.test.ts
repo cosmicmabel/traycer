@@ -20,7 +20,7 @@ const REPO_1: GitPanelSelectedRepo = {
 const REPO_2: GitPanelSelectedRepo = {
   hostId: "host-2",
   rootRunningDir: "/path/1",
-  repoRoot: "/path/1/traycer",
+  repoRoot: "/path/1/cic",
 };
 
 function getEpicState(epicId: string): GitPanelEpicState {
@@ -74,7 +74,7 @@ describe("git-panel-store", () => {
     const submoduleSelection: GitPanelSelectedRepo = {
       hostId: "host-1",
       rootRunningDir: "/path/1",
-      repoRoot: "/path/1/traycer",
+      repoRoot: "/path/1/cic",
     };
     store.getState().setSelectedRepo(EPIC_ID, rootSelection);
     const before = store.getState().stateByEpicId;

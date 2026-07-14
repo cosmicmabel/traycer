@@ -6,7 +6,7 @@ import { act, cleanup, render, screen, waitFor } from "@testing-library/react";
 import type {
   ListTasksResponse,
   TaskLight,
-} from "@traycer/protocol/host/epic/unary-schemas";
+} from "@cic/protocol/host/epic/unary-schemas";
 
 const hostState = vi.hoisted((): { id: string | null } => ({ id: "host-a" }));
 const authServiceStub = vi.hoisted(() => ({

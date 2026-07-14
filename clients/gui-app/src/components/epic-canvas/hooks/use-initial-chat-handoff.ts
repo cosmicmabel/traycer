@@ -27,8 +27,8 @@ import {
   type InitialChatHandoffScope,
 } from "@/stores/epics/initial-chat-handoff-store";
 import type { EpicChatProjection } from "@/lib/epic-selectors";
-import type { PermissionRole } from "@traycer/protocol/host/epic/unary-schemas";
-import type { StreamConnectionStatus } from "@traycer-clients/shared/host-transport/i-stream-session";
+import type { PermissionRole } from "@cic/protocol/host/epic/unary-schemas";
+import type { StreamConnectionStatus } from "@cic/shared/host-transport/i-stream-session";
 
 /**
  * Drives the landing-page → epic-canvas chat-handoff lifecycle and is the

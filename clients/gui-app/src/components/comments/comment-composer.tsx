@@ -11,7 +11,7 @@ import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { Placeholder } from "@tiptap/extensions";
 import Mention from "@tiptap/extension-mention";
-import type { JsonContent } from "@traycer/protocol/common/registry";
+import type { JsonContent } from "@cic/protocol/common/registry";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useMentionCollaborators } from "@/hooks/comments/use-mention-collaborators";

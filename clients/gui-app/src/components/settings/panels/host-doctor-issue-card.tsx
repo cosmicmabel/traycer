@@ -8,7 +8,7 @@ import {
 } from "@/components/settings/panels/host-doctor-actions";
 import { modLabel } from "@/lib/keybindings/platform";
 import { cn } from "@/lib/utils";
-import type { HostDoctorIssue } from "@traycer-clients/shared/platform/runner-host";
+import type { HostDoctorIssue } from "@cic/shared/platform/runner-host";
 
 interface HostDoctorIssueCardProps {
   readonly issue: HostDoctorIssue;

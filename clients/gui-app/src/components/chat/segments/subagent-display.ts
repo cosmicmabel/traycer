@@ -9,7 +9,7 @@ export interface ProgressUpdateItem {
 }
 
 /**
- * Strip Traycer task-notification wrapper markup from a subagent name / type /
+ * Strip CIC task-notification wrapper markup from a subagent name / type /
  * task string, returning the human-readable inner text (or null when empty).
  * Plain strings pass through trimmed.
  */

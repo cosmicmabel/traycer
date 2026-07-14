@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from "react";
-import type { JsonContent } from "@traycer/protocol/common/registry";
-import type { ChatRunSettings } from "@traycer/protocol/host/agent/gui/subscribe";
-import type { WorktreeBinding } from "@traycer/protocol/host/worktree-schemas";
+import type { JsonContent } from "@cic/protocol/common/registry";
+import type { ChatRunSettings } from "@cic/protocol/host/agent/gui/subscribe";
+import type { WorktreeBinding } from "@cic/protocol/host/worktree-schemas";
 import type { ChatMessageActions } from "@/components/chat/chat-message";
 import { buildForkWorkspaceSeed } from "@/lib/worktree/fork-workspace-seed";
 import {

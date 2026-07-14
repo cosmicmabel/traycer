@@ -1,16 +1,16 @@
-import { commonRecordRegistry } from "@traycer/protocol/common/registry";
-import { providerWorkspaceSchema } from "@traycer/protocol/common/workspace-association";
+import { commonRecordRegistry } from "@cic/protocol/common/registry";
+import { providerWorkspaceSchema } from "@cic/protocol/common/workspace-association";
 import {
   DEFAULT_ACCOUNT_CONTEXT,
   accountContextSchema,
-} from "@traycer/protocol/common/schemas";
-import { guiHarnessIdSchema } from "@traycer/protocol/host/agent/shared";
-import { getRecordSchema } from "@traycer/protocol/framework/index";
+} from "@cic/protocol/common/schemas";
+import { guiHarnessIdSchema } from "@cic/protocol/host/agent/shared";
+import { getRecordSchema } from "@cic/protocol/framework/index";
 import {
   interviewAnswerSchema,
   interviewQuestionOptionSchema,
   interviewQuestionSchema,
-} from "@traycer/protocol/persistence/epic/schemas";
+} from "@cic/protocol/persistence/epic/schemas";
 import {
   agentMessageSendSchema,
   artifactOperationActionSchema,
@@ -22,7 +22,7 @@ import {
   providerNoticeNormalizedMetadataSchema,
   providerNoticeToneSchema,
   workflowActivityEntrySchema,
-} from "@traycer/protocol/persistence/epic/content-blocks";
+} from "@cic/protocol/persistence/epic/content-blocks";
 
 export {
   agentMessageSendSchema,
@@ -43,7 +43,7 @@ export {
   type ProviderNoticeNormalizedMetadata,
   type ProviderNoticeTone,
   type WorkflowActivityEntry,
-} from "@traycer/protocol/persistence/epic/content-blocks";
+} from "@cic/protocol/persistence/epic/content-blocks";
 import { z } from "zod";
 
 const attachmentMentionAttrsSchema = getRecordSchema(
@@ -203,7 +203,7 @@ export const runtimeAgentRunInputSchema = z.object({
   slashInvocation: runtimeSlashInvocationSchema.nullable().default(null),
   // Billing/account context for the turn, sourced from the turn-bearing frame's
   // `accountContext` (a global app-wide selection), not from per-chat
-  // `chatRunSettings`. The Traycer harness threads this to its per-user
+  // `chatRunSettings`. The CIC harness threads this to its per-user
   // OpenCode server so the inference call bills the right account; other
   // harnesses ignore it.
   accountContext: accountContextSchema.default(DEFAULT_ACCOUNT_CONTEXT),

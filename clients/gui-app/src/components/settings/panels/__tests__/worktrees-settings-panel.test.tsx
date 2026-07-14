@@ -9,15 +9,15 @@ import {
 } from "@testing-library/react";
 import type { ReactNode } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { WsStreamClient } from "@traycer-clients/shared/host-transport/ws-stream-client";
-import type { WorktreeDeleteStreamCallbacks } from "@traycer-clients/shared/host-transport/worktree-delete-stream-client";
+import { WsStreamClient } from "@cic/shared/host-transport/ws-stream-client";
+import type { WorktreeDeleteStreamCallbacks } from "@cic/shared/host-transport/worktree-delete-stream-client";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import type { WorktreeHostEntryV11 } from "@traycer/protocol/host/index";
-import type { WorktreeEntryScripts } from "@traycer/protocol/host/worktree-schemas";
+import type { WorktreeHostEntryV11 } from "@cic/protocol/host/index";
+import type { WorktreeEntryScripts } from "@cic/protocol/host/worktree-schemas";
 import {
   hostStreamRpcRegistry,
   type HostStreamRpcRegistry,
-} from "@traycer/protocol/host/registry";
+} from "@cic/protocol/host/registry";
 import { WorktreesList } from "@/components/settings/panels/worktrees-settings-panel";
 import { __resetWorktreeDeleteRunForTests } from "@/components/settings/panels/use-worktree-delete-run";
 import { hostQueryKeys } from "@/lib/query-keys";
@@ -122,29 +122,26 @@ vi.mock("@/components/ui/dropdown-menu", () => {
   };
 });
 
-vi.mock(
-  "@traycer-clients/shared/host-transport/worktree-delete-stream-client",
-  () => ({
-    WorktreeDeleteStreamClient: class {
-      constructor(options: {
-        readonly worktreePath: string;
-        readonly scripts: WorktreeEntryScripts | null;
-        readonly callbacks: WorktreeDeleteStreamCallbacks;
-      }) {
-        streamMock.paths.push(options.worktreePath);
-        if (streamMock.throwForPaths.has(options.worktreePath)) {
-          throw new Error(`cannot subscribe ${options.worktreePath}`);
-        }
-        streamMock.scriptsByPath.set(options.worktreePath, options.scripts);
-        streamMock.callbacks = options.callbacks;
-        streamMock.callbacksByPath.set(options.worktreePath, options.callbacks);
+vi.mock("@cic/shared/host-transport/worktree-delete-stream-client", () => ({
+  WorktreeDeleteStreamClient: class {
+    constructor(options: {
+      readonly worktreePath: string;
+      readonly scripts: WorktreeEntryScripts | null;
+      readonly callbacks: WorktreeDeleteStreamCallbacks;
+    }) {
+      streamMock.paths.push(options.worktreePath);
+      if (streamMock.throwForPaths.has(options.worktreePath)) {
+        throw new Error(`cannot subscribe ${options.worktreePath}`);
       }
-      close(): void {
-        streamMock.closeCount += 1;
-      }
-    },
-  }),
-);
+      streamMock.scriptsByPath.set(options.worktreePath, options.scripts);
+      streamMock.callbacks = options.callbacks;
+      streamMock.callbacksByPath.set(options.worktreePath, options.callbacks);
+    }
+    close(): void {
+      streamMock.closeCount += 1;
+    }
+  },
+}));
 
 // A real `WsStreamClient` whose factory throws if dialled - the mocked stream
 // wrapper above never calls `.subscribe`, so it is only a non-null token that

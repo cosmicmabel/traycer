@@ -6,21 +6,21 @@ import { ShellFlagChips } from "@/components/settings/panels/shell/shell-flag-ch
 import { ShellProgramCombobox } from "@/components/settings/panels/shell/shell-program-combobox";
 import { AgentSpinningDots } from "@/components/ui/agent-spinning-dots";
 import { Button } from "@/components/ui/button";
-import { useRunnerTraycerEnvOverrideDeleteMutation } from "@/hooks/runner/use-runner-traycer-env-override-delete-mutation";
-import { useRunnerTraycerEnvOverrideListQuery } from "@/hooks/runner/use-runner-traycer-env-override-list-query";
-import { useRunnerTraycerEnvOverrideSetMutation } from "@/hooks/runner/use-runner-traycer-env-override-set-mutation";
-import { useRunnerTraycerShellConfigQuery } from "@/hooks/runner/use-runner-traycer-shell-config-query";
-import { useRunnerTraycerShellConfigResetMutation } from "@/hooks/runner/use-runner-traycer-shell-config-reset-mutation";
-import { useRunnerTraycerShellConfigSetMutation } from "@/hooks/runner/use-runner-traycer-shell-config-set-mutation";
-import { useRunnerTraycerShellListQuery } from "@/hooks/runner/use-runner-traycer-shell-list-query";
+import { useRunnerCicEnvOverrideDeleteMutation } from "@/hooks/runner/use-runner-cic-env-override-delete-mutation";
+import { useRunnerCicEnvOverrideListQuery } from "@/hooks/runner/use-runner-cic-env-override-list-query";
+import { useRunnerCicEnvOverrideSetMutation } from "@/hooks/runner/use-runner-cic-env-override-set-mutation";
+import { useRunnerCicShellConfigQuery } from "@/hooks/runner/use-runner-cic-shell-config-query";
+import { useRunnerCicShellConfigResetMutation } from "@/hooks/runner/use-runner-cic-shell-config-reset-mutation";
+import { useRunnerCicShellConfigSetMutation } from "@/hooks/runner/use-runner-cic-shell-config-set-mutation";
+import { useRunnerCicShellListQuery } from "@/hooks/runner/use-runner-cic-shell-list-query";
 import { useRunnerHost } from "@/providers/use-runner-host";
 
 const PANEL_DESCRIPTION =
-  "How Traycer launches terminals, the host, and provider harnesses. New terminals pick up shell changes immediately; host env changes apply on restart.";
+  "How CIC launches terminals, the host, and provider harnesses. New terminals pick up shell changes immediately; host env changes apply on restart.";
 
 export function ShellSettingsPanel() {
   const runnerHost = useRunnerHost();
-  if (runnerHost.traycerCli === null) {
+  if (runnerHost.cicCli === null) {
     return (
       <SettingsPanelShell
         title="Shell"
@@ -36,13 +36,13 @@ export function ShellSettingsPanel() {
 }
 
 function ShellSettingsPanelInner() {
-  const configQuery = useRunnerTraycerShellConfigQuery();
-  const shellListQuery = useRunnerTraycerShellListQuery();
-  const envListQuery = useRunnerTraycerEnvOverrideListQuery();
-  const setMutation = useRunnerTraycerShellConfigSetMutation();
-  const resetMutation = useRunnerTraycerShellConfigResetMutation();
-  const envSetMutation = useRunnerTraycerEnvOverrideSetMutation();
-  const envDeleteMutation = useRunnerTraycerEnvOverrideDeleteMutation();
+  const configQuery = useRunnerCicShellConfigQuery();
+  const shellListQuery = useRunnerCicShellListQuery();
+  const envListQuery = useRunnerCicEnvOverrideListQuery();
+  const setMutation = useRunnerCicShellConfigSetMutation();
+  const resetMutation = useRunnerCicShellConfigResetMutation();
+  const envSetMutation = useRunnerCicEnvOverrideSetMutation();
+  const envDeleteMutation = useRunnerCicEnvOverrideDeleteMutation();
 
   const config = configQuery.data;
   const detected = shellListQuery.data ?? [];

@@ -4,8 +4,8 @@ import type { DiffFindMatch, DiffFindUnit } from "@/lib/diff/diff-find";
 import type { DiffTileFindRenderer } from "@/stores/tile-find";
 import type { TileFindExactHighlight } from "@/stores/tile-find/types";
 
-const DIFF_FIND_MATCH_ATTRIBUTE = "data-traycer-diff-find-match";
-const DIFF_FIND_ACTIVE_ATTRIBUTE = "data-traycer-diff-find-active";
+const DIFF_FIND_MATCH_ATTRIBUTE = "data-cic-diff-find-match";
+const DIFF_FIND_ACTIVE_ATTRIBUTE = "data-cic-diff-find-active";
 const DIFFS_CONTAINER_TAG_NAME = "diffs-container";
 
 export interface DiffFindNavigationController extends DiffTileFindRenderer {
