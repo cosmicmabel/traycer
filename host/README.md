@@ -15,11 +15,17 @@ file documents the implemented wire surface and its design decisions.
 ## Run it
 
 ```bash
-bun host/src/index.ts                          # verify bearers against authn.traycer.ai
-bun host/src/index.ts --insecure-no-auth       # offline dev: accept any bearer
+bun host/src/index.ts                          # local-only (default): no Traycer account
+bun host/src/index.ts --require-auth           # opt-in: verify bearers against authn.traycer.ai
 bun host/src/index.ts --environment dev --port 48765 \
   --openclaw-gateway-url ws://127.0.0.1:18789
 ```
+
+The default is **local-only**: any bearer is accepted and every connection
+maps to the single local user (`insecure-local-user`), so no Traycer login
+exists anywhere in the stack. That is safe because the host binds
+`127.0.0.1` only; pass `--require-auth` if you front it for multiple real
+users and want bearers verified against authn.
 
 It binds `127.0.0.1` only (part of the pid.json contract), writes
 `~/.traycer/host[/env]/pid.json` so every client (desktop, CLI, the
@@ -30,7 +36,8 @@ removes the pid file on SIGTERM/SIGINT.
 
 - **Transport, byte-compatible with the shipped clients**
   - `/rpc`: one RPC per socket — `open {token, manifest}` → bearer
-    verification (authn `GET /api/v3/user`, cached) + host-side compatibility
+    verification (local-user by default; authn `GET /api/v3/user`, cached,
+    under `--require-auth`) + host-side compatibility
     check → `openAck {manifest}` → `request` → `response`; 30s post-open idle
     timeout mirroring the client's frame timeout; `fatalError` frames with
     `UNAUTHORIZED` (+ `retryable: true` for transient authn outages) and

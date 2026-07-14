@@ -27,7 +27,7 @@ This fork extends upstream Traycer with three self-hosting-oriented additions:
 
 - **OpenClaw agent harness** — [OpenClaw](https://openclaw.ai) is wired through the versioned protocol (new `openclaw` harness/provider ids with v4.0 wire bridges) and the GUI, driven by a local OpenClaw Gateway.
 - **Web hosting on Linux** — [`clients/web/`](clients/web/README.md): a browser shell plus a Bun serve process (and a [`Dockerfile`](Dockerfile)), so the GUI runs as a webapp instead of the Electron desktop. `make serve-web` → `http://127.0.0.1:8788`.
-- **`@traycer/open-host`** — [`host/`](host/README.md): an open-source host server implementing the client⇄host wire contract, so the entire stack runs with no closed-source components — chats (queueing, approvals), epics (artifacts, comments, collaborative sync), real PTY terminals, git worktrees with setup scripts, diffs, and more.
+- **`@traycer/open-host`** — [`host/`](host/README.md): an open-source host server implementing the client⇄host wire contract, so the entire stack runs with no closed-source components **and no Traycer account** (open host + web shell default to a local-only session; no sign-in) — chats (queueing, approvals), epics (artifacts, comments, collaborative sync), real PTY terminals, git worktrees with setup scripts, diffs, and more.
 
 **Start here:** [`docs/AGENT_SETUP.md`](docs/AGENT_SETUP.md) — a step-by-step install/configure/verify guide, written to be followed by AI agents and humans alike.
 

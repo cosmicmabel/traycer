@@ -14,6 +14,14 @@ steps: [`docs/AGENT_SETUP.md`](../../docs/AGENT_SETUP.md).
   in-page auth (device flow via the same-origin `/authn/*` proxy), browser
   token storage, and a host snapshot stream polled from
   `/api/runtime-config`.
+- **Local mode (no Traycer login).** When the serve process fronts the
+  open-source host (`host/`, pid.json version `0.0.0-open`) — or is started
+  with `--local` — `/api/runtime-config` reports `localMode: true` and the
+  shell skips Traycer auth entirely: it seeds a constant local credential
+  before rendering and answers every validate/refresh with a synthetic
+  local identity (`src/shell/local-session.ts`). No account, no network
+  auth. `--cloud-auth` forces the sign-in flow back on (for an open host
+  started with `--require-auth`).
 - `src/server/serve.ts` is a Bun process that serves the built bundle and
   bridges the browser to the machine:
   - `/host/rpc` + `/host/stream` — WebSocket proxy to the local host's
@@ -39,7 +47,9 @@ make serve-web ARGS="--bind 0.0.0.0 --port 8788"          # expose on a trusted 
 
 Flags: `--port` (default `8788`), `--bind` (default `127.0.0.1`),
 `--environment` (default `production`; picks the pid.json slot),
-`--dist` (default `clients/web/dist`), `--sign-in-url`, `--authn-url`.
+`--dist` (default `clients/web/dist`), `--sign-in-url`, `--authn-url`,
+`--local` / `--cloud-auth` (force local mode on/off; auto-detected from the
+fronted host otherwise).
 
 ### Docker
 

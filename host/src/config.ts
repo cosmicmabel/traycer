@@ -11,8 +11,11 @@ export interface OpenHostConfig {
   /** Authn service used to verify bearers presented at the open frame. */
   readonly authnBaseUrl: string;
   /**
-   * Accept any non-empty bearer without verifying it against authn. For
-   * offline development ONLY - the flag name says so on purpose.
+   * Accept any non-empty bearer without verifying it against authn, mapping
+   * every connection to the single local user. This is the DEFAULT: the open
+   * host is local-only software (it binds 127.0.0.1 and is reached through
+   * the web server's proxy), so no Traycer account is required. Pass
+   * `--require-auth` to opt back into verifying bearers against authn.
    */
   readonly insecureNoAuth: boolean;
   /** Local OpenClaw Gateway control plane (WS). */
@@ -55,7 +58,9 @@ export function parseOpenHostArgs(argv: readonly string[]): OpenHostConfig {
     port,
     environment: values.get("environment") ?? "production",
     authnBaseUrl: values.get("authn-url") ?? DEFAULT_AUTHN_BASE_URL,
-    insecureNoAuth: flags.has("insecure-no-auth"),
+    // `--insecure-no-auth` (the pre-local-default spelling) stays accepted;
+    // it is simply the default now unless `--require-auth` is passed.
+    insecureNoAuth: !flags.has("require-auth"),
     openclawGatewayUrl:
       values.get("openclaw-gateway-url") ?? DEFAULT_OPENCLAW_GATEWAY_URL,
     openclawGatewayToken: values.get("openclaw-gateway-token") ?? null,

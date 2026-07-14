@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import { TraycerApp, hostRpcRegistry } from "@traycer-clients/gui-app";
 import "./index.css";
 import { BrowserRunnerHost } from "./browser-runner-host";
+import { ensureLocalSessionSeeded } from "./local-session";
 import { fetchRuntimeConfig, RUNTIME_CONFIG_PATH } from "./runtime-config";
 
 /**
@@ -26,6 +27,13 @@ async function bootstrap(): Promise<void> {
   }
 
   const host = new BrowserRunnerHost({ config });
+
+  // Local-only deployments (the open host / `--local`): seed the constant
+  // local credential BEFORE the app renders so `AuthService.start()`
+  // rehydrates straight into the signed-in state - no Traycer login screen.
+  if (config.localMode) {
+    await ensureLocalSessionSeeded(host.tokenStore);
+  }
 
   createRoot(container).render(
     <StrictMode>

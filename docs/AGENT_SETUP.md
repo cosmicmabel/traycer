@@ -14,16 +14,18 @@ What this fork adds on top of upstream Traycer (see the
    process (+ Dockerfile), instead of the Electron desktop.
 3. **`@traycer/open-host`** — an open-source host server (`host/`)
    implementing the client⇄host wire contract, so the whole stack runs
-   without the closed-source host binary. It drives agent turns through a
-   local [OpenClaw Gateway](https://docs.openclaw.ai).
+   without the closed-source host binary — and **without a Traycer
+   account**: open host + web shell run local-only by default, no sign-in.
+   It drives agent turns through a local
+   [OpenClaw Gateway](https://docs.openclaw.ai).
 
 ## 0. Pick a deployment mode
 
-| Mode                                 | Host process                                   | Use when                                                                            |
-| ------------------------------------ | ---------------------------------------------- | ----------------------------------------------------------------------------------- |
-| **A. Fully open (recommended here)** | `@traycer/open-host` (`bun host/src/index.ts`) | You want no closed-source components. Agent turns run via a local OpenClaw Gateway. |
-| **B. Signed host**                   | Official host binary provisioned by the CLI    | You want the full upstream feature set (Traycer cloud, all providers).              |
-| **C. Docker**                        | Signed host inside a container                 | One-command self-hosting; wraps mode B.                                             |
+| Mode                                 | Host process                                   | Use when                                                                                                                    |
+| ------------------------------------ | ---------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| **A. Fully open (recommended here)** | `@traycer/open-host` (`bun host/src/index.ts`) | You want no closed-source components and **no Traycer account** (local-only). Agent turns run via a local OpenClaw Gateway. |
+| **B. Signed host**                   | Official host binary provisioned by the CLI    | You want the full upstream feature set (Traycer cloud sign-in, all providers).                                              |
+| **C. Docker**                        | Signed host inside a container                 | One-command self-hosting; wraps mode B.                                                                                     |
 
 All three serve the GUI at `http://127.0.0.1:8788` through the same web
 server. Modes A and B differ only in which process writes
@@ -69,8 +71,8 @@ All flags (defaults in parentheses):
 | -------------------------------- | -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `--port N`                       | `0` (OS-assigned)          | WS server port. Pass a fixed port for reproducible setups.                                                                                                     |
 | `--environment NAME`             | `production`               | pid.json slot: `production` → `~/.traycer/host/`, anything else → `~/.traycer/host/<NAME>/`. The web server must be started with the **same** `--environment`. |
-| `--authn-url URL`                | `https://authn.traycer.ai` | Authn service used to verify client bearer tokens.                                                                                                             |
-| `--insecure-no-auth`             | off                        | Accept ANY non-empty bearer without verification. **Offline development only** — never on a reachable port.                                                    |
+| `--require-auth`                 | off                        | Opt-in: verify client bearers against authn. The DEFAULT is local-only — any bearer is accepted and maps to the single local user; no Traycer account exists.  |
+| `--authn-url URL`                | `https://authn.traycer.ai` | Authn service used to verify client bearer tokens (only consulted under `--require-auth`).                                                                     |
 | `--openclaw-gateway-url URL`     | `ws://127.0.0.1:18789`     | The local OpenClaw Gateway control plane.                                                                                                                      |
 | `--openclaw-gateway-token TOKEN` | none                       | Shared-secret token for the gateway `connect` handshake, if the gateway requires one.                                                                          |
 
@@ -107,24 +109,27 @@ bun clients/web/src/server/serve.ts                  # http://127.0.0.1:8788
 
 Web server flags:
 
-| Flag                 | Default            | Meaning                                                                                                                  |
-| -------------------- | ------------------ | ------------------------------------------------------------------------------------------------------------------------ |
-| `--port N`           | `8788`             | HTTP port.                                                                                                               |
-| `--bind ADDR`        | `127.0.0.1`        | Bind address. `0.0.0.0` exposes the GUI (and the host proxy) to the network — explicit opt-in for trusted networks only. |
-| `--environment NAME` | `production`       | Which pid.json slot to proxy to. Match the host's `--environment`.                                                       |
-| `--dist PATH`        | `clients/web/dist` | Built bundle location.                                                                                                   |
-| `--sign-in-url URL`  | production sign-in | Overrides the sign-in link shown before auth.                                                                            |
-| `--authn-url URL`    | production authn   | Upstream for the `/authn/*` reverse proxy.                                                                               |
+| Flag                 | Default            | Meaning                                                                                                                        |
+| -------------------- | ------------------ | ------------------------------------------------------------------------------------------------------------------------------ |
+| `--port N`           | `8788`             | HTTP port.                                                                                                                     |
+| `--bind ADDR`        | `127.0.0.1`        | Bind address. `0.0.0.0` exposes the GUI (and the host proxy) to the network — explicit opt-in for trusted networks only.       |
+| `--environment NAME` | `production`       | Which pid.json slot to proxy to. Match the host's `--environment`.                                                             |
+| `--dist PATH`        | `clients/web/dist` | Built bundle location.                                                                                                         |
+| `--sign-in-url URL`  | production sign-in | Overrides the sign-in link shown before auth (cloud-auth mode only).                                                           |
+| `--authn-url URL`    | production authn   | Upstream for the `/authn/*` reverse proxy (cloud-auth mode only).                                                              |
+| `--local`            | auto               | Force **local mode**: no Traycer login; the page runs as a synthetic local user. Auto-detected ON when fronting the open host. |
+| `--cloud-auth`       | auto               | Force local mode OFF (use with an open host started with `--require-auth`).                                                    |
 
 Verify:
 
 ```sh
 curl -s http://127.0.0.1:8788/api/runtime-config
-# → JSON with "host": { "hostId": …, "websocketUrl": "…/host/rpc", … } — "host" must be non-null.
+# → JSON with "localMode": true and "host": { "hostId": …, "version": "0.0.0-open", … } — "host" must be non-null.
 ```
 
-Open `http://127.0.0.1:8788` in a browser, sign in (device flow), and the
-epic list should load. Chat turns additionally require the OpenClaw
+Open `http://127.0.0.1:8788` in a browser — **no sign-in**: in front of the
+open host the shell auto-detects local mode, seeds a local session, and the
+epic list loads immediately. Chat turns additionally require the OpenClaw
 Gateway to be reachable (the provider row in Settings shows its status).
 
 ### 2.3 Configure the OpenClaw Gateway
@@ -196,26 +201,31 @@ never touch production data.
   contract clients verify. Remote access goes through the web server's
   proxy, never by rebinding the host.
 - The **web serve port is an unauthenticated door** to the page and the
-  host proxy; host RPCs still verify the signed-in user's bearer against
-  authn, but treat `--bind 0.0.0.0` as trusted-network-only (or front it
-  with your own TLS + auth reverse proxy).
-- `--insecure-no-auth` disables bearer verification entirely. Offline
-  development only.
+  host proxy. In the default local-only setup (mode A) there is no bearer
+  verification behind it at all, so anyone who reaches the port has the
+  host: treat `--bind 0.0.0.0` as trusted-network-only (or front it with
+  your own TLS + auth reverse proxy). With the signed host (mode B) host
+  RPCs still verify the signed-in user's bearer against authn.
+- The open host is **local-only by default** (any bearer → the single local
+  user); it also binds `127.0.0.1` only, so exposure is governed entirely by
+  the web server's `--bind`. Pass `--require-auth` to the open host (and
+  `--cloud-auth` to the web server) to require real Traycer sign-in.
 - Browser tokens are stored in `localStorage` (plaintext, origin-scoped);
   provider API keys saved through Settings are stored plaintext in
   `open-host-provider-settings.json`.
 
 ## 7. Troubleshooting
 
-| Symptom                                                 | Likely cause                                      | Fix                                                                                            |
-| ------------------------------------------------------- | ------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| `/api/runtime-config` returns `"host": null`            | No pid.json in the selected slot                  | Start the host; make `--environment` match on both processes.                                  |
-| GUI loads but sign-in fails                             | Authn unreachable through the proxy               | Check outbound HTTPS from the serving machine; override `--authn-url` if self-hosting authn.   |
-| `openclaw` provider shows "Start the OpenClaw Gateway…" | Gateway probe failing                             | Start the gateway; verify `--openclaw-gateway-url`/token. Availability re-probes within ~15 s. |
-| Chat send errors with `OPENCLAW_GATEWAY_ERROR`          | Gateway reachable at boot but connect/send failed | Check gateway logs; the turn error text carries the underlying message.                        |
-| `UNAUTHORIZED` fatal frames on connect                  | Bearer rejected by authn                          | Re-sign-in; for offline work use `--insecure-no-auth` (dev only).                              |
-| Web build fails on `routeTree.gen.ts`                   | Desktop + web dev servers ran concurrently        | They share TanStack Router codegen; run one at a time, then rebuild.                           |
-| Terminals never echo                                    | Bun < 1.3 (no PTY support)                        | Upgrade Bun (`bun upgrade`), restart the host.                                                 |
+| Symptom                                                 | Likely cause                                       | Fix                                                                                            |
+| ------------------------------------------------------- | -------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| `/api/runtime-config` returns `"host": null`            | No pid.json in the selected slot                   | Start the host; make `--environment` match on both processes.                                  |
+| GUI still shows a Traycer sign-in in mode A             | Serve process didn't detect the open host          | Check `localMode` in `/api/runtime-config`; match `--environment`, or force with `--local`.    |
+| GUI loads but sign-in fails (mode B / `--cloud-auth`)   | Authn unreachable through the proxy                | Check outbound HTTPS from the serving machine; override `--authn-url` if self-hosting authn.   |
+| `openclaw` provider shows "Start the OpenClaw Gateway…" | Gateway probe failing                              | Start the gateway; verify `--openclaw-gateway-url`/token. Availability re-probes within ~15 s. |
+| Chat send errors with `OPENCLAW_GATEWAY_ERROR`          | Gateway reachable at boot but connect/send failed  | Check gateway logs; the turn error text carries the underlying message.                        |
+| `UNAUTHORIZED` fatal frames on connect                  | Host runs `--require-auth` and rejected the bearer | Re-sign-in, or drop `--require-auth` to return to the local-only default.                      |
+| Web build fails on `routeTree.gen.ts`                   | Desktop + web dev servers ran concurrently         | They share TanStack Router codegen; run one at a time, then rebuild.                           |
+| Terminals never echo                                    | Bun < 1.3 (no PTY support)                         | Upgrade Bun (`bun upgrade`), restart the host.                                                 |
 
 ## 8. Verification checklist
 
@@ -225,7 +235,7 @@ Run after any install or upgrade; every command must succeed:
 bun run compile                                   # repo-wide type-check
 cd host && bun test src && cd ..                  # 48 wire tests against a live server
 curl -s http://127.0.0.1:47100/activity           # {"busy":false}   (host up)
-curl -s http://127.0.0.1:8788/api/runtime-config  # "host" non-null  (proxy wired)
+curl -s http://127.0.0.1:8788/api/runtime-config  # "host" non-null  (proxy wired); mode A also reports "localMode": true
 ```
 
 ## 9. Further reading

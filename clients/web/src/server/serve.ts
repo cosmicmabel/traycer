@@ -39,6 +39,17 @@ interface ServeOptions {
   readonly distDir: string;
   readonly signInUrl: string;
   readonly authnUpstream: string;
+  /**
+   * Force local mode (`--local`): the shell skips Traycer sign-in entirely
+   * and runs as a single synthetic local user. When the flag is absent,
+   * local mode still switches on automatically whenever the fronted host is
+   * the open host (pid.json version `0.0.0-open`), whose default is to
+   * accept any bearer as the local user; `--cloud-auth` forces it OFF for an
+   * open host started with `--require-auth`.
+   */
+  readonly forceLocalMode: boolean;
+  /** Force cloud sign-in even in front of an open host (`--cloud-auth`). */
+  readonly forceCloudAuth: boolean;
 }
 
 const DEFAULT_PORT = 8788;
@@ -47,8 +58,12 @@ const DEFAULT_ENVIRONMENT = "production";
 const DEFAULT_SIGN_IN_URL = "https://platform.traycer.ai";
 const DEFAULT_AUTHN_UPSTREAM = "https://authn.traycer.ai";
 
+/** Mirror of `OPEN_HOST_VERSION` in host/src/config.ts (the open host's pid.json version). */
+const OPEN_HOST_PID_VERSION = "0.0.0-open";
+
 function parseArgs(argv: readonly string[]): ServeOptions {
   const values = new Map<string, string>();
+  const flags = new Set<string>();
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i];
     if (!arg.startsWith("--")) {
@@ -63,7 +78,9 @@ function parseArgs(argv: readonly string[]): ServeOptions {
     if (next !== undefined && !next.startsWith("--")) {
       values.set(arg.slice(2), next);
       i += 1;
+      continue;
     }
+    flags.add(arg.slice(2));
   }
   const port = Number(values.get("port") ?? DEFAULT_PORT);
   if (!Number.isInteger(port) || port < 1 || port > 65_535) {
@@ -78,10 +95,31 @@ function parseArgs(argv: readonly string[]): ServeOptions {
     ),
     signInUrl: values.get("sign-in-url") ?? DEFAULT_SIGN_IN_URL,
     authnUpstream: values.get("authn-url") ?? DEFAULT_AUTHN_UPSTREAM,
+    forceLocalMode: flags.has("local"),
+    forceCloudAuth: flags.has("cloud-auth"),
   };
 }
 
 // ─── Runtime config ─────────────────────────────────────────────────────────
+
+/**
+ * Local mode is decided per request (pid.json is re-read anyway): forced on
+ * by `--local`, forced off by `--cloud-auth`, and otherwise inferred from
+ * the fronted host - the open host advertises version `0.0.0-open` and runs
+ * without Traycer auth by default, so the page should not demand a login.
+ */
+function isLocalMode(
+  options: ServeOptions,
+  metadata: HostPidMetadata | null,
+): boolean {
+  if (options.forceCloudAuth) {
+    return false;
+  }
+  if (options.forceLocalMode) {
+    return true;
+  }
+  return metadata !== null && metadata.version === OPEN_HOST_PID_VERSION;
+}
 
 function runtimeConfigResponse(
   options: ServeOptions,
@@ -90,6 +128,7 @@ function runtimeConfigResponse(
   return Response.json({
     signInUrl: options.signInUrl,
     systemHostName: hostname(),
+    localMode: isLocalMode(options, metadata),
     host:
       metadata === null
         ? null
@@ -288,6 +327,15 @@ function startServer(options: ServeOptions): void {
   console.log(
     `traycer-web serving ${options.distDir} on http://${options.bind}:${server.port} (host environment: ${options.environment})`,
   );
+  if (options.forceLocalMode) {
+    console.log(
+      "local mode forced (--local): the page signs in as the local user, no Traycer account.",
+    );
+  } else if (!options.forceCloudAuth) {
+    console.log(
+      "local mode: auto (on whenever the fronted host is the open host; --local / --cloud-auth to force)",
+    );
+  }
   if (options.bind !== "127.0.0.1" && options.bind !== "localhost") {
     console.warn(
       `WARNING: bound to ${options.bind} - this port is an unauthenticated door to the local Traycer host; only expose it on a trusted network.`,

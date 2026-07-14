@@ -34,6 +34,12 @@ import type {
 import type { Disposable } from "@traycer-clients/shared/platform/uri-callback";
 import { BrowserSecureStorage, BrowserTokenStore } from "./browser-token-store";
 import {
+  LOCAL_BEARER_TOKEN,
+  LOCAL_REFRESH_TOKEN,
+  localAuthProfile,
+  localAuthenticatedUser,
+} from "./local-session";
+import {
   fetchRuntimeConfig,
   hostWebsocketUrlFromLocation,
   type WebRuntimeConfig,
@@ -57,6 +63,11 @@ export interface BrowserRunnerHostOptions {
  *    serve process's same-origin `/authn/*` reverse proxy, which is what makes
  *    the direct HTTP helpers CORS-safe here (desktop needs Electron main for
  *    the same reason).
+ *  - In LOCAL MODE (`config.localMode`, i.e. the serve process fronts the
+ *    open host or was started with `--local`) no authn is involved at all:
+ *    validate/refresh answer with the synthetic local identity
+ *    (local-session.ts) and the device flow settles instantly - the page
+ *    never shows a Traycer sign-in.
  *  - `hasLocalHost: true`: the serve process fronts a real local host; the
  *    snapshot stream polls `/api/runtime-config` and advertises the
  *    same-origin `/host/rpc` WebSocket proxy as the dial URL.
@@ -121,6 +132,7 @@ export class BrowserRunnerHost implements IRunnerHost {
   readonly hostManagement: null = null;
   readonly hostTray: null = null;
 
+  private readonly localMode: boolean;
   private localHost: LocalHostSnapshot | null;
   private readonly localHostHandlers = new Set<
     (snapshot: LocalHostSnapshot | null) => void
@@ -129,11 +141,14 @@ export class BrowserRunnerHost implements IRunnerHost {
   constructor(options: BrowserRunnerHostOptions) {
     this.signInUrl = options.config.signInUrl;
     this.authnBaseUrl = `${window.location.origin}/authn`;
+    this.localMode = options.config.localMode;
     this.localHost = snapshotFromConfig(options.config);
-    this.deviceFlow = new BrowserDeviceFlowHost({
-      authnBaseUrl: this.authnBaseUrl,
-      hostLabel: hostLabelFromConfig(options.config),
-    });
+    this.deviceFlow = this.localMode
+      ? new LocalDeviceFlowHost()
+      : new BrowserDeviceFlowHost({
+          authnBaseUrl: this.authnBaseUrl,
+          hostLabel: hostLabelFromConfig(options.config),
+        });
     // Track host restarts/upgrades for the lifetime of the page. The page and
     // this runner host share that lifetime, so the interval is never cleared.
     window.setInterval(() => {
@@ -141,17 +156,23 @@ export class BrowserRunnerHost implements IRunnerHost {
     }, HOST_POLL_INTERVAL_MS);
   }
 
-  validateAuthToken(
+  async validateAuthToken(
     token: string,
     refreshToken: string,
   ): Promise<AuthTokenValidationResult> {
+    if (this.localMode) {
+      return { kind: "valid", profile: localAuthProfile() };
+    }
     return validateAuthTokenViaHttp(this.authnBaseUrl, token, refreshToken);
   }
 
-  validateAuthTokenIdentity(
+  async validateAuthTokenIdentity(
     token: string,
     refreshToken: string,
   ): Promise<AuthIdentityValidationResult> {
+    if (this.localMode) {
+      return { kind: "valid", user: localAuthenticatedUser() };
+    }
     return validateAuthTokenIdentityViaHttp(
       this.authnBaseUrl,
       token,
@@ -159,10 +180,18 @@ export class BrowserRunnerHost implements IRunnerHost {
     );
   }
 
-  refreshAuthToken(
+  async refreshAuthToken(
     token: string,
     refreshToken: string,
   ): Promise<AuthTokenRefreshResult> {
+    if (this.localMode) {
+      // The constant local credential never expires; hand it straight back.
+      return {
+        kind: "refreshed",
+        token: LOCAL_BEARER_TOKEN,
+        refreshToken: LOCAL_REFRESH_TOKEN,
+      };
+    }
     return refreshAuthTokenViaHttp(this.authnBaseUrl, token, refreshToken);
   }
 
@@ -274,6 +303,55 @@ function hostLabelFromConfig(config: WebRuntimeConfig): string {
   return config.systemHostName.length > 0
     ? `Web (${config.systemHostName})`
     : `Web (${window.location.hostname})`;
+}
+
+// ─── Device flow (local mode, instant) ──────────────────────────────────────
+
+/**
+ * Local-mode "device flow": settles as authorized with the constant local
+ * credential on the first `onResult` subscription, so an explicit sign-in
+ * click (e.g. after a sign-out) completes without any browser round trip or
+ * authn traffic. The `authorization` fields are placeholders the GUI may
+ * briefly render before the settled result lands.
+ */
+class LocalDeviceFlowHost implements IDeviceFlowHost {
+  async start(): Promise<DeviceFlowSession | null> {
+    return new LocalDeviceFlowSession();
+  }
+}
+
+class LocalDeviceFlowSession implements DeviceFlowSession {
+  readonly authorization: DeviceFlowAuthorization = {
+    userCode: "LOCAL",
+    verificationUri: window.location.origin,
+    verificationUriComplete: window.location.origin,
+    expiresInSeconds: 300,
+    intervalSeconds: 1,
+  };
+
+  private cancelled = false;
+
+  onResult(handler: (result: DeviceFlowResult) => void): Disposable {
+    if (this.cancelled) {
+      return { dispose: () => undefined };
+    }
+    // Same settled-result replay contract as the real controller: the
+    // attempt is already authorized by the time anyone subscribes.
+    handler({
+      kind: "authorized",
+      token: LOCAL_BEARER_TOKEN,
+      refreshToken: LOCAL_REFRESH_TOKEN,
+    });
+    return { dispose: () => undefined };
+  }
+
+  pollNow(): void {
+    // Nothing to poll; the result is settled from construction.
+  }
+
+  cancel(): void {
+    this.cancelled = true;
+  }
 }
 
 // ─── Device flow (RFC 8628, in-page) ────────────────────────────────────────
