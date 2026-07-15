@@ -98,28 +98,47 @@ Web server flags:
 | `--bind ADDR`        | `127.0.0.1`        | Bind address. `0.0.0.0` exposes the GUI (and the host proxy) to the network — explicit opt-in for trusted networks only. |
 | `--environment NAME` | `production`       | Which pid.json slot to proxy to. Match the host's `--environment`.                                                       |
 | `--dist PATH`        | `clients/web/dist` | Built bundle location.                                                                                                   |
+| `--no-auth`          | off                | Disable the local password gate (below). Only for a pure-loopback machine you fully trust.                               |
+
+**Login.** The serve port is protected by a machine-local password (there is
+still no account and no external auth service). On the first visit the page
+asks you to **create a password**; later visits ask you to unlock. The
+password is argon2id-hashed in `~/.cic/web-auth.json` (mode 0600), sessions
+are HttpOnly cookies, and repeated wrong guesses lock out briefly. Forgot it?
+Delete `~/.cic/web-auth.json` and reload to set a new one. Pass `--no-auth`
+to skip the gate entirely on a trusted loopback host.
 
 Verify:
 
 ```sh
-curl -s http://127.0.0.1:8788/api/runtime-config
-# → JSON with "host": { "hostId": …, "version": "0.0.0-open", … } — "host" must be non-null.
+curl -s http://127.0.0.1:8788/api/auth/status
+# → {"authRequired":true,"passwordSet":false,"authenticated":false} on a fresh install
+curl -s http://127.0.0.1:8788/api/runtime-config   # → 401 until you log in (200 with a session cookie)
 ```
 
-Open `http://127.0.0.1:8788` in a browser — **there is no sign-in**: the
-shell seeds a local session and the epic list loads immediately. Chat turns
-additionally require the OpenClaw Gateway to be reachable (the provider row
-in Settings shows its status).
+Open `http://127.0.0.1:8788` in a browser, set/enter your password, and the
+epic list loads. Chat turns additionally require the selected agent to be
+runnable (the provider row in Settings shows its status).
 
-### Configure the OpenClaw Gateway
+### Agents
 
-The host is a protocol adapter: model/tool selection, agent auth, and
-session storage belong to the gateway. Point the host at it with
-`--openclaw-gateway-url` (and `--openclaw-gateway-token` if configured).
-Reachability is probed with a connect handshake and cached ~15 s; the
-`openclaw` provider/harness rows in the GUI flip to available when the
-probe succeeds. Chat sessions map 1:1 to gateway sessions keyed
-`cic-<chatId>`.
+CIC runs agent turns two ways, both local:
+
+- **OpenClaw** — through the local OpenClaw Gateway. The host is a protocol
+  adapter here: model/tool selection, agent auth, and session storage belong
+  to the gateway. Point the host at it with `--openclaw-gateway-url` (and
+  `--openclaw-gateway-token` if configured); reachability is probed with a
+  connect handshake, cached ~15 s. Sessions map 1:1 to gateway sessions keyed
+  `cic-<chatId>`.
+- **Claude Code / Codex / Grok** — by spawning the vendor CLI. Install the CLI
+  and make sure it's on `PATH` (or set a custom path in Settings → Providers);
+  the host detects it via `--version` and the harness flips to available. Sign
+  in with the CLI itself (`claude`, `codex`, `grok`) exactly as you would in a
+  terminal — the host never sees the vendor credentials. Each turn runs the
+  CLI in its non-interactive mode in the epic's working directory and streams
+  the reply back.
+
+The Providers panel in Settings shows each agent's detected/enabled state.
 
 ## 4. Docker
 
@@ -165,15 +184,19 @@ never touch production data.
 - The **host binds `127.0.0.1` only** — that is part of the pid.json
   contract clients verify. Remote access goes through the web server's
   proxy, never by rebinding the host.
-- The **web serve port is an unauthenticated door** to the page and the
-  host proxy. There are no accounts anywhere, so anyone who can reach the
-  port has the machine's CIC: treat `--bind 0.0.0.0` as
-  trusted-network-only (or front it with your own TLS + auth reverse
-  proxy).
+- The **web serve port is gated by a machine-local password** (unless
+  `--no-auth`). That protects the page and the host proxy, but it is one
+  shared password, not per-user accounts — treat `--bind 0.0.0.0` as
+  trusted-network-only, and front it with your own TLS if the network isn't
+  trusted (the session cookie is not marked `Secure` because the server
+  speaks plain HTTP). The password is argon2id-hashed in
+  `~/.cic/web-auth.json`.
 - Provider API keys saved through Settings are stored plaintext in
-  `open-host-provider-settings.json`.
-- The stack makes **no outbound connections**. The only network dependency
-  is whatever your OpenClaw Gateway needs to reach its models.
+  `open-host-provider-settings.json`. Vendor CLI logins (Claude/Codex/Grok)
+  live wherever each CLI keeps them; the host never reads or proxies them.
+- The host stack makes **no outbound connections**. The only network
+  dependencies are what your OpenClaw Gateway needs, and whatever the vendor
+  CLIs contact when they run.
 
 ## 7. Troubleshooting
 

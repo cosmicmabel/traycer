@@ -72,7 +72,7 @@ function SystemTabModalSurface(props: SystemTabModalSurfaceProps): ReactNode {
     <PromotableModalFrame
       icon={<Icon className="size-4 text-muted-foreground" />}
       title={meta.label}
-      contentClassName="h-[80vh] w-[80vw] max-w-[min(95vw,80rem)]"
+      contentClassName="h-[92vh] w-[96vw] max-w-[min(96vw,80rem)] sm:h-[80vh] sm:w-[80vw]"
       dataAttributes={{ "data-leader-scope": LEADER_SCOPE_SETTINGS }}
       promoteAriaLabel={`Open ${meta.label} as a tab`}
       promoteTestId={`system-tab-modal-promote-${active.kind}`}

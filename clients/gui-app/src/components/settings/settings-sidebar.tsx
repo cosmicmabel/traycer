@@ -26,9 +26,11 @@ export interface SettingsSidebarProps {
 }
 
 export function SettingsSidebar(props: SettingsSidebarProps) {
+  // Mobile: a horizontally-scrollable strip above the panel (touch-friendly,
+  // keeps the panel full-width). Desktop (sm+): the vertical rail.
   return (
-    <aside className="flex w-64 shrink-0 flex-col gap-1 border-r border-border/60 bg-background p-4">
-      <div className="flex flex-col gap-1">
+    <aside className="flex w-full shrink-0 flex-row gap-1 overflow-x-auto border-b border-border/60 bg-background p-2 sm:w-60 sm:flex-col sm:overflow-x-visible sm:border-b-0 sm:border-r sm:p-4 md:w-64">
+      <div className="flex flex-row gap-1 sm:flex-col">
         {SETTINGS_SECTIONS.map((section, index) => (
           <SettingsSidebarItem
             key={section.id}
@@ -54,9 +56,10 @@ function SettingsSidebarItem(props: SettingsSidebarItemProps) {
   const Icon = section.icon;
   const digit = leaderDigitFor(index);
   const baseClass =
-    "inline-flex items-center gap-3 rounded-md px-3 py-2 text-ui-sm transition-colors";
+    "inline-flex shrink-0 items-center gap-2 whitespace-nowrap rounded-md px-3 py-2 text-ui-sm transition-colors sm:w-full sm:gap-3 min-h-9";
+  // Leader-key digit badges are a desktop affordance; hide on the mobile strip.
   const badge = (
-    <span className="flex min-w-5 justify-end">
+    <span className="hidden min-w-5 justify-end sm:flex">
       <AnimatePresence initial={false}>
         {badgeModifier === null ? null : (
           <LeaderDigitBadge

@@ -3,10 +3,12 @@
 [![Apache 2.0 License](https://img.shields.io/badge/License-Apache_2.0-555555.svg?labelColor=333333&color=666666)](./LICENSE)
 
 **CIC is local-only software for orchestrating AI coding agents from your
-browser.** It runs entirely on your own machine: no accounts, no sign-in, no
-telemetry, no cloud. Agent turns are driven through a local
-[OpenClaw Gateway](https://openclaw.ai), so even the AI side is under your
-control.
+browser.** It runs entirely on your own machine: no cloud accounts, no
+telemetry, no external services. Access is protected by a password you set on
+first launch (a machine-local gate, not an account). Agents run through your
+own tools — a local [OpenClaw Gateway](https://openclaw.ai), or the Claude
+Code / Codex / Grok CLIs you already have installed — so the AI side stays
+under your control too.
 
 Organize work into **Epics** (boards of chats, artifacts, and terminals),
 run agents against real git worktrees with setup scripts, review diffs, and
@@ -22,9 +24,10 @@ make host &        # the host server (loopback WebSocket, writes ~/.cic)
 make serve-web     # build + serve the GUI at http://127.0.0.1:8788
 ```
 
-Open `http://127.0.0.1:8788` — no sign-in, the epic list loads immediately.
-Chat turns additionally need an OpenClaw Gateway running locally (default
-`ws://127.0.0.1:18789`); the provider row in Settings shows its status.
+Open `http://127.0.0.1:8788`, set a password on first launch, and the epic
+list loads. Chat turns need an agent: either a local OpenClaw Gateway
+(default `ws://127.0.0.1:18789`) or one of the Claude Code / Codex / Grok
+CLIs on your `PATH`. Settings → Providers shows which agents are detected.
 
 Full install/configure/verify steps (written for agents and humans):
 [`docs/AGENT_SETUP.md`](docs/AGENT_SETUP.md).
@@ -48,11 +51,14 @@ Full install/configure/verify steps (written for agents and humans):
   staged/unstaged diff review.
 - **Agent orchestration**: queue sends during running turns, approvals for
   tool use, agent-to-agent mentions.
-- **Local-only by design**: the host binds `127.0.0.1`; remote access goes
-  through the web server's proxy on your terms (`--bind 0.0.0.0` for a
-  trusted LAN, or your own TLS reverse proxy). The stack makes **zero**
-  outbound connections — the only network dependency is whatever your
-  OpenClaw Gateway needs for its models.
+- **Bring your own agent**: OpenClaw via its local gateway, or the Claude
+  Code / Codex / Grok CLIs you already use — detected on `PATH`, signed in
+  through the CLI itself.
+- **Local-only by design**: the host binds `127.0.0.1`; browser access goes
+  through the web server's password-gated proxy on your terms (`--bind
+0.0.0.0` for a trusted LAN, or your own TLS reverse proxy). The host makes
+  **zero** outbound connections of its own — network egress is only whatever
+  your gateway or the vendor CLIs need.
 
 ## Docker
 

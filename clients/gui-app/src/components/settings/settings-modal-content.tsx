@@ -27,7 +27,7 @@ export function SettingsModalContent(
   const { setSection } = useSystemTabModalActions();
   const section: SettingsSectionId = props.section ?? "general";
   return (
-    <div className="flex min-h-0 min-w-0 flex-1">
+    <div className="flex min-h-0 min-w-0 flex-1 flex-col sm:flex-row">
       <SettingsSidebar
         mode={{
           kind: "modal",
