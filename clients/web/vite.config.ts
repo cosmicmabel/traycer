@@ -35,7 +35,11 @@ export default defineConfig((): UserConfig => {
 
   return {
     root: resolve(__dirname, "src", "shell"),
-    base: "./",
+    // Absolute asset base so a deep link (e.g. /settings/foo) still resolves
+    // `/assets/*` from the server root instead of `./assets/*` relative to the
+    // current path — the serve process rewrites every non-asset route to
+    // index.html, so nested URLs must not depend on their own depth.
+    base: "/",
     publicDir: false,
     envPrefix: webEnvPrefix,
     plugins: [

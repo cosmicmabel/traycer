@@ -220,6 +220,14 @@ async function serveStatic(
   if (relative.length > 0 && (await file.exists())) {
     return new Response(file);
   }
+  // A request that looks like a file (has an extension) but doesn't exist is a
+  // genuine 404 — never fall back to index.html for it, or a missing
+  // `/assets/x.js` would be served as HTML and trip the browser's strict MIME
+  // check. Only extensionless routes get the SPA fallback.
+  const lastSegment = relative.slice(relative.lastIndexOf("/") + 1);
+  if (lastSegment.includes(".")) {
+    return new Response("not found", { status: 404 });
+  }
   // SPA fallback: every non-asset route renders index.html and the router
   // takes over client-side.
   const index = Bun.file(join(distDir, "index.html"));
