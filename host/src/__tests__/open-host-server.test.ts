@@ -138,7 +138,7 @@ describe("open host /rpc", () => {
     expect(result).toMatchObject({ ready: true, hostVersion: "0.0.0-open" });
   });
 
-  it("advertises the openclaw harness in agent.gui.listHarnesses@4.0", async () => {
+  it("advertises openclaw + the CLI harnesses in agent.gui.listHarnesses@4.0", async () => {
     const { result, error } = await callRpc(
       "agent.gui.listHarnesses",
       { major: 4, minor: 0 },
@@ -148,7 +148,26 @@ describe("open host /rpc", () => {
     expect(error).toBeNull();
     const harnesses = (result as { harnesses: Array<{ id: string }> })
       .harnesses;
-    expect(harnesses.map((harness) => harness.id)).toContain("openclaw");
+    const ids = harnesses.map((harness) => harness.id);
+    // OpenClaw plus the three CLI-driven harnesses are always listed; their
+    // `available` flag depends on the CLI being installed on the test host.
+    expect(ids).toContain("openclaw");
+    expect(ids).toContain("claude");
+    expect(ids).toContain("codex");
+    expect(ids).toContain("grok");
+  });
+
+  it("advertises CLI model catalogs in agent.gui.listModels@1.0", async () => {
+    const { result, error } = await callRpc(
+      "agent.gui.listModels",
+      { major: 1, minor: 0 },
+      { harnessId: "claude", workingDirectory: null },
+      manifest,
+    );
+    expect(error).toBeNull();
+    const models = (result as { models: Array<{ slug: string }> }).models;
+    expect(models.length).toBeGreaterThan(0);
+    expect(models.map((model) => model.slug)).toContain("claude-opus-4-8");
   });
 
   it("downgrades providers.list for a v2.0 client (drops amp + openclaw)", async () => {

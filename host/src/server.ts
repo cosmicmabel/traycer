@@ -16,6 +16,7 @@ import { AgentInboxStream } from "./agent/inbox-subscription";
 import { SelectionGuideStore } from "./agent/selection-guide-store";
 import { CommentStore } from "./epic/comment-store";
 import { ProviderSettingsStore } from "./providers/provider-settings";
+import { CliDetector, bunVersionProbe } from "./providers/cli-detect";
 import { TerminalStore } from "./terminal/terminal-store";
 import { BindingStore } from "./worktree/binding-store";
 import { WorktreeDeleteStream } from "./worktree/delete-stream";
@@ -55,7 +56,12 @@ export function startOpenHostServer(config: OpenHostConfig): RunningOpenHost {
     token: config.openclawGatewayToken,
   };
   const openclaw = new OpenClawGatewayProbe(gatewayOptions);
-  const chats = new ChatSessionStore(gatewayOptions, config.environment);
+  const cliDetector = new CliDetector(bunVersionProbe);
+  const chats = new ChatSessionStore(
+    gatewayOptions,
+    config.environment,
+    cliDetector,
+  );
   const epics = new EpicStore(config.environment);
   const tasks = new TaskIndex(config.environment);
   const gitStatus = new GitStatusBroadcaster();
@@ -76,6 +82,7 @@ export function startOpenHostServer(config: OpenHostConfig): RunningOpenHost {
     comments: new CommentStore(config.environment),
     providerSettings: new ProviderSettingsStore(config.environment),
     selectionGuide: new SelectionGuideStore(config.environment),
+    cliDetector,
   });
   const agentInbox = new AgentInboxStream();
 

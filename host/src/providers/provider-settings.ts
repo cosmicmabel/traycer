@@ -119,38 +119,50 @@ export class ProviderSettingsStore {
 }
 
 /**
- * Builds the wire `ProviderCliState` from a settings row. `gatewayReachable`
- * only matters for the openclaw provider — the sole provider this host can
- * actually run.
+ * Availability inputs for one provider, resolved by the host before building
+ * wire state:
+ *  - `gateway` (openclaw): the local OpenClaw Gateway probe succeeded.
+ *  - `cli` (claude-code/codex/grok): the vendor CLI answered `--version`.
+ * A provider with neither kind is a settings-only row (edits persist, but the
+ * host can't run it).
  */
+export type ProviderAvailability =
+  | { readonly kind: "none" }
+  | { readonly kind: "gateway"; readonly reachable: boolean }
+  | {
+      readonly kind: "cli";
+      readonly detected: boolean;
+      readonly binary: string | null;
+      readonly version: string | null;
+    };
+
+/** Builds the wire `ProviderCliState` from a settings row + availability. */
 export function buildProviderState(
   row: ProviderSettingsRow,
-  gatewayReachable: boolean,
+  availability: ProviderAvailability,
 ): ProviderCliState {
-  const isOpenClaw = row.providerId === "openclaw";
-  const enabled = row.enabled ?? isOpenClaw;
-  const available = isOpenClaw && enabled && gatewayReachable;
+  const runnable =
+    availability.kind === "gateway"
+      ? availability.reachable
+      : availability.kind === "cli"
+        ? availability.detected
+        : false;
+  const enabled = row.enabled ?? availability.kind !== "none";
+  const available = enabled && runnable;
   return {
     providerId: row.providerId,
     enabled,
     disabledBy: null,
     selected: row.selection,
-    candidates: row.customPaths.map((path) => ({
-      kind: "custom" as const,
-      path,
-      version: null,
-      available: false,
-      versionPending: false,
-    })),
+    candidates: cliCandidates(row, availability),
     auth: {
       status: available ? "authenticated" : enabled ? "unknown" : "unavailable",
-      badgeText: null,
+      badgeText:
+        availability.kind === "cli" && availability.version !== null
+          ? availability.version
+          : null,
       label: available ? PROVIDER_DISPLAY_NAMES[row.providerId] : null,
-      detail: isOpenClaw
-        ? available
-          ? "Local OpenClaw Gateway"
-          : "Start the OpenClaw Gateway to enable this provider"
-        : "Not implemented in @cic/open-host yet",
+      detail: availabilityDetail(availability),
     },
     authPending: false,
     checkedAt: Date.now(),
@@ -164,4 +176,49 @@ export function buildProviderState(
     loginCapability: null,
     availabilityPending: false,
   };
+}
+
+function cliCandidates(
+  row: ProviderSettingsRow,
+  availability: ProviderAvailability,
+): ProviderCliState["candidates"] {
+  const custom = row.customPaths.map((path) => ({
+    kind: "custom" as const,
+    path,
+    version: null,
+    available: false,
+    versionPending: false,
+  }));
+  if (
+    availability.kind === "cli" &&
+    availability.detected &&
+    availability.binary !== null &&
+    !row.customPaths.includes(availability.binary)
+  ) {
+    return [
+      {
+        kind: "path" as const,
+        path: availability.binary,
+        version: availability.version,
+        available: true,
+        versionPending: false,
+      },
+      ...custom,
+    ];
+  }
+  return custom;
+}
+
+function availabilityDetail(availability: ProviderAvailability): string | null {
+  if (availability.kind === "gateway") {
+    return availability.reachable
+      ? "Local OpenClaw Gateway"
+      : "Start the OpenClaw Gateway to enable this provider";
+  }
+  if (availability.kind === "cli") {
+    return availability.detected
+      ? "Detected on PATH — turns run through the vendor CLI (sign in with the CLI itself)"
+      : "CLI not found on PATH — install it or add a custom path";
+  }
+  return "Not runnable by @cic/open-host — settings persist but this agent can't launch here";
 }

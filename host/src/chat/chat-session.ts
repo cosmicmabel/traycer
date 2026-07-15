@@ -19,6 +19,15 @@ import {
   type UserMessage,
 } from "@cic/protocol/persistence/epic/schemas";
 import { hostHomeDir } from "../pid-file";
+import { ensureFolderlessCwd } from "../worktree/worktree-service";
+import {
+  isCliHarnessId,
+  type CliDetector,
+  type CliHarnessId,
+} from "../providers/cli-detect";
+import { ProviderSettingsStore } from "../providers/provider-settings";
+import type { ProviderId } from "@cic/protocol/host/provider-schemas";
+import { bunProcessRunner, runCliTurn } from "../agent-cli/cli-agent";
 import type { RuntimeEvent } from "@cic/protocol/host/agent/gui/agent-runtime";
 import {
   OpenClawGatewayConnection,
@@ -57,6 +66,8 @@ interface ChatKeyState {
   readonly pendingApprovals: ChatApprovalState[];
   readonly emitters: Set<(frame: ChatSubscribeServerFrame) => void>;
   flushTimer: NodeJS.Timeout | null;
+  /** Per-CLI-harness resume session id, so successive turns continue the chat. */
+  readonly cliSessions: Map<string, string>;
 }
 
 const FLUSH_DEBOUNCE_MS = 500;
@@ -69,7 +80,12 @@ type SendFrame = Extract<
 interface ActiveTurnState {
   readonly turnId: string;
   status:
-    "starting" | "running" | "stopping" | "completed" | "stopped" | "errored";
+    | "starting"
+    | "running"
+    | "stopping"
+    | "completed"
+    | "stopped"
+    | "errored";
   readonly harnessId: ChatRunSettings["harnessId"];
   readonly model: string;
   readonly reasoningEffort: string | null;
@@ -81,18 +97,26 @@ interface ActiveTurnState {
 }
 
 interface ActiveTurnRun {
-  readonly connection: OpenClawGatewayConnection;
+  /** Present for OpenClaw turns; CLI turns use `abort` instead. */
+  readonly connection: OpenClawGatewayConnection | null;
+  readonly abort: AbortController | null;
   stopped: boolean;
 }
 
 export class ChatSessionStore {
   private readonly gateway: OpenClawGatewayOptions;
   private readonly environment: string;
+  private readonly cliDetector: CliDetector;
   private readonly chats = new Map<string, ChatKeyState>();
 
-  constructor(gateway: OpenClawGatewayOptions, environment: string) {
+  constructor(
+    gateway: OpenClawGatewayOptions,
+    environment: string,
+    cliDetector: CliDetector,
+  ) {
     this.gateway = gateway;
     this.environment = environment;
+    this.cliDetector = cliDetector;
   }
 
   /**
@@ -233,6 +257,8 @@ export class ChatSessionStore {
     // forward frames (see stream-connection.ts's phase gate).
     return new ChatSubscription(
       this.gateway,
+      this.environment,
+      this.cliDetector,
       open.data.epicId,
       open.data.chatId,
       input.userId,
@@ -281,6 +307,7 @@ export class ChatSessionStore {
       pendingApprovals: [],
       emitters: new Set(),
       flushTimer: null,
+      cliSessions: new Map(),
     };
     // Two concurrent loads race the disk read; last-write-wins on the map is
     // fine (same persisted bytes), but keep the first-inserted state if one
@@ -302,6 +329,8 @@ function blobName(epicId: string, chatId: string): string {
 
 export class ChatSubscription {
   private readonly gateway: OpenClawGatewayOptions;
+  private readonly environment: string;
+  private readonly cliDetector: CliDetector;
   private readonly epicId: string;
   private readonly chatId: string;
   private readonly userId: string;
@@ -311,6 +340,8 @@ export class ChatSubscription {
 
   constructor(
     gateway: OpenClawGatewayOptions,
+    environment: string,
+    cliDetector: CliDetector,
     epicId: string,
     chatId: string,
     userId: string,
@@ -319,6 +350,8 @@ export class ChatSubscription {
     persist: () => void,
   ) {
     this.gateway = gateway;
+    this.environment = environment;
+    this.cliDetector = cliDetector;
     this.epicId = epicId;
     this.chatId = chatId;
     this.userId = userId;
@@ -574,6 +607,26 @@ export class ChatSubscription {
     userMessageId: string,
     prompt: string,
   ): Promise<void> {
+    // Dispatch on the turn's selected harness: OpenClaw goes through the
+    // gateway; claude/codex/grok spawn the vendor CLI. Everything else has
+    // no runner on this host and reports an honest "can't run here" turn.
+    const harnessId = this.state.activeTurn?.harnessId ?? "openclaw";
+    if (isCliHarnessId(harnessId)) {
+      await this.runCliTurn(turnId, userMessageId, prompt, harnessId);
+      return;
+    }
+    if (harnessId !== "openclaw") {
+      await this.runUnsupportedTurn(turnId, userMessageId, harnessId);
+      return;
+    }
+    await this.runOpenClawTurn(turnId, userMessageId, prompt);
+  }
+
+  private async runOpenClawTurn(
+    turnId: string,
+    userMessageId: string,
+    prompt: string,
+  ): Promise<void> {
     const blockId = randomUUID();
     let accumulated = "";
     const emitEvent = (event: RuntimeEvent): void => {
@@ -589,7 +642,7 @@ export class ChatSubscription {
 
     try {
       const connection = await OpenClawGatewayConnection.connect(this.gateway);
-      this.state.turn = { connection, stopped: false };
+      this.state.turn = { connection, abort: null, stopped: false };
       if (this.state.activeTurn !== null) {
         this.state.activeTurn.status = "running";
         this.state.activeTurn.updatedAt = Date.now();
@@ -673,6 +726,138 @@ export class ChatSubscription {
     );
   }
 
+  private async runCliTurn(
+    turnId: string,
+    userMessageId: string,
+    prompt: string,
+    harnessId: CliHarnessId,
+  ): Promise<void> {
+    const blockId = randomUUID();
+    let accumulated = "";
+    const emitEvent = (event: RuntimeEvent): void => {
+      this.broadcast({
+        kind: "blockDelta",
+        hasBinaryPayload: false,
+        epicId: this.epicId,
+        chatId: this.chatId,
+        event,
+      });
+    };
+
+    const providerId = harnessId === "claude" ? "claude-code" : harnessId;
+    const settings = await this.cliProviderSettings(providerId);
+    const detection = await this.cliDetector.detect(
+      harnessId,
+      settings.customPaths,
+    );
+    if (!detection.available || detection.binary === null) {
+      this.finishTurn(turnId, userMessageId, blockId, "", [], {
+        kind: "errored",
+        message: `${harnessId} CLI is not available on this host (not found on PATH). Install it or add a custom path in Settings.`,
+      });
+      return;
+    }
+
+    const abort = new AbortController();
+    this.state.turn = { connection: null, abort, stopped: false };
+    if (this.state.activeTurn !== null) {
+      this.state.activeTurn.status = "running";
+      this.state.activeTurn.updatedAt = Date.now();
+    }
+    this.broadcastTurnState();
+    emitEvent({
+      blockId: turnId,
+      timestamp: Date.now(),
+      type: "turn.started",
+      turnId,
+    });
+    this.appendChatEvent("turn.started", null, turnId, userMessageId, null);
+
+    const cwd = await ensureFolderlessCwd(this.environment, this.epicId);
+    const result = await runCliTurn(
+      {
+        harnessId,
+        binary: detection.binary,
+        prompt,
+        cwd,
+        model: this.state.activeTurn?.model ?? "",
+        resumeSessionId: this.state.cliSessions.get(harnessId) ?? null,
+      },
+      {
+        onTextDelta: (delta) => {
+          if (delta.length === 0) {
+            return;
+          }
+          accumulated += delta;
+          emitEvent({
+            blockId,
+            timestamp: Date.now(),
+            type: "text.delta",
+            delta,
+          });
+        },
+      },
+      bunProcessRunner,
+      abort.signal,
+    );
+
+    if (this.state.turn?.stopped === true) {
+      this.finishTurn(turnId, userMessageId, blockId, accumulated, [], {
+        kind: "stopped",
+      });
+      return;
+    }
+    if (result.kind === "errored") {
+      this.finishTurn(turnId, userMessageId, blockId, accumulated, [], {
+        kind: "errored",
+        message: result.message,
+      });
+      return;
+    }
+    if (result.sessionId !== null) {
+      // Remember the CLI's session id so the next turn resumes this chat.
+      this.state.cliSessions.set(harnessId, result.sessionId);
+    }
+    emitEvent({ blockId, timestamp: Date.now(), type: "text.completed" });
+    this.finishTurn(turnId, userMessageId, blockId, accumulated, [], {
+      kind: "completed",
+    });
+  }
+
+  /** Provider settings lookup local to the session (custom CLI paths only). */
+  private async cliProviderSettings(
+    providerId: string,
+  ): Promise<{ readonly customPaths: readonly string[] }> {
+    const store = new ProviderSettingsStore(this.environment);
+    const row = await store.get(providerId as ProviderId);
+    return { customPaths: row.customPaths };
+  }
+
+  private async runUnsupportedTurn(
+    turnId: string,
+    userMessageId: string,
+    harnessId: string,
+  ): Promise<void> {
+    const blockId = randomUUID();
+    this.broadcast({
+      kind: "blockDelta",
+      hasBinaryPayload: false,
+      epicId: this.epicId,
+      chatId: this.chatId,
+      event: {
+        blockId: turnId,
+        timestamp: Date.now(),
+        type: "turn.started",
+        turnId,
+      },
+    });
+    this.appendChatEvent("turn.started", null, turnId, userMessageId, null);
+    this.finishTurn(turnId, userMessageId, blockId, "", [], {
+      kind: "errored",
+      message: `The "${harnessId}" agent isn't runnable by this host. Use OpenClaw, Claude Code, Codex, or Grok.`,
+    });
+  }
+
   private finishTurn(
     turnId: string,
     userMessageId: string,
@@ -686,19 +871,21 @@ export class ChatSubscription {
   ): void {
     const now = Date.now();
     const activeTurn = this.state.activeTurn;
+    const senderHarnessId = activeTurn?.harnessId ?? "openclaw";
     const assistant: Message = {
       role: "assistant",
       messageId: randomUUID(),
       sender: {
         type: "agent",
-        harnessId: "openclaw",
+        harnessId: senderHarnessId,
         agentId: this.chatId,
-        displayName: "OpenClaw",
+        displayName: harnessDisplayName(senderHarnessId),
         reply: { expectsReply: false },
       },
       blocks: [
         ...toolBlocks,
-        ...(text.length > 0 || outcome.kind === "completed"
+        ...(text.length > 0 ||
+        (outcome.kind === "completed" && toolBlocks.length === 0)
           ? [
               {
                 blockId,
@@ -711,7 +898,9 @@ export class ChatSubscription {
                 text:
                   text.length > 0
                     ? text
-                    : "(the OpenClaw Gateway returned no text for this turn)",
+                    : outcome.kind === "errored"
+                      ? outcome.message
+                      : `(${harnessDisplayName(senderHarnessId)} returned no text for this turn)`,
                 providerNotice: null,
               },
             ]
@@ -855,7 +1044,9 @@ export class ChatSubscription {
     }
     this.state.turn.stopped = true;
     this.state.runStatus = "stopping";
-    this.state.turn.connection.close();
+    // OpenClaw turns close the gateway socket; CLI turns abort the process.
+    this.state.turn.connection?.close();
+    this.state.turn.abort?.abort();
     this.ackAccepted(clientActionId, "stop");
     this.broadcastTurnState();
   }
@@ -1296,4 +1487,19 @@ function readClientActionId(parsed: unknown): string {
     }
   }
   return "";
+}
+
+function harnessDisplayName(harnessId: string): string {
+  switch (harnessId) {
+    case "openclaw":
+      return "OpenClaw";
+    case "claude":
+      return "Claude Code";
+    case "codex":
+      return "Codex";
+    case "grok":
+      return "Grok";
+    default:
+      return harnessId;
+  }
 }

@@ -6,6 +6,15 @@ import {
   upstreamHostUrl,
   type HostPidMetadata,
 } from "./host-pid";
+import {
+  MIN_PASSWORD_LENGTH,
+  WebAuthStore,
+  bunPasswordHasher,
+  clearedSessionCookie,
+  sessionCookie,
+  sessionTokenFromRequest,
+  webAuthPath,
+} from "./web-auth";
 
 /**
  * The Bun process that hosts the GUI as a webapp on a Linux machine running
@@ -23,13 +32,16 @@ import {
  *     bootstraps from (re-read from pid.json per call so the page tracks
  *     host restarts).
  *
- * The stack is local-only: there is no sign-in and no external service
- * anywhere - this process makes NO outbound network connections.
+ * The stack is local-only: there is no external auth service anywhere -
+ * this process makes NO outbound network connections. Access is protected
+ * by a machine-local password (created on the first visit, argon2id-hashed
+ * in `~/.cic/web-auth.json`, HttpOnly cookie sessions - see web-auth.ts);
+ * the static bundle and `/api/auth/*` are the only unauthenticated routes.
+ * `--no-auth` disables the gate for pure-loopback setups.
  *
- * SECURITY: this port is an unauthenticated door to the local host (anyone
- * who can reach this port has the GUI and the host proxy). It binds
- * 127.0.0.1 by default; `--bind 0.0.0.0` is an explicit opt-in for trusted
- * LANs.
+ * SECURITY: with `--no-auth`, this port is an unauthenticated door to the
+ * local host. It binds 127.0.0.1 by default; `--bind 0.0.0.0` is an
+ * explicit opt-in for trusted LANs.
  */
 
 interface ServeOptions {
@@ -37,6 +49,8 @@ interface ServeOptions {
   readonly bind: string;
   readonly environment: string;
   readonly distDir: string;
+  /** `--no-auth`: serve without the local password gate. */
+  readonly noAuth: boolean;
 }
 
 const DEFAULT_PORT = 8788;
@@ -45,6 +59,7 @@ const DEFAULT_ENVIRONMENT = "production";
 
 function parseArgs(argv: readonly string[]): ServeOptions {
   const values = new Map<string, string>();
+  const flags = new Set<string>();
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i];
     if (!arg.startsWith("--")) {
@@ -59,7 +74,9 @@ function parseArgs(argv: readonly string[]): ServeOptions {
     if (next !== undefined && !next.startsWith("--")) {
       values.set(arg.slice(2), next);
       i += 1;
+      continue;
     }
+    flags.add(arg.slice(2));
   }
   const port = Number(values.get("port") ?? DEFAULT_PORT);
   if (!Number.isInteger(port) || port < 1 || port > 65_535) {
@@ -72,7 +89,101 @@ function parseArgs(argv: readonly string[]): ServeOptions {
     distDir: resolve(
       values.get("dist") ?? resolve(import.meta.dir, "..", "..", "dist"),
     ),
+    noAuth: flags.has("no-auth"),
   };
+}
+
+// ─── Auth endpoints ─────────────────────────────────────────────────────────
+
+async function readPasswordBody(request: Request): Promise<string | null> {
+  let parsed: unknown;
+  try {
+    parsed = await request.json();
+  } catch {
+    return null;
+  }
+  if (parsed === null || typeof parsed !== "object") {
+    return null;
+  }
+  const password = (parsed as Record<string, unknown>).password;
+  return typeof password === "string" ? password : null;
+}
+
+async function handleAuthRoute(
+  request: Request,
+  url: URL,
+  auth: WebAuthStore | null,
+): Promise<Response> {
+  if (url.pathname === "/api/auth/status") {
+    if (auth === null) {
+      return Response.json({
+        authRequired: false,
+        passwordSet: false,
+        authenticated: true,
+      });
+    }
+    const authenticated = await auth.verifySession(
+      sessionTokenFromRequest(request),
+    );
+    return Response.json({
+      authRequired: true,
+      passwordSet: await auth.passwordSet(),
+      authenticated,
+    });
+  }
+  if (auth === null || request.method !== "POST") {
+    return new Response("not found", { status: 404 });
+  }
+  if (url.pathname === "/api/auth/setup") {
+    const password = await readPasswordBody(request);
+    if (password === null) {
+      return new Response("bad request", { status: 400 });
+    }
+    const result = await auth.setup(password);
+    if (result.kind === "already-set") {
+      return new Response("password already set", { status: 409 });
+    }
+    if (result.kind === "too-short") {
+      return new Response(
+        `password must be at least ${MIN_PASSWORD_LENGTH} characters`,
+        { status: 422 },
+      );
+    }
+    return Response.json(
+      { ok: true },
+      { headers: { "Set-Cookie": sessionCookie(result.token) } },
+    );
+  }
+  if (url.pathname === "/api/auth/login") {
+    const password = await readPasswordBody(request);
+    if (password === null) {
+      return new Response("bad request", { status: 400 });
+    }
+    const result = await auth.login(password);
+    if (result.kind === "locked") {
+      return new Response("too many attempts - try again shortly", {
+        status: 429,
+        headers: {
+          "Retry-After": String(Math.ceil(result.retryAfterMs / 1000)),
+        },
+      });
+    }
+    if (result.kind === "invalid") {
+      return new Response("wrong password", { status: 401 });
+    }
+    return Response.json(
+      { ok: true },
+      { headers: { "Set-Cookie": sessionCookie(result.token) } },
+    );
+  }
+  if (url.pathname === "/api/auth/logout") {
+    await auth.logout(sessionTokenFromRequest(request));
+    return Response.json(
+      { ok: true },
+      { headers: { "Set-Cookie": clearedSessionCookie() } },
+    );
+  }
+  return new Response("not found", { status: 404 });
 }
 
 // ─── Runtime config ─────────────────────────────────────────────────────────
@@ -131,11 +242,32 @@ interface ProxySocketData {
 }
 
 function startServer(options: ServeOptions): void {
+  const auth = options.noAuth
+    ? null
+    : new WebAuthStore(webAuthPath(options.environment), bunPasswordHasher);
+
   const server = Bun.serve<ProxySocketData>({
     hostname: options.bind,
     port: options.port,
     async fetch(request, serverInstance) {
       const url = new URL(request.url);
+
+      if (url.pathname.startsWith("/api/auth/")) {
+        return handleAuthRoute(request, url, auth);
+      }
+
+      // Everything that reaches the host (or reveals its state) requires a
+      // session; the static bundle stays open so the login screen can render.
+      const guarded =
+        url.pathname === "/host/rpc" ||
+        url.pathname === "/host/stream" ||
+        url.pathname === "/api/runtime-config";
+      if (guarded && auth !== null) {
+        const ok = await auth.verifySession(sessionTokenFromRequest(request));
+        if (!ok) {
+          return new Response("unauthorized", { status: 401 });
+        }
+      }
 
       if (url.pathname === "/host/rpc" || url.pathname === "/host/stream") {
         const metadata = await readHostPidMetadata(options.environment);
@@ -222,9 +354,16 @@ function startServer(options: ServeOptions): void {
   console.log(
     `cic-web serving ${options.distDir} on http://${options.bind}:${server.port} (host environment: ${options.environment})`,
   );
+  console.log(
+    auth === null
+      ? "auth: DISABLED (--no-auth) - anyone who can reach this port has the host."
+      : `auth: local password (created on first visit; stored argon2id-hashed in ${webAuthPath(options.environment)} - delete that file to reset it)`,
+  );
   if (options.bind !== "127.0.0.1" && options.bind !== "localhost") {
     console.warn(
-      `WARNING: bound to ${options.bind} - this port is an unauthenticated door to the local host; only expose it on a trusted network.`,
+      auth === null
+        ? `WARNING: bound to ${options.bind} with --no-auth - this port is an unauthenticated door to the local host; only expose it on a trusted network.`
+        : `NOTE: bound to ${options.bind} - the local password is the only gate; front with TLS if the network is not trusted.`,
     );
   }
   if (!existsSync(join(options.distDir, "index.html"))) {

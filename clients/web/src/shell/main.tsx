@@ -2,6 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { CicApp, hostRpcRegistry } from "@cic/gui-app";
 import "./index.css";
+import { fetchAuthStatus, LoginScreen } from "./auth-gate";
 import { BrowserRunnerHost } from "./browser-runner-host";
 import { ensureLocalSessionSeeded } from "./local-session";
 import { fetchRuntimeConfig, RUNTIME_CONFIG_PATH } from "./runtime-config";
@@ -16,6 +17,23 @@ async function bootstrap(): Promise<void> {
   const container = document.getElementById("root");
   if (container === null) {
     throw new Error("#root element not found in index.html");
+  }
+
+  // Machine-local password gate (serve process, web-auth.ts): if this
+  // browser has no session, render the login screen instead of the app.
+  // A successful login sets the HttpOnly cookie and reloads the page.
+  const authStatus = await fetchAuthStatus();
+  if (
+    authStatus !== null &&
+    authStatus.authRequired &&
+    !authStatus.authenticated
+  ) {
+    createRoot(container).render(
+      <StrictMode>
+        <LoginScreen passwordSet={authStatus.passwordSet} />
+      </StrictMode>,
+    );
+    return;
   }
 
   const config = await fetchRuntimeConfig();

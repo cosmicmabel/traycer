@@ -145,8 +145,14 @@ import type { TaskIndex } from "./epic/task-index";
 import type { OpenClawGatewayProbe } from "./openclaw/gateway-client";
 import {
   buildProviderState,
+  type ProviderAvailability,
   type ProviderSettingsStore,
 } from "./providers/provider-settings";
+import {
+  isCliHarnessId,
+  type CliDetector,
+  type CliHarnessId,
+} from "./providers/cli-detect";
 import type { TerminalStore } from "./terminal/terminal-store";
 import type { BindingStore } from "./worktree/binding-store";
 import {
@@ -250,9 +256,46 @@ export interface HandlerDeps {
   readonly comments: CommentStore;
   readonly providerSettings: ProviderSettingsStore;
   readonly selectionGuide: SelectionGuideStore;
+  readonly cliDetector: CliDetector;
 }
 
 const OPENCLAW_PROVIDER_ID: ProviderId = "openclaw";
+
+/**
+ * The CLI harnesses the host can spawn, and how their provider id (used in
+ * `providers.list`) maps to their harness id (used in `agent.gui.*` and chat
+ * run settings). Claude Code's provider id is `claude-code` but its harness
+ * id is `claude`; codex and grok share one id across both.
+ */
+const CLI_PROVIDER_TO_HARNESS: Partial<Record<ProviderId, CliHarnessId>> = {
+  "claude-code": "claude",
+  codex: "codex",
+  grok: "grok",
+};
+
+const CLI_HARNESS_LABEL: Record<CliHarnessId, string> = {
+  claude: "Claude Code",
+  codex: "Codex",
+  grok: "Grok",
+};
+
+async function cliAvailabilityFor(
+  deps: HandlerDeps,
+  providerId: ProviderId,
+): Promise<ProviderAvailability> {
+  const harnessId = CLI_PROVIDER_TO_HARNESS[providerId];
+  if (harnessId === undefined) {
+    return { kind: "none" };
+  }
+  const row = await deps.providerSettings.get(providerId);
+  const detection = await deps.cliDetector.detect(harnessId, row.customPaths);
+  return {
+    kind: "cli",
+    detected: detection.available,
+    binary: detection.binary,
+    version: detection.version,
+  };
+}
 
 /**
  * Fallback model row when the local OpenClaw Gateway does not answer a model
@@ -306,6 +349,40 @@ function openclawHarnessOption(gatewayReachable: boolean): GuiHarnessOption {
   };
 }
 
+function cliHarnessOption(
+  harnessId: CliHarnessId,
+  detected: boolean,
+): GuiHarnessOption {
+  return {
+    id: harnessId,
+    label: CLI_HARNESS_LABEL[harnessId],
+    enabled: true,
+    available: detected,
+    error: detected
+      ? null
+      : `${CLI_HARNESS_LABEL[harnessId]} CLI not found on PATH`,
+    modes: ["gui"],
+    requiresApiKey: false,
+    supportedPermissionModes: [
+      "supervised",
+      "auto_accept_edits",
+      "full_access",
+    ],
+    availabilityPending: false,
+  };
+}
+
+/**
+ * Per-harness model catalogs. The vendor CLIs own real model resolution;
+ * the host advertises the common slugs so the picker has sensible choices
+ * and forwards the chosen slug to the CLI's `--model` flag verbatim.
+ */
+const CLI_MODEL_SLUGS: Record<CliHarnessId, readonly string[]> = {
+  claude: ["claude-opus-4-8", "claude-sonnet-5", "claude-haiku-4-5-20251001"],
+  codex: ["gpt-5-codex", "gpt-5"],
+  grok: ["grok-code-fast-1", "grok-4"],
+};
+
 export function buildUnaryHandlers(
   deps: HandlerDeps,
 ): ReadonlyMap<string, UnaryHandler> {
@@ -332,13 +409,16 @@ export function buildUnaryHandlers(
     })),
   );
 
-  const stateFor = async (providerId: ProviderId) =>
-    buildProviderState(
-      await deps.providerSettings.get(providerId),
+  const stateFor = async (providerId: ProviderId) => {
+    const availability: ProviderAvailability =
       providerId === OPENCLAW_PROVIDER_ID
-        ? await deps.openclaw.isReachable()
-        : false,
+        ? { kind: "gateway", reachable: await deps.openclaw.isReachable() }
+        : await cliAvailabilityFor(deps, providerId);
+    return buildProviderState(
+      await deps.providerSettings.get(providerId),
+      availability,
     );
+  };
 
   handlers.set(
     providersListV40.method,
@@ -513,35 +593,72 @@ export function buildUnaryHandlers(
 
   handlers.set(
     agentGuiListHarnessesV40.method,
-    contractHandler(agentGuiListHarnessesV40, async () => ({
-      harnesses: [openclawHarnessOption(await deps.openclaw.isReachable())],
-    })),
+    contractHandler(agentGuiListHarnessesV40, async () => {
+      const [gatewayReachable, ...cliDetections] = await Promise.all([
+        deps.openclaw.isReachable(),
+        ...(["claude", "codex", "grok"] as const).map(async (harnessId) => {
+          const row = await deps.providerSettings.get(
+            harnessId === "claude" ? "claude-code" : harnessId,
+          );
+          return deps.cliDetector.detect(harnessId, row.customPaths);
+        }),
+      ]);
+      return {
+        harnesses: [
+          openclawHarnessOption(gatewayReachable),
+          ...cliDetections.map((detection) =>
+            cliHarnessOption(detection.harnessId, detection.available),
+          ),
+        ],
+      };
+    }),
   );
 
   handlers.set(
     agentGuiListModelsV10.method,
-    contractHandler(agentGuiListModelsV10, async (request) => ({
-      harnessId: request.harnessId,
-      models:
-        request.harnessId === "openclaw"
-          ? [
-              {
-                harnessId: "openclaw" as const,
-                slug: OPENCLAW_DEFAULT_MODEL_SLUG,
-                label: "OpenClaw (gateway default)",
-                description:
-                  "Model selection is owned by the local OpenClaw Gateway configuration.",
-                contextWindow: null,
-                maxOutputTokens: null,
-                defaultReasoningEffort: null,
-                supportedReasoningEfforts: [],
-                defaultServiceTier: null,
-                supportedServiceTiers: [],
-                metadata: {},
-              },
-            ]
-          : [],
-    })),
+    contractHandler(agentGuiListModelsV10, async (request) => {
+      if (request.harnessId === "openclaw") {
+        return {
+          harnessId: request.harnessId,
+          models: [
+            {
+              harnessId: "openclaw" as const,
+              slug: OPENCLAW_DEFAULT_MODEL_SLUG,
+              label: "OpenClaw (gateway default)",
+              description:
+                "Model selection is owned by the local OpenClaw Gateway configuration.",
+              contextWindow: null,
+              maxOutputTokens: null,
+              defaultReasoningEffort: null,
+              supportedReasoningEfforts: [],
+              defaultServiceTier: null,
+              supportedServiceTiers: [],
+              metadata: {},
+            },
+          ],
+        };
+      }
+      if (isCliHarnessId(request.harnessId)) {
+        const harnessId = request.harnessId;
+        return {
+          harnessId,
+          models: CLI_MODEL_SLUGS[harnessId].map((slug) => ({
+            harnessId,
+            slug,
+            label: slug,
+            description: `Runs through the ${CLI_HARNESS_LABEL[harnessId]} CLI (\`--model ${slug}\`).`,
+            contextWindow: null,
+            maxOutputTokens: null,
+            defaultReasoningEffort: null,
+            supportedReasoningEfforts: [],
+            defaultServiceTier: null,
+            supportedServiceTiers: [],
+            metadata: {},
+          })),
+        };
+      }
+      return { harnessId: request.harnessId, models: [] };
+    }),
   );
 
   handlers.set(
