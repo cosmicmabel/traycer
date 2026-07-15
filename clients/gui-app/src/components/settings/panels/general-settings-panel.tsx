@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { useShallow } from "zustand/react/shallow";
 import { SettingsPanelShell } from "@/components/settings/settings-panel-shell";
 import { SettingsRow } from "@/components/settings/settings-row";
+import { appVersionLabel } from "@/lib/app-version";
 import { VoiceSettingsSection } from "@/components/settings/voice-settings-section";
 import { AgentSpinningDots } from "@/components/ui/agent-spinning-dots";
 import { Button } from "@/components/ui/button";
@@ -224,6 +225,15 @@ export function GeneralSettingsPanel() {
         }
       />
       <DangerZoneSection />
+      <SettingsRow
+        label="Version"
+        description="The CIC build this app is running."
+        control={
+          <span className="font-mono text-ui-sm text-muted-foreground">
+            {appVersionLabel()}
+          </span>
+        }
+      />
     </SettingsPanelShell>
   );
 }

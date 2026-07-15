@@ -65,6 +65,7 @@ import {
 import { ProviderAuthBadge, ProviderAuthLine } from "./provider-auth-display";
 import { EnvOverrideEditor } from "./env-override-editor";
 import { ProviderRateLimitForProvider } from "./provider-rate-limit-section";
+import { ProviderOAuthSignIn } from "./provider-oauth-signin";
 
 type ProviderId = ProviderCliState["providerId"];
 type ProvidersListQuery = UseQueryResult<
@@ -155,8 +156,11 @@ function terminalAgentArgsPlaceholder(providerId: ProviderId): string {
 // Grid keeps the columns aligned across header + rows; `minmax(0,1fr)` on
 // the Path column guarantees it shrinks/truncates instead of pushing the
 // table past the panel width.
+// Radio · path (flexes) · version · remove. The version column collapses to
+// content width on phones (a fixed min-width overlapped the path column at
+// ~390px) and gets its roomier min from sm+.
 const TABLE_GRID =
-  "grid grid-cols-[2.25rem_minmax(0,1fr)_minmax(5.5rem,auto)_2.25rem] items-center";
+  "grid grid-cols-[2.25rem_minmax(0,1fr)_auto_2.25rem] items-center gap-x-1 sm:grid-cols-[2.25rem_minmax(0,1fr)_minmax(5.5rem,auto)_2.25rem]";
 
 interface ProviderCandidateConfig {
   readonly selected: ProviderSelection;
@@ -400,10 +404,14 @@ function ProvidersRailLayout({
     // providers never resizes the box and the detail pane - not the outer
     // overlay - owns the scroll. Height follows the viewport: on shorter
     // screens it shrinks to fit the modal instead of overflowing it.
-    <div className="flex h-full">
+    //
+    // Layout is responsive: on phones the provider rail collapses to a
+    // dropdown above a full-width detail pane (the side-by-side rail leaves
+    // too little room for the detail); from sm+ it's the two-pane rail.
+    <div className="flex h-full min-h-0 flex-col sm:flex-row">
       <nav
         aria-label="Providers"
-        className="flex w-[clamp(10rem,22vw,14rem)] shrink-0 flex-col gap-1 overflow-y-auto border-r border-border/60 p-2"
+        className="hidden shrink-0 flex-col gap-1 overflow-y-auto border-border/60 p-2 sm:flex sm:w-[clamp(10rem,22vw,14rem)] sm:border-r"
       >
         <ProviderList
           ariaLabel="Providers"
@@ -421,7 +429,27 @@ function ProvidersRailLayout({
           }))}
         />
       </nav>
-      <div className="min-h-0 min-w-0 flex-1 overflow-y-auto p-5">
+      <div className="border-b border-border/60 p-3 sm:hidden">
+        <label className="sr-only" htmlFor="provider-select-mobile">
+          Agent
+        </label>
+        <select
+          id="provider-select-mobile"
+          className="h-11 w-full rounded-md border border-border/60 bg-background px-3 text-base text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          value={active.providerId}
+          onChange={(event) =>
+            setActiveId(event.target.value as ProviderCliState["providerId"])
+          }
+        >
+          {orderedProviders.map((state) => (
+            <option key={state.providerId} value={state.providerId}>
+              {PROVIDER_DISPLAY_NAMES[state.providerId]}
+              {state.enabled ? "" : " (disabled)"}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div className="min-h-0 min-w-0 flex-1 overflow-y-auto p-4 sm:p-5">
         <ProviderDetail
           key={active.providerId}
           state={active}
@@ -568,6 +596,7 @@ function ProviderDetail({
           state.enabled ? "" : "pointer-events-none opacity-50",
         )}
       >
+        <ProviderOAuthSignIn state={state} />
         <ApiKeySection state={state} />
         {showCliCandidates ? (
           <>

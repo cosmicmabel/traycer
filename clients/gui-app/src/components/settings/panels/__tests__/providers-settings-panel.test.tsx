@@ -73,6 +73,23 @@ vi.mock("@/hooks/providers/use-providers-set-api-key-mutation", () => ({
   }),
 }));
 
+// The provider OAuth sign-in control's login hooks (host-scoped): inert here.
+vi.mock("@/hooks/providers/use-providers-start-login-mutation", () => ({
+  useProvidersStartLogin: () => ({ mutate: () => undefined, isPending: false }),
+}));
+vi.mock("@/hooks/providers/use-providers-await-login-scoped-mutation", () => ({
+  useProvidersAwaitLoginScoped: () => ({
+    mutate: () => undefined,
+    isPending: false,
+  }),
+}));
+vi.mock("@/hooks/providers/use-providers-cancel-login-mutation", () => ({
+  useProvidersCancelLogin: () => ({
+    mutate: () => undefined,
+    isPending: false,
+  }),
+}));
+
 vi.mock("@/hooks/providers/use-providers-clear-api-key-mutation", () => ({
   useProvidersClearApiKey: () => ({
     mutate: providerMocks.clearApiKeyMutate,
