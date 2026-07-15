@@ -43,6 +43,11 @@ export interface LoginProcess {
   urlPromise(): Promise<string | null>;
   /** Resolves with the child's exit code when it finishes. */
   exited(): Promise<number>;
+  /**
+   * Writes text to the child's stdin (e.g. a pasted verification code for
+   * `claude setup-token`). Returns false when the child has no writable stdin.
+   */
+  writeStdin(text: string): boolean;
   kill(): void;
 }
 
@@ -54,10 +59,13 @@ const URL_PATTERN = /https?:\/\/[^\s"']+/;
 
 export const bunLoginSpawner: LoginSpawner = {
   spawn(cmd: readonly string[]): LoginProcess {
+    // stdin is piped (not ignored) so a pasted verification code can be
+    // written to code-prompt CLIs like `claude setup-token`; loopback-callback
+    // CLIs (codex/grok) ignore stdin and are completed via a host-side fetch.
     const proc = Bun.spawn([...cmd], {
       stdout: "pipe",
       stderr: "pipe",
-      stdin: "ignore",
+      stdin: "pipe",
     });
     let resolveUrl: (url: string | null) => void = () => undefined;
     const url = new Promise<string | null>((resolve) => {
@@ -83,6 +91,15 @@ export const bunLoginSpawner: LoginSpawner = {
     return {
       urlPromise: () => url,
       exited: () => proc.exited,
+      writeStdin: (text) => {
+        const sink = proc.stdin;
+        if (sink === undefined || sink === null) {
+          return false;
+        }
+        sink.write(text);
+        sink.flush();
+        return true;
+      },
       kill: () => proc.kill(),
     };
   },
@@ -134,6 +151,19 @@ export class LoginProcessStore {
       setTimeout(() => resolve(null), urlDeadlineMs),
     );
     return Promise.race([process.urlPromise(), deadline]);
+  }
+
+  /**
+   * Writes text to the in-flight login child's stdin (a pasted verification
+   * code). Returns false when nothing is in flight or the child has no
+   * writable stdin.
+   */
+  writeStdin(providerId: string, text: string): boolean {
+    const entry = this.inFlight.get(providerId);
+    if (entry === undefined) {
+      return false;
+    }
+    return entry.process.writeStdin(text);
   }
 
   /** Awaits the in-flight login child's exit; null if none is running. */

@@ -233,7 +233,9 @@ import {
   providersDetectVersionRequestSchema,
   providersDetectVersionResponseSchema,
   providersStartLoginRequestSchema,
+  providersStartLoginRequestSchemaV11,
   providersStartLoginResponseSchema,
+  providersStartLoginResponseSchemaV11,
   providersListRequestSchema,
   providersListResponseSchema,
   providersListResponseSchemaV10,
@@ -880,6 +882,38 @@ export const providersStartLoginV10 = defineRpcContract({
   schemaVersion: { major: 1, minor: 0 } as const,
   requestSchema: providersStartLoginRequestSchema,
   responseSchema: providersStartLoginResponseSchema,
+});
+
+// v1.1 adds the paste-the-callback-URL completion path (`callbackUrl` in,
+// `callbackDelivered` out) so CLI OAuth can finish on a remote host. Folded
+// onto this existing method instead of a new `providers.submitLoginCallback`
+// so the wire method-name set stays identical to the frozen host-v1.0.0
+// handshake surface. See the RPC backward-compat decision log.
+export const providersStartLoginV11 = defineRpcContract({
+  method: "providers.startLogin",
+  schemaVersion: { major: 1, minor: 1 } as const,
+  requestSchema: providersStartLoginRequestSchemaV11,
+  responseSchema: providersStartLoginResponseSchemaV11,
+});
+
+// Additive upgrade from v1.0: an older peer never submits a callback, so the
+// new request field defaults to null (start-the-flow behavior) and the new
+// response field defaults to null (this call started a flow, delivered nothing).
+export const providersStartLoginUpgradeV10ToV11 = defineUpgradePath<
+  typeof providersStartLoginV10,
+  typeof providersStartLoginV11
+>({
+  from: providersStartLoginV10.schemaVersion,
+  to: providersStartLoginV11.schemaVersion,
+  upgradeRequest: (request) => ({
+    providerId: request.providerId,
+    callbackUrl: null,
+  }),
+  upgradeResponse: (response) => ({
+    url: response.url,
+    started: response.started,
+    callbackDelivered: null,
+  }),
 });
 
 export const providersAwaitLoginV10 = defineRpcContract({
@@ -2686,11 +2720,15 @@ export const hostRpcRegistry = defineVersionedRpcRegistry({
   },
   "providers.startLogin": {
     1: {
-      latestMinor: 0,
+      latestMinor: 1,
       versions: {
         0: {
           contract: providersStartLoginV10,
           upgradeFromPreviousVersion: null,
+        },
+        1: {
+          contract: providersStartLoginV11,
+          upgradeFromPreviousVersion: providersStartLoginUpgradeV10ToV11,
         },
       },
       downgradePathsFromLatest: {},

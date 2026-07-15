@@ -58,7 +58,7 @@ import {
   providersSetEnvOverrideV20,
   providersSetSelectionV20,
   providersSetTerminalAgentArgsV20,
-  providersStartLoginV10,
+  providersStartLoginV11,
   workspaceBindingRemoveEntryV10,
   worktreeCreatePathsV10,
   worktreeCreateV10,
@@ -263,6 +263,59 @@ export interface HandlerDeps {
 
 /** How long `startLogin` waits for the CLI to print an auth URL. */
 const LOGIN_URL_DEADLINE_MS = 8_000;
+
+/** Loopback hostnames the callback-replay fetch is allowed to reach. */
+const LOOPBACK_HOSTS = new Set(["localhost", "127.0.0.1", "::1", "[::1]"]);
+
+/**
+ * Parses a pasted browser callback into a loopback URL to replay against the
+ * host's own loopback, or null when it is not a loopback http(s) URL (e.g. a
+ * bare verification code, which is delivered to the child's stdin instead).
+ * Restricting to loopback keeps this from becoming a host-side SSRF primitive:
+ * the only legitimate callback target is the login child's local server.
+ */
+function loopbackCallbackUrl(callback: string): string | null {
+  let parsed: URL;
+  try {
+    parsed = new URL(callback.trim());
+  } catch {
+    return null;
+  }
+  if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
+    return null;
+  }
+  return LOOPBACK_HOSTS.has(parsed.hostname) ? parsed.toString() : null;
+}
+
+/**
+ * Completes a login started on this host by delivering the pasted browser
+ * callback to the in-flight login child. A loopback URL is replayed against the
+ * host loopback so the child's own callback server receives the OAuth code (the
+ * user's browser couldn't reach it from another machine); anything else is
+ * written to the child's stdin for code-prompt CLIs (`claude setup-token`). The
+ * child's exit remains the honest "login finished" signal `awaitLogin` reaps.
+ */
+async function deliverLoginCallback(
+  logins: LoginProcessStore,
+  providerId: ProviderId,
+  callback: string,
+): Promise<boolean> {
+  if (!logins.hasInFlight(providerId)) {
+    return false;
+  }
+  const loopback = loopbackCallbackUrl(callback);
+  if (loopback === null) {
+    return logins.writeStdin(providerId, `${callback.trim()}\n`);
+  }
+  // Best-effort: the child's server may close the socket without a clean
+  // response once it has the code, so a rejected fetch is not a failure.
+  try {
+    await fetch(loopback, { redirect: "manual" });
+  } catch {
+    // ignore
+  }
+  return true;
+}
 
 const OPENCLAW_PROVIDER_ID: ProviderId = "openclaw";
 
@@ -571,19 +624,30 @@ export function buildUnaryHandlers(
   );
 
   handlers.set(
-    providersStartLoginV10.method,
-    contractHandler(providersStartLoginV10, async (request) => {
+    providersStartLoginV11.method,
+    contractHandler(providersStartLoginV11, async (request) => {
+      // Completion path: a pasted browser callback finishes a login started by
+      // an earlier call (the remote-host flow — see the schema doc comment). No
+      // new child is spawned; the callback is delivered to the one in flight.
+      if (request.callbackUrl !== null) {
+        const callbackDelivered = await deliverLoginCallback(
+          deps.logins,
+          request.providerId,
+          request.callbackUrl,
+        );
+        return { url: null, started: false, callbackDelivered };
+      }
       // Launch the vendor CLI's own OAuth login (`claude setup-token`,
       // `codex login`, …). The child runs the browser flow through its own
       // loopback callback; we surface the URL it prints and leave it running
       // for `awaitLogin` to reap.
       const harnessId = CLI_PROVIDER_TO_HARNESS[request.providerId];
       if (harnessId === undefined) {
-        return { url: null, started: false };
+        return { url: null, started: false, callbackDelivered: null };
       }
       const oauthArgs = CLI_LOGIN[harnessId].oauthArgs;
       if (oauthArgs === null) {
-        return { url: null, started: false };
+        return { url: null, started: false, callbackDelivered: null };
       }
       const row = await deps.providerSettings.get(request.providerId);
       const detection = await deps.cliDetector.detect(
@@ -591,7 +655,7 @@ export function buildUnaryHandlers(
         row.customPaths,
       );
       if (!detection.available || detection.binary === null) {
-        return { url: null, started: false };
+        return { url: null, started: false, callbackDelivered: null };
       }
       const url = await deps.logins.start(
         request.providerId,
@@ -599,7 +663,7 @@ export function buildUnaryHandlers(
         oauthArgs,
         LOGIN_URL_DEADLINE_MS,
       );
-      return { url, started: true };
+      return { url, started: true, callbackDelivered: null };
     }),
   );
 

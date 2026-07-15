@@ -10,13 +10,16 @@ function fakeProcess(opts: {
   url: string | null;
   exitCode?: number;
   resolveExitNow?: boolean;
+  stdinWritable?: boolean;
 }): {
   process: LoginProcess;
   finish: (code: number) => void;
   killed: () => boolean;
+  stdinWrites: () => string[];
 } {
   let resolveExit: (code: number) => void = () => undefined;
   let wasKilled = false;
+  const writes: string[] = [];
   const exited = new Promise<number>((resolve) => {
     resolveExit = resolve;
   });
@@ -26,9 +29,17 @@ function fakeProcess(opts: {
   return {
     killed: () => wasKilled,
     finish: (code) => resolveExit(code),
+    stdinWrites: () => writes,
     process: {
       urlPromise: async () => opts.url,
       exited: () => exited,
+      writeStdin: (text) => {
+        if (opts.stdinWritable === false) {
+          return false;
+        }
+        writes.push(text);
+        return true;
+      },
       kill: () => {
         wasKilled = true;
         resolveExit(opts.exitCode ?? 143);
@@ -70,6 +81,7 @@ describe("LoginProcessStore", () => {
     const { spawner } = spawnerReturning({
       urlPromise: () => never,
       exited: () => new Promise<number>(() => undefined),
+      writeStdin: () => false,
       kill: () => undefined,
     });
     const store = new LoginProcessStore(spawner);
@@ -95,6 +107,23 @@ describe("LoginProcessStore", () => {
       spawnerReturning(fakeProcess({ url: null }).process).spawner,
     );
     expect(await store.await("grok")).toBe(null);
+  });
+
+  test("writeStdin forwards a pasted code to the in-flight child", async () => {
+    const fake = fakeProcess({ url: null });
+    const { spawner } = spawnerReturning(fake.process);
+    const store = new LoginProcessStore(spawner);
+    await store.start("claude", "claude", ["setup-token"], 10);
+
+    expect(store.writeStdin("claude", "code-123\n")).toBe(true);
+    expect(fake.stdinWrites()).toEqual(["code-123\n"]);
+  });
+
+  test("writeStdin returns false when nothing is in flight", () => {
+    const store = new LoginProcessStore(
+      spawnerReturning(fakeProcess({ url: null }).process).spawner,
+    );
+    expect(store.writeStdin("grok", "code\n")).toBe(false);
   });
 
   test("cancel kills the in-flight child", async () => {

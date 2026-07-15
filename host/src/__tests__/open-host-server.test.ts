@@ -344,10 +344,14 @@ describe("open host /rpc", () => {
     const login = await callRpc(
       "providers.startLogin",
       manifest["providers.startLogin"],
-      { providerId: "openclaw" },
+      { providerId: "openclaw", callbackUrl: null },
       manifest,
     );
-    expect(login.result).toMatchObject({ started: false, url: null });
+    expect(login.result).toMatchObject({
+      started: false,
+      url: null,
+      callbackDelivered: null,
+    });
   });
 
   it("serves the selection guide, collaborator echoes, and agent fills", async () => {

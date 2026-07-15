@@ -284,7 +284,7 @@ function OAuthReauthForm({
   const onAuthenticate = (): void => {
     if (startLogin.isPending || awaiting) return;
     startLogin.mutate(
-      { providerId },
+      { providerId, callbackUrl: null },
       {
         onSuccess: (data) => {
           setLoginUrl(data.url);

@@ -613,6 +613,44 @@ export type ProvidersStartLoginResponse = z.infer<
 >;
 
 /**
+ * v1.1 lets the client COMPLETE a login it started on a remote host by handing
+ * the browser's loopback callback URL back to the host.
+ *
+ * The CLI's browser-OAuth flow redirects to a `http://localhost:PORT/…`
+ * callback served by the login child on the HOST. When the host and the
+ * browser are different machines (a remote host reached from a phone), that
+ * `localhost` resolves to the user's device, not the host, so the redirect
+ * dead-ends. The user copies the failed callback URL and submits it here; the
+ * host replays it against its OWN loopback, delivering the OAuth code to the
+ * login child's local server so it finishes exactly as the same-machine case.
+ *
+ * `callbackUrl: null` keeps the v1.0 "start the flow" behavior (spawn the login
+ * child, scrape its URL). A non-null value does NOT spawn anything: it delivers
+ * the callback to the child already in flight for this provider. Folded onto
+ * `providers.startLogin` (rather than a new `providers.submitLoginCallback`
+ * method) so the wire method-name set stays identical to the frozen host-v1.0.0
+ * handshake surface.
+ */
+export const providersStartLoginRequestSchemaV11 = z.object({
+  providerId: providerIdSchema,
+  callbackUrl: z.string().nullable(),
+});
+export type ProvidersStartLoginRequestV11 = z.infer<
+  typeof providersStartLoginRequestSchemaV11
+>;
+
+export const providersStartLoginResponseSchemaV11 = z.object({
+  url: z.string().nullable(),
+  started: z.boolean(),
+  // Whether a submitted `callbackUrl` was delivered to the in-flight login
+  // child. Null when the call started a flow (no `callbackUrl` was submitted).
+  callbackDelivered: z.boolean().nullable(),
+});
+export type ProvidersStartLoginResponseV11 = z.infer<
+  typeof providersStartLoginResponseSchemaV11
+>;
+
+/**
  * Block until an in-flight `providers.startLogin` child finishes (the browser
  * loopback completes or the CLI exits), then return the freshly re-probed state.
  * This is the honest "did the reconnect work?" signal - the host owns the
