@@ -17,6 +17,7 @@ import { SelectionGuideStore } from "./agent/selection-guide-store";
 import { CommentStore } from "./epic/comment-store";
 import { ProviderSettingsStore } from "./providers/provider-settings";
 import { CliDetector, bunVersionProbe } from "./providers/cli-detect";
+import { LoginProcessStore, bunLoginSpawner } from "./providers/login-process";
 import { TerminalStore } from "./terminal/terminal-store";
 import { BindingStore } from "./worktree/binding-store";
 import { WorktreeDeleteStream } from "./worktree/delete-stream";
@@ -83,6 +84,7 @@ export function startOpenHostServer(config: OpenHostConfig): RunningOpenHost {
     providerSettings: new ProviderSettingsStore(config.environment),
     selectionGuide: new SelectionGuideStore(config.environment),
     cliDetector,
+    logins: new LoginProcessStore(bunLoginSpawner),
   });
   const agentInbox = new AgentInboxStream();
 

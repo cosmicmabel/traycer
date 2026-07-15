@@ -153,6 +153,7 @@ import {
   type CliDetector,
   type CliHarnessId,
 } from "./providers/cli-detect";
+import { CLI_LOGIN, type LoginProcessStore } from "./providers/login-process";
 import type { TerminalStore } from "./terminal/terminal-store";
 import type { BindingStore } from "./worktree/binding-store";
 import {
@@ -257,7 +258,11 @@ export interface HandlerDeps {
   readonly providerSettings: ProviderSettingsStore;
   readonly selectionGuide: SelectionGuideStore;
   readonly cliDetector: CliDetector;
+  readonly logins: LoginProcessStore;
 }
+
+/** How long `startLogin` waits for the CLI to print an auth URL. */
+const LOGIN_URL_DEADLINE_MS = 8_000;
 
 const OPENCLAW_PROVIDER_ID: ProviderId = "openclaw";
 
@@ -567,27 +572,55 @@ export function buildUnaryHandlers(
 
   handlers.set(
     providersStartLoginV10.method,
-    contractHandler(providersStartLoginV10, async () => ({
-      // No provider CLI login flows on the open host (the OpenClaw Gateway
-      // owns its own auth); `started: false` renders the "can't start
-      // login" state instead of hanging a spinner.
-      url: null,
-      started: false,
-    })),
+    contractHandler(providersStartLoginV10, async (request) => {
+      // Launch the vendor CLI's own OAuth login (`claude setup-token`,
+      // `codex login`, …). The child runs the browser flow through its own
+      // loopback callback; we surface the URL it prints and leave it running
+      // for `awaitLogin` to reap.
+      const harnessId = CLI_PROVIDER_TO_HARNESS[request.providerId];
+      if (harnessId === undefined) {
+        return { url: null, started: false };
+      }
+      const oauthArgs = CLI_LOGIN[harnessId].oauthArgs;
+      if (oauthArgs === null) {
+        return { url: null, started: false };
+      }
+      const row = await deps.providerSettings.get(request.providerId);
+      const detection = await deps.cliDetector.detect(
+        harnessId,
+        row.customPaths,
+      );
+      if (!detection.available || detection.binary === null) {
+        return { url: null, started: false };
+      }
+      const url = await deps.logins.start(
+        request.providerId,
+        detection.binary,
+        oauthArgs,
+        LOGIN_URL_DEADLINE_MS,
+      );
+      return { url, started: true };
+    }),
   );
 
   handlers.set(
     providersAwaitLoginV20.method,
-    contractHandler(providersAwaitLoginV20, async () => ({
-      // Nothing to await: no login is ever in flight on this host.
-      state: null,
-    })),
+    contractHandler(providersAwaitLoginV20, async (request) => {
+      const exitCode = await deps.logins.await(request.providerId);
+      if (exitCode === null) {
+        return { state: null };
+      }
+      // The login child closed; re-probe and report fresh state. Detection is
+      // binary-presence only, but the child's exit is the real "login done"
+      // signal the GUI awaits.
+      return { state: await stateFor(request.providerId) };
+    }),
   );
 
   handlers.set(
     providersCancelLoginV10.method,
-    contractHandler(providersCancelLoginV10, async () => ({
-      cancelled: false,
+    contractHandler(providersCancelLoginV10, async (request) => ({
+      cancelled: deps.logins.cancel(request.providerId),
     })),
   );
 

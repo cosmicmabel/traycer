@@ -132,11 +132,27 @@ CIC runs agent turns two ways, both local:
   `cic-<chatId>`.
 - **Claude Code / Codex / Grok** — by spawning the vendor CLI. Install the CLI
   and make sure it's on `PATH` (or set a custom path in Settings → Providers);
-  the host detects it via `--version` and the harness flips to available. Sign
-  in with the CLI itself (`claude`, `codex`, `grok`) exactly as you would in a
-  terminal — the host never sees the vendor credentials. Each turn runs the
-  CLI in its non-interactive mode in the epic's working directory and streams
-  the reply back.
+  the host detects it via `--version` and the harness flips to available. Each
+  turn runs the CLI in its non-interactive mode in the epic's working
+  directory and streams the reply back. The host never sees the vendor
+  credentials — auth is the CLI's own.
+
+  **Signing in.** Each of these CLIs owns its own OAuth. Two ways to
+  authenticate:
+  - **In-app (OAuth).** Settings → Providers → the agent → **Sign in** runs
+    the CLI's browser-OAuth flow (`claude setup-token`, `codex login`, …);
+    click the link it surfaces, approve in your browser, done. This uses the
+    CLI's own loopback callback, so it works when the browser and the host are
+    the **same machine** (the default local setup). The exact login command
+    per CLI lives in `host/src/providers/login-process.ts` (`CLI_LOGIN`) — a
+    one-line tweak if your CLI version differs.
+  - **Token / API key.** Paste a key or OAuth token into the provider's field
+    in Settings (e.g. `CLAUDE_CODE_OAUTH_TOKEN`, `ANTHROPIC_API_KEY`,
+    `OPENAI_API_KEY`, `XAI_API_KEY`). Use this for a **remote** host, where the
+    browser can't reach the CLI's loopback callback.
+
+  You can also just run the login once in a CIC terminal tab (`codex login`,
+  `claude`) — every turn afterward uses that stored session.
 
 The Providers panel in Settings shows each agent's detected/enabled state.
 

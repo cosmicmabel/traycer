@@ -10,6 +10,7 @@ import {
   type ProviderId,
 } from "@cic/protocol/host/provider-schemas";
 import { hostHomeDir } from "../pid-file";
+import { CLI_LOGIN } from "./login-process";
 
 /**
  * Per-provider user settings behind the `providers.set*` mutations,
@@ -173,8 +174,33 @@ export function buildProviderState(
     },
     terminalAgentArgs: row.terminalAgentArgs,
     envOverrides: row.envOverrides,
-    loginCapability: null,
+    loginCapability: cliLoginCapability(row.providerId),
     availabilityPending: false,
+  };
+}
+
+/**
+ * The OAuth/token reconnect affordance for a CLI provider (drives the GUI's
+ * "Sign in" button + token-paste field). `null` for non-CLI providers.
+ */
+function cliLoginCapability(
+  providerId: ProviderId,
+): ProviderCliState["loginCapability"] {
+  const harnessId =
+    providerId === "claude-code"
+      ? "claude"
+      : providerId === "codex"
+        ? "codex"
+        : providerId === "grok"
+          ? "grok"
+          : null;
+  if (harnessId === null) {
+    return null;
+  }
+  const config = CLI_LOGIN[harnessId];
+  return {
+    oauthArgs: config.oauthArgs === null ? null : [...config.oauthArgs],
+    token: { vars: [...config.tokenVars] },
   };
 }
 

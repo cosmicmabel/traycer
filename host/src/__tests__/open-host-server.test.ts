@@ -170,6 +170,37 @@ describe("open host /rpc", () => {
     expect(models.map((model) => model.slug)).toContain("claude-opus-4-8");
   });
 
+  it("exposes an OAuth login capability for the CLI providers", async () => {
+    const { result, error } = await callRpc(
+      "providers.list",
+      { major: 4, minor: 0 },
+      {},
+      manifest,
+    );
+    expect(error).toBeNull();
+    const providers = (
+      result as {
+        providers: Array<{
+          providerId: string;
+          loginCapability: {
+            oauthArgs: string[] | null;
+            token: { vars: string[] } | null;
+          } | null;
+        }>;
+      }
+    ).providers;
+    const claude = providers.find((p) => p.providerId === "claude-code");
+    expect(claude?.loginCapability?.oauthArgs).toEqual(["setup-token"]);
+    expect(claude?.loginCapability?.token?.vars).toContain(
+      "CLAUDE_CODE_OAUTH_TOKEN",
+    );
+    const codex = providers.find((p) => p.providerId === "codex");
+    expect(codex?.loginCapability?.oauthArgs).toEqual(["login"]);
+    // OpenClaw has no CLI login (the gateway owns its auth).
+    const openclaw = providers.find((p) => p.providerId === "openclaw");
+    expect(openclaw?.loginCapability).toBeNull();
+  });
+
   it("downgrades providers.list for a v2.0 client (drops amp + openclaw)", async () => {
     const oldManifest: ConnectionManifest = {
       ...manifest,
@@ -306,11 +337,14 @@ describe("open host /rpc", () => {
     const openclaw = providers.find((row) => row.providerId === "openclaw");
     expect(openclaw).toMatchObject({ terminalAgentArgs: "--verbose" });
 
-    // Login flows never start on the open host.
+    // OpenClaw has no CLI login flow (the gateway owns its auth), so
+    // startLogin is a deterministic no-op. (CLI providers DO start a real
+    // login when their binary is installed — covered by login-process tests
+    // rather than here, since a live CLI would block on the browser flow.)
     const login = await callRpc(
       "providers.startLogin",
       manifest["providers.startLogin"],
-      { providerId: "claude-code" },
+      { providerId: "openclaw" },
       manifest,
     );
     expect(login.result).toMatchObject({ started: false, url: null });
