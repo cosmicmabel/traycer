@@ -205,6 +205,25 @@ function runtimeConfigResponse(metadata: HostPidMetadata | null): Response {
 
 // ─── Static bundle ──────────────────────────────────────────────────────────
 
+/**
+ * Cache policy for a served file.
+ *
+ * `index.html` must never be cached: it names the content-hashed asset bundles,
+ * so a stale copy pins the browser to an old build even after a redeploy (this
+ * is the classic "I rebuilt but the browser still shows the old app"). Files
+ * under `assets/` ARE content-hashed, so their names change on every build and
+ * the old names are safe to cache forever. Everything else revalidates.
+ */
+function cacheControlFor(relative: string): string {
+  if (relative === "index.html") {
+    return "no-cache, no-store, must-revalidate";
+  }
+  if (relative.startsWith("assets/")) {
+    return "public, max-age=31536000, immutable";
+  }
+  return "no-cache";
+}
+
 async function serveStatic(
   distDir: string,
   pathname: string,
@@ -218,7 +237,9 @@ async function serveStatic(
   }
   const file = Bun.file(candidate);
   if (relative.length > 0 && (await file.exists())) {
-    return new Response(file);
+    return new Response(file, {
+      headers: { "Cache-Control": cacheControlFor(relative) },
+    });
   }
   // A request that looks like a file (has an extension) but doesn't exist is a
   // genuine 404 — never fall back to index.html for it, or a missing
@@ -229,10 +250,13 @@ async function serveStatic(
     return new Response("not found", { status: 404 });
   }
   // SPA fallback: every non-asset route renders index.html and the router
-  // takes over client-side.
+  // takes over client-side. Served no-store so a redeploy is picked up on the
+  // next load without a manual hard-refresh.
   const index = Bun.file(join(distDir, "index.html"));
   if (await index.exists()) {
-    return new Response(index);
+    return new Response(index, {
+      headers: { "Cache-Control": cacheControlFor("index.html") },
+    });
   }
   return new Response(
     "clients/web/dist is missing - run `bunx nx run @cic/web:build` first",

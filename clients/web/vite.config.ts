@@ -2,6 +2,8 @@ import babel from "@rolldown/plugin-babel";
 import tailwindcss from "@tailwindcss/vite";
 import { tanstackRouter } from "@tanstack/router-plugin/vite";
 import react, { reactCompilerPreset } from "@vitejs/plugin-react";
+import { execSync } from "node:child_process";
+import { readFileSync } from "node:fs";
 import { resolve } from "path";
 import { defineConfig, type HtmlTagDescriptor, type UserConfig } from "vite";
 import { CONTENT_SECURITY_POLICY } from "./src/shell/content-security-policy";
@@ -11,6 +13,56 @@ const webEnvPrefix = [
   "VITE_CIC_OSS_REPO",
   "VITE_VIRTUOSO_MESSAGE_LIST_LICENSE_KEY",
 ];
+
+/**
+ * The version string baked into the build, read back by `appVersionLabel()`
+ * (clients/gui-app/src/lib/app-version.ts) for the Settings › General "Version"
+ * row and the onboarding footer.
+ *
+ * Precedence: an explicit `VITE_APP_VERSION` (set at release) wins; otherwise
+ * the gui-app package version is combined with the short git SHA
+ * (`0.1.0+ad46db0`) so every deploy shows a DIFFERENT, verifiable value — the
+ * whole point of the row is to confirm at a glance which build is live. Falls
+ * back to the bare package version when git isn't available (e.g. a source
+ * tarball with no `.git`).
+ */
+function resolveWebAppVersion(guiAppRoot: string): string {
+  const fromEnv = process.env.VITE_APP_VERSION;
+  if (typeof fromEnv === "string" && fromEnv.length > 0) {
+    return fromEnv;
+  }
+  const pkgVersion = ((): string => {
+    try {
+      const parsed: unknown = JSON.parse(
+        readFileSync(resolve(guiAppRoot, "package.json"), "utf8"),
+      );
+      if (
+        typeof parsed === "object" &&
+        parsed !== null &&
+        "version" in parsed &&
+        typeof parsed.version === "string"
+      ) {
+        return parsed.version;
+      }
+      return "0.0.0";
+    } catch {
+      return "0.0.0";
+    }
+  })();
+  const sha = ((): string => {
+    try {
+      return execSync("git rev-parse --short HEAD", {
+        cwd: guiAppRoot,
+        stdio: ["ignore", "pipe", "ignore"],
+      })
+        .toString()
+        .trim();
+    } catch {
+      return "";
+    }
+  })();
+  return sha.length > 0 ? `${pkgVersion}+${sha}` : pkgVersion;
+}
 
 /**
  * Web (browser) shell Vite config.
@@ -32,6 +84,7 @@ export default defineConfig((): UserConfig => {
   const guiAppRoot = resolve(__dirname, "..", "gui-app");
   const sharedRoot = resolve(__dirname, "..", "shared");
   const protocolRoot = resolve(__dirname, "..", "..", "protocol");
+  const appVersion = resolveWebAppVersion(guiAppRoot);
 
   return {
     root: resolve(__dirname, "src", "shell"),
@@ -90,6 +143,14 @@ export default defineConfig((): UserConfig => {
         "@cic/protocol/utils": resolve(protocolRoot, "utils"),
         "@cic/protocol": resolve(protocolRoot, "src"),
       },
+    },
+    // Bake the resolved version in so `import.meta.env.VITE_APP_VERSION` is a
+    // real string in the bundle even when the build ran without the env var set
+    // (the common `nx run @cic/web:build` path). Vite's own env injection still
+    // wins when `VITE_APP_VERSION` is exported, because `resolveWebAppVersion`
+    // prefers it.
+    define: {
+      "import.meta.env.VITE_APP_VERSION": JSON.stringify(appVersion),
     },
     build: {
       emptyOutDir: true,
