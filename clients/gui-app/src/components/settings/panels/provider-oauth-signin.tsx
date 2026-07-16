@@ -7,10 +7,10 @@ import { PROVIDER_DISPLAY_NAMES } from "@cic/protocol/host/provider-schemas";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { MutedAgentSpinner } from "@/components/ui/agent-spinning-dots";
+import { useClipboardCopy } from "@/hooks/ui/use-clipboard-copy";
 import { useProvidersStartLogin } from "@/hooks/providers/use-providers-start-login-mutation";
 import { useProvidersAwaitLoginScoped } from "@/hooks/providers/use-providers-await-login-scoped-mutation";
 import { useProvidersCancelLogin } from "@/hooks/providers/use-providers-cancel-login-mutation";
-import { useRunnerHost } from "@/providers/use-runner-host";
 
 /**
  * Settings-panel "Sign in" control for a CLI provider that advertises an
@@ -37,7 +37,11 @@ export function ProviderOAuthSignIn({
   const startLogin = useProvidersStartLogin();
   const awaitLogin = useProvidersAwaitLoginScoped();
   const cancelLogin = useProvidersCancelLogin();
-  const runnerHost = useRunnerHost();
+  const { copied, copy } = useClipboardCopy({
+    resetMs: 1500,
+    onSuccess: null,
+    onError: null,
+  });
   const [awaiting, setAwaiting] = useState(false);
   const [loginUrl, setLoginUrl] = useState<string | null>(null);
   const [callbackDraft, setCallbackDraft] = useState("");
@@ -121,16 +125,40 @@ export function ProviderOAuthSignIn({
             <MutedAgentSpinner />
             <span>Waiting for browser sign-in…</span>
           </div>
-          <div className="flex flex-wrap items-center gap-2">
-            {loginUrl !== null ? (
-              <Button
-                size="sm"
-                variant="secondary"
-                onClick={() => void runnerHost.openExternalLink(loginUrl)}
-              >
-                Open sign-in page
-              </Button>
-            ) : null}
+          {loginUrl !== null ? (
+            <div className="flex flex-col gap-1.5">
+              <span className="text-ui-xs text-muted-foreground">
+                Open this link to sign in (it opens on the device you&apos;re
+                using now). If it doesn&apos;t open, copy it into your browser:
+              </span>
+              <div className="flex flex-wrap items-center gap-2">
+                {/* A real anchor, not `window.open`: programmatic opens are
+                    popup-blocked on many (esp. mobile) browsers even from a
+                    click, so the link navigation is the reliable path. */}
+                <Button asChild size="sm" variant="secondary">
+                  <a href={loginUrl} target="_blank" rel="noopener noreferrer">
+                    Open sign-in page
+                  </a>
+                </Button>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => copy(loginUrl)}
+                >
+                  {copied ? "Copied" : "Copy link"}
+                </Button>
+              </div>
+              <span className="w-full select-all break-all rounded border border-border/60 bg-muted/40 px-2 py-1 font-mono text-ui-xs text-muted-foreground">
+                {loginUrl}
+              </span>
+            </div>
+          ) : (
+            <span className="text-ui-xs text-muted-foreground">
+              No sign-in link was printed by the CLI. Cancel and try again, or
+              run the login from the host&apos;s terminal.
+            </span>
+          )}
+          <div>
             <Button size="sm" variant="ghost" onClick={onCancel}>
               Cancel
             </Button>
