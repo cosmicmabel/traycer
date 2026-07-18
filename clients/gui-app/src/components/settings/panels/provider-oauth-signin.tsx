@@ -127,30 +127,34 @@ export function ProviderOAuthSignIn({
           </div>
           {loginUrl !== null ? (
             <div className="flex flex-col gap-1.5">
-              <span className="text-ui-xs text-muted-foreground">
-                Open this link to sign in (it opens on the device you&apos;re
-                using now). If it doesn&apos;t open, copy it into your browser:
+              <span className="text-ui-xs font-medium text-foreground">
+                1. Copy this sign-in link and open it in your browser
               </span>
+              {/* Copy is the reliable path: opening a tab programmatically is
+                  popup-blocked on many browsers (Brave/mobile show
+                  about:blank#blocked). The full URL is shown select-all so it
+                  can always be copied by hand, and the "Open" link below is a
+                  real anchor offered as a best-effort convenience. */}
               <div className="flex flex-wrap items-center gap-2">
-                {/* A real anchor, not `window.open`: programmatic opens are
-                    popup-blocked on many (esp. mobile) browsers even from a
-                    click, so the link navigation is the reliable path. */}
-                <Button asChild size="sm" variant="secondary">
-                  <a href={loginUrl} target="_blank" rel="noopener noreferrer">
-                    Open sign-in page
-                  </a>
-                </Button>
+                <span className="min-w-0 flex-1 select-all break-all rounded border border-border/60 bg-muted/40 px-2 py-1 font-mono text-ui-xs text-muted-foreground">
+                  {loginUrl}
+                </span>
                 <Button
                   size="sm"
-                  variant="ghost"
+                  variant="secondary"
                   onClick={() => copy(loginUrl)}
                 >
                   {copied ? "Copied" : "Copy link"}
                 </Button>
               </div>
-              <span className="w-full select-all break-all rounded border border-border/60 bg-muted/40 px-2 py-1 font-mono text-ui-xs text-muted-foreground">
-                {loginUrl}
-              </span>
+              <a
+                href={loginUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-ui-xs text-primary underline underline-offset-2"
+              >
+                Or try opening it in a new tab ↗
+              </a>
             </div>
           ) : (
             <span className="text-ui-xs text-muted-foreground">
@@ -168,12 +172,13 @@ export function ProviderOAuthSignIn({
               htmlFor={callbackInputId}
               className="text-ui-xs font-medium text-foreground"
             >
-              Finish on another device? Paste the callback URL
+              2. After signing in, paste the callback URL here
             </label>
             <span className="text-ui-xs text-muted-foreground">
-              After signing in, your browser lands on a{" "}
-              <span className="font-mono">localhost</span> page (it may show an
-              error). Copy that address and paste it here to complete sign-in.
+              When you finish signing in, your browser lands on a{" "}
+              <span className="font-mono">localhost</span> page (it may look like
+              an error). Copy that address and paste it here to complete
+              sign-in.
             </span>
             <div className="flex flex-wrap items-center gap-2">
               <Input
